@@ -1,9 +1,15 @@
 /** @jsxImportSource @emotion/react */
+import { useNode } from '@craftjs/core';
 import { rgbaToCss } from 'utils/colors';
 
 export default function Root({ backgroundColor, children }) {
+  const {
+    connectors: { connect },
+  } = useNode();
+
   return (
     <div
+      ref={connect}
       css={{
         width: '100%',
         height: '100%',
@@ -17,3 +23,9 @@ export default function Root({ backgroundColor, children }) {
     </div>
   );
 }
+
+Root.craft = {
+  props: {
+    backgroundColor: { r: 255, g: 255, b: 255, a: 1 },
+  },
+};
