@@ -33,8 +33,8 @@ export default function Navigation() {
   return (
     <Flex sx={{ py: 2, px: 4, justifyContent: 'center', backgroundColor: 'gray.50' }}>
       <DrawButton mr={4} label="Container" component={Container} canvas connectors={connectors} />
-      <DrawButton mr={4} label="Text" component={Btn} connectors={connectors} />
-      <DrawButton label="Button" component={Txt} connectors={connectors} />
+      <DrawButton mr={4} label="Button" component={Btn} connectors={connectors} />
+      <DrawButton label="Text" component={Txt} connectors={connectors} />
     </Flex>
   );
 }
