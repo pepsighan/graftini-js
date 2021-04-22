@@ -1,24 +1,27 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
+import Outline from './Outline';
 
-export default function Text({ color, fontFamily, fontSize, fontWeight, content }) {
+export default function Text({ name, color, fontFamily, fontSize, fontWeight, content }) {
   const {
     connectors: { drag },
   } = useNode();
 
   return (
-    <p
-      ref={drag}
-      css={{
-        color,
-        fontFamily,
-        fontWeight,
-        fontSize: fontSize?.number ? `${fontSize.number}${fontSize?.unit ?? 'px'}` : null,
-        margin: 0,
-      }}
-    >
-      {content}
-    </p>
+    <Outline name={name}>
+      <p
+        ref={drag}
+        css={{
+          color,
+          fontFamily,
+          fontWeight,
+          fontSize: fontSize?.number ? `${fontSize.number}${fontSize?.unit ?? 'px'}` : null,
+          margin: 0,
+        }}
+      >
+        {content}
+      </p>
+    </Outline>
   );
 }
 

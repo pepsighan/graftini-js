@@ -1,30 +1,33 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
 import { rgbaToCss } from 'utils/colors';
+import Outline from './Outline';
 
-export default function Button({ padding, backgroundColor, color, children }) {
+export default function Button({ name, padding, backgroundColor, color, children }) {
   const {
     connectors: { drag },
   } = useNode();
 
   return (
-    <button
-      ref={drag}
-      css={{
-        display: 'block',
-        width: '100%',
-        paddingTop: padding?.top,
-        paddingRight: padding?.right,
-        paddingBottom: padding?.bottom,
-        paddingLeft: padding?.left,
-        backgroundColor: rgbaToCss(backgroundColor),
-        color: rgbaToCss(color),
-        borderRadius: 4,
-        outline: 'none',
-      }}
-    >
-      {children}
-    </button>
+    <Outline name={name}>
+      <button
+        ref={drag}
+        css={{
+          display: 'block',
+          width: '100%',
+          paddingTop: padding?.top,
+          paddingRight: padding?.right,
+          paddingBottom: padding?.bottom,
+          paddingLeft: padding?.left,
+          backgroundColor: rgbaToCss(backgroundColor),
+          color: rgbaToCss(color),
+          borderRadius: 4,
+          outline: 'none',
+        }}
+      >
+        {children}
+      </button>
+    </Outline>
   );
 }
 
