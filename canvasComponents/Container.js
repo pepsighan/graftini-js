@@ -2,8 +2,9 @@
 import { useNode } from '@craftjs/core';
 import { useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
-import { parseInteger } from 'utils/parser';
+import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
+import NumberInput from './form/NumberInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
@@ -62,6 +63,9 @@ function Options({ componentId }) {
     <CanvasForm
       componentId={componentId}
       onTransformValues={useCallback((values) => {
+        values.width = parsePositiveInteger(values.width);
+        values.height = parsePositiveInteger(values.height);
+
         values.padding = values.padding ?? {};
         values.padding.top = parseInteger(values.padding?.top);
         values.padding.right = parseInteger(values.padding?.right);
@@ -76,6 +80,8 @@ function Options({ componentId }) {
       }, [])}
     >
       <TextInput name="name" label="Name" />
+      <NumberInput name="width" label="Width" spaceTop />
+      <NumberInput name="height" label="Height" spaceTop />
       <SpacingField name="padding" label="Padding" spaceTop />
       <SpacingField name="margin" label="Margin" spaceTop />
     </CanvasForm>
