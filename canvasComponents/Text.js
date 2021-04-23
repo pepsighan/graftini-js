@@ -1,5 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
+import CanvasForm from './form/CanvasForm';
+import TextInput from './form/TextInput';
 import Outline from './Outline';
 
 export default function Text({ name, color, fontFamily, fontSize, fontWeight, content }) {
@@ -36,4 +38,12 @@ Text.craft = {
       unit: 'px',
     },
   },
+};
+
+Text.Options = ({ componentId }) => {
+  return (
+    <CanvasForm componentId={componentId}>
+      <TextInput name="name" label="Name" />
+    </CanvasForm>
+  );
 };

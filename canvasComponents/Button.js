@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
 import { rgbaToCss } from 'utils/colors';
+import CanvasForm from './form/CanvasForm';
+import TextInput from './form/TextInput';
 import Outline from './Outline';
 
 export default function Button({ name, padding, backgroundColor, color, children }) {
@@ -38,4 +40,12 @@ Button.craft = {
     color: { r: 0, g: 0, b: 0, a: 1 },
     children: 'Button',
   },
+};
+
+Button.Options = ({ componentId }) => {
+  return (
+    <CanvasForm componentId={componentId}>
+      <TextInput name="name" label="Name" />
+    </CanvasForm>
+  );
 };
