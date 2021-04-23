@@ -54,9 +54,9 @@ Container.craft = {
   },
 };
 
-Container.Options = () => {
+Container.Options = ({ componentId }) => {
   return (
-    <CanvasForm>
+    <CanvasForm componentId={componentId}>
       <TextInput name="name" label="Name" />
     </CanvasForm>
   );
