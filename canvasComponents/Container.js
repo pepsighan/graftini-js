@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
 import { rgbaToCss } from 'utils/colors';
+import CanvasForm from './form/CanvasForm';
+import TextInput from './form/TextInput';
 import Outline from './Outline';
 
 export default function Container({
@@ -50,4 +52,12 @@ Container.craft = {
     margin: {},
     backgroundColor: { r: 220, g: 220, b: 255, a: 1 },
   },
+};
+
+Container.Options = () => {
+  return (
+    <CanvasForm>
+      <TextInput name="name" label="Name" />
+    </CanvasForm>
+  );
 };
