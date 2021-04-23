@@ -31,7 +31,16 @@ export default function Navigation() {
   const { connectors } = useEditor();
 
   return (
-    <Flex sx={{ py: 2, px: 4, justifyContent: 'center', backgroundColor: 'gray.50' }}>
+    <Flex
+      sx={{
+        py: 2,
+        px: 4,
+        justifyContent: 'center',
+        backgroundColor: 'gray.50',
+        position: 'sticky',
+        top: 0,
+      }}
+    >
       <DrawButton mr={4} label="Container" component={Container} canvas connectors={connectors} />
       <DrawButton mr={4} label="Button" component={Btn} connectors={connectors} />
       <DrawButton label="Text" component={Txt} connectors={connectors} />
