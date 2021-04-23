@@ -1,12 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
+import { useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
+import { parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
+import NumberInput from './form/NumberInput';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
-export default function Text({ name, color, fontFamily, fontSize, fontWeight, content }) {
+export default function Text({ name, color, fontSize, content }) {
   const {
     connectors: { drag },
   } = useNode();
@@ -17,9 +20,7 @@ export default function Text({ name, color, fontFamily, fontSize, fontWeight, co
         ref={drag}
         css={{
           color: rgbaToCss(color),
-          fontFamily,
-          fontWeight,
-          fontSize: fontSize?.number ? `${fontSize.number}${fontSize?.unit ?? 'px'}` : null,
+          fontSize,
           margin: 0,
         }}
       >
@@ -33,20 +34,23 @@ Text.craft = {
   props: {
     color: { r: 0, g: 0, b: 0, a: 1 },
     content: 'Lorem ipsum dolor sit amet.',
-    fontFamily: 'Asar',
-    fontWeight: 'regular',
-    fontSize: {
-      number: 16,
-      unit: 'px',
-    },
+    fontSize: 16,
   },
 };
 
-Text.Options = ({ componentId }) => {
+function Options({ componentId }) {
   return (
-    <CanvasForm componentId={componentId}>
+    <CanvasForm
+      componentId={componentId}
+      onTransformValues={useCallback((values) => {
+        values.fontSize = parsePositiveInteger(values.fontSize);
+      }, [])}
+    >
       <TextInput name="name" label="Name" />
+      <NumberInput name="fontSize" label="Font Size" spaceTop />
       <ColorPicker name="color" label="Color" spaceTop />
     </CanvasForm>
   );
-};
+}
+
+Text.Options = Options;
