@@ -42,26 +42,32 @@ export default function Outline({ name, width, children }) {
           position: 'absolute',
           display: isSelected || isHovered ? 'flex' : 'none',
           top: 0,
-          left: -1,
+          left: '-1px',
           transform: 'translateY(-100%)',
           px: 1,
-          py: 0.25,
+          py: 0.5,
           backgroundColor: isHovered && !isSelected ? 'white' : 'blue.600',
-          border: `1px solid ${theme.colors.blue[600]}`,
+          border: '1px',
+          borderColor: 'blue.600',
           alignItems: 'center',
         }}
       >
         <Text
-          sx={{
-            fontSize: 'sm',
-            color: isHovered && !isSelected ? 'blue.600' : 'white',
-            lineHeight: 'normal',
-          }}
+          fontSize="xs"
+          lineHeight="normal"
+          color={isHovered && !isSelected ? 'blue.600' : 'white'}
         >
           {name || 'Untitled'}
         </Text>
 
-        <IconButton size="small" sx={{ ml: 1 }} colorScheme="blue" onClick={onDelete}>
+        <IconButton
+          height="unset"
+          width="unset"
+          minWidth="unset"
+          sx={{ ml: 1 }}
+          colorScheme={isHovered && !isSelected ? 'blue' : 'grey'}
+          onClick={onDelete}
+        >
           <MdDelete />
         </IconButton>
       </Box>
