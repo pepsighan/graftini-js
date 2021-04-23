@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
 import { useCallback } from 'react';
+import Editor from 'rich-markdown-editor';
 import { rgbaToCss } from 'utils/colors';
 import { parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
@@ -12,20 +13,29 @@ import Outline from './Outline';
 export default function Text({ name, color, fontSize, content }) {
   const {
     connectors: { drag },
+    actions: { setProp },
   } = useNode();
 
   return (
     <Outline name={name}>
-      <p
+      <div
         ref={drag}
         css={{
           color: rgbaToCss(color),
           fontSize,
-          margin: 0,
         }}
       >
-        {content}
-      </p>
+        <Editor
+          defaultValue={content}
+          onChange={useCallback(
+            (getText) =>
+              setProp((props) => {
+                props.content = getText();
+              }),
+            [setProp]
+          )}
+        />
+      </div>
     </Outline>
   );
 }
