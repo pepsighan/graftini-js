@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
 import { rgbaToCss } from 'utils/colors';
+import CanvasForm from './form/CanvasForm';
+import ColorPicker from './form/ColorPicker';
 
 export default function Root({ backgroundColor, children }) {
   const {
@@ -28,4 +30,12 @@ Root.craft = {
   props: {
     backgroundColor: { r: 255, g: 255, b: 255, a: 1 },
   },
+};
+
+Root.Options = ({ componentId }) => {
+  return (
+    <CanvasForm componentId={componentId}>
+      <ColorPicker name="backgroundColor" label="Background Color" />
+    </CanvasForm>
+  );
 };
