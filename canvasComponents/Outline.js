@@ -34,7 +34,7 @@ export default function Outline({ name, width, children }) {
         // To show the border on top even if there is some overlap in components.
         position: isSelected || isHovered ? 'relative' : null,
         // Width is only considered in the case of container, since its width can be modified.
-        width,
+        width: `${width}px`,
       }}
     >
       <Box
