@@ -1,7 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
+import { useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
+import { parseInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
+import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
@@ -54,10 +57,29 @@ Container.craft = {
   },
 };
 
-Container.Options = ({ componentId }) => {
+function Options({ componentId }) {
   return (
-    <CanvasForm componentId={componentId}>
+    <CanvasForm
+      componentId={componentId}
+      onTransformValues={useCallback((values) => {
+        values.padding = values.padding ?? {};
+        values.padding.top = parseInteger(values.padding?.top);
+        values.padding.right = parseInteger(values.padding?.right);
+        values.padding.bottom = parseInteger(values.padding?.bottom);
+        values.padding.left = parseInteger(values.padding?.left);
+
+        values.margin = values.margin ?? {};
+        values.margin.top = parseInteger(values.margin?.top);
+        values.margin.right = parseInteger(values.margin?.right);
+        values.margin.bottom = parseInteger(values.margin?.bottom);
+        values.margin.left = parseInteger(values.margin?.left);
+      }, [])}
+    >
       <TextInput name="name" label="Name" />
+      <SpacingField name="padding" label="Padding" spaceTop />
+      <SpacingField name="margin" label="Margin" spaceTop />
     </CanvasForm>
   );
-};
+}
+
+Container.Options = Options;

@@ -1,0 +1,29 @@
+/**
+ * Parses the value into a valid positive number. If it cannot, returns null.
+ */
+export function parsePositiveInteger(value: unknown): number | null {
+  const number = parseInteger(value);
+  if (typeof number === 'number' && number >= 0) {
+    return number;
+  }
+
+  return null;
+}
+
+/**
+ * Parses the value into an non-NaN integer. If it cannot parse, returns null.
+ */
+export function parseInteger(value: unknown): number | null {
+  if (typeof value === 'number') {
+    return !isNaN(value) ? value : null;
+  }
+
+  if (typeof value === 'string') {
+    const number = parseInt(value);
+    if (!isNaN(number)) {
+      return number;
+    }
+  }
+
+  return null;
+}
