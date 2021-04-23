@@ -4,6 +4,7 @@ import { useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
+import ColorPicker from './form/ColorPicker';
 import NumberInput from './form/NumberInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
@@ -84,6 +85,7 @@ function Options({ componentId }) {
       <NumberInput name="height" label="Height" spaceTop />
       <SpacingField name="padding" label="Padding" spaceTop />
       <SpacingField name="margin" label="Margin" spaceTop />
+      <ColorPicker name="backgroundColor" label="Background Color" spaceTop />
     </CanvasForm>
   );
 }

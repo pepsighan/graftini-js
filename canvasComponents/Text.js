@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
+import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
+import ColorPicker from './form/ColorPicker';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
@@ -14,7 +16,7 @@ export default function Text({ name, color, fontFamily, fontSize, fontWeight, co
       <p
         ref={drag}
         css={{
-          color,
+          color: rgbaToCss(color),
           fontFamily,
           fontWeight,
           fontSize: fontSize?.number ? `${fontSize.number}${fontSize?.unit ?? 'px'}` : null,
@@ -44,6 +46,7 @@ Text.Options = ({ componentId }) => {
   return (
     <CanvasForm componentId={componentId}>
       <TextInput name="name" label="Name" />
+      <ColorPicker name="color" label="Color" spaceTop />
     </CanvasForm>
   );
 };

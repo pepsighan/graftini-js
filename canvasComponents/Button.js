@@ -2,6 +2,7 @@
 import { useNode } from '@craftjs/core';
 import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
+import ColorPicker from './form/ColorPicker';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
@@ -46,6 +47,8 @@ Button.Options = ({ componentId }) => {
   return (
     <CanvasForm componentId={componentId}>
       <TextInput name="name" label="Name" />
+      <ColorPicker name="color" label="Color" spaceTop />
+      <ColorPicker name="backgroundColor" label="Background Color" spaceTop />
     </CanvasForm>
   );
 };
