@@ -17,10 +17,15 @@ export default function Outline({ name, width, children }) {
     id,
     isSelected,
     isHovered,
-  } = useNode((state) => ({
-    isSelected: state.events.selected,
-    isHovered: state.events.hovered,
-  }));
+  } = useNode(
+    useCallback(
+      (state) => ({
+        isSelected: state.events.selected,
+        isHovered: state.events.hovered,
+      }),
+      []
+    )
+  );
 
   const onDelete = useCallback(() => {
     del(id);
