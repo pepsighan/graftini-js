@@ -1,12 +1,14 @@
-import { Button } from '@chakra-ui/button';
-import { Flex } from '@chakra-ui/layout';
+import { Button, IconButton } from '@chakra-ui/button';
+import { Box, Flex } from '@chakra-ui/layout';
 import { Text } from '@chakra-ui/react';
 import { Element, useEditor } from '@craftjs/core';
 import { default as Btn } from 'canvasComponents/Button';
 import Container from 'canvasComponents/Container';
 import { default as Txt } from 'canvasComponents/Text';
 import { useCallback } from 'react';
-import { MdImportContacts } from 'react-icons/md';
+import { MdCode, MdImportContacts } from 'react-icons/md';
+import { RightSidebarOpenPane, useEditorState } from 'store/editor';
+import { useImmerSetter } from 'store/zustand';
 
 function DrawButton({ connectors, mr, label, component: Component, canvas }) {
   const ref = useCallback(
@@ -29,21 +31,39 @@ function DrawButton({ connectors, mr, label, component: Component, canvas }) {
 
 export default function Navigation() {
   const { connectors } = useEditor();
+  const updateEditorState = useImmerSetter(useEditorState);
 
   return (
     <Flex
-      sx={{
-        py: 2,
-        px: 4,
-        justifyContent: 'center',
-        backgroundColor: 'gray.50',
-        position: 'sticky',
-        top: 0,
-      }}
+      py={2}
+      px={4}
+      justifyContent="space-between"
+      alignItems="center"
+      position="sticky"
+      top={0}
+      backgroundColor="gray.50"
     >
-      <DrawButton mr={4} label="Container" component={Container} canvas connectors={connectors} />
-      <DrawButton mr={4} label="Button" component={Btn} connectors={connectors} />
-      <DrawButton label="Text" component={Txt} connectors={connectors} />
+      <Box />
+
+      <Flex>
+        <DrawButton mr={4} label="Container" component={Container} canvas connectors={connectors} />
+        <DrawButton mr={4} label="Button" component={Btn} connectors={connectors} />
+        <DrawButton label="Text" component={Txt} connectors={connectors} />
+      </Flex>
+
+      <IconButton
+        icon={<MdCode />}
+        onClick={useCallback(
+          () =>
+            updateEditorState((state) => {
+              state.rightSidebarOpenPane =
+                state.rightSidebarOpenPane === RightSidebarOpenPane.QueryBuilder
+                  ? RightSidebarOpenPane.StyleOptions
+                  : RightSidebarOpenPane.QueryBuilder;
+            }),
+          [updateEditorState]
+        )}
+      />
     </Flex>
   );
 }
