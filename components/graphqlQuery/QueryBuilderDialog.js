@@ -6,7 +6,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay
+  ModalOverlay,
 } from '@chakra-ui/modal';
 import QueryBuilder from './QueryBuilder';
 
@@ -17,7 +17,7 @@ export default function QueryBuilderDialog({ isOpen, onClose }) {
       <ModalContent>
         <ModalHeader>Query Builder</ModalHeader>
         <ModalCloseButton />
-        <ModalBody>
+        <ModalBody sx={{ maxHeight: 500, overflowY: 'auto' }}>
           <QueryBuilder />
         </ModalBody>
         <ModalFooter>
