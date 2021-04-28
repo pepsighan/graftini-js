@@ -12,7 +12,7 @@ import QueryBuilder from './QueryBuilder';
 
 export default function QueryBuilderDialog({ isOpen, onClose }) {
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={onClose} size="4xl">
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Query Builder</ModalHeader>
