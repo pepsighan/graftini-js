@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
-import { forwardRef, useCallback } from 'react';
+import { QueryContext } from 'components/RenderQueries';
+import { render } from 'micromustache';
+import { forwardRef, useCallback, useContext } from 'react';
 import Editor from 'rich-markdown-editor';
 import { rgbaToCss } from 'utils/colors';
 import { parsePositiveInteger } from 'utils/parser';
@@ -18,7 +20,7 @@ export default function Text({ name, content, ...rest }) {
 
   return (
     <Outline name={name}>
-      <Render ref={drag} {...rest} content={content}>
+      <RenderMarkup ref={drag} {...rest}>
         <Editor
           defaultValue={content}
           theme={{
@@ -32,7 +34,7 @@ export default function Text({ name, content, ...rest }) {
             [setProp]
           )}
         />
-      </Render>
+      </RenderMarkup>
     </Outline>
   );
 }
@@ -45,7 +47,7 @@ Text.craft = {
   },
 };
 
-const Render = forwardRef(({ color, fontSize, content, children }, ref) => {
+const RenderMarkup = forwardRef(({ color, fontSize, children }, ref) => {
   return (
     <div
       ref={ref}
@@ -54,12 +56,15 @@ const Render = forwardRef(({ color, fontSize, content, children }, ref) => {
         fontSize,
       }}
     >
-      {/* The children is only going to be present when editing. When previewing or actually
-      rendering it to the user, the content is going to be provided. */}
-      {children ?? content}
+      {children}
     </div>
   );
 });
+
+const Render = ({ color, fontSize, content }) => {
+  const result = useContext(QueryContext);
+  return <RenderMarkup color={color} fontSize={fontSize} children={render(content, result)} />;
+};
 
 Text.Render = Render;
 
