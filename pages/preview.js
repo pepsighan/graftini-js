@@ -1,5 +1,6 @@
 import PreviewNavigation from 'components/preview/PreviewNavigation';
 import Render from 'components/Render';
+import RenderQueries from 'components/RenderQueries';
 import { useCallback } from 'react';
 import { useEditorState } from 'store/editor';
 
@@ -9,7 +10,9 @@ export default function Preview() {
   return (
     <>
       <PreviewNavigation />
-      <Render markup={markup} />
+      <RenderQueries>
+        <Render markup={markup} />
+      </RenderQueries>
     </>
   );
 }
