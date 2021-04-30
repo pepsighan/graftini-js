@@ -14,11 +14,20 @@ export default function Render({ componentId, markup }: RenderProps) {
   const type = typeof component.type === 'string' ? component.type : component.type.resolvedName;
   const Component = components[type];
 
-  return (
-    <Component.Render {...component.props}>
-      {component.nodes.map((node) => (
-        <Render key={node} componentId={node} markup={markup} />
-      ))}
-    </Component.Render>
-  );
+  const { children, ...rest } = component.props;
+
+  // If the component has an explicit children prop defined, then use it (for ex: in Button).
+  // TODO: Move the implementation of Button from explicit children to the one where it is a
+  // canvas.
+  let resolvedChildren = children;
+  if (!children && component.nodes.length > 0) {
+    // Do not create children if there are no nodes. The renderer needlessly passes
+    // an empty array, which can make some components think that a children exists
+    // (for ex: Text).
+    resolvedChildren = component.nodes.map((node) => (
+      <Render key={node} componentId={node} markup={markup} />
+    ));
+  }
+
+  return <Component.Render {...rest} children={resolvedChildren} />;
 }
