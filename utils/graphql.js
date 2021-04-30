@@ -1,4 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import config from './config';
 
 /**
  * Creates a new apollo client for both frontend and backend.
@@ -7,7 +8,7 @@ export function createApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
     link: new HttpLink({
-      uri: 'http://127.0.0.3:8080/index.php?graphql',
+      uri: config.USER_GRAPHQL_URL,
     }),
     cache: new InMemoryCache(),
   });
