@@ -27,6 +27,9 @@ export default function Text({ name, color, fontSize, content }) {
       >
         <Editor
           defaultValue={content}
+          theme={{
+            background: 'transparent',
+          }}
           onChange={useCallback(
             (getText) =>
               setProp((props) => {
