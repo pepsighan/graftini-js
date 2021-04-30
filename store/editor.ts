@@ -22,11 +22,13 @@ type SavedQuery = {
   };
 };
 
+export const rootComponentId = 'ROOT';
+
 export const useEditorState = create<WithImmerSetter<UseEditorState>>((set) => ({
   rightSidebarOpenPane: RightSidebarOpenPane.StyleOptions,
   savedQueries: [],
   markup: {
-    ROOT: {
+    [rootComponentId]: {
       type: {
         resolvedName: 'Root',
       },
