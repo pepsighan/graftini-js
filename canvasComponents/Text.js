@@ -29,7 +29,8 @@ export default function Text({ name, content, ...rest }) {
           onChange={useCallback(
             (getText) =>
               setProp((props) => {
-                props.content = getText();
+                // There are \ escapes in the string. So, naively unescaping the whole thing.
+                props.content = getText().replaceAll(/\\/g, '');
               }),
             [setProp]
           )}
@@ -63,6 +64,7 @@ const RenderMarkup = forwardRef(({ color, fontSize, children }, ref) => {
 
 const Render = ({ color, fontSize, content }) => {
   const result = useContext(QueryContext);
+  console.log(content);
   return <RenderMarkup color={color} fontSize={fontSize} children={render(content, result)} />;
 };
 
