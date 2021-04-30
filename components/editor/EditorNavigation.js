@@ -31,7 +31,7 @@ function DrawButton({ connectors, mr, label, component: Component, canvas }) {
   );
 }
 
-export default function Navigation() {
+export default function EditorNavigation() {
   const { connectors } = useEditor();
   const updateEditorState = useImmerSetter(useEditorState);
 
