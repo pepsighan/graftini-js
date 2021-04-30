@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
-import { useCallback } from 'react';
+import { forwardRef, useCallback } from 'react';
 import Editor from 'rich-markdown-editor';
 import { rgbaToCss } from 'utils/colors';
 import { parsePositiveInteger } from 'utils/parser';
@@ -10,7 +10,7 @@ import NumberInput from './form/NumberInput';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
-export default function Text({ name, color, fontSize, content }) {
+export default function Text({ name, content, ...rest }) {
   const {
     connectors: { drag },
     actions: { setProp },
@@ -18,13 +18,7 @@ export default function Text({ name, color, fontSize, content }) {
 
   return (
     <Outline name={name}>
-      <div
-        ref={drag}
-        css={{
-          color: rgbaToCss(color),
-          fontSize,
-        }}
-      >
+      <Render ref={drag} {...rest} content={content}>
         <Editor
           defaultValue={content}
           theme={{
@@ -38,7 +32,7 @@ export default function Text({ name, color, fontSize, content }) {
             [setProp]
           )}
         />
-      </div>
+      </Render>
     </Outline>
   );
 }
@@ -51,18 +45,23 @@ Text.craft = {
   },
 };
 
-Text.Render = ({ color, fontSize, content }) => {
+const Render = forwardRef(({ color, fontSize, content, children }, ref) => {
   return (
     <div
+      ref={ref}
       css={{
         color: rgbaToCss(color),
         fontSize,
       }}
     >
-      {content}
+      {/* The children is only going to be present when editing. When previewing or actually
+      rendering it to the user, the content is going to be provided. */}
+      {children ?? content}
     </div>
   );
-};
+});
+
+Text.Render = Render;
 
 function Options({ componentId }) {
   return (

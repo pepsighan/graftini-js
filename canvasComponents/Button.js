@@ -1,35 +1,22 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
+import { forwardRef } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
-export default function Button({ name, padding, backgroundColor, color, children }) {
+export default function Button({ name, children, ...rest }) {
   const {
     connectors: { drag },
   } = useNode();
 
   return (
     <Outline name={name}>
-      <button
-        ref={drag}
-        css={{
-          display: 'block',
-          width: '100%',
-          paddingTop: padding?.top,
-          paddingRight: padding?.right,
-          paddingBottom: padding?.bottom,
-          paddingLeft: padding?.left,
-          backgroundColor: rgbaToCss(backgroundColor),
-          color: rgbaToCss(color),
-          borderRadius: 4,
-          outline: 'none',
-        }}
-      >
+      <Render ref={drag} {...rest}>
         {children}
-      </button>
+      </Render>
     </Outline>
   );
 }
@@ -43,9 +30,10 @@ Button.craft = {
   },
 };
 
-Button.Render = ({ padding, backgroundColor, color, children }) => {
+const Render = forwardRef(({ padding, backgroundColor, color, children }, ref) => {
   return (
     <button
+      ref={ref}
       css={{
         display: 'block',
         width: '100%',
@@ -62,7 +50,9 @@ Button.Render = ({ padding, backgroundColor, color, children }) => {
       {children}
     </button>
   );
-};
+});
+
+Button.Render = Render;
 
 Button.Options = ({ componentId }) => {
   return (

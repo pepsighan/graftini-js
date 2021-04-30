@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
-import { useCallback } from 'react';
+import { forwardRef, useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
@@ -10,41 +10,23 @@ import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
-export default function Container({
-  name,
-  width,
-  height,
-  padding,
-  margin,
-  backgroundColor,
-  children,
-}) {
+export default function Container({ name, width, height, children, ...rest }) {
   const {
     connectors: { drag },
   } = useNode();
 
   return (
     <Outline name={name} width={width}>
-      <div
+      <Render
         ref={drag}
-        css={{
-          width,
-          // If there is no children and no height, give it some so that it is visible.
-          // TODO: https://github.com/pepsighan/nocode/issues/15.
-          height: height ?? (!children ? 80 : null),
-          marginTop: margin?.top,
-          marginRight: margin?.right,
-          marginBottom: margin?.bottom,
-          marginLeft: margin?.left,
-          paddingTop: padding?.top,
-          paddingRight: padding?.right,
-          paddingBottom: padding?.bottom,
-          paddingLeft: padding?.left,
-          backgroundColor: rgbaToCss(backgroundColor),
-        }}
+        width={width}
+        // If there is no children and no height, give it some so that it is visible.
+        // TODO: https://github.com/pepsighan/nocode/issues/15.
+        height={height ?? (!children ? 80 : null)}
+        {...rest}
       >
         {children}
-      </div>
+      </Render>
     </Outline>
   );
 }
@@ -59,9 +41,10 @@ Container.craft = {
   },
 };
 
-Container.Render = ({ width, height, padding, margin, backgroundColor, children }) => {
+const Render = forwardRef(({ width, height, padding, margin, backgroundColor, children }, ref) => {
   return (
     <div
+      ref={ref}
       css={{
         width,
         height,
@@ -79,7 +62,9 @@ Container.Render = ({ width, height, padding, margin, backgroundColor, children 
       {children}
     </div>
   );
-};
+});
+
+Container.Render = Render;
 
 function Options({ componentId }) {
   return (

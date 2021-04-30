@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
+import { forwardRef } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -10,19 +11,9 @@ export default function Root({ backgroundColor, children }) {
   } = useNode();
 
   return (
-    <div
-      ref={connect}
-      css={{
-        width: '100%',
-        minHeight: '100vh',
-        backgroundColor: rgbaToCss(backgroundColor),
-        // The following padding is provided so that any nested elements do have overflow an overflowing
-        // margin when it is set.
-        padding: 0.1,
-      }}
-    >
+    <Render ref={connect} backgroundColor={backgroundColor}>
       {children}
-    </div>
+    </Render>
   );
 }
 
@@ -32,9 +23,10 @@ Root.craft = {
   },
 };
 
-Root.Render = ({ backgroundColor, children }) => {
+const Render = forwardRef(({ backgroundColor, children }, ref) => {
   return (
     <div
+      ref={ref}
       css={{
         width: '100%',
         minHeight: '100vh',
@@ -47,7 +39,9 @@ Root.Render = ({ backgroundColor, children }) => {
       {children}
     </div>
   );
-};
+});
+
+Root.Render = Render;
 
 Root.Options = ({ componentId }) => {
   return (
