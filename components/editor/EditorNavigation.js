@@ -6,9 +6,11 @@ import { default as Btn } from 'canvasComponents/Button';
 import Container from 'canvasComponents/Container';
 import { default as Txt } from 'canvasComponents/Text';
 import { useCallback } from 'react';
+import { CgScreen } from 'react-icons/cg';
 import { MdCode, MdImportContacts } from 'react-icons/md';
 import { RightSidebarOpenPane, useEditorState } from 'store/editor';
 import { useImmerSetter } from 'store/zustand';
+import Link from 'next/link';
 
 function DrawButton({ connectors, mr, label, component: Component, canvas }) {
   const ref = useCallback(
@@ -29,7 +31,7 @@ function DrawButton({ connectors, mr, label, component: Component, canvas }) {
   );
 }
 
-export default function Navigation() {
+export default function EditorNavigation() {
   const { connectors } = useEditor();
   const updateEditorState = useImmerSetter(useEditorState);
 
@@ -51,19 +53,25 @@ export default function Navigation() {
         <DrawButton label="Text" component={Txt} connectors={connectors} />
       </Flex>
 
-      <IconButton
-        icon={<MdCode />}
-        onClick={useCallback(
-          () =>
-            updateEditorState((state) => {
-              state.rightSidebarOpenPane =
-                state.rightSidebarOpenPane === RightSidebarOpenPane.QueryBuilder
-                  ? RightSidebarOpenPane.StyleOptions
-                  : RightSidebarOpenPane.QueryBuilder;
-            }),
-          [updateEditorState]
-        )}
-      />
+      <Flex>
+        <IconButton
+          icon={<MdCode />}
+          onClick={useCallback(
+            () =>
+              updateEditorState((state) => {
+                state.rightSidebarOpenPane =
+                  state.rightSidebarOpenPane === RightSidebarOpenPane.QueryBuilder
+                    ? RightSidebarOpenPane.StyleOptions
+                    : RightSidebarOpenPane.QueryBuilder;
+              }),
+            [updateEditorState]
+          )}
+        />
+
+        <Link href="/preview">
+          <IconButton ml={4} icon={<CgScreen />} />
+        </Link>
+      </Flex>
     </Flex>
   );
 }

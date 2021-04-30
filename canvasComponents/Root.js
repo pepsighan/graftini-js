@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
+import { forwardRef } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -10,8 +11,22 @@ export default function Root({ backgroundColor, children }) {
   } = useNode();
 
   return (
+    <Render ref={connect} backgroundColor={backgroundColor}>
+      {children}
+    </Render>
+  );
+}
+
+Root.craft = {
+  props: {
+    backgroundColor: { r: 255, g: 255, b: 255, a: 1 },
+  },
+};
+
+const Render = forwardRef(({ backgroundColor, children }, ref) => {
+  return (
     <div
-      ref={connect}
+      ref={ref}
       css={{
         width: '100%',
         minHeight: '100vh',
@@ -24,13 +39,9 @@ export default function Root({ backgroundColor, children }) {
       {children}
     </div>
   );
-}
+});
 
-Root.craft = {
-  props: {
-    backgroundColor: { r: 255, g: 255, b: 255, a: 1 },
-  },
-};
+Root.Render = Render;
 
 Root.Options = ({ componentId }) => {
   return (

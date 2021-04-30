@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { useNode } from '@craftjs/core';
-import { useCallback } from 'react';
+import { QueryContext } from 'components/RenderQueries';
+import { render } from 'micromustache';
+import { forwardRef, useCallback, useContext } from 'react';
 import Editor from 'rich-markdown-editor';
 import { rgbaToCss } from 'utils/colors';
 import { parsePositiveInteger } from 'utils/parser';
@@ -10,7 +12,7 @@ import NumberInput from './form/NumberInput';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
-export default function Text({ name, color, fontSize, content }) {
+export default function Text({ name, content, ...rest }) {
   const {
     connectors: { drag },
     actions: { setProp },
@@ -18,24 +20,22 @@ export default function Text({ name, color, fontSize, content }) {
 
   return (
     <Outline name={name}>
-      <div
-        ref={drag}
-        css={{
-          color: rgbaToCss(color),
-          fontSize,
-        }}
-      >
+      <RenderMarkup ref={drag} {...rest}>
         <Editor
           defaultValue={content}
+          theme={{
+            background: 'transparent',
+          }}
           onChange={useCallback(
             (getText) =>
               setProp((props) => {
-                props.content = getText();
+                // There are \ escapes in the string. So, naively unescaping the whole thing.
+                props.content = getText().replaceAll(/\\/g, '');
               }),
             [setProp]
           )}
         />
-      </div>
+      </RenderMarkup>
     </Outline>
   );
 }
@@ -47,6 +47,28 @@ Text.craft = {
     fontSize: 16,
   },
 };
+
+const RenderMarkup = forwardRef(({ color, fontSize, children }, ref) => {
+  return (
+    <div
+      ref={ref}
+      css={{
+        color: rgbaToCss(color),
+        fontSize,
+      }}
+    >
+      {children}
+    </div>
+  );
+});
+
+const Render = ({ color, fontSize, content }) => {
+  const result = useContext(QueryContext);
+  console.log(content);
+  return <RenderMarkup color={color} fontSize={fontSize} children={render(content, result)} />;
+};
+
+Text.Render = Render;
 
 function Options({ componentId }) {
   return (
