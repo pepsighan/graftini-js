@@ -59,6 +59,28 @@ Container.craft = {
   },
 };
 
+Container.Render = ({ width, height, padding, margin, backgroundColor, children }) => {
+  return (
+    <div
+      css={{
+        width,
+        height,
+        marginTop: margin?.top,
+        marginRight: margin?.right,
+        marginBottom: margin?.bottom,
+        marginLeft: margin?.left,
+        paddingTop: padding?.top,
+        paddingRight: padding?.right,
+        paddingBottom: padding?.bottom,
+        paddingLeft: padding?.left,
+        backgroundColor: rgbaToCss(backgroundColor),
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
 function Options({ componentId }) {
   return (
     <CanvasForm

@@ -43,6 +43,27 @@ Button.craft = {
   },
 };
 
+Button.Render = ({ padding, backgroundColor, color, children }) => {
+  return (
+    <button
+      css={{
+        display: 'block',
+        width: '100%',
+        paddingTop: padding?.top,
+        paddingRight: padding?.right,
+        paddingBottom: padding?.bottom,
+        paddingLeft: padding?.left,
+        backgroundColor: rgbaToCss(backgroundColor),
+        color: rgbaToCss(color),
+        borderRadius: 4,
+        outline: 'none',
+      }}
+    >
+      {children}
+    </button>
+  );
+};
+
 Button.Options = ({ componentId }) => {
   return (
     <CanvasForm componentId={componentId}>

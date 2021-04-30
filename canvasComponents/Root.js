@@ -32,6 +32,23 @@ Root.craft = {
   },
 };
 
+Root.Render = ({ backgroundColor, children }) => {
+  return (
+    <div
+      css={{
+        width: '100%',
+        minHeight: '100vh',
+        backgroundColor: rgbaToCss(backgroundColor),
+        // The following padding is provided so that any nested elements do have overflow an overflowing
+        // margin when it is set.
+        padding: 0.1,
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
 Root.Options = ({ componentId }) => {
   return (
     <CanvasForm componentId={componentId}>

@@ -51,6 +51,19 @@ Text.craft = {
   },
 };
 
+Text.Render = ({ color, fontSize, content }) => {
+  return (
+    <div
+      css={{
+        color: rgbaToCss(color),
+        fontSize,
+      }}
+    >
+      {content}
+    </div>
+  );
+};
+
 function Options({ componentId }) {
   return (
     <CanvasForm

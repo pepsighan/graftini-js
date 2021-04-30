@@ -15,10 +15,10 @@ export default function Render({ componentId, markup }: RenderProps) {
   const Component = components[type];
 
   return (
-    <Component {...component.props}>
+    <Component.Render {...component.props}>
       {component.nodes.map((node) => (
         <Render key={node} componentId={node} markup={markup} />
       ))}
-    </Component>
+    </Component.Render>
   );
 }
