@@ -27,8 +27,8 @@ export default function Queries() {
 
       <Box mb={4}>
         {savedQueries.map((it) => (
-          <Flex justifyContent="space-between" alignItems="center" mb={2}>
-            <Text key={it.id}>{it.variableName}</Text>
+          <Flex key={it.id} justifyContent="space-between" alignItems="center" mb={2}>
+            <Text>{it.variableName}</Text>
             <IconButton size="xs" colorScheme="red" onClick={onQueryDelete(it.id)}>
               <MdDelete />
             </IconButton>
