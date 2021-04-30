@@ -39,7 +39,6 @@ function SingleQuery({ variableName, query, queryResults, children }) {
     variableName,
   ]);
 
-  const result = useQuery(gql(gqlQuery));
-
-  return children({ [variableName]: result, ...queryResults });
+  const { data } = useQuery(gql(gqlQuery));
+  return children({ [variableName]: data, ...queryResults });
 }
