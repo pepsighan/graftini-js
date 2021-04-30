@@ -22,7 +22,7 @@ export default function Queries() {
       </Box>
 
       <Button onClick={onOpen}>New Query</Button>
-      <QueryBuilderDialog isOpen={isOpen} onClose={onClose} />
+      <QueryBuilderDialog key={isOpen ? 0 : 1} isOpen={isOpen} onClose={onClose} />
     </>
   );
 }
