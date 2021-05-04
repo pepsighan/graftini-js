@@ -7,7 +7,7 @@ import Container from 'canvasComponents/Container';
 import { default as Txt } from 'canvasComponents/Text';
 import { useCallback } from 'react';
 import { CgScreen } from 'react-icons/cg';
-import { MdCode, MdImportContacts } from 'react-icons/md';
+import { MdArrowBack, MdCode, MdImportContacts } from 'react-icons/md';
 import { RightSidebarOpenPane, useEditorState } from 'store/editor';
 import { useImmerSetter } from 'store/zustand';
 import Link from 'next/link';
@@ -45,7 +45,11 @@ export default function EditorNavigation() {
       top={0}
       backgroundColor="gray.50"
     >
-      <Box />
+      <Box>
+        <Link href="/">
+          <IconButton icon={<MdArrowBack />} size="sm" />
+        </Link>
+      </Box>
 
       <Flex>
         <DrawButton mr={4} label="Container" component={Container} canvas connectors={connectors} />
