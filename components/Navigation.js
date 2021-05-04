@@ -1,6 +1,21 @@
 import { Button, Flex, Text } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
+import { useCallback } from 'react';
+import { useIsLoggedIn, loginWithGitHub } from 'store/auth';
 
 export default function Navigation() {
+  const { push } = useRouter();
+
+  const isLoggedIn = useIsLoggedIn();
+  const onLogin = useCallback(() => {
+    if (isLoggedIn) {
+      push('/dashboard');
+      return;
+    }
+
+    loginWithGitHub();
+  }, [isLoggedIn, push]);
+
   return (
     <Flex
       py={2}
@@ -12,7 +27,9 @@ export default function Navigation() {
       backgroundColor="gray.50"
     >
       <Text fontWeight="bold">Nocodepress</Text>
-      <Button colorScheme="blue">Login</Button>
+      <Button colorScheme="blue" onClick={onLogin}>
+        Login
+      </Button>
     </Flex>
   );
 }

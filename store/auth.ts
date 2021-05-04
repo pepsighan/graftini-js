@@ -1,9 +1,9 @@
-import create from 'zustand';
 import firebase from 'firebase/app';
+import produce from 'immer';
 import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
+import create from 'zustand';
 import { useImmerSetter, WithImmerSetter } from './zustand';
-import produce from 'immer';
 
 /**
  * A logged in user object.
@@ -15,7 +15,8 @@ type User = {
 };
 
 type AuthStore = {
-  user: User | false | null;
+  user?: User;
+  isLoggedIn?: boolean;
 };
 
 /**
@@ -35,26 +36,23 @@ export function logout(): Promise<void> {
 
 /**
  * Hook to get the currently logged in user.
- * If null, then the store has not been initialized.
- * If false, then the user is not logged in.
- * If it has value, then the user is logged in.
  */
 export const useAuth = create<WithImmerSetter<AuthStore>>((set) => ({
   user: null,
+  isLoggedIn: null,
   set: (fn) => set(produce(fn)),
 }));
 
 /**
- * Hook to get whether the user is logged in. The inverse of boolean value does not mean
- * `not logged in`. Use `useIsNotLoggedIn` for that.
+ * Get the user object within the auth state.
  */
-export const useIsLoggedIn = () =>
-  useAuth(useCallback((state) => state.user !== null && state.user !== false, []));
+export const useUser = () => useAuth(useCallback((state) => state.user, []));
 
 /**
- * Hook to get whether the user is not logged in.
+ * Hook to get whether the user is logged in. It may be null if the logged in status
+ * is not yet know. This may happen during first load.
  */
-export const useIsNotLoggedIn = () => useAuth(useCallback((state) => state.user === false, []));
+export const useIsLoggedIn = () => useAuth(useCallback((state) => state.isLoggedIn, []));
 
 /**
  * Hook to listen on firebase auth and update the halka state referred to by `useAuth`.
@@ -66,7 +64,8 @@ export function useAuthListener() {
     firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
         set((state) => {
-          state.user = false;
+          state.user = null;
+          state.isLoggedIn = false;
         });
         return;
       }
@@ -77,6 +76,7 @@ export function useAuthListener() {
           email: user.email,
           photoURL: user.photoURL,
         };
+        state.isLoggedIn = true;
       });
     });
   }, [set]);
