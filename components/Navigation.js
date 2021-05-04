@@ -14,6 +14,7 @@ export default function Navigation() {
     }
 
     loginWithGitHub();
+    push('/dashboard');
   }, [isLoggedIn, push]);
 
   return (
