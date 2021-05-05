@@ -3,7 +3,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { useAuthListener } from 'store/auth';
 import 'utils/firebase';
-import { initializeAppApollo } from 'utils/graphql';
+import { initializeAppApollo } from 'utils/graphqlApp';
 
 export default function MyApp({ Component, pageProps }) {
   const apolloClient = useMemo(() => initializeAppApollo(pageProps.initialApolloState), [
