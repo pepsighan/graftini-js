@@ -4,26 +4,26 @@ import config from './config';
 /**
  * Creates a new apollo client for both frontend and backend.
  */
-export function createApolloClient() {
+function createApolloClient(uri) {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
-    link: new HttpLink({
-      uri: config.USER_GRAPHQL_URL,
-    }),
+    link: new HttpLink({ uri }),
     cache: new InMemoryCache(),
   });
 }
 
 // Cached apollo client;
-let apolloClient;
+let apolloClientCache = {
+  userClient: null,
+  appClient: null,
+};
 
 /**
- * Initialize the apollo client for the frontend. Do not use this in the backend.
- * For backend use [createApolloClient] instead since it does not require any
- * caching between separate requests.
+ * Initialize the apollo client for the frontend.
  */
-export function initializeApollo(initialState) {
-  apolloClient = apolloClient ?? createApolloClient();
+function initializeApollo(initialState, uri, kind) {
+  apolloClientCache[kind] = apolloClientCache[kind] ?? createApolloClient(uri);
+  const apolloClient = apolloClientCache[kind];
 
   if (initialState) {
     // Get existing cache, loaded during client side data fetching.
@@ -35,4 +35,20 @@ export function initializeApollo(initialState) {
   }
 
   return apolloClient;
+}
+
+export function initializeUserApollo(initialState) {
+  return initializeApollo(initialState, config.USER_GRAPHQL_URL, 'userClient');
+}
+
+export function createUserApollo() {
+  return createApolloClient(config.USER_GRAPHQL_URL);
+}
+
+export function initializeAppApollo(initialState) {
+  return initializeApollo(initialState, config.APP_GRAPHQL_URL, 'appClient');
+}
+
+export function createAppApollo() {
+  return createApolloClient(config.APP_GRAPHQL_URL);
 }
