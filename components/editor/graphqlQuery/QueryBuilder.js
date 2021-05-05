@@ -1,6 +1,6 @@
 import { Box, Flex } from '@chakra-ui/layout';
 import { useMemo } from 'react';
-import { useClientGraphQLSchema } from 'store/graphqlIntrospection';
+import { useClientGraphQLSchema } from 'store/userStore/graphqlIntrospection';
 import FieldName from './FieldName';
 import QueryText from './QueryText';
 import QueryTree from './QueryTree';

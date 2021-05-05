@@ -2,14 +2,12 @@ import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
 import config from './config';
 
 /**
- * Creates a new apollo client for both frontend and backend.
+ * Creates a new apollo client for both frontend and ui-backend using the server backend.
  */
-export function createApolloClient() {
+export function createUserApolloClient() {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
-    link: new HttpLink({
-      uri: config.USER_GRAPHQL_URL,
-    }),
+    link: new HttpLink({ uri: config.USER_GRAPHQL_URL }),
     cache: new InMemoryCache(),
   });
 }
@@ -18,12 +16,10 @@ export function createApolloClient() {
 let apolloClient;
 
 /**
- * Initialize the apollo client for the frontend. Do not use this in the backend.
- * For backend use [createApolloClient] instead since it does not require any
- * caching between separate requests.
+ * Initialize the apollo client for the frontend. Use [createUserApolloClient] if using in SSR.
  */
-export function initializeApollo(initialState) {
-  apolloClient = apolloClient ?? createApolloClient();
+export function initializeUserApollo(initialState) {
+  apolloClient = apolloClient ?? createUserApolloClient();
 
   if (initialState) {
     // Get existing cache, loaded during client side data fetching.
