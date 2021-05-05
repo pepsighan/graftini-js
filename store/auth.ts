@@ -1,22 +1,16 @@
+import { gql, useQuery } from '@apollo/client';
 import firebase from 'firebase/app';
-import produce from 'immer';
-import { useRouter } from 'next/router';
 import { useCallback, useEffect } from 'react';
 import create from 'zustand';
-import { useImmerSetter, WithImmerSetter } from './zustand';
 
 /**
  * A logged in user object.
  */
 type User = {
-  fullName: string;
+  id: number;
+  firstName?: string;
+  lastName?: string;
   email: string;
-  photoURL?: string;
-};
-
-type AuthStore = {
-  user?: User;
-  isLoggedIn?: boolean;
 };
 
 /**
@@ -34,74 +28,62 @@ export function logout(): Promise<void> {
   return firebase.auth().signOut();
 }
 
-/**
- * Hook to get the currently logged in user.
- */
-export const useAuth = create<WithImmerSetter<AuthStore>>((set) => ({
-  user: null,
+type IsLoggedInState = {
+  isLoggedIn?: boolean;
+  loggedIn: () => void;
+  loggedOut: () => void;
+};
+
+const useIsLoggedInState = create<IsLoggedInState>((set) => ({
   isLoggedIn: null,
-  set: (fn) => set(produce(fn)),
+  loggedIn: () => set({ isLoggedIn: true }),
+  loggedOut: () => set({ isLoggedIn: false }),
 }));
 
-/**
- * Get the user object within the auth state.
- */
-export const useUser = () => useAuth(useCallback((state) => state.user, []));
+export const useIsLoggedIn = () => useIsLoggedInState(useCallback((state) => state.isLoggedIn, []));
 
 /**
- * Hook to get whether the user is logged in. It may be null if the logged in status
- * is not yet know. This may happen during first load.
- */
-export const useIsLoggedIn = () => useAuth(useCallback((state) => state.isLoggedIn, []));
-
-/**
- * Hook to listen on firebase auth and update the halka state referred to by `useAuth`.
+ * Hook to listen on firebase auth and update the current logged in state.
  */
 export function useAuthListener() {
-  const set = useImmerSetter(useAuth);
+  const loggedIn = useIsLoggedInState(useCallback((state) => state.loggedIn, []));
+  const loggedOut = useIsLoggedInState(useCallback((state) => state.loggedOut, []));
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((user) => {
       if (!user) {
-        set((state) => {
-          state.user = null;
-          state.isLoggedIn = false;
-        });
+        loggedOut();
         return;
       }
 
-      set((state) => {
-        state.user = {
-          fullName: user.displayName,
-          email: user.email,
-          photoURL: user.photoURL,
-        };
-        state.isLoggedIn = true;
-      });
+      loggedIn();
     });
-  }, [set]);
+  }, [loggedIn, loggedOut]);
 }
 
 /**
- * Hook that redirects the app back after login. This function checks for `redirectUrl` query
- * param to redirect back to if present. Otherwise redirects to `/dashboard`.
+ * Hook to get the currently logged in user and the logged in state.
  */
-export function useRedirectBackAfterLogin() {
-  const router = useRouter();
+export function useAuthUser() {
+  const { data, ...rest } = useQuery(
+    gql`
+      query GetMe {
+        me {
+          id
+          firstName
+          lastName
+          email
+        }
+      }
+    `
+  );
 
-  return useCallback(() => {
-    // Using router's query params does not give the latest value.
-    const search = new URLSearchParams(window.location.search);
-    const redirectUrl = search.get('redirectUrl');
+  // Refetch the user whenever the auth state changes.
+  const isLoggedIn = useIsLoggedIn();
+  const refetch = rest.refetch;
+  useEffect(() => {
+    refetch();
+  }, [isLoggedIn, refetch]);
 
-    if (!redirectUrl) {
-      // Redirect to /dashboard.
-      router.push('/dashboard');
-      return;
-    }
-
-    // The redirectUrl may be encoded to make it safe for usage as a query param.
-    const decodedUrl = decodeURIComponent(redirectUrl as string);
-    router.push(decodedUrl);
-  }, [router]);
+  return { user: data?.me as User, isLoggedIn, ...rest };
 }
