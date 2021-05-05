@@ -8,8 +8,9 @@ import RightSidebar from 'components/editor/RightSidebar';
 import { useCallback } from 'react';
 import { useEditorState } from 'store/editor';
 import { useImmerSetter } from 'store/zustand';
+import { protectedPage } from 'utils/auth';
 
-export default function Dashboard() {
+export default protectedPage(function Dashboard() {
   const updateEditorState = useImmerSetter(useEditorState);
 
   return (
@@ -41,4 +42,4 @@ export default function Dashboard() {
       </Flex>
     </Editor>
   );
-}
+});
