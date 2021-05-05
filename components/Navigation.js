@@ -2,13 +2,13 @@ import { Button, Flex, Text } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { loginWithGitHub, useAuthUser, useIsLoggedIn } from 'store/auth';
+import { loginWithGitHub, logout, useAuthUser } from 'store/auth';
 
 export default function Navigation() {
   const { push } = useRouter();
 
-  const onLogin = useCallback(() => {
-    loginWithGitHub();
+  const onLogin = useCallback(async () => {
+    await loginWithGitHub();
     push('/dashboard');
   }, [push]);
 
@@ -31,9 +31,15 @@ export default function Navigation() {
         </Button>
       )}
       {user && (
-        <Link href="/dashboard">
-          <Button colorScheme="blue">Dashboard</Button>
-        </Link>
+        <Flex>
+          <Link href="/dashboard">
+            <Button colorScheme="blue">Dashboard</Button>
+          </Link>
+
+          <Button ml={2} onClick={logout}>
+            Logout
+          </Button>
+        </Flex>
       )}
     </Flex>
   );
