@@ -7,7 +7,7 @@ import create from 'zustand';
  * A logged in user object.
  */
 type User = {
-  id: number;
+  string: number;
   firstName?: string;
   lastName?: string;
   email: string;

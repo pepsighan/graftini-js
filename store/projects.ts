@@ -1,7 +1,7 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 
 type Project = {
-  id: number;
+  id: string;
   name: string;
 };
 
@@ -25,7 +25,7 @@ export function useMyProjects() {
 
 type CreateProjectResponse = {
   createProject: {
-    id: number;
+    id: string;
     name: string;
   };
 };
@@ -51,4 +51,38 @@ export function useCreateProject() {
     `,
     { refetchQueries: [{ query: QUERY_MY_PROJECTS }] }
   );
+}
+
+type MyProject = {
+  id: string;
+  name: string;
+  pages: {
+    id: string;
+    name: string;
+    route: string;
+  }[];
+};
+
+/**
+ * Hook to get my project in full detail.
+ */
+export function useMyProject({ projectId }) {
+  const { data, ...rest } = useQuery(
+    gql`
+      query GetMyProjectPages($id: ID!) {
+        myProject(id: $id) {
+          id
+          name
+          pages {
+            id
+            name
+            route
+          }
+        }
+      }
+    `,
+    { variables: { id: projectId } }
+  );
+
+  return { project: data?.myProject as MyProject | null, ...rest };
 }
