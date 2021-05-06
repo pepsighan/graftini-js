@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client';
 import PreviewNavigation from 'components/preview/PreviewNavigation';
 import Render from 'components/Render';
 import RenderQueries from 'components/RenderQueries';
+import SEO from 'components/SEO';
 import { useCallback, useMemo } from 'react';
 import { useEditorState } from 'store/editor';
 import { protectedPage } from 'utils/auth';
@@ -13,6 +14,7 @@ export default protectedPage(function Preview() {
 
   return (
     <>
+      <SEO title="Preview" />
       <PreviewNavigation />
       <ApolloProvider client={userApolloClient}>
         <RenderQueries>

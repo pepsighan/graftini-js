@@ -1,5 +1,6 @@
 import { Button, Container, Flex, Heading, Skeleton, Stack } from '@chakra-ui/react';
 import Navigation from 'components/Navigation';
+import SEO from 'components/SEO';
 import { useMyProjects } from 'store/projects';
 import { protectedPage } from 'utils/auth';
 
@@ -8,8 +9,8 @@ export default protectedPage(function Projects() {
 
   return (
     <>
+      <SEO title="All Projects" />
       <Navigation />
-
       <Container mt={4} maxW="container.lg">
         <Flex alignItems="center" justifyContent="space-between">
           <Heading size="md" mb={4}>
