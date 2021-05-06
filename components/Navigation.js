@@ -24,7 +24,11 @@ export default function Navigation() {
       top={0}
       backgroundColor="gray.50"
     >
-      <Text fontWeight="bold">Nocodepress</Text>
+      <Link href="/" passHref>
+        <Text as="a" fontWeight="bold">
+          Nocodepress
+        </Text>
+      </Link>
       {!user && (
         <Button colorScheme="blue" onClick={onLogin}>
           Login
