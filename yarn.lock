@@ -760,6 +760,13 @@
     lodash "^4.17.20"
     tiny-invariant "^1.0.6"
 
+"@digitalmaas/uuid-base62@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@digitalmaas/uuid-base62/-/uuid-base62-1.0.1.tgz#25d50169e1a7cac83afca655ff3e6dacd9a49d17"
+  integrity sha512-MTaTVyZ6XEET4w55bZVxZQc6nTNgUJM0XkzAGP4prquELxpXnWYTqbCXq3w7cCRG+uVrvfvJ0C3B0oeuhHIRow==
+  dependencies:
+    base-x "^3.0.8"
+
 "@emotion/babel-plugin@^11.3.0":
   version "11.3.0"
   resolved "https://registry.yarnpkg.com/@emotion/babel-plugin/-/babel-plugin-11.3.0.tgz#3a16850ba04d8d9651f07f3fb674b3436a4fb9d7"
@@ -1780,6 +1787,13 @@ balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
+
+base-x@^3.0.8:
+  version "3.0.8"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-3.0.8.tgz#1e1106c2537f0162e8b52474a557ebb09000018d"
+  integrity sha512-Rl/1AWP4J/zRrk54hhlxH4drNxPJXYUaKffODVI53/dAsV4t9fBxyxYKAVPU1XBHxYwOWP9h9H0hM2MVw4YfJA==
+  dependencies:
+    safe-buffer "^5.0.1"
 
 base64-js@^1.0.2:
   version "1.5.1"

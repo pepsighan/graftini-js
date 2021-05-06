@@ -8,6 +8,7 @@ import {
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
+import { encode } from '@digitalmaas/uuid-base62';
 import Navigation from 'components/Navigation';
 import NewProjectDialog from 'components/NewProjectDialog';
 import SEO from 'components/SEO';
@@ -55,7 +56,7 @@ export default protectedPage(function Projects() {
 
 function ProjectItem({ id, name }) {
   return (
-    <Link href={`/dashboard/project/${id}`} passHref>
+    <Link href={`/dashboard/project/${encode(id)}`} passHref>
       <Button as="a" isFullWidth justifyContent="flex-start" height="unset" py={2}>
         <Avatar name="P" size="sm" mr={3} />
 
