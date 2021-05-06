@@ -8,13 +8,13 @@ import {
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { encode } from '@digitalmaas/uuid-base62';
 import Navigation from 'components/Navigation';
 import NewProjectDialog from 'components/NewProjectDialog';
 import SEO from 'components/SEO';
 import Link from 'next/link';
 import { useMyProjects } from 'store/projects';
 import { protectedPage } from 'utils/auth';
+import { slugify } from 'utils/url';
 
 export default protectedPage(function Projects() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -56,7 +56,7 @@ export default protectedPage(function Projects() {
 
 function ProjectItem({ id, name }) {
   return (
-    <Link href={`/dashboard/project/${encode(id)}`} passHref>
+    <Link href={`/dashboard/project/${slugify({ id, name })}`} passHref>
       <Button as="a" isFullWidth justifyContent="flex-start" height="unset" py={2}>
         <Avatar name="P" size="sm" mr={3} />
 
