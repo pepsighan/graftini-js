@@ -9,7 +9,7 @@ export default function Navigation() {
 
   const onLogin = useCallback(async () => {
     await loginWithGitHub();
-    push('/dashboard');
+    push('/dashboard/projects');
   }, [push]);
 
   const { user } = useAuthUser();
@@ -32,7 +32,7 @@ export default function Navigation() {
       )}
       {user && (
         <Flex>
-          <Link href="/dashboard">
+          <Link href="/dashboard/projects">
             <Button colorScheme="blue">Dashboard</Button>
           </Link>
 
