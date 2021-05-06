@@ -38,7 +38,7 @@ export default function NewProjectDialog({ isOpen, onClose }) {
       }
 
       if (data?.createProject?.id) {
-        push(`/dashboard/project/${data.createProject.id}`);
+        await push(`/dashboard/project/${data.createProject.id}`);
       }
     },
     [createProject, push]
