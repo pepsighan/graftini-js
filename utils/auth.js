@@ -6,7 +6,7 @@ import { useIsLoggedIn } from 'store/auth';
  * HOC to protect the given page. Its not server rendereable right now.
  */
 export function protectedPage(Component) {
-  return () => {
+  return function ProtectedPage() {
     const isLoggedIn = useIsLoggedIn();
     const { push } = useRouter();
 
