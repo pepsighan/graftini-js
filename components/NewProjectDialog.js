@@ -9,15 +9,36 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { useCreateProject } from 'store/projects';
 
 export default function NewProjectDialog({ isOpen, onClose }) {
   const { register, handleSubmit } = useForm();
+  const { push } = useRouter();
+  const [createProject] = useCreateProject();
 
-  const onSubmit = useCallback((state) => {
-    console.log(state);
-  }, []);
+  const onSubmit = useCallback(
+    async (state) => {
+      const { data, errors } = await createProject({
+        variables: {
+          input: {
+            name: state.name,
+          },
+        },
+      });
+
+      if (errors?.length > 0) {
+        return;
+      }
+
+      if (data?.createProject?.id) {
+        push(`/dashboard/project/${data.createProject.id}`);
+      }
+    },
+    [createProject, push]
+  );
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
