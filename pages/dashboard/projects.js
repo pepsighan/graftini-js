@@ -1,10 +1,12 @@
-import { Button, Container, Flex, Heading, Skeleton, Stack } from '@chakra-ui/react';
+import { Button, Container, Flex, Heading, Skeleton, Stack, useDisclosure } from '@chakra-ui/react';
 import Navigation from 'components/Navigation';
+import NewProjectDialog from 'components/NewProjectDialog';
 import SEO from 'components/SEO';
 import { useMyProjects } from 'store/projects';
 import { protectedPage } from 'utils/auth';
 
 export default protectedPage(function Projects() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const { myProjects, loading } = useMyProjects();
 
   return (
@@ -17,7 +19,7 @@ export default protectedPage(function Projects() {
             All Projects
           </Heading>
 
-          <Button size="sm" colorScheme="blue">
+          <Button size="sm" colorScheme="blue" onClick={onOpen}>
             New
           </Button>
         </Flex>
@@ -31,6 +33,8 @@ export default protectedPage(function Projects() {
           </Stack>
         )}
       </Container>
+
+      <NewProjectDialog isOpen={isOpen} onClose={onClose} />
     </>
   );
 });
