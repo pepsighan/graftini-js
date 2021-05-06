@@ -63,26 +63,47 @@ type MyProject = {
   }[];
 };
 
+const QUERY_USE_MY_PROJECT = gql`
+  query GetMyProjectPages($id: ID!) {
+    myProject(id: $id) {
+      id
+      name
+      pages {
+        id
+        name
+        route
+      }
+    }
+  }
+`;
+
 /**
  * Hook to get my project in full detail.
  */
 export function useMyProject({ projectId }) {
-  const { data, ...rest } = useQuery(
+  const { data, ...rest } = useQuery(QUERY_USE_MY_PROJECT, { variables: { id: projectId } });
+  return { project: data?.myProject as MyProject | null, ...rest };
+}
+
+/**
+ * Hook to create a new page in the project.
+ */
+export function useCreatePage({ projectId }) {
+  return useMutation(
     gql`
-      query GetMyProjectPages($id: ID!) {
-        myProject(id: $id) {
-          id
-          name
-          pages {
-            id
-            name
-            route
-          }
-        }
+      mutation CreateProjectPage($input: NewPage!) {
+        id
+        name
+        route
       }
     `,
-    { variables: { id: projectId } }
+    {
+      refetchQueries: [
+        {
+          query: QUERY_USE_MY_PROJECT,
+          variables: { id: projectId },
+        },
+      ],
+    }
   );
-
-  return { project: data?.myProject as MyProject | null, ...rest };
 }
