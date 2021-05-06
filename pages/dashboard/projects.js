@@ -14,17 +14,21 @@ export default protectedPage(function Projects() {
       <SEO title="All Projects" />
       <Navigation />
       <Container mt={4} maxW="container.lg">
-        <Flex alignItems="center" justifyContent="space-between">
-          <Heading size="md" mb={4}>
-            All Projects
-          </Heading>
+        <Flex alignItems="center" justifyContent="space-between" mb={4}>
+          <Heading size="md">All Projects</Heading>
 
           <Button size="sm" colorScheme="blue" onClick={onOpen}>
             New
           </Button>
         </Flex>
 
-        {!loading && myProjects.map((it) => <ProjectItem key={it.id} name={it.name} />)}
+        {!loading && (
+          <Stack>
+            {myProjects.map((it) => (
+              <ProjectItem key={it.id} name={it.name} />
+            ))}
+          </Stack>
+        )}
         {loading && (
           <Stack>
             <Skeleton height={8} />
@@ -40,5 +44,5 @@ export default protectedPage(function Projects() {
 });
 
 function ProjectItem({ name }) {
-  return <Button>{name}</Button>;
+  return <Button isFullWidth>{name}</Button>;
 }
