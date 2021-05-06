@@ -1,7 +1,17 @@
-import { Button, Container, Flex, Heading, Skeleton, Stack, useDisclosure } from '@chakra-ui/react';
+import {
+  Avatar,
+  Button,
+  Container,
+  Flex,
+  Heading,
+  Skeleton,
+  Stack,
+  useDisclosure,
+} from '@chakra-ui/react';
 import Navigation from 'components/Navigation';
 import NewProjectDialog from 'components/NewProjectDialog';
 import SEO from 'components/SEO';
+import Link from 'next/link';
 import { useMyProjects } from 'store/projects';
 import { protectedPage } from 'utils/auth';
 
@@ -25,7 +35,7 @@ export default protectedPage(function Projects() {
         {!loading && (
           <Stack>
             {myProjects.map((it) => (
-              <ProjectItem key={it.id} name={it.name} />
+              <ProjectItem key={it.id} id={it.id} name={it.name} />
             ))}
           </Stack>
         )}
@@ -43,6 +53,14 @@ export default protectedPage(function Projects() {
   );
 });
 
-function ProjectItem({ name }) {
-  return <Button isFullWidth>{name}</Button>;
+function ProjectItem({ id, name }) {
+  return (
+    <Link href={`/dashboard/project/${id}`} passHref>
+      <Button as="a" isFullWidth justifyContent="flex-start" height="unset" py={2}>
+        <Avatar name="P" size="sm" mr={3} />
+
+        {name}
+      </Button>
+    </Link>
+  );
 }
