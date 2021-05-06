@@ -55,7 +55,7 @@ export default protectedPage(function Project() {
       <Editor resolver={components} onNodesChange={onNodesChange}>
         <EditorNavigation />
         <Flex>
-          <LeftSidebar />
+          <LeftSidebar projectId={projectId} />
           <Canvas />
           <RightSidebar />
         </Flex>
