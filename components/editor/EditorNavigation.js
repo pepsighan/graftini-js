@@ -46,7 +46,7 @@ export default function EditorNavigation() {
       backgroundColor="gray.50"
     >
       <Box>
-        <Link href="/">
+        <Link href="/dashboard/projects">
           <IconButton icon={<MdArrowBack />} size="sm" />
         </Link>
       </Box>
