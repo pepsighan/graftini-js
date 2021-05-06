@@ -13,6 +13,7 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useCreateProject } from 'store/projects';
+import { slugify } from 'utils/url';
 
 export default function NewProjectDialog({ isOpen, onClose }) {
   const {
@@ -38,7 +39,12 @@ export default function NewProjectDialog({ isOpen, onClose }) {
       }
 
       if (data?.createProject?.id) {
-        await push(`/dashboard/project/${data.createProject.id}`);
+        await push(
+          `/dashboard/project/${slugify({
+            id: data.createProject.id,
+            name: data.createProject.name,
+          })}`
+        );
       }
     },
     [createProject, push]
