@@ -15,7 +15,11 @@ import { useForm } from 'react-hook-form';
 import { useCreateProject } from 'store/projects';
 
 export default function NewProjectDialog({ isOpen, onClose }) {
-  const { register, handleSubmit } = useForm();
+  const {
+    register,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm();
   const { push } = useRouter();
   const [createProject] = useCreateProject();
 
@@ -51,7 +55,9 @@ export default function NewProjectDialog({ isOpen, onClose }) {
             <Input {...register('name')} />
           </ModalBody>
           <ModalFooter>
-            <Button type="submit">Create</Button>
+            <Button type="submit" isLoading={isSubmitting}>
+              Create
+            </Button>
           </ModalFooter>
         </ModalContent>
       </form>
