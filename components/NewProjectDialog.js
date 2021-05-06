@@ -52,7 +52,7 @@ export default function NewProjectDialog({ isOpen, onClose }) {
           <ModalHeader>New Project</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input {...register('name')} />
+            <Input {...register('name')} placeholder="Name of the project" />
           </ModalBody>
           <ModalFooter>
             <Button type="submit" isLoading={isSubmitting}>
