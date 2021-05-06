@@ -85,5 +85,5 @@ export function useAuthUser() {
     refetch();
   }, [isLoggedIn, refetch]);
 
-  return { user: data?.me as User, isLoggedIn, ...rest };
+  return { user: data?.me as User | null, isLoggedIn, ...rest };
 }
