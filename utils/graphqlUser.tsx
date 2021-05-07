@@ -1,4 +1,5 @@
-import { ApolloClient, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache, NormalizedCacheObject } from '@apollo/client';
+import { createContext, useContext } from 'react';
 import config from './config';
 
 /**
@@ -18,7 +19,7 @@ let apolloClient;
 /**
  * Initialize the apollo client for the frontend. Use [createUserApolloClient] if using in SSR.
  */
-export function initializeUserApollo(initialState) {
+export function initializeUserApollo(initialState: any): ApolloClient<NormalizedCacheObject> {
   apolloClient = apolloClient ?? createUserApolloClient();
 
   if (initialState) {
@@ -31,4 +32,22 @@ export function initializeUserApollo(initialState) {
   }
 
   return apolloClient;
+}
+
+const UserApolloClientContext = createContext<ApolloClient<NormalizedCacheObject> | null>(null);
+
+/**
+ * Use this provider to pass in a user specified graphql's apollo client.
+ */
+export function UserApolloProvider({ client, children }) {
+  return (
+    <UserApolloClientContext.Provider value={client}>{children}</UserApolloClientContext.Provider>
+  );
+}
+
+/**
+ * Gets the apollo client for the user graphql service.
+ */
+export function useUserApolloClient(): ApolloClient<NormalizedCacheObject> {
+  return useContext(UserApolloClientContext);
 }
