@@ -13,6 +13,7 @@ import { useEditorState } from 'store/editor';
 import { useMyProject } from 'store/projects';
 import { useImmerSetter } from 'store/zustand';
 import { protectedPage } from 'utils/auth';
+import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 import { decodeSlug } from 'utils/url';
 
 export default protectedPage(function Project() {
@@ -40,6 +41,8 @@ export default protectedPage(function Project() {
     [updateEditorState]
   );
 
+  const userApollo = useMemo(() => initializeUserApollo(), []);
+
   if (loading) {
     // TODO: Show some skeleton loading of the editor here.
     return null;
@@ -52,14 +55,16 @@ export default protectedPage(function Project() {
   return (
     <>
       <SEO title="Project" />
-      <Editor resolver={components} onNodesChange={onNodesChange}>
-        <EditorNavigation />
-        <Flex>
-          <LeftSidebar projectId={projectId} />
-          <Canvas />
-          <RightSidebar />
-        </Flex>
-      </Editor>
+      <UserApolloProvider client={userApollo}>
+        <Editor resolver={components} onNodesChange={onNodesChange}>
+          <EditorNavigation />
+          <Flex>
+            <LeftSidebar projectId={projectId} />
+            <Canvas />
+            <RightSidebar />
+          </Flex>
+        </Editor>
+      </UserApolloProvider>
     </>
   );
 });
