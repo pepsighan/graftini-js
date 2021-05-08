@@ -1,21 +1,25 @@
 import { useDisclosure } from '@chakra-ui/hooks';
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Button, Stack, Text, Tag } from '@chakra-ui/react';
 import NewPageDialog from 'components/NewPageDialog';
 import { useMyProject } from 'store/projects';
 
-function PageItem({ name }) {
+function PageItem({ name, route }) {
   return (
     <Button
       isFullWidth
-      justifyContent="flex-start"
+      justifyContent="space-between"
+      alignItems="center"
       fontSize="sm"
       fontWeight="normal"
       height="unset"
       lineHeight="unset"
-      py={1}
-      borderRadius="none"
+      py={2}
     >
       {name}
+
+      <Tag fontSize="xs" fontFamily="mono">
+        {route}
+      </Tag>
     </Button>
   );
 }
@@ -28,11 +32,11 @@ export default function Pages({ projectId }) {
     <Box mb={4}>
       <Text fontWeight="bold">Pages</Text>
 
-      <Box mt={2} borderRadius="md" overflow="hidden">
+      <Stack mt={2}>
         {project.pages.map((it) => (
-          <PageItem key={it.id} name={it.name} />
+          <PageItem key={it.id} name={it.name} route={it.route} />
         ))}
-      </Box>
+      </Stack>
 
       <Button mt={2} onClick={onOpen} isFullWidth size="sm">
         New Page
