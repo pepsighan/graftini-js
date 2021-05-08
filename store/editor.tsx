@@ -13,12 +13,10 @@ export enum RightSidebarOpenPane {
 
 type UseEditorState = {
   rightSidebarOpenPane: RightSidebarOpenPane;
-  pages: EditorPage[];
-};
-
-type EditorPage = {
-  id: string;
-  markup: SerializedNodes;
+  currentOpenPage?: string;
+  pages: {
+    [id: string]: SerializedNodes;
+  };
 };
 
 export const rootComponentId = 'ROOT';
@@ -26,10 +24,11 @@ export const rootComponentId = 'ROOT';
 const createEditorState = (pages: ProjectPage[]) =>
   create<WithImmerSetter<UseEditorState>>((set) => ({
     rightSidebarOpenPane: RightSidebarOpenPane.StyleOptions,
-    pages: pages.map((it) => ({
-      id: it.id,
-      markup: parseMarkup(it.markup),
-    })),
+    currentOpenPage: pages.length > 0 ? pages[0].id : null,
+    pages: pages.reduce((acc, cur) => {
+      acc[cur.id] = parseMarkup(cur.markup);
+      return acc;
+    }, {}),
     set: (fn) => set(produce(fn)),
   }));
 
