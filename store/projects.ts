@@ -1,4 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
+import { useEditorState, parseMarkup } from './editor';
+import { useImmerSetter } from './zustand';
 
 type Project = {
   id: string;
@@ -105,13 +107,14 @@ export function useMyProject({ projectId }) {
  * Hook to create a new page in the project.
  */
 export function useCreatePage({ projectId }) {
+  const updateEditorState = useImmerSetter(useEditorState);
+
   return useMutation(
     gql`
       mutation CreateProjectPage($input: NewPage!) {
         createPage(input: $input) {
           id
-          name
-          route
+          markup
         }
       }
     `,
@@ -122,6 +125,15 @@ export function useCreatePage({ projectId }) {
           variables: { id: projectId },
         },
       ],
+      onCompleted: (data) => {
+        // Add this page so that the UI can edit it.
+        updateEditorState((state) => {
+          state.pages.push({
+            id: data.createPage.id,
+            markup: parseMarkup(data.createPage.markup),
+          });
+        });
+      },
     }
   );
 }
