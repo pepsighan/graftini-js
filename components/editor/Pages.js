@@ -3,11 +3,13 @@ import { Box, Button, Stack, Tag, Text } from '@chakra-ui/react';
 import NewPageDialog from 'components/NewPageDialog';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useMemo } from 'react';
 import { useMyProject } from 'store/projects';
-import { encode } from 'utils/url';
+import { decode, encode } from 'utils/url';
 
 function PageItem({ id, name, route }) {
   const { query } = useRouter();
+  const decodedId = useMemo(() => (query.page ? decode(query.page) : null), [query.page]);
 
   // TODO: Do not cause history to change. Since the pages are used to change
   // the views in the editor rather than change route for the app.
@@ -30,6 +32,7 @@ function PageItem({ id, name, route }) {
         height="unset"
         lineHeight="unset"
         py={2}
+        isActive={id === decodedId}
       >
         {name}
 
