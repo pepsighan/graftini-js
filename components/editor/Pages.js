@@ -4,7 +4,20 @@ import NewPageDialog from 'components/NewPageDialog';
 import { useMyProject } from 'store/projects';
 
 function PageItem({ name }) {
-  return <Button isFullWidth>{name}</Button>;
+  return (
+    <Button
+      isFullWidth
+      justifyContent="flex-start"
+      fontSize="sm"
+      fontWeight="normal"
+      height="unset"
+      lineHeight="unset"
+      py={1}
+      borderRadius="none"
+    >
+      {name}
+    </Button>
+  );
 }
 
 export default function Pages({ projectId }) {
@@ -15,13 +28,13 @@ export default function Pages({ projectId }) {
     <Box mb={4}>
       <Text fontWeight="bold">Pages</Text>
 
-      <Box my={4}>
+      <Box mt={2} borderRadius="md" overflow="hidden">
         {project.pages.map((it) => (
           <PageItem key={it.id} name={it.name} />
         ))}
       </Box>
 
-      <Button onClick={onOpen} isFullWidth size="sm">
+      <Button mt={2} onClick={onOpen} isFullWidth size="sm">
         New Page
       </Button>
 
