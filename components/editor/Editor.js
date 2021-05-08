@@ -41,6 +41,7 @@ export default function Editor({ projectId }) {
   );
 
   const userApollo = useMemo(() => initializeUserApollo(), []);
+  const currentPageId = useEditorState(useCallback((state) => state.currentOpenPage, []));
 
   return (
     <ProjectIdContext.Provider value={projectId}>
@@ -49,7 +50,7 @@ export default function Editor({ projectId }) {
           <EditorNavigation />
           <Flex>
             <LeftSidebar projectId={projectId} />
-            <Canvas />
+            <Canvas key={currentPageId} />
             <RightSidebar />
           </Flex>
         </Edt>
