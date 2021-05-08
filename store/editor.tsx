@@ -49,6 +49,9 @@ export function EditorStateProvider({ initialPages, children }: EditorStateProvi
 
 export const useEditorState = useStore as ReturnType<typeof createEditorState>;
 
+/**
+ * Parse the markup that is received from the backend to the one readable by craftjs.
+ */
 export function parseMarkup(markup: string): SerializedNodes {
   const json = JSON.parse(markup);
 
@@ -68,4 +71,23 @@ export function parseMarkup(markup: string): SerializedNodes {
     };
     return acc;
   }, {} as SerializedNodes);
+}
+
+/**
+ * Turn the markup readable by craftjs to a format accepted by the backend.
+ */
+export function transformMarkup(markup: SerializedNodes): string {
+  const obj = Object.keys(markup).reduce((acc, cur) => {
+    const item = markup[cur];
+    acc[cur] = {
+      id: cur,
+      component: typeof item.type === 'string' ? item.type : item.type.resolvedName,
+      props: item.props,
+      isCanvas: item.isCanvas,
+      childrenNodes: item.nodes,
+    };
+    return acc;
+  }, {});
+
+  return JSON.stringify(obj);
 }
