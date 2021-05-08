@@ -23,7 +23,7 @@ export default protectedPage(function Project() {
   }
 
   return (
-    <EditorStateProvider initialPages={project.page} initialQueries={project.queries}>
+    <EditorStateProvider key={projectId} initialPages={project.pages}>
       <SEO title="Project" />
       <Editor projectId={projectId} />
     </EditorStateProvider>
