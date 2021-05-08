@@ -1,24 +1,27 @@
 import { Box, Button, Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
 import { useCallback } from 'react';
 import { MdDelete } from 'react-icons/md';
-import { useEditorState } from 'store/editor';
-import { useMyProjectQueries } from 'store/projects';
-import { useImmerSetter } from 'store/zustand';
+import { useDeleteQuery, useMyProjectQueries } from 'store/projects';
 import { useProjectId } from './Editor';
 import QueryBuilderDialog from './graphqlQuery/QueryBuilderDialog';
 
 export default function Queries() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { queries, loading } = useMyProjectQueries({ projectId: useProjectId() });
 
-  const updateEditorState = useImmerSetter(useEditorState);
+  const projectId = useProjectId();
+  const { queries, loading } = useMyProjectQueries({ projectId });
+  const [deleteQuery] = useDeleteQuery({ projectId });
+
   const onQueryDelete = useCallback(
     (id) => () => {
-      updateEditorState((state) => {
-        state.savedQueries = state.savedQueries.filter((it) => it.id !== id);
+      deleteQuery({
+        variables: {
+          projectId,
+          queryId: id,
+        },
       });
     },
-    [updateEditorState]
+    [deleteQuery, projectId]
   );
 
   return (

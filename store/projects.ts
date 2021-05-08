@@ -178,3 +178,26 @@ export function useCreateQuery({ projectId }) {
     }
   );
 }
+
+/**
+ * Hook to delete a query of a project.
+ */
+export function useDeleteQuery({ projectId }) {
+  return useMutation(
+    gql`
+      mutation DeleteProjectQuery($projectId: ID!, $queryId: ID!) {
+        deleteQuery(projectId: $projectId, queryId: $queryId) {
+          id
+        }
+      }
+    `,
+    {
+      refetchQueries: [
+        {
+          query: QUERY_MY_PROJECT_QUERIES,
+          variables: { projectId },
+        },
+      ],
+    }
+  );
+}
