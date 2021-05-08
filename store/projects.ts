@@ -135,21 +135,46 @@ export function useCreatePage({ projectId }) {
   );
 }
 
+const QUERY_MY_PROJECT_QUERIES = gql`
+  query GetMyProjectQueries($projectId: ID!) {
+    myProject(id: $id) {
+      id
+      queries {
+        id
+        variableName
+        gqlAst
+      }
+    }
+  }
+`;
+
+/**
+ * Hook to get the queries of the project.
+ */
 export function useMyProjectQueries({ projectId }) {
-  const { data, ...rest } = useQuery(
+  const { data, ...rest } = useQuery(QUERY_MY_PROJECT_QUERIES, { variables: { id: projectId } });
+  return { queries: (data?.myProject?.queries ?? []) as Query[], ...rest };
+}
+
+/**
+ * Hook to create a query for a project.
+ */
+export function useCreateQuery({ projectId }) {
+  return useMutation(
     gql`
-      query GetMyProjectQueries($projectId: ID!) {
-        myProject(id: $id) {
+      mutation CreateProjectQuery($input: NewGraphQLQuery!) {
+        createQuery(input: $input) {
           id
-          queries {
-            id
-            variableName
-            gqlAst
-          }
         }
       }
     `,
-    { variables: { id: projectId } }
+    {
+      refetchQueries: [
+        {
+          query: QUERY_MY_PROJECT_QUERIES,
+          variables: { projectId },
+        },
+      ],
+    }
   );
-  return { queries: (data?.myProject?.queries ?? []) as Query[], ...rest };
 }
