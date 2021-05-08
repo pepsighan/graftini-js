@@ -1,26 +1,41 @@
 import { useDisclosure } from '@chakra-ui/hooks';
-import { Box, Button, Stack, Text, Tag } from '@chakra-ui/react';
+import { Box, Button, Stack, Tag, Text } from '@chakra-ui/react';
 import NewPageDialog from 'components/NewPageDialog';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useMyProject } from 'store/projects';
+import { encode } from 'utils/url';
 
-function PageItem({ name, route }) {
+function PageItem({ id, name, route }) {
+  const { query } = useRouter();
+
   return (
-    <Button
-      isFullWidth
-      justifyContent="space-between"
-      alignItems="center"
-      fontSize="sm"
-      fontWeight="normal"
-      height="unset"
-      lineHeight="unset"
-      py={2}
+    <Link
+      href={{
+        pathname: '/dashboard/project/[projectId]',
+        query: {
+          page: encode(id),
+          projectId: query.projectId,
+        },
+      }}
     >
-      {name}
+      <Button
+        isFullWidth
+        justifyContent="space-between"
+        alignItems="center"
+        fontSize="sm"
+        fontWeight="normal"
+        height="unset"
+        lineHeight="unset"
+        py={2}
+      >
+        {name}
 
-      <Tag fontSize="xs" fontFamily="mono">
-        {route}
-      </Tag>
-    </Button>
+        <Tag fontSize="xs" fontFamily="mono">
+          {route}
+        </Tag>
+      </Button>
+    </Link>
   );
 }
 
@@ -34,7 +49,7 @@ export default function Pages({ projectId }) {
 
       <Stack mt={2}>
         {project.pages.map((it) => (
-          <PageItem key={it.id} name={it.name} route={it.route} />
+          <PageItem key={it.id} id={it.id} name={it.name} route={it.route} />
         ))}
       </Stack>
 

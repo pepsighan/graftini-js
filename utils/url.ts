@@ -18,3 +18,5 @@ export function decodeSlug(slug: string): string | null {
 
   return decode(splits[1]);
 }
+
+export { encode, decode };
