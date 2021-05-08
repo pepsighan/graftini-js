@@ -128,10 +128,7 @@ export function useCreatePage({ projectId }) {
       onCompleted: (data) => {
         // Add this page so that the UI can edit it.
         updateEditorState((state) => {
-          state.pages.push({
-            id: data.createPage.id,
-            markup: parseMarkup(data.createPage.markup),
-          });
+          state.pages[data.createPage.id] = parseMarkup(data.createPage.markup);
         });
       },
     }
