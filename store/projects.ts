@@ -60,6 +60,12 @@ type MyProject = {
     id: string;
     name: string;
     route: string;
+    markup: string;
+  }[];
+  queries: {
+    id: string;
+    variableName: string;
+    gqlAst: string;
   }[];
 };
 
@@ -72,6 +78,12 @@ const QUERY_USE_MY_PROJECT = gql`
         id
         name
         route
+        markup
+      }
+      queries {
+        id
+        variableName
+        gqlAst
       }
     }
   }
