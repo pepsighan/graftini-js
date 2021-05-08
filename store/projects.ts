@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { useEditorState, parseMarkup } from './editor';
+import { parseMarkup, useEditorState } from './editor';
 import { useImmerSetter } from './zustand';
 
 type Project = {
@@ -136,4 +136,23 @@ export function useCreatePage({ projectId }) {
       },
     }
   );
+}
+
+export function useMyProjectQueries({ projectId }) {
+  const { data, ...rest } = useQuery(
+    gql`
+      query GetMyProjectQueries($projectId: ID!) {
+        myProject(id: $id) {
+          id
+          queries {
+            id
+            variableName
+            gqlAst
+          }
+        }
+      }
+    `,
+    { variables: { id: projectId } }
+  );
+  return { queries: (data?.myProject?.queries ?? []) as Query[], ...rest };
 }
