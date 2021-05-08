@@ -22,6 +22,9 @@ export function useProjectId() {
   return useContext(ProjectIdContext);
 }
 
+// TODO: Make sure that the sync of the editor state that is done every 5 seconds are not dropped between
+// route changes. Also, they should be done before the browser tab is closed. And also when there is
+// failure, retries should be done.
 export default function Editor({ projectId }) {
   const updateEditorState = useImmerSetter(useEditorState);
   const [updatePageMarkup] = useUpdatePageMarkup();
