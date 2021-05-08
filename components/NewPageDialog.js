@@ -33,8 +33,9 @@ export default function NewPageDialog({ isOpen, onClose, projectId }) {
           },
         },
       });
+      onClose();
     },
-    [createPage, projectId]
+    [createPage, onClose, projectId]
   );
 
   return (
