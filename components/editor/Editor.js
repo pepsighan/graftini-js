@@ -5,8 +5,10 @@ import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/EditorNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
+import { debounce } from 'lodash-es';
 import { createContext, useCallback, useContext, useMemo } from 'react';
-import { useEditorState } from 'store/editor';
+import { transformMarkup, useEditorState } from 'store/editor';
+import { useUpdatePageMarkup } from 'store/projects';
 import { useImmerSetter } from 'store/zustand';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 
@@ -22,6 +24,19 @@ export function useProjectId() {
 
 export default function Editor({ projectId }) {
   const updateEditorState = useImmerSetter(useEditorState);
+  const [updatePageMarkup] = useUpdatePageMarkup();
+
+  const currentPageId = useEditorState(useCallback((state) => state.currentOpenPage, []));
+
+  // Only update the page markup at max once every 5 seconds.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const updatePageMarkupDebounced = useMemo(() => debounce(updatePageMarkup, 5000), [
+    updatePageMarkup,
+    // So that when the page changes, the debouncer also changes. This will let the older
+    // mutation to run even when new ones from a different page are fired up.
+    currentPageId,
+  ]);
+
   const onNodesChange = useCallback(
     (query) => {
       const serialized = query.getSerializedNodes();
@@ -32,16 +47,26 @@ export default function Editor({ projectId }) {
       const hasSome = Object.keys(serialized).length !== 0;
 
       if (hasSome) {
+        // This is for the local switches of the page.
         updateEditorState((state) => {
           state.markup = serialized;
         });
+
+        updatePageMarkupDebounced({
+          variables: {
+            input: {
+              projectId,
+              pageId: currentPageId,
+              markup: transformMarkup(serialized),
+            },
+          },
+        });
       }
     },
-    [updateEditorState]
+    [currentPageId, projectId, updateEditorState, updatePageMarkupDebounced]
   );
 
   const userApollo = useMemo(() => initializeUserApollo(), []);
-  const currentPageId = useEditorState(useCallback((state) => state.currentOpenPage, []));
 
   return (
     <ProjectIdContext.Provider value={projectId}>
