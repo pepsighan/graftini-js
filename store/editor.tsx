@@ -50,5 +50,22 @@ export function EditorStateProvider({ initialPages, children }: EditorStateProvi
 export const useEditorState = useStore as ReturnType<typeof createEditorState>;
 
 export function parseMarkup(markup: string): SerializedNodes {
-  return {};
+  const json = JSON.parse(markup);
+
+  return Object.keys(json).reduce((acc, cur) => {
+    const item = json[cur];
+    acc[cur] = {
+      type: {
+        resolvedName: item.component,
+      },
+      isCanvas: item.isCanvas,
+      nodes: item.childrenNodes ?? [],
+      props: item.props,
+      parent: '',
+      displayName: '-',
+      hidden: false,
+      linkedNodes: {},
+    };
+    return acc;
+  }, {} as SerializedNodes);
 }
