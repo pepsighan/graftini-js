@@ -27,8 +27,6 @@ type SavedQuery = {
 
 type EditorPage = {
   id: string;
-  name: string;
-  route: string;
   markup: SerializedNodes;
 };
 
@@ -40,14 +38,12 @@ const createEditorState = (pages: ProjectPage[], queries: Query[]) =>
     savedQueries: parseQueries(queries),
     pages: pages.map((it) => ({
       id: it.id,
-      name: it.name,
-      route: it.route,
       markup: parseMarkup(it.markup),
     })),
     set: (fn) => set(produce(fn)),
   }));
 
-const { Provider, useStore } = createContext();
+const { Provider, useStore } = createContext<WithImmerSetter<UseEditorState>>();
 
 type EditorStateProviderProps = {
   initialPages: ProjectPage[];
@@ -67,9 +63,9 @@ export function EditorStateProvider({
   return <Provider initialStore={initialStore}>{children}</Provider>;
 }
 
-export const useEditorState = useStore;
+export const useEditorState = useStore as ReturnType<typeof createEditorState>;
 
-function parseMarkup(markup: string): SerializedNodes {
+export function parseMarkup(markup: string): SerializedNodes {
   return {};
 }
 
