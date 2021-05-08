@@ -92,9 +92,11 @@ export function useCreatePage({ projectId }) {
   return useMutation(
     gql`
       mutation CreateProjectPage($input: NewPage!) {
-        id
-        name
-        route
+        createPage(input: $input) {
+          id
+          name
+          route
+        }
       }
     `,
     {
