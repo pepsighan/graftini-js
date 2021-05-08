@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 import { useMyProject } from 'store/projects';
 import { decode, encode } from 'utils/url';
+import { useProjectId } from './Editor';
 
 function PageItem({ id, name, route }) {
   const { query } = useRouter();
@@ -44,9 +45,9 @@ function PageItem({ id, name, route }) {
   );
 }
 
-export default function Pages({ projectId }) {
+export default function Pages() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { project } = useMyProject({ projectId });
+  const { project } = useMyProject({ projectId: useProjectId() });
 
   return (
     <Box mb={4}>
@@ -62,7 +63,7 @@ export default function Pages({ projectId }) {
         New Page
       </Button>
 
-      <NewPageDialog key={isOpen} isOpen={isOpen} onClose={onClose} projectId={projectId} />
+      <NewPageDialog key={isOpen} isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 }

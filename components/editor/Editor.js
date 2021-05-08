@@ -5,10 +5,20 @@ import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/EditorNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
-import { useCallback, useMemo } from 'react';
+import { createContext, useCallback, useContext, useMemo } from 'react';
 import { useEditorState } from 'store/editor';
 import { useImmerSetter } from 'store/zustand';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
+
+export const ProjectIdContext = createContext();
+
+/**
+ * Gets the project id that is currently opened in the editor. This is only
+ * to be used within an editor.
+ */
+export function useProjectId() {
+  return useContext(ProjectIdContext);
+}
 
 export default function Editor({ projectId }) {
   const updateEditorState = useImmerSetter(useEditorState);
@@ -33,15 +43,17 @@ export default function Editor({ projectId }) {
   const userApollo = useMemo(() => initializeUserApollo(), []);
 
   return (
-    <UserApolloProvider client={userApollo}>
-      <Edt resolver={components} onNodesChange={onNodesChange}>
-        <EditorNavigation />
-        <Flex>
-          <LeftSidebar projectId={projectId} />
-          <Canvas />
-          <RightSidebar />
-        </Flex>
-      </Edt>
-    </UserApolloProvider>
+    <ProjectIdContext.Provider value={projectId}>
+      <UserApolloProvider client={userApollo}>
+        <Edt resolver={components} onNodesChange={onNodesChange}>
+          <EditorNavigation />
+          <Flex>
+            <LeftSidebar projectId={projectId} />
+            <Canvas />
+            <RightSidebar />
+          </Flex>
+        </Edt>
+      </UserApolloProvider>
+    </ProjectIdContext.Provider>
   );
 }
