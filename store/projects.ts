@@ -201,3 +201,16 @@ export function useDeleteQuery({ projectId }) {
     }
   );
 }
+
+/**
+ * Hook to update the markup for a page in a project.
+ */
+export function useUpdatePageMarkup() {
+  return useMutation(gql`
+    mutation UpdatePageMarkup($input: UpdatePageMarkup!) {
+      updatePageMarkup(input: $input) {
+        id
+      }
+    }
+  `);
+}
