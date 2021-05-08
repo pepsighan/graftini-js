@@ -9,6 +9,8 @@ import { encode } from 'utils/url';
 function PageItem({ id, name, route }) {
   const { query } = useRouter();
 
+  // TODO: Do not cause history to change. Since the pages are used to change
+  // the views in the editor rather than change route for the app.
   return (
     <Link
       href={{
