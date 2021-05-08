@@ -1,8 +1,9 @@
 import { SerializedNodes } from '@craftjs/core';
 import produce from 'immer';
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
+import { ProjectPage, Query } from './projects';
 import { WithImmerSetter } from './zustand';
 
 export enum RightSidebarOpenPane {
@@ -13,7 +14,7 @@ export enum RightSidebarOpenPane {
 type UseEditorState = {
   rightSidebarOpenPane: RightSidebarOpenPane;
   savedQueries: SavedQuery[];
-  markup: SerializedNodes;
+  pages: EditorPage[];
 };
 
 type SavedQuery = {
@@ -24,24 +25,54 @@ type SavedQuery = {
   };
 };
 
+type EditorPage = {
+  id: string;
+  name: string;
+  route: string;
+  markup: SerializedNodes;
+};
+
 export const rootComponentId = 'ROOT';
 
-const createEditorState = (markup: SerializedNodes) =>
+const createEditorState = (pages: ProjectPage[], queries: Query[]) =>
   create<WithImmerSetter<UseEditorState>>((set) => ({
     rightSidebarOpenPane: RightSidebarOpenPane.StyleOptions,
-    savedQueries: [],
-    markup,
+    savedQueries: parseQueries(queries),
+    pages: pages.map((it) => ({
+      id: it.id,
+      name: it.name,
+      route: it.route,
+      markup: parseMarkup(it.markup),
+    })),
     set: (fn) => set(produce(fn)),
   }));
 
 const { Provider, useStore } = createContext();
 
+type EditorStateProviderProps = {
+  initialPages: ProjectPage[];
+  initialQueries: Query[];
+  children: ReactNode;
+};
+
 /**
  * We need the editor state completely clean for each of the project.
  */
-export function EditorStateProvider({ initialMarkup, children }) {
-  const [initialStore] = useState(() => createEditorState(initialMarkup));
+export function EditorStateProvider({
+  initialPages,
+  initialQueries,
+  children,
+}: EditorStateProviderProps) {
+  const [initialStore] = useState(() => createEditorState(initialPages, initialQueries));
   return <Provider initialStore={initialStore}>{children}</Provider>;
 }
 
 export const useEditorState = useStore;
+
+function parseMarkup(markup: string): SerializedNodes {
+  return {};
+}
+
+function parseQueries(queries: Query[]): SavedQuery[] {
+  return [];
+}

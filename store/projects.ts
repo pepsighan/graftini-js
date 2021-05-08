@@ -56,17 +56,21 @@ export function useCreateProject() {
 type MyProject = {
   id: string;
   name: string;
-  pages: {
-    id: string;
-    name: string;
-    route: string;
-    markup: string;
-  }[];
-  queries: {
-    id: string;
-    variableName: string;
-    gqlAst: string;
-  }[];
+  pages: ProjectPage[];
+  queries: Query[];
+};
+
+export type ProjectPage = {
+  id: string;
+  name: string;
+  route: string;
+  markup: string;
+};
+
+export type Query = {
+  id: string;
+  variableName: string;
+  gqlAst: string;
 };
 
 const QUERY_USE_MY_PROJECT = gql`
