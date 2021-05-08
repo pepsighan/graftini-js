@@ -1,9 +1,10 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/layout';
+import Pages from './Pages';
 
-export default function LeftSidebar() {
+export default function LeftSidebar({ projectId }) {
   return (
-    <Box sx={{ width: 300, bg: 'gray.50', p: 4 }}>
-      <Text>Layers</Text>
+    <Box p={4} width={300} bg="gray.50">
+      <Pages projectId={projectId} />
     </Box>
   );
 }

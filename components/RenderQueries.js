@@ -3,6 +3,7 @@ import { print } from 'graphql';
 import { createContext, useCallback, useMemo } from 'react';
 import { useEditorState } from 'store/editor';
 import { generateGraphQLAST } from 'utils/graphqlAst';
+import { useUserApolloClient } from 'utils/graphqlUser';
 
 export const QueryContext = createContext();
 
@@ -39,6 +40,7 @@ function SingleQuery({ variableName, query, queryResults, children }) {
     variableName,
   ]);
 
-  const { data } = useQuery(gql(gqlQuery));
+  const userApollo = useUserApolloClient();
+  const { data } = useQuery(gql(gqlQuery), { client: userApollo });
   return children({ [variableName]: data, ...queryResults });
 }

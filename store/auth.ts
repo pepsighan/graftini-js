@@ -7,7 +7,7 @@ import create from 'zustand';
  * A logged in user object.
  */
 type User = {
-  id: number;
+  string: number;
   firstName?: string;
   lastName?: string;
   email: string;
@@ -85,5 +85,5 @@ export function useAuthUser() {
     refetch();
   }, [isLoggedIn, refetch]);
 
-  return { user: data?.me as User, isLoggedIn, ...rest };
+  return { user: data?.me as User | null, isLoggedIn, ...rest };
 }

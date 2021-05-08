@@ -1,11 +1,11 @@
-import { ApolloProvider } from '@apollo/client';
 import PreviewNavigation from 'components/preview/PreviewNavigation';
 import Render from 'components/Render';
 import RenderQueries from 'components/RenderQueries';
+import SEO from 'components/SEO';
 import { useCallback, useMemo } from 'react';
 import { useEditorState } from 'store/editor';
 import { protectedPage } from 'utils/auth';
-import { initializeUserApollo } from 'utils/graphqlUser';
+import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 
 export default protectedPage(function Preview() {
   const markup = useEditorState(useCallback((state) => state.markup, []));
@@ -13,12 +13,13 @@ export default protectedPage(function Preview() {
 
   return (
     <>
+      <SEO title="Preview" />
       <PreviewNavigation />
-      <ApolloProvider client={userApolloClient}>
+      <UserApolloProvider client={userApolloClient}>
         <RenderQueries>
           <Render markup={markup} />
         </RenderQueries>
-      </ApolloProvider>
+      </UserApolloProvider>
     </>
   );
 });

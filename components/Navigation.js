@@ -9,7 +9,7 @@ export default function Navigation() {
 
   const onLogin = useCallback(async () => {
     await loginWithGitHub();
-    push('/dashboard');
+    push('/dashboard/projects');
   }, [push]);
 
   const { user } = useAuthUser();
@@ -24,7 +24,11 @@ export default function Navigation() {
       top={0}
       backgroundColor="gray.50"
     >
-      <Text fontWeight="bold">Nocodepress</Text>
+      <Link href="/" passHref>
+        <Text as="a" fontWeight="bold">
+          Nocodepress
+        </Text>
+      </Link>
       {!user && (
         <Button colorScheme="blue" onClick={onLogin}>
           Login
@@ -32,7 +36,7 @@ export default function Navigation() {
       )}
       {user && (
         <Flex>
-          <Link href="/dashboard">
+          <Link href="/dashboard/projects">
             <Button colorScheme="blue">Dashboard</Button>
           </Link>
 
