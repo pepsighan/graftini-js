@@ -52,7 +52,7 @@ export default function Editor({ projectId }) {
       if (hasSome) {
         // This is for the local switches of the page.
         updateEditorState((state) => {
-          state.markup = serialized;
+          state.pages[state.currentOpenPage] = serialized;
         });
 
         updatePageMarkupDebounced({
