@@ -3,13 +3,23 @@ import { Box, Button, Stack, Tag, Text } from '@chakra-ui/react';
 import NewPageDialog from 'components/NewPageDialog';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
+import { useEditorState } from 'store/editor';
 import { useMyProject } from 'store/projects';
-import { decode, encode } from 'utils/url';
+import { useImmerSetter } from 'store/zustand';
+import { encode } from 'utils/url';
+import { useEffectOnce } from 'utils/useEffect';
+import { useProjectId } from './Editor';
 
-function PageItem({ id, name, route }) {
-  const { query } = useRouter();
-  const decodedId = useMemo(() => (query.page ? decode(query.page) : null), [query.page]);
+function PageItem({ id, name, route, slugProjectId }) {
+  const isSelected = useEditorState(useCallback((state) => state.currentOpenPage === id, [id]));
+  const updateEditorState = useImmerSetter(useEditorState);
+
+  const onPageChange = useCallback(() => {
+    updateEditorState((state) => {
+      state.currentOpenPage = id;
+    });
+  }, [id, updateEditorState]);
 
   // TODO: Do not cause history to change. Since the pages are used to change
   // the views in the editor rather than change route for the app.
@@ -19,7 +29,7 @@ function PageItem({ id, name, route }) {
         pathname: '/dashboard/project/[projectId]',
         query: {
           page: encode(id),
-          projectId: query.projectId,
+          projectId: slugProjectId,
         },
       }}
     >
@@ -32,7 +42,8 @@ function PageItem({ id, name, route }) {
         height="unset"
         lineHeight="unset"
         py={2}
-        isActive={id === decodedId}
+        isActive={isSelected}
+        onClick={onPageChange}
       >
         {name}
 
@@ -44,9 +55,29 @@ function PageItem({ id, name, route }) {
   );
 }
 
-export default function Pages({ projectId }) {
+export default function Pages() {
+  const { query, push } = useRouter();
+  const slugProjectId = query.projectId;
+
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { project } = useMyProject({ projectId });
+  const { project } = useMyProject({ projectId: useProjectId() });
+
+  const defaultPageId = useEditorState(
+    useCallback((state) => state.currentOpenPage, []),
+    // Only load the open page for the first time.
+    useCallback(() => false, [])
+  );
+
+  useEffectOnce(() => {
+    // Add the page id to the path.
+    push({
+      pathname: '/dashboard/project/[projectId]',
+      query: {
+        page: encode(defaultPageId),
+        projectId: slugProjectId,
+      },
+    });
+  });
 
   return (
     <Box mb={4}>
@@ -54,7 +85,13 @@ export default function Pages({ projectId }) {
 
       <Stack mt={2}>
         {project.pages.map((it) => (
-          <PageItem key={it.id} id={it.id} name={it.name} route={it.route} />
+          <PageItem
+            key={it.id}
+            id={it.id}
+            name={it.name}
+            route={it.route}
+            slugProjectId={slugProjectId}
+          />
         ))}
       </Stack>
 
@@ -62,7 +99,7 @@ export default function Pages({ projectId }) {
         New Page
       </Button>
 
-      <NewPageDialog key={isOpen} isOpen={isOpen} onClose={onClose} projectId={projectId} />
+      <NewPageDialog key={isOpen} isOpen={isOpen} onClose={onClose} />
     </Box>
   );
 }

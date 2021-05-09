@@ -1,47 +1,17 @@
-import { Flex } from '@chakra-ui/layout';
-import { Editor } from '@craftjs/core';
-import components from 'canvasComponents';
-import Canvas from 'components/editor/Canvas';
-import EditorNavigation from 'components/editor/EditorNavigation';
-import LeftSidebar from 'components/editor/LeftSidebar';
-import RightSidebar from 'components/editor/RightSidebar';
+import Editor from 'components/editor/Editor';
 import SEO from 'components/SEO';
 import { useRouter } from 'next/router';
 import NotFound from 'pages/404';
-import { useCallback, useMemo } from 'react';
-import { useEditorState } from 'store/editor';
+import { useMemo } from 'react';
+import { EditorStateProvider } from 'store/editor';
 import { useMyProject } from 'store/projects';
-import { useImmerSetter } from 'store/zustand';
 import { protectedPage } from 'utils/auth';
-import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 import { decodeSlug } from 'utils/url';
 
 export default protectedPage(function Project() {
   const { query } = useRouter();
   const projectId = useMemo(() => decodeSlug(query.projectId), [query.projectId]);
-
   const { project, loading } = useMyProject({ projectId });
-
-  const updateEditorState = useImmerSetter(useEditorState);
-  const onNodesChange = useCallback(
-    (query) => {
-      const serialized = query.getSerializedNodes();
-
-      // When the editor is first rendered, it returns an empty serialized object.
-      // We want to ignore it. The default nodes are going to be rendered which
-      // at least has a `ROOT` node.
-      const hasSome = Object.keys(serialized).length !== 0;
-
-      if (hasSome) {
-        updateEditorState((state) => {
-          state.markup = serialized;
-        });
-      }
-    },
-    [updateEditorState]
-  );
-
-  const userApollo = useMemo(() => initializeUserApollo(), []);
 
   if (loading) {
     // TODO: Show some skeleton loading of the editor here.
@@ -53,18 +23,9 @@ export default protectedPage(function Project() {
   }
 
   return (
-    <>
+    <EditorStateProvider key={projectId} initialPages={project.pages}>
       <SEO title="Project" />
-      <UserApolloProvider client={userApollo}>
-        <Editor resolver={components} onNodesChange={onNodesChange}>
-          <EditorNavigation />
-          <Flex>
-            <LeftSidebar projectId={projectId} />
-            <Canvas />
-            <RightSidebar />
-          </Flex>
-        </Editor>
-      </UserApolloProvider>
-    </>
+      <Editor projectId={projectId} />
+    </EditorStateProvider>
   );
 });

@@ -8,29 +8,34 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/modal';
-import { nanoid } from 'nanoid';
 import { useCallback } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
-import { useEditorState } from 'store/editor';
-import { useImmerSetter } from 'store/zustand';
+import { useCreateQuery } from 'store/projects';
+import { generateGraphQLAST } from 'utils/graphqlAst';
+import { useProjectId } from '../Editor';
 import QueryBuilder from './QueryBuilder';
 
 export default function QueryBuilderDialog({ isOpen, onClose }) {
   const form = useForm();
-  const updateEditorState = useImmerSetter(useEditorState);
+
+  const projectId = useProjectId();
+  const [createQuery] = useCreateQuery({ projectId });
 
   const onSubmit = useCallback(
-    (values) => {
-      updateEditorState((state) => {
-        state.savedQueries.push({
-          id: nanoid(),
-          variableName: values.variableName,
-          query: values.query,
-        });
+    async (values) => {
+      await createQuery({
+        variables: {
+          input: {
+            projectId,
+            variableName: values.variableName,
+            gqlAst: JSON.stringify(generateGraphQLAST(values.variableName, values.query)),
+          },
+        },
       });
+
       onClose();
     },
-    [onClose, updateEditorState]
+    [createQuery, onClose, projectId]
   );
 
   return (
@@ -44,7 +49,9 @@ export default function QueryBuilderDialog({ isOpen, onClose }) {
             <QueryBuilder />
           </ModalBody>
           <ModalFooter>
-            <Button onClick={form.handleSubmit(onSubmit)}>Save</Button>
+            <Button isLoading={form.formState.isSubmitting} onClick={form.handleSubmit(onSubmit)}>
+              Save
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>

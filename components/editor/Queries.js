@@ -1,22 +1,27 @@
 import { Box, Button, Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
 import { useCallback } from 'react';
 import { MdDelete } from 'react-icons/md';
-import { useEditorState } from 'store/editor';
-import { useImmerSetter } from 'store/zustand';
+import { useDeleteQuery, useMyProjectQueries } from 'store/projects';
+import { useProjectId } from './Editor';
 import QueryBuilderDialog from './graphqlQuery/QueryBuilderDialog';
 
 export default function Queries() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const savedQueries = useEditorState(useCallback((state) => state.savedQueries, []));
 
-  const updateEditorState = useImmerSetter(useEditorState);
+  const projectId = useProjectId();
+  const { queries, loading } = useMyProjectQueries({ projectId });
+  const [deleteQuery] = useDeleteQuery({ projectId });
+
   const onQueryDelete = useCallback(
     (id) => () => {
-      updateEditorState((state) => {
-        state.savedQueries = state.savedQueries.filter((it) => it.id !== id);
+      deleteQuery({
+        variables: {
+          projectId,
+          queryId: id,
+        },
       });
     },
-    [updateEditorState]
+    [deleteQuery, projectId]
   );
 
   return (
@@ -26,7 +31,7 @@ export default function Queries() {
       </Text>
 
       <Box mb={4}>
-        {savedQueries.map((it) => (
+        {queries.map((it) => (
           <Flex key={it.id} justifyContent="space-between" alignItems="center" mb={2}>
             <Text>{it.variableName}</Text>
             <IconButton size="xs" colorScheme="red" onClick={onQueryDelete(it.id)}>
@@ -35,7 +40,7 @@ export default function Queries() {
           </Flex>
         ))}
 
-        {savedQueries.length === 0 && <Text color="gray.500">There are no queries.</Text>}
+        {!loading && queries.length === 0 && <Text color="gray.500">There are no queries.</Text>}
       </Box>
 
       <Button onClick={onOpen}>New Query</Button>

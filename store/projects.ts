@@ -1,4 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
+import { parseMarkup, useEditorState } from './editor';
+import { useImmerSetter } from './zustand';
 
 type Project = {
   id: string;
@@ -56,11 +58,21 @@ export function useCreateProject() {
 type MyProject = {
   id: string;
   name: string;
-  pages: {
-    id: string;
-    name: string;
-    route: string;
-  }[];
+  pages: ProjectPage[];
+  queries: Query[];
+};
+
+export type ProjectPage = {
+  id: string;
+  name: string;
+  route: string;
+  markup: string;
+};
+
+export type Query = {
+  id: string;
+  variableName: string;
+  gqlAst: string;
 };
 
 const QUERY_USE_MY_PROJECT = gql`
@@ -72,6 +84,12 @@ const QUERY_USE_MY_PROJECT = gql`
         id
         name
         route
+        markup
+      }
+      queries {
+        id
+        variableName
+        gqlAst
       }
     }
   }
@@ -89,13 +107,14 @@ export function useMyProject({ projectId }) {
  * Hook to create a new page in the project.
  */
 export function useCreatePage({ projectId }) {
+  const updateEditorState = useImmerSetter(useEditorState);
+
   return useMutation(
     gql`
       mutation CreateProjectPage($input: NewPage!) {
         createPage(input: $input) {
           id
-          name
-          route
+          markup
         }
       }
     `,
@@ -106,6 +125,92 @@ export function useCreatePage({ projectId }) {
           variables: { id: projectId },
         },
       ],
+      onCompleted: (data) => {
+        // Add this page so that the UI can edit it.
+        updateEditorState((state) => {
+          state.pages[data.createPage.id] = parseMarkup(data.createPage.markup);
+        });
+      },
     }
   );
+}
+
+const QUERY_MY_PROJECT_QUERIES = gql`
+  query GetMyProjectQueries($projectId: ID!) {
+    myProject(id: $id) {
+      id
+      queries {
+        id
+        variableName
+        gqlAst
+      }
+    }
+  }
+`;
+
+/**
+ * Hook to get the queries of the project.
+ */
+export function useMyProjectQueries({ projectId }) {
+  const { data, ...rest } = useQuery(QUERY_MY_PROJECT_QUERIES, { variables: { id: projectId } });
+  return { queries: (data?.myProject?.queries ?? []) as Query[], ...rest };
+}
+
+/**
+ * Hook to create a query for a project.
+ */
+export function useCreateQuery({ projectId }) {
+  return useMutation(
+    gql`
+      mutation CreateProjectQuery($input: NewGraphQLQuery!) {
+        createQuery(input: $input) {
+          id
+        }
+      }
+    `,
+    {
+      refetchQueries: [
+        {
+          query: QUERY_MY_PROJECT_QUERIES,
+          variables: { projectId },
+        },
+      ],
+    }
+  );
+}
+
+/**
+ * Hook to delete a query of a project.
+ */
+export function useDeleteQuery({ projectId }) {
+  return useMutation(
+    gql`
+      mutation DeleteProjectQuery($projectId: ID!, $queryId: ID!) {
+        deleteQuery(projectId: $projectId, queryId: $queryId) {
+          id
+        }
+      }
+    `,
+    {
+      refetchQueries: [
+        {
+          query: QUERY_MY_PROJECT_QUERIES,
+          variables: { projectId },
+        },
+      ],
+    }
+  );
+}
+
+/**
+ * Hook to update the markup for a page in a project.
+ */
+export function useUpdatePageMarkup() {
+  return useMutation(gql`
+    mutation UpdatePageMarkup($input: UpdatePageMarkup!) {
+      updatePageMarkup(input: $input) {
+        id
+      }
+    }
+  `);
 }

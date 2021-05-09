@@ -5,8 +5,9 @@ import { useEditorState } from 'store/editor';
 
 export default function Canvas() {
   const defaultMarkup = useEditorState(
-    useCallback((state) => state.markup, []),
+    useCallback((state) => state.pages[state.currentOpenPage], []),
     // Only load the markup on startup because craftjs handles the internal state itself.
+    // Make sure the canvas is re-created when page changes.
     useCallback(() => true, [])
   );
 

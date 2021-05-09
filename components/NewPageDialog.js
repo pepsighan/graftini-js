@@ -8,13 +8,16 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Stack,
+  Stack
 } from '@chakra-ui/react';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useCreatePage } from 'store/projects';
+import { useProjectId } from './editor/Editor';
 
-export default function NewPageDialog({ isOpen, onClose, projectId }) {
+export default function NewPageDialog({ isOpen, onClose }) {
+  const projectId = useProjectId();
+
   const {
     register,
     handleSubmit,
