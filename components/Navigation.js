@@ -26,7 +26,7 @@ export default function Navigation() {
     >
       <Link href="/" passHref>
         <Text as="a" fontWeight="bold">
-          Nocodepress
+          Graftini
         </Text>
       </Link>
       {!user && (

@@ -4,7 +4,7 @@ import Head from 'next/head';
 export default function SEO({ title, description }) {
   return (
     <Head>
-      <title>{title ? `${title} - Nocodepress` : 'Nocodepress'}</title>
+      <title>{title ? `${title} - Graftini` : 'Graftini'}</title>
       <meta
         name="description"
         content={description ?? 'Create dynamic websites without writing a line of code.'}
