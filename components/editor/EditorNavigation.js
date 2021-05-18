@@ -1,22 +1,14 @@
-import { Button, IconButton } from '@chakra-ui/button';
-import { Box, Flex } from '@chakra-ui/layout';
-import { Text } from '@chakra-ui/react';
-import { Element, useEditor } from '@craftjs/core';
-import { default as Btn } from 'canvasComponents/Button';
-import Container from 'canvasComponents/Container';
-import { default as Txt } from 'canvasComponents/Text';
+import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
+import { useCreateComponent } from '@graftini/graft';
+import Link from 'next/link';
 import { useCallback } from 'react';
 import { CgScreen } from 'react-icons/cg';
 import { MdArrowBack, MdCode, MdImportContacts } from 'react-icons/md';
 import { RightSidebarOpenPane, useEditorState } from 'store/editor';
 import { useImmerSetter } from 'store/zustand';
-import Link from 'next/link';
 
-function DrawButton({ connectors, mr, label, component: Component, canvas }) {
-  const ref = useCallback(
-    (ref) => connectors.create(ref, <Element is={Component} canvas={canvas} />),
-    [Component, canvas, connectors]
-  );
+function DrawButton({ mr, label, component }) {
+  const ref = useCreateComponent({ component });
 
   return (
     <Button
@@ -32,7 +24,6 @@ function DrawButton({ connectors, mr, label, component: Component, canvas }) {
 }
 
 export default function EditorNavigation() {
-  const { connectors } = useEditor();
   const updateEditorState = useImmerSetter(useEditorState);
 
   return (
@@ -52,9 +43,9 @@ export default function EditorNavigation() {
       </Box>
 
       <Flex>
-        <DrawButton mr={4} label="Container" component={Container} canvas connectors={connectors} />
-        <DrawButton mr={4} label="Button" component={Btn} connectors={connectors} />
-        <DrawButton label="Text" component={Txt} connectors={connectors} />
+        <DrawButton mr={4} label="Container" component="Container" canvas />
+        <DrawButton mr={4} label="Button" component="Button" />
+        <DrawButton label="Text" component="Text" />
       </Flex>
 
       <Flex>
