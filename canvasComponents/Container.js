@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useNode } from '@craftjs/core';
+import { useEditorState, useElementId, useElementProps } from '@graftini/graft';
 import { forwardRef, useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
@@ -8,37 +8,36 @@ import ColorPicker from './form/ColorPicker';
 import NumberInput from './form/NumberInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
-import Outline from './Outline';
 
-export default function Container({ name, width, height, children, ...rest }) {
-  const {
-    connectors: { drag },
-  } = useNode();
+const Container = forwardRef((_, ref) => {
+  const elementId = useElementId();
+  const hasChildren = useEditorState(
+    useCallback((state) => state[elementId].childrenNodes.length > 0, [elementId])
+  );
+
+  // TODO: Provide a way to select a subsection of props.
+  const { height, ...rest } = useElementProps();
 
   return (
-    <Outline name={name} width={width}>
-      <Render
-        ref={drag}
-        width={width}
-        // If there is no children and no height, give it some so that it is visible.
-        // TODO: https://github.com/pepsighan/nocode/issues/15.
-        height={height ?? (!children ? 80 : null)}
-        {...rest}
-      >
-        {children}
-      </Render>
-    </Outline>
+    <Render
+      ref={ref}
+      // If there is no children and no height, give it some so that it is visible.
+      // TODO: https://github.com/pepsighan/nocode/issues/15.
+      height={height ?? (hasChildren ? null : 80)}
+      {...rest}
+    />
   );
-}
+});
 
-Container.craft = {
-  props: {
+Container.graftOptions = {
+  defaultProps: {
     width: null,
     height: null,
     padding: null,
     margin: {},
     backgroundColor: { r: 220, g: 220, b: 255, a: 1 },
   },
+  isCanvas: true,
 };
 
 const Render = forwardRef(({ width, height, padding, margin, backgroundColor, children }, ref) => {
@@ -98,3 +97,5 @@ function Options({ componentId }) {
 }
 
 Container.Options = Options;
+
+export default Container;
