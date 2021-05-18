@@ -6,6 +6,8 @@ import createContext from 'zustand/context';
 import { ProjectPage } from './projects';
 import { WithImmerSetter } from './zustand';
 
+// TODO: Rename this store to something else. Graft already uses editor to mean the designer.
+
 export enum RightSidebarOpenPane {
   QueryBuilder,
   StyleOptions,
