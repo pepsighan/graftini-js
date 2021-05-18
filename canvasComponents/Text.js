@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
+import { useElementProps } from '@graftini/graft';
 import { QueryContext } from 'components/RenderQueries';
 import { render } from 'micromustache';
 import { forwardRef, useCallback, useContext } from 'react';
-import Editor from 'rich-markdown-editor';
 import { rgbaToCss } from 'utils/colors';
 import { parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
@@ -10,15 +10,12 @@ import ColorPicker from './form/ColorPicker';
 import NumberInput from './form/NumberInput';
 import TextInput from './form/TextInput';
 
-const Text = forwardRef(({ name, content, ...rest }, ref) => {
+const Text = forwardRef((_, ref) => {
+  const { content, ...rest } = useElementProps();
+
   return (
     <RenderMarkup ref={ref} {...rest}>
-      <Editor
-        defaultValue={content}
-        theme={{
-          background: 'transparent',
-        }}
-      />
+      {content}
     </RenderMarkup>
   );
 });
