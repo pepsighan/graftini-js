@@ -37,6 +37,7 @@ Container.graftOptions = {
     margin: {},
     backgroundColor: { r: 220, g: 220, b: 255, a: 1 },
   },
+  isCanvas: true,
 };
 
 const Render = forwardRef(({ width, height, padding, margin, backgroundColor, children }, ref) => {
