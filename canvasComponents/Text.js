@@ -1,5 +1,4 @@
 /** @jsxImportSource @emotion/react */
-import { useNode } from '@craftjs/core';
 import { QueryContext } from 'components/RenderQueries';
 import { render } from 'micromustache';
 import { forwardRef, useCallback, useContext } from 'react';
@@ -10,38 +9,22 @@ import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import NumberInput from './form/NumberInput';
 import TextInput from './form/TextInput';
-import Outline from './Outline';
 
-export default function Text({ name, content, ...rest }) {
-  const {
-    connectors: { drag },
-    actions: { setProp },
-  } = useNode();
-
+const Text = forwardRef(({ name, content, ...rest }, ref) => {
   return (
-    <Outline name={name}>
-      <RenderMarkup ref={drag} {...rest}>
-        <Editor
-          defaultValue={content}
-          theme={{
-            background: 'transparent',
-          }}
-          onChange={useCallback(
-            (getText) =>
-              setProp((props) => {
-                // There are \ escapes in the string. So, naively unescaping the whole thing.
-                props.content = getText().replaceAll(/\\/g, '');
-              }),
-            [setProp]
-          )}
-        />
-      </RenderMarkup>
-    </Outline>
+    <RenderMarkup ref={ref} {...rest}>
+      <Editor
+        defaultValue={content}
+        theme={{
+          background: 'transparent',
+        }}
+      />
+    </RenderMarkup>
   );
-}
+});
 
-Text.craft = {
-  props: {
+Text.graftOptions = {
+  defaultProps: {
     color: { r: 0, g: 0, b: 0, a: 1 },
     content: 'Lorem ipsum dolor sit amet.',
     fontSize: 16,
@@ -86,3 +69,5 @@ function Options({ componentId }) {
 }
 
 Text.Options = Options;
+
+export default Text;

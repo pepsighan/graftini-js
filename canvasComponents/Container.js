@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useNode } from '@craftjs/core';
+import { useEditorState, useElementId } from '@graftini/graft';
 import { forwardRef, useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
@@ -8,31 +8,29 @@ import ColorPicker from './form/ColorPicker';
 import NumberInput from './form/NumberInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
-import Outline from './Outline';
 
-export default function Container({ name, width, height, children, ...rest }) {
-  const {
-    connectors: { drag },
-  } = useNode();
+const Container = forwardRef(({ name, width, height, children, ...rest }, ref) => {
+  const elementId = useElementId();
+  const hasChildren = useEditorState(
+    useCallback((state) => state[elementId].childrenNodes.length > 0, [elementId])
+  );
 
   return (
-    <Outline name={name} width={width}>
-      <Render
-        ref={drag}
-        width={width}
-        // If there is no children and no height, give it some so that it is visible.
-        // TODO: https://github.com/pepsighan/nocode/issues/15.
-        height={height ?? (!children ? 80 : null)}
-        {...rest}
-      >
-        {children}
-      </Render>
-    </Outline>
+    <Render
+      ref={ref}
+      width={width}
+      // If there is no children and no height, give it some so that it is visible.
+      // TODO: https://github.com/pepsighan/nocode/issues/15.
+      height={height ?? (hasChildren ? null : 80)}
+      {...rest}
+    >
+      {children}
+    </Render>
   );
-}
+});
 
-Container.craft = {
-  props: {
+Container.graftOptions = {
+  defaultProps: {
     width: null,
     height: null,
     padding: null,
@@ -98,3 +96,5 @@ function Options({ componentId }) {
 }
 
 Container.Options = Options;
+
+export default Container;
