@@ -1124,10 +1124,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.4.1.tgz#600f2275ff54739ad5ac0102f1467b8963cd5f71"
   integrity sha512-0yPjzuzGMkW1GkrC8yWsiN7vt1OzkMIi9HgxRmKREZl2wnNPOKo/yScTjXf/O57HM8dltqxPF6jlNLFVtc2qdw==
 
-"@graftini/graft@^0.1.0":
-  version "0.1.0"
-  resolved "https://npm.pkg.github.com/download/@graftini/graft/0.1.0/157ada080056d5e07cd3c73c843631008f876e995cee20edb3c6e3ed16e52d62#ed9fb7a9601e1b0ef8942c8a6f3d620ff413b765"
-  integrity sha512-nNx48vfVA0ayXysDTURZ2JxYWHAPdDkFf2/bdwSQZeVu/Wo7BoJm1SaPcSNdA4mGqstlZ6L1jjVGwX31gGUxMw==
+"@graftini/graft@^0.2.0":
+  version "0.2.0"
+  resolved "https://npm.pkg.github.com/download/@graftini/graft/0.2.0/7e247a4cb8a27a2d557f06cd6e00e232851af6174926068adc0cab573292ba43#44cdcd130cf6c43e645647a6ceecf8cfe4cc06e5"
+  integrity sha512-IXtKgKcMxZvC22igw0zgdqncZTA65ll3T1086lQmz8T7heXFZtcDMlFnWDksSpgfPSYpOq42LftSBYfKE4KX7A==
   dependencies:
     framer-motion "^4.1.16"
     nanoid "^3.1.23"
@@ -1424,9 +1424,9 @@
     csstype "^3.0.2"
 
 "@types/react@^16.9.11":
-  version "16.14.5"
-  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.14.5.tgz#2c39b5cadefaf4829818f9219e5e093325979f4d"
-  integrity sha512-YRRv9DNZhaVTVRh9Wmmit7Y0UFhEVqXqCSw3uazRWMxa2x85hWQZ5BN24i7GXZbaclaLXEcodEeIHsjBA8eAMw==
+  version "16.14.6"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-16.14.6.tgz#d933a2a6bc1bfe320a5eea480e8f45ba8126d6ee"
+  integrity sha512-Ol/aFKune+P0FSFKIgf+XbhGzYGyz0p7g5befSt4rmbzfGLaZR0q7jPew9k7d3bvrcuaL8dPy9Oz3XGZmf9n+w==
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
