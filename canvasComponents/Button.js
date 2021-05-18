@@ -1,16 +1,15 @@
 /** @jsxImportSource @emotion/react */
+import { useElementProps } from '@graftini/graft';
 import { forwardRef } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import TextInput from './form/TextInput';
 
-const Button = forwardRef(({ name, children, ...rest }, ref) => {
-  return (
-    <Render ref={ref} {...rest}>
-      {children}
-    </Render>
-  );
+const Button = forwardRef((_, ref) => {
+  // TODO: Rename the type of the hook return.
+  const props = useElementProps();
+  return <Render ref={ref} {...props} />;
 });
 
 Button.graftOptions = {
