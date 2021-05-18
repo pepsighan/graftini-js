@@ -15,6 +15,7 @@ const Container = forwardRef((_, ref) => {
     useCallback((state) => state[elementId].childrenNodes.length > 0, [elementId])
   );
 
+  // TODO: Provide a way to select a subsection of props.
   const { height, ...rest } = useElementProps();
 
   return (
