@@ -37,8 +37,14 @@ export default function Designer({ projectId }) {
 }
 
 function Editorial() {
+  const editorState = useDesignerState(
+    useCallback((state) => state.pages[state.currentOpenPage], []),
+    // Only get the editor state once on load. No need after that.
+    useCallback(() => true, [])
+  );
+
   return (
-    <Editor resolvers={components}>
+    <Editor resolvers={components} initialState={editorState}>
       {config.ENV === 'local' && <TrackChanges />}
       <SyncEditorAndDesignerState />
       <EditorNavigation />
