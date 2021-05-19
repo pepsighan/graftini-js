@@ -4,8 +4,7 @@ import Link from 'next/link';
 import { useCallback } from 'react';
 import { CgScreen } from 'react-icons/cg';
 import { MdArrowBack, MdCode, MdImportContacts } from 'react-icons/md';
-import { RightSidebarOpenPane, useDesignerState } from 'store/designer';
-import { useImmerSetter } from 'store/zustand';
+import { useDesignerState } from 'store/designer';
 
 function DrawButton({ mr, label, component }) {
   const ref = useCreateComponent({ type: component });
@@ -24,7 +23,9 @@ function DrawButton({ mr, label, component }) {
 }
 
 export default function EditorNavigation() {
-  const updateEditorState = useImmerSetter(useDesignerState);
+  const toggleQueryBuilderPane = useDesignerState(
+    useCallback((state) => state.toggleQueryBuilderPane, [])
+  );
 
   return (
     <Flex
@@ -49,20 +50,7 @@ export default function EditorNavigation() {
       </Flex>
 
       <Flex>
-        <IconButton
-          icon={<MdCode />}
-          onClick={useCallback(
-            () =>
-              updateEditorState((state) => {
-                state.rightSidebarOpenPane =
-                  state.rightSidebarOpenPane === RightSidebarOpenPane.QueryBuilder
-                    ? RightSidebarOpenPane.StyleOptions
-                    : RightSidebarOpenPane.QueryBuilder;
-              }),
-            [updateEditorState]
-          )}
-        />
-
+        <IconButton icon={<MdCode />} onClick={toggleQueryBuilderPane} />
         <Link href="/preview">
           <IconButton ml={4} icon={<CgScreen />} />
         </Link>

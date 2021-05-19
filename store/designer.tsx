@@ -4,7 +4,6 @@ import { ReactNode, useState } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
 import { ProjectPage } from './projects';
-import { WithImmerSetter } from './zustand';
 
 export enum RightSidebarOpenPane {
   QueryBuilder,
@@ -20,10 +19,13 @@ type UseDesignerState = {
   };
 
   selectComponent(componentId: string): void;
+  toggleQueryBuilderPane(): void;
+  setCurrentPage(pageId: string): void;
+  updatePageDesign(pageId: string, componentMap: ComponentMap): void;
 };
 
 const createDesignerState = (pages: ProjectPage[]) =>
-  create<WithImmerSetter<UseDesignerState>>((set) => {
+  create<UseDesignerState>((set) => {
     const immerSet = (fn: (state: UseDesignerState) => void) => set(produce(fn));
 
     return {
@@ -34,17 +36,34 @@ const createDesignerState = (pages: ProjectPage[]) =>
         acc[cur.id] = parseMarkup(cur.markup);
         return acc;
       }, {}),
-      set: (fn) => set(produce(fn)),
 
       selectComponent(componentId: string) {
         immerSet((state) => {
           state.selectedComponentId = componentId;
         });
       },
+      toggleQueryBuilderPane() {
+        immerSet((state) => {
+          state.rightSidebarOpenPane =
+            state.rightSidebarOpenPane === RightSidebarOpenPane.QueryBuilder
+              ? RightSidebarOpenPane.StyleOptions
+              : RightSidebarOpenPane.QueryBuilder;
+        });
+      },
+      setCurrentPage(pageId: string) {
+        immerSet((state) => {
+          state.currentOpenPage = pageId;
+        });
+      },
+      updatePageDesign(pageId: string, componentMap: ComponentMap) {
+        immerSet((state) => {
+          state.pages[pageId] = componentMap;
+        });
+      },
     };
   });
 
-const { Provider, useStore } = createContext<WithImmerSetter<UseDesignerState>>();
+const { Provider, useStore } = createContext<UseDesignerState>();
 
 type DesignerStateProviderProps = {
   initialPages: ProjectPage[];
