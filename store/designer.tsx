@@ -13,22 +13,36 @@ export enum RightSidebarOpenPane {
 
 type UseDesignerState = {
   rightSidebarOpenPane: RightSidebarOpenPane;
-  currentOpenPage?: string;
+  currentOpenPage?: string | null;
+  selectedComponentId?: string | null;
   pages: {
     [id: string]: ComponentMap;
   };
+
+  selectComponent(componentId: string): void;
 };
 
 const createDesignerState = (pages: ProjectPage[]) =>
-  create<WithImmerSetter<UseDesignerState>>((set) => ({
-    rightSidebarOpenPane: RightSidebarOpenPane.StyleOptions,
-    currentOpenPage: pages.length > 0 ? pages[0].id : null,
-    pages: pages.reduce((acc, cur) => {
-      acc[cur.id] = parseMarkup(cur.markup);
-      return acc;
-    }, {}),
-    set: (fn) => set(produce(fn)),
-  }));
+  create<WithImmerSetter<UseDesignerState>>((set) => {
+    const immerSet = (fn: (state: UseDesignerState) => void) => set(produce(fn));
+
+    return {
+      rightSidebarOpenPane: RightSidebarOpenPane.StyleOptions,
+      currentOpenPage: pages.length > 0 ? pages[0].id : null,
+      selectedComponentId: null,
+      pages: pages.reduce((acc, cur) => {
+        acc[cur.id] = parseMarkup(cur.markup);
+        return acc;
+      }, {}),
+      set: (fn) => set(produce(fn)),
+
+      selectComponent(componentId: string) {
+        immerSet((state) => {
+          state.selectedComponentId = componentId;
+        });
+      },
+    };
+  });
 
 const { Provider, useStore } = createContext<WithImmerSetter<UseDesignerState>>();
 

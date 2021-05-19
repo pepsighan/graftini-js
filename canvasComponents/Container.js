@@ -10,6 +10,7 @@ import ColorPicker from './form/ColorPicker';
 import NumberInput from './form/NumberInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
+import Outline from './Outline';
 
 const Container = forwardRef(({ children }, ref) => {
   const componentId = useComponentId();
@@ -21,26 +22,28 @@ const Container = forwardRef(({ children }, ref) => {
   const { width, height, padding, margin, backgroundColor } = useComponentProps();
 
   return (
-    <motion.div
-      ref={ref}
-      style={{
-        width,
-        // If there is no children and no height, give it some so that it is visible.
-        // TODO: https://github.com/pepsighan/nocode/issues/15.
-        height: height ?? (hasChildren ? null : 80),
-        marginTop: margin?.top,
-        marginRight: margin?.right,
-        marginBottom: margin?.bottom,
-        marginLeft: margin?.left,
-        paddingTop: padding?.top,
-        paddingRight: padding?.right,
-        paddingBottom: padding?.bottom,
-        paddingLeft: padding?.left,
-        backgroundColor: rgbaToCss(backgroundColor),
-      }}
-    >
-      {children}
-    </motion.div>
+    <Outline>
+      <motion.div
+        ref={ref}
+        style={{
+          width,
+          // If there is no children and no height, give it some so that it is visible.
+          // TODO: https://github.com/pepsighan/nocode/issues/15.
+          height: height ?? (hasChildren ? null : 80),
+          marginTop: margin?.top,
+          marginRight: margin?.right,
+          marginBottom: margin?.bottom,
+          marginLeft: margin?.left,
+          paddingTop: padding?.top,
+          paddingRight: padding?.right,
+          paddingBottom: padding?.bottom,
+          paddingLeft: padding?.left,
+          backgroundColor: rgbaToCss(backgroundColor),
+        }}
+      >
+        {children}
+      </motion.div>
+    </Outline>
   );
 });
 

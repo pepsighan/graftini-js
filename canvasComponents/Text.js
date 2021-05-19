@@ -9,14 +9,17 @@ import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import NumberInput from './form/NumberInput';
 import TextInput from './form/TextInput';
+import Outline from './Outline';
 
 const Text = forwardRef((_, ref) => {
   const { content, color, fontSize } = useComponentProps();
 
   return (
-    <motion.div ref={ref} style={{ color: rgbaToCss(color), fontSize }}>
-      {content}
-    </motion.div>
+    <Outline>
+      <motion.div ref={ref} style={{ color: rgbaToCss(color), fontSize }}>
+        {content}
+      </motion.div>
+    </Outline>
   );
 });
 
