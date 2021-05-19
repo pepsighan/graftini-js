@@ -33,7 +33,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
       currentOpenPage: pages.length > 0 ? pages[0].id : null,
       selectedComponentId: null,
       pages: pages.reduce((acc, cur) => {
-        acc[cur.id] = parseMarkup(cur.markup);
+        acc[cur.id] = parseComponentMap(cur.componentMap);
         return acc;
       }, {}),
 
@@ -64,7 +64,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
     };
   });
 
-const { Provider, useStore } = createContext<UseDesignerState>();
+const { Provider, useStore, useStoreApi } = createContext<UseDesignerState>();
 
 type DesignerStateProviderProps = {
   initialPages: ProjectPage[];
@@ -81,10 +81,12 @@ export function DesignerStateProvider({ initialPages, children }: DesignerStateP
 
 export const useDesignerState = useStore as ReturnType<typeof createDesignerState>;
 
+export const useDesignerStateApi = useStoreApi;
+
 /**
- * Parse the markup that is received from the backend to the one readable by graft.
+ * Parse the component map that is received from the backend to the one readable by graft.
  */
-export function parseMarkup(markup: string): ComponentMap {
-  const json = JSON.parse(markup);
-  return json as ComponentMap;
+export function parseComponentMap(stringified?: string): ComponentMap | null {
+  const json = stringified ? JSON.parse(stringified) : null;
+  return json;
 }

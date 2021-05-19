@@ -6,7 +6,7 @@ import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
-import { useDesignerState } from 'store/designer';
+import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import config from 'utils/config';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 
@@ -30,17 +30,30 @@ export default function Designer({ projectId }) {
   return (
     <ProjectIdContext.Provider value={projectId}>
       <UserApolloProvider client={userApollo}>
-        <Editor resolvers={components}>
-          {config.ENV === 'local' && <TrackChanges />}
-          <EditorNavigation />
-          <Flex>
-            <LeftSidebar projectId={projectId} />
-            <Canvas key={currentPageId} />
-            <RightSidebar />
-          </Flex>
-        </Editor>
+        <Editorial key={currentPageId} />
       </UserApolloProvider>
     </ProjectIdContext.Provider>
+  );
+}
+
+function Editorial() {
+  const editorState = useDesignerState(
+    useCallback((state) => state.pages[state.currentOpenPage], []),
+    // Only get the editor state once on load. No need after that.
+    useCallback(() => true, [])
+  );
+
+  return (
+    <Editor resolvers={components} initialState={editorState}>
+      {config.ENV === 'local' && <TrackChanges />}
+      <SyncEditorAndDesignerState />
+      <EditorNavigation />
+      <Flex>
+        <LeftSidebar />
+        <Canvas />
+        <RightSidebar />
+      </Flex>
+    </Editor>
   );
 }
 
@@ -51,6 +64,29 @@ function TrackChanges() {
   const { subscribe } = useEditor();
 
   useEffect(() => subscribe((state) => console.log(state)));
+
+  return <></>;
+}
+
+/**
+ * This component is renderless and just syncs the internal state of editor and the designer in
+ * that direction.
+ */
+function SyncEditorAndDesignerState() {
+  const { subscribe } = useEditor();
+  const { setState } = useDesignerStateApi();
+
+  useEffect(() => {
+    return subscribe((editorState) => {
+      setState((designerState) => ({
+        ...designerState,
+        pages: {
+          ...designerState.pages,
+          [designerState.currentOpenPage]: editorState,
+        },
+      }));
+    });
+  }, [setState, subscribe]);
 
   return <></>;
 }
