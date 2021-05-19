@@ -45,12 +45,12 @@ function Preview() {
       width="140px"
       height="32px"
       borderRadius="md"
-      bg="blue.200"
+      bg="preview.light"
       display="flex"
       justifyContent="center"
       alignItems="center"
     >
-      <Box width="100px" height="12px" bg="blue.300" borderRadius="sm" />
+      <Box width="100px" height="12px" bg="preview.dark" borderRadius="sm" />
     </Box>
   );
 }

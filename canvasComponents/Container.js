@@ -76,7 +76,7 @@ Container.Options = function Options({ componentId }) {
 };
 
 function Preview() {
-  return <Box width="300px" height="200px" bg="blue.200" />;
+  return <Box width="300px" height="200px" bg="preview.light" />;
 }
 
 Container.graftOptions = {

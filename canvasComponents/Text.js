@@ -37,10 +37,10 @@ Text.Options = function Options({ componentId }) {
 
 function Preview() {
   return (
-    <Box width="140px" bg="blue.200" borderRadius="md" p={4}>
-      <Box width="100%" height="10px" bg="blue.300" borderRadius="sm" mb={2} />
-      <Box width="100%" height="10px" bg="blue.300" borderRadius="sm" mb={2} />
-      <Box width="100%" height="10px" bg="blue.300" borderRadius="sm" />
+    <Box width="140px" bg="preview.light" borderRadius="md" p={4}>
+      <Box width="100%" height="10px" bg="preview.dark" borderRadius="sm" mb={2} />
+      <Box width="100%" height="10px" bg="preview.dark" borderRadius="sm" mb={2} />
+      <Box width="100%" height="10px" bg="preview.dark" borderRadius="sm" />
     </Box>
   );
 }
