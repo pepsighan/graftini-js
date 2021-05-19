@@ -7,25 +7,28 @@ import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import TextInput from './form/TextInput';
+import Outline from './Outline';
 
 const Button = forwardRef((_, ref) => {
   const { padding, backgroundColor, color, children } = useComponentProps();
   return (
-    <motion.button
-      ref={ref}
-      style={{
-        display: 'block',
-        width: '100%',
-        paddingTop: padding?.top,
-        paddingRight: padding?.right,
-        paddingBottom: padding?.bottom,
-        paddingLeft: padding?.left,
-        backgroundColor: rgbaToCss(backgroundColor),
-        color: rgbaToCss(color),
-      }}
-    >
-      {children}
-    </motion.button>
+    <Outline>
+      <motion.button
+        ref={ref}
+        style={{
+          display: 'block',
+          width: '100%',
+          paddingTop: padding?.top,
+          paddingRight: padding?.right,
+          paddingBottom: padding?.bottom,
+          paddingLeft: padding?.left,
+          backgroundColor: rgbaToCss(backgroundColor),
+          color: rgbaToCss(color),
+        }}
+      >
+        {children}
+      </motion.button>
+    </Outline>
   );
 });
 

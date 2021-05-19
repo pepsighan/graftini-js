@@ -6,20 +6,17 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import { useMyProject } from 'store/projects';
-import { useImmerSetter } from 'store/zustand';
 import { encode } from 'utils/url';
 import { useEffectOnce } from 'utils/useEffect';
 import { useProjectId } from './Designer';
 
 function PageItem({ id, name, route, slugProjectId }) {
   const isSelected = useDesignerState(useCallback((state) => state.currentOpenPage === id, [id]));
-  const updateEditorState = useImmerSetter(useDesignerState);
+  const setCurrentPage = useDesignerState(useCallback((state) => state.setCurrentPage, []));
 
   const onPageChange = useCallback(() => {
-    updateEditorState((state) => {
-      state.currentOpenPage = id;
-    });
-  }, [id, updateEditorState]);
+    setCurrentPage(id);
+  }, [id, setCurrentPage]);
 
   // TODO: Do not cause history to change. Since the pages are used to change
   // the views in the editor rather than change route for the app.
