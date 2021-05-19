@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { Box } from '@chakra-ui/layout';
 import { useComponentProps } from '@graftini/graft';
 import { motion } from 'framer-motion';
 import { forwardRef, useCallback } from 'react';
@@ -34,12 +35,23 @@ Text.Options = function Options({ componentId }) {
   );
 };
 
+function Preview() {
+  return (
+    <Box width="140px" bg="blue.200" borderRadius="md" p={4}>
+      <Box width="100%" height="10px" bg="blue.300" borderRadius="sm" mb={2} />
+      <Box width="100%" height="10px" bg="blue.300" borderRadius="sm" mb={2} />
+      <Box width="100%" height="10px" bg="blue.300" borderRadius="sm" />
+    </Box>
+  );
+}
+
 Text.graftOptions = {
   defaultProps: {
     color: { r: 0, g: 0, b: 0, a: 1 },
     content: 'Lorem ipsum dolor sit amet.',
     fontSize: 16,
   },
+  preview: Preview,
 };
 
 export default Text;
