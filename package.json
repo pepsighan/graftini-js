@@ -14,7 +14,7 @@
     "@digitalmaas/uuid-base62": "^1.0.1",
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
-    "@graftini/graft": "^0.2.0",
+    "@graftini/graft": "^0.3.0",
     "@next/bundle-analyzer": "^10.2.0",
     "firebase": "^8.5.0",
     "framer-motion": "^4.1.11",
