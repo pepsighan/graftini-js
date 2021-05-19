@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { Box } from '@chakra-ui/layout';
 import { useComponentProps } from '@graftini/graft';
 import { motion } from 'framer-motion';
 import { forwardRef } from 'react';
@@ -38,6 +39,22 @@ Button.Options = ({ componentId }) => {
   );
 };
 
+function Preview() {
+  return (
+    <Box
+      width="140px"
+      height="32px"
+      borderRadius="md"
+      bg="blue.200"
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+    >
+      <Box width="100px" height="12px" bg="blue.300" borderRadius="sm" />
+    </Box>
+  );
+}
+
 Button.graftOptions = {
   defaultProps: {
     padding: { top: 4, right: 4, bottom: 4, left: 4 },
@@ -46,6 +63,7 @@ Button.graftOptions = {
     children: 'Button',
   },
   display: 'block',
+  preview: Preview,
 };
 
 export default Button;
