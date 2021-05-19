@@ -4,16 +4,16 @@ import NewPageDialog from 'components/NewPageDialog';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { useEditorState } from 'store/editor';
+import { useDesignerState } from 'store/designer';
 import { useMyProject } from 'store/projects';
 import { useImmerSetter } from 'store/zustand';
 import { encode } from 'utils/url';
 import { useEffectOnce } from 'utils/useEffect';
-import { useProjectId } from './Editor';
+import { useProjectId } from './Designer';
 
 function PageItem({ id, name, route, slugProjectId }) {
-  const isSelected = useEditorState(useCallback((state) => state.currentOpenPage === id, [id]));
-  const updateEditorState = useImmerSetter(useEditorState);
+  const isSelected = useDesignerState(useCallback((state) => state.currentOpenPage === id, [id]));
+  const updateEditorState = useImmerSetter(useDesignerState);
 
   const onPageChange = useCallback(() => {
     updateEditorState((state) => {
@@ -62,7 +62,7 @@ export default function Pages() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { project } = useMyProject({ projectId: useProjectId() });
 
-  const defaultPageId = useEditorState(
+  const defaultPageId = useDesignerState(
     useCallback((state) => state.currentOpenPage, []),
     // Only load the open page for the first time.
     useCallback(() => false, [])

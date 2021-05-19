@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useCallback } from 'react';
 import { CgScreen } from 'react-icons/cg';
 import { MdArrowBack, MdCode, MdImportContacts } from 'react-icons/md';
-import { RightSidebarOpenPane, useEditorState } from 'store/editor';
+import { RightSidebarOpenPane, useDesignerState } from 'store/designer';
 import { useImmerSetter } from 'store/zustand';
 
 function DrawButton({ mr, label, component }) {
@@ -24,7 +24,7 @@ function DrawButton({ mr, label, component }) {
 }
 
 export default function EditorNavigation() {
-  const updateEditorState = useImmerSetter(useEditorState);
+  const updateEditorState = useImmerSetter(useDesignerState);
 
   return (
     <Flex

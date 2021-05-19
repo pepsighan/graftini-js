@@ -1,14 +1,14 @@
 import { gql, useQuery } from '@apollo/client';
 import { print } from 'graphql';
 import { createContext, useCallback, useMemo } from 'react';
-import { useEditorState } from 'store/editor';
+import { useDesignerState } from 'store/designer';
 import { generateGraphQLAST } from 'utils/graphqlAst';
 import { useUserApolloClient } from 'utils/graphqlUser';
 
 export const QueryContext = createContext();
 
 export default function RenderQueries({ children }) {
-  const savedQueries = useEditorState(useCallback((state) => state.savedQueries, []));
+  const savedQueries = useDesignerState(useCallback((state) => state.savedQueries, []));
 
   const allQuery = useMemo(
     () =>
@@ -35,10 +35,10 @@ export default function RenderQueries({ children }) {
 }
 
 function SingleQuery({ variableName, query, queryResults, children }) {
-  const gqlQuery = useMemo(() => print(generateGraphQLAST(variableName, query)), [
-    query,
-    variableName,
-  ]);
+  const gqlQuery = useMemo(
+    () => print(generateGraphQLAST(variableName, query)),
+    [query, variableName]
+  );
 
   const userApollo = useUserApolloClient();
   const { data } = useQuery(gql(gqlQuery), { client: userApollo });

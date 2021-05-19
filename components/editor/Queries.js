@@ -2,7 +2,7 @@ import { Box, Button, Flex, IconButton, Text, useDisclosure } from '@chakra-ui/r
 import { useCallback } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { useDeleteQuery, useMyProjectQueries } from 'store/projects';
-import { useProjectId } from './Editor';
+import { useProjectId } from './Designer';
 import QueryBuilderDialog from './graphqlQuery/QueryBuilderDialog';
 
 export default function Queries() {

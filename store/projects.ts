@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
-import { parseMarkup, useEditorState } from './editor';
+import { parseMarkup, useDesignerState } from './designer';
 import { useImmerSetter } from './zustand';
 
 type Project = {
@@ -107,7 +107,7 @@ export function useMyProject({ projectId }) {
  * Hook to create a new page in the project.
  */
 export function useCreatePage({ projectId }) {
-  const updateEditorState = useImmerSetter(useEditorState);
+  const updateEditorState = useImmerSetter(useDesignerState);
 
   return useMutation(
     gql`

@@ -3,12 +3,12 @@ import Render from 'components/Render';
 import RenderQueries from 'components/RenderQueries';
 import SEO from 'components/SEO';
 import { useCallback, useMemo } from 'react';
-import { useEditorState } from 'store/editor';
+import { useDesignerState } from 'store/designer';
 import { protectedPage } from 'utils/auth';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 
 export default protectedPage(function Preview() {
-  const markup = useEditorState(useCallback((state) => state.markup, []));
+  const markup = useDesignerState(useCallback((state) => state.markup, []));
   const userApolloClient = useMemo(() => initializeUserApollo(), []);
 
   return (

@@ -12,7 +12,7 @@ import { useCallback } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useCreateQuery } from 'store/projects';
 import { generateGraphQLAST } from 'utils/graphqlAst';
-import { useProjectId } from '../Editor';
+import { useProjectId } from '../Designer';
 import QueryBuilder from './QueryBuilder';
 
 export default function QueryBuilderDialog({ isOpen, onClose }) {
