@@ -53,6 +53,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
       setCurrentPage(pageId: string) {
         immerSet((state) => {
           state.currentOpenPage = pageId;
+          state.selectedComponentId = null;
         });
       },
       updatePageDesign(pageId: string, componentMap: ComponentMap) {
