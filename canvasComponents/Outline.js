@@ -19,7 +19,13 @@ export default function Outline({ children }) {
           outline: '1px solid black',
         },
       }}
-      onClick={useCallback(() => selectComponent(componentId), [componentId, selectComponent])}
+      onClick={useCallback(
+        (ev) => {
+          ev.stopPropagation();
+          return selectComponent(componentId);
+        },
+        [componentId, selectComponent]
+      )}
     >
       {children}
     </div>
