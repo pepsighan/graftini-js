@@ -9,7 +9,7 @@ import NumberInput from './form/NumberInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 
-const Container = forwardRef((_, ref) => {
+const Container = forwardRef(({ children }, ref) => {
   const componentId = useComponentId();
   const hasChildren = useEditorState(
     useCallback((state) => state[componentId].childrenNodes.length > 0, [componentId])
@@ -25,7 +25,9 @@ const Container = forwardRef((_, ref) => {
       // TODO: https://github.com/pepsighan/nocode/issues/15.
       height={height ?? (hasChildren ? null : 80)}
       {...rest}
-    />
+    >
+      {children}
+    </Render>
   );
 });
 
