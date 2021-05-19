@@ -8,7 +8,7 @@ import { RightSidebarOpenPane, useEditorState } from 'store/editor';
 import { useImmerSetter } from 'store/zustand';
 
 function DrawButton({ mr, label, component }) {
-  const ref = useCreateComponent({ component });
+  const ref = useCreateComponent({ type: component });
 
   return (
     <Button

@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useEditorState, useElementId, useElementProps } from '@graftini/graft';
+import { useComponentId, useComponentProps, useEditorState } from '@graftini/graft';
 import { forwardRef, useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
@@ -10,13 +10,13 @@ import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 
 const Container = forwardRef((_, ref) => {
-  const elementId = useElementId();
+  const componentId = useComponentId();
   const hasChildren = useEditorState(
-    useCallback((state) => state[elementId].childrenNodes.length > 0, [elementId])
+    useCallback((state) => state[componentId].childrenNodes.length > 0, [componentId])
   );
 
   // TODO: Provide a way to select a subsection of props.
-  const { height, ...rest } = useElementProps();
+  const { height, ...rest } = useComponentProps();
 
   return (
     <Render

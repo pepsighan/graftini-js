@@ -1,6 +1,6 @@
 import { useEditor } from '@graftini/graft';
 import produce from 'immer';
-import { useCallback, useMemo } from 'react';
+import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 export default function CanvasForm({ elementId, onTransformValues, children }) {

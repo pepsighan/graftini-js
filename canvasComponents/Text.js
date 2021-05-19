@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { useElementProps } from '@graftini/graft';
+import { useComponentProps } from '@graftini/graft';
 import { QueryContext } from 'components/RenderQueries';
 import { render } from 'micromustache';
 import { forwardRef, useCallback, useContext } from 'react';
@@ -11,7 +11,7 @@ import NumberInput from './form/NumberInput';
 import TextInput from './form/TextInput';
 
 const Text = forwardRef((_, ref) => {
-  const { content, ...rest } = useElementProps();
+  const { content, ...rest } = useComponentProps();
 
   return (
     <RenderMarkup ref={ref} {...rest}>
