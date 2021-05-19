@@ -17,7 +17,7 @@ export default function CanvasForm({ componentId, onTransformValues, children })
         transformed = produce(values, onTransformValues);
       }
 
-      updateComponentProps(componentId, (props) => ({ ...props, transformed }));
+      updateComponentProps(componentId, (props) => ({ ...props, ...transformed }));
 
       // We do not do show any errors here.
       return { values, errors: {} };
