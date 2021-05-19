@@ -30,20 +30,20 @@ export default function Designer({ projectId }) {
   return (
     <ProjectIdContext.Provider value={projectId}>
       <UserApolloProvider client={userApollo}>
-        <Editorial key={currentPageId} projectId={projectId} />
+        <Editorial key={currentPageId} />
       </UserApolloProvider>
     </ProjectIdContext.Provider>
   );
 }
 
-function Editorial({ projectId }) {
+function Editorial() {
   return (
     <Editor resolvers={components}>
       {config.ENV === 'local' && <TrackChanges />}
       <SyncEditorAndDesignerState />
       <EditorNavigation />
       <Flex>
-        <LeftSidebar projectId={projectId} />
+        <LeftSidebar />
         <Canvas />
         <RightSidebar />
       </Flex>
