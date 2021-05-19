@@ -64,7 +64,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
     };
   });
 
-const { Provider, useStore } = createContext<UseDesignerState>();
+const { Provider, useStore, useStoreApi } = createContext<UseDesignerState>();
 
 type DesignerStateProviderProps = {
   initialPages: ProjectPage[];
@@ -80,6 +80,8 @@ export function DesignerStateProvider({ initialPages, children }: DesignerStateP
 }
 
 export const useDesignerState = useStore as ReturnType<typeof createDesignerState>;
+
+export const useDesignerStateApi = useStoreApi;
 
 /**
  * Parse the markup that is received from the backend to the one readable by graft.

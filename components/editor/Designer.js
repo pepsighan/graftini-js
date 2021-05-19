@@ -6,7 +6,7 @@ import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
-import { useDesignerState } from 'store/designer';
+import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import config from 'utils/config';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 
@@ -32,6 +32,7 @@ export default function Designer({ projectId }) {
       <UserApolloProvider client={userApollo}>
         <Editor resolvers={components}>
           {config.ENV === 'local' && <TrackChanges />}
+          <SyncEditorAndDesignerState />
           <EditorNavigation />
           <Flex>
             <LeftSidebar projectId={projectId} />
@@ -51,6 +52,29 @@ function TrackChanges() {
   const { subscribe } = useEditor();
 
   useEffect(() => subscribe((state) => console.log(state)));
+
+  return <></>;
+}
+
+/**
+ * This component is renderless and just syncs the internal state of editor and the designer in
+ * that direction.
+ */
+function SyncEditorAndDesignerState() {
+  const { subscribe } = useEditor();
+  const { setState } = useDesignerStateApi();
+
+  useEffect(() => {
+    return subscribe((editorState) => {
+      setState((designerState) => ({
+        ...designerState,
+        pages: {
+          ...designerState.pages,
+          [designerState.currentOpenPage]: editorState,
+        },
+      }));
+    });
+  }, [setState, subscribe]);
 
   return <></>;
 }
