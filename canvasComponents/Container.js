@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { Box } from '@chakra-ui/layout';
 import { useComponentId, useComponentProps, useEditorState } from '@graftini/graft';
 import { motion } from 'framer-motion';
 import { forwardRef, useCallback } from 'react';
@@ -74,6 +75,10 @@ Container.Options = function Options({ componentId }) {
   );
 };
 
+function Preview() {
+  return <Box width="300px" height="200px" bg="blue.200" />;
+}
+
 Container.graftOptions = {
   defaultProps: {
     width: null,
@@ -84,6 +89,7 @@ Container.graftOptions = {
   },
   isCanvas: true,
   display: 'block',
+  preview: Preview,
 };
 
 export default Container;
