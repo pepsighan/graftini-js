@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useComponentProps } from '@graftini/graft';
+import { motion } from 'framer-motion';
 import { forwardRef } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
@@ -7,24 +8,11 @@ import ColorPicker from './form/ColorPicker';
 import TextInput from './form/TextInput';
 
 const Button = forwardRef((_, ref) => {
-  const props = useComponentProps();
-  return <Render ref={ref} {...props} />;
-});
-
-Button.graftOptions = {
-  defaultProps: {
-    padding: { top: 4, right: 4, bottom: 4, left: 4 },
-    backgroundColor: { r: 220, g: 220, b: 255, a: 1 },
-    color: { r: 0, g: 0, b: 0, a: 1 },
-    children: 'Button',
-  },
-};
-
-const Render = forwardRef(({ padding, backgroundColor, color, children }, ref) => {
+  const { padding, backgroundColor, color, children } = useComponentProps();
   return (
-    <button
+    <motion.button
       ref={ref}
-      css={{
+      style={{
         display: 'block',
         width: '100%',
         paddingTop: padding?.top,
@@ -33,16 +21,12 @@ const Render = forwardRef(({ padding, backgroundColor, color, children }, ref) =
         paddingLeft: padding?.left,
         backgroundColor: rgbaToCss(backgroundColor),
         color: rgbaToCss(color),
-        borderRadius: 4,
-        outline: 'none',
       }}
     >
       {children}
-    </button>
+    </motion.button>
   );
 });
-
-Button.Render = Render;
 
 Button.Options = ({ componentId }) => {
   return (
@@ -52,6 +36,16 @@ Button.Options = ({ componentId }) => {
       <ColorPicker name="backgroundColor" label="Background Color" spaceTop />
     </CanvasForm>
   );
+};
+
+Button.graftOptions = {
+  defaultProps: {
+    padding: { top: 4, right: 4, bottom: 4, left: 4 },
+    backgroundColor: { r: 220, g: 220, b: 255, a: 1 },
+    color: { r: 0, g: 0, b: 0, a: 1 },
+    children: 'Button',
+  },
+  display: 'block',
 };
 
 export default Button;

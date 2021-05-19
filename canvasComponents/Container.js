@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useComponentId, useComponentProps, useEditorState } from '@graftini/graft';
+import { motion } from 'framer-motion';
 import { forwardRef, useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
@@ -16,39 +17,16 @@ const Container = forwardRef(({ children }, ref) => {
   );
 
   // TODO: Provide a way to select a subsection of props.
-  const { height, ...rest } = useComponentProps();
+  const { width, height, padding, margin, backgroundColor } = useComponentProps();
 
   return (
-    <Render
+    <motion.div
       ref={ref}
-      // If there is no children and no height, give it some so that it is visible.
-      // TODO: https://github.com/pepsighan/nocode/issues/15.
-      height={height ?? (hasChildren ? null : 80)}
-      {...rest}
-    >
-      {children}
-    </Render>
-  );
-});
-
-Container.graftOptions = {
-  defaultProps: {
-    width: null,
-    height: null,
-    padding: null,
-    margin: {},
-    backgroundColor: { r: 220, g: 220, b: 255, a: 1 },
-  },
-  isCanvas: true,
-};
-
-const Render = forwardRef(({ width, height, padding, margin, backgroundColor, children }, ref) => {
-  return (
-    <div
-      ref={ref}
-      css={{
+      style={{
         width,
-        height,
+        // If there is no children and no height, give it some so that it is visible.
+        // TODO: https://github.com/pepsighan/nocode/issues/15.
+        height: height ?? (hasChildren ? null : 80),
         marginTop: margin?.top,
         marginRight: margin?.right,
         marginBottom: margin?.bottom,
@@ -61,13 +39,11 @@ const Render = forwardRef(({ width, height, padding, margin, backgroundColor, ch
       }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 });
 
-Container.Render = Render;
-
-function Options({ componentId }) {
+Container.Options = function Options({ componentId }) {
   return (
     <CanvasForm
       componentId={componentId}
@@ -96,8 +72,18 @@ function Options({ componentId }) {
       <ColorPicker name="backgroundColor" label="Background Color" spaceTop />
     </CanvasForm>
   );
-}
+};
 
-Container.Options = Options;
+Container.graftOptions = {
+  defaultProps: {
+    width: null,
+    height: null,
+    padding: null,
+    margin: {},
+    backgroundColor: { r: 220, g: 220, b: 255, a: 1 },
+  },
+  isCanvas: true,
+  display: 'block',
+};
 
 export default Container;
