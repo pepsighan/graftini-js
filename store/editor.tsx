@@ -1,4 +1,4 @@
-import { ElementMap } from '@graftini/graft';
+import { ComponentMap } from '@graftini/graft';
 import produce from 'immer';
 import { ReactNode, useState } from 'react';
 import create from 'zustand';
@@ -17,7 +17,7 @@ type UseEditorState = {
   rightSidebarOpenPane: RightSidebarOpenPane;
   currentOpenPage?: string;
   pages: {
-    [id: string]: ElementMap;
+    [id: string]: ComponentMap;
   };
 };
 
@@ -54,7 +54,7 @@ export const useEditorState = useStore as ReturnType<typeof createEditorState>;
 /**
  * Parse the markup that is received from the backend to the one readable by graft.
  */
-export function parseMarkup(markup: string): ElementMap {
+export function parseMarkup(markup: string): ComponentMap {
   const json = JSON.parse(markup);
-  return json as ElementMap;
+  return json as ComponentMap;
 }
