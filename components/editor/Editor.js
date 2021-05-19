@@ -1,12 +1,13 @@
 import { Flex } from '@chakra-ui/layout';
-import { Editor as Edt } from '@graftini/graft';
+import { Editor as Edt, useEditor } from '@graftini/graft';
 import components from 'canvasComponents';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/EditorNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
-import { createContext, useCallback, useContext, useMemo } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useEditorState } from 'store/editor';
+import config from 'utils/config';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 
 export const ProjectIdContext = createContext();
@@ -30,6 +31,7 @@ export default function Editor({ projectId }) {
     <ProjectIdContext.Provider value={projectId}>
       <UserApolloProvider client={userApollo}>
         <Edt resolvers={components}>
+          {config.ENV === 'local' && <TrackChanges />}
           <EditorNavigation />
           <Flex>
             <LeftSidebar projectId={projectId} />
@@ -40,4 +42,15 @@ export default function Editor({ projectId }) {
       </UserApolloProvider>
     </ProjectIdContext.Provider>
   );
+}
+
+// Add this component within the editor to track the changes of the state.
+// This is only to be use when debugging.
+// eslint-disable-next-line no-unused-vars
+function TrackChanges() {
+  const { subscribe } = useEditor();
+
+  useEffect(() => subscribe((state) => console.log(state)));
+
+  return <></>;
 }
