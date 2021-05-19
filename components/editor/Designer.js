@@ -30,18 +30,24 @@ export default function Designer({ projectId }) {
   return (
     <ProjectIdContext.Provider value={projectId}>
       <UserApolloProvider client={userApollo}>
-        <Editor resolvers={components}>
-          {config.ENV === 'local' && <TrackChanges />}
-          <SyncEditorAndDesignerState />
-          <EditorNavigation />
-          <Flex>
-            <LeftSidebar projectId={projectId} />
-            <Canvas key={currentPageId} />
-            <RightSidebar />
-          </Flex>
-        </Editor>
+        <Editorial key={currentPageId} projectId={projectId} />
       </UserApolloProvider>
     </ProjectIdContext.Provider>
+  );
+}
+
+function Editorial({ projectId }) {
+  return (
+    <Editor resolvers={components}>
+      {config.ENV === 'local' && <TrackChanges />}
+      <SyncEditorAndDesignerState />
+      <EditorNavigation />
+      <Flex>
+        <LeftSidebar projectId={projectId} />
+        <Canvas />
+        <RightSidebar />
+      </Flex>
+    </Editor>
   );
 }
 
