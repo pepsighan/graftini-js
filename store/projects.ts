@@ -1,6 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { useCallback } from 'react';
-import { parseMarkup, useDesignerState } from './designer';
+import { parseComponentMap, useDesignerState } from './designer';
 
 type Project = {
   id: string;
@@ -66,7 +66,7 @@ export type ProjectPage = {
   id: string;
   name: string;
   route: string;
-  markup: string;
+  componentMap?: string;
 };
 
 export type Query = {
@@ -84,7 +84,7 @@ const QUERY_USE_MY_PROJECT = gql`
         id
         name
         route
-        markup
+        componentMap
       }
       queries {
         id
@@ -114,7 +114,7 @@ export function useCreatePage({ projectId }) {
       mutation CreateProjectPage($input: NewPage!) {
         createPage(input: $input) {
           id
-          markup
+          componentMap
         }
       }
     `,
@@ -127,7 +127,7 @@ export function useCreatePage({ projectId }) {
       ],
       onCompleted: (data) => {
         // Add this page so that the UI can edit it.
-        updatePageDesign(data.createPage.id, parseMarkup(data.createPage.markup));
+        updatePageDesign(data.createPage.id, parseComponentMap(data.createPage.componentMap));
       },
     }
   );
@@ -198,17 +198,4 @@ export function useDeleteQuery({ projectId }) {
       ],
     }
   );
-}
-
-/**
- * Hook to update the markup for a page in a project.
- */
-export function useUpdatePageMarkup() {
-  return useMutation(gql`
-    mutation UpdatePageMarkup($input: UpdatePageMarkup!) {
-      updatePageMarkup(input: $input) {
-        id
-      }
-    }
-  `);
 }
