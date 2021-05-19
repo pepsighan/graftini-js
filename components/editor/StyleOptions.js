@@ -4,17 +4,21 @@ import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
 export default function StyleOptions() {
-  const selectedComponent = useDesignerState(
+  const selectedComponentId = useDesignerState(
+    useCallback((state) => state.selectedComponentId, [])
+  );
+
+  const type = useDesignerState(
     useCallback(
       (state) =>
         state.selectedComponentId
-          ? state.pages[state.currentOpenPage]?.[state.selectedComponentId] ?? null
+          ? state.pages[state.currentOpenPage]?.[state.selectedComponentId]?.type ?? null
           : null,
       []
     )
   );
 
-  if (!selectedComponent) {
+  if (!selectedComponentId) {
     return (
       <Box px={3} py={2} bg="gray.200" borderRadius="md">
         <Text fontSize="sm">Select a component from the canvas to view options.</Text>
@@ -22,8 +26,7 @@ export default function StyleOptions() {
     );
   }
 
-  const nodeType = selectedComponent.type;
-  const Component = nodeType ? components[nodeType] : null;
+  const Component = type ? components[type] : null;
 
   return (
     <>
@@ -31,7 +34,7 @@ export default function StyleOptions() {
         Styles
       </Text>
       {Component?.Options != null ? (
-        <Component.Options key={selectedComponent.id} componentId={selectedComponent.id} />
+        <Component.Options key={selectedComponentId} componentId={selectedComponentId} />
       ) : null}
     </>
   );
