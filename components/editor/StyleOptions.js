@@ -30,7 +30,9 @@ export default function StyleOptions() {
       <Text fontWeight="bold" mb={2}>
         Styles
       </Text>
-      {Component?.Options != null ? <Component.Options componentId={selectedComponent.id} /> : null}
+      {Component?.Options != null ? (
+        <Component.Options key={selectedComponent.id} componentId={selectedComponent.id} />
+      ) : null}
     </>
   );
 }
