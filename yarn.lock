@@ -1091,10 +1091,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.4.1.tgz#600f2275ff54739ad5ac0102f1467b8963cd5f71"
   integrity sha512-0yPjzuzGMkW1GkrC8yWsiN7vt1OzkMIi9HgxRmKREZl2wnNPOKo/yScTjXf/O57HM8dltqxPF6jlNLFVtc2qdw==
 
-"@graftini/graft@^0.3.0":
-  version "0.3.3"
-  resolved "https://npm.pkg.github.com/download/@graftini/graft/0.3.3/b6be9b12f35395954aa3f494166e4fe7deea5cae52e70349020457fe55da4c83#5f52ea23c611a116379b4bf4c9bc29c5d5160210"
-  integrity sha512-wzuAdKzC4EgHNWp3vupWL/TaoIY4oChtuH2ELCfRC0d3Pclj3V83+u/+Czay0q6P7BeyW55na1sNM+9ZKRheGg==
+"@graftini/graft@^0.3.4":
+  version "0.3.4"
+  resolved "https://npm.pkg.github.com/download/@graftini/graft/0.3.4/5572572bcfd8ecddd305f06050a450f1b51b04c557453f2f61458ab6100ef4b2#cc5bcc53368da271c8049cffcafd7e2b4e3f0320"
+  integrity sha512-Wh070ZIwxpavbKGwNtrCFkFuCP7ja3lzMzzTgYtH9BImI+yb0Cor8j7bkGzMChcK0oKOyx1ayvvoyEQXUA2UVQ==
   dependencies:
     framer-motion "^4.1.16"
     nanoid "^3.1.23"
