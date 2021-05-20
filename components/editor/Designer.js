@@ -5,8 +5,10 @@ import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
+import { debounce } from 'lodash-es';
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
+import { useUpdateProjectDesign } from 'store/projects';
 import config from 'utils/config';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 
@@ -20,12 +22,12 @@ export function useProjectId() {
   return useContext(ProjectIdContext);
 }
 
-// TODO: Make sure that the sync of the editor state that is done every 5 seconds are not dropped between
-// route changes. Also, they should be done before the browser tab is closed. And also when there is
-// failure, retries should be done.
 export default function Designer({ projectId }) {
   const currentPageId = useDesignerState(useCallback((state) => state.currentOpenPage, []));
   const userApollo = useMemo(() => initializeUserApollo(), []);
+
+  // TODO: Make sure that this is run even before the browser is closed abruptly.
+  useSyncDesignerStateToBackend({ projectId });
 
   return (
     <ProjectIdContext.Provider value={projectId}>
@@ -62,15 +64,12 @@ function Editorial() {
 // eslint-disable-next-line no-unused-vars
 function TrackChanges() {
   const { subscribe } = useEditor();
-
   useEffect(() => subscribe((state) => console.log(state)));
-
   return <></>;
 }
 
 /**
- * This component is renderless and just syncs the internal state of editor and the designer in
- * that direction.
+ * This renderless component syncs the internal state of editor and the designer in that direction.
  */
 function SyncEditorAndDesignerState() {
   const { subscribe } = useEditor();
@@ -89,4 +88,33 @@ function SyncEditorAndDesignerState() {
   }, [setState, subscribe]);
 
   return <></>;
+}
+
+/**
+ * Hook that syncs the designer state to the backend. This hook is retained
+ * until the project designer page is open. Changing pages does not affect this as
+ * all the designs of all the pages are synced every time.
+ */
+function useSyncDesignerStateToBackend({ projectId }) {
+  const { subscribe } = useDesignerStateApi();
+  const [updateDesign] = useUpdateProjectDesign();
+
+  useEffect(() => {
+    // Update every two seconds.
+    const debouncedUpdate = debounce(async (pages) => {
+      await updateDesign({
+        variables: {
+          input: {
+            projectId,
+            pages: Object.keys(pages).map((pageId) => ({
+              pageId,
+              componentMap: pages[pageId] ? JSON.stringify(pages[pageId]) : null,
+            })),
+          },
+        },
+      });
+    }, 2000);
+
+    return subscribe(debouncedUpdate, (state) => state.pages);
+  }, [projectId, subscribe, updateDesign]);
 }
