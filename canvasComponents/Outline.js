@@ -2,7 +2,7 @@
 
 import { IconButton } from '@chakra-ui/button';
 import { Box } from '@chakra-ui/layout';
-import { useComponentId, useEditorState } from '@graftini/graft';
+import { useComponentId, useEditor, useEditorState } from '@graftini/graft';
 import { useCallback } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
@@ -13,8 +13,19 @@ export default function Outline({ children }) {
     useCallback((state) => state.selectedComponentId === componentId, [componentId])
   );
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
-
   const name = useEditorState(useCallback((state) => state[componentId].props.name, [componentId]));
+
+  const unselectComonent = useDesignerState(useCallback((state) => state.unselectComonent, []));
+  const { deleteComponentNode } = useEditor();
+
+  const onDelete = useCallback(
+    (ev) => {
+      ev.stopPropagation();
+      unselectComonent();
+      deleteComponentNode(componentId);
+    },
+    [componentId, deleteComponentNode, unselectComonent]
+  );
 
   return (
     <Box
@@ -51,7 +62,7 @@ export default function Outline({ children }) {
         backgroundColor="blue.200"
       >
         {name || 'Untitled'}
-        <IconButton size="xs" p={0.5} ml={2} height="unset" minWidth="unset">
+        <IconButton size="xs" p={0.5} ml={2} height="unset" minWidth="unset" onClick={onDelete}>
           <MdDelete />
         </IconButton>
       </Box>
