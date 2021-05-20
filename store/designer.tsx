@@ -19,6 +19,7 @@ type UseDesignerState = {
   };
 
   selectComponent(componentId: string): void;
+  unselectComonent(): void;
   toggleQueryBuilderPane(): void;
   setCurrentPage(pageId: string): void;
   updatePageDesign(pageId: string, componentMap: ComponentMap): void;
@@ -40,6 +41,11 @@ const createDesignerState = (pages: ProjectPage[]) =>
       selectComponent(componentId: string) {
         immerSet((state) => {
           state.selectedComponentId = componentId;
+        });
+      },
+      unselectComonent() {
+        immerSet((state) => {
+          state.selectedComponentId = null;
         });
       },
       toggleQueryBuilderPane() {

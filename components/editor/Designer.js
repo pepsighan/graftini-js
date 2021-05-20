@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/layout';
 import { Editor, useEditor } from '@graftini/graft';
+import { cleanupComponentMap } from '@graftini/graft';
 import components from 'canvasComponents';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
@@ -108,7 +109,11 @@ function useSyncDesignerStateToBackend({ projectId }) {
             projectId,
             pages: Object.keys(pages).map((pageId) => ({
               pageId,
-              componentMap: pages[pageId] ? JSON.stringify(pages[pageId]) : null,
+              componentMap: pages[pageId]
+                ? // Cleanup any deleted component nodes before saving them to
+                  // backend.
+                  JSON.stringify(cleanupComponentMap({ ...pages[pageId] }))
+                : null,
             })),
           },
         },
