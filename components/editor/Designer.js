@@ -45,11 +45,10 @@ function Editorial() {
     useCallback(() => true, [])
   );
 
-  useSyncEditorAndDesignerState();
-
   return (
     <Editor resolvers={components} initialState={editorState}>
       {config.ENV === 'local' && <TrackChanges />}
+      <SyncEditorAndDesignerState />
       <EditorNavigation />
       <Flex>
         <LeftSidebar />
@@ -70,9 +69,9 @@ function TrackChanges() {
 }
 
 /**
- * This hook syncs the internal state of editor and the designer in that direction.
+ * This renderless component syncs the internal state of editor and the designer in that direction.
  */
-function useSyncEditorAndDesignerState() {
+function SyncEditorAndDesignerState() {
   const { subscribe } = useEditor();
   const { setState } = useDesignerStateApi();
 
@@ -87,6 +86,8 @@ function useSyncEditorAndDesignerState() {
       }));
     });
   }, [setState, subscribe]);
+
+  return <></>;
 }
 
 /**
