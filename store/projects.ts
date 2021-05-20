@@ -199,3 +199,20 @@ export function useDeleteQuery({ projectId }) {
     }
   );
 }
+
+/**
+ * Hook to update the project design for all the pages.
+ */
+export function useUpdateProjectDesign() {
+  return useMutation(gql`
+    mutation UpdateProjectDesign($input: UpdateProjectDesign!) {
+      updateProjectDesign(input: $input) {
+        id
+        pages {
+          id
+          componentMap
+        }
+      }
+    }
+  `);
+}
