@@ -1,11 +1,9 @@
 /** @jsxImportSource @emotion/react */
-
-import { IconButton } from '@chakra-ui/button';
-import { Box } from '@chakra-ui/layout';
 import { useComponentId, useEditor, useEditorState } from '@graftini/graft';
 import { useCallback } from 'react';
 import { MdDelete } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
+import theme from 'utils/theme';
 
 export default function Outline({ children }) {
   const componentId = useComponentId();
@@ -28,10 +26,11 @@ export default function Outline({ children }) {
   );
 
   return (
-    <Box
-      position="relative"
-      outline={isSelected ? '1px solid #9999ff' : null}
+    <div
       css={{
+        position: 'relative',
+        outline: isSelected ? '1px solid #9999ff' : null,
+
         '& > .component-toolbox': {
           display: isSelected ? 'block' : 'none',
         },
@@ -48,25 +47,29 @@ export default function Outline({ children }) {
         [componentId, selectComponent]
       )}
     >
-      <Box
+      <div
         className="component-toolbox"
-        display="flex"
-        alignItems="center"
-        position="absolute"
-        top={0}
-        left={0}
-        transform="translateY(-100%)"
-        fontSize="xs"
-        px={2}
-        py={0.5}
-        backgroundColor="blue.200"
+        css={{
+          paddingLeft: 8,
+          paddingRight: 8,
+          paddingTop: 2,
+          paddingBottom: 2,
+          backgroundColor: theme.colors.blue[200],
+          fontSize: 12,
+          transform: 'translateY(-100%)',
+          top: 0,
+          left: 0,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+        }}
       >
         {name || 'Untitled'}
-        <IconButton size="xs" p={0.5} ml={2} height="unset" minWidth="unset" onClick={onDelete}>
+        <button onClick={onDelete}>
           <MdDelete />
-        </IconButton>
-      </Box>
+        </button>
+      </div>
       {children}
-    </Box>
+    </div>
   );
 }
