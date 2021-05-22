@@ -1,20 +1,18 @@
 /** @jsxImportSource @emotion/react */
-import { Box } from '@chakra-ui/layout';
 import { useComponentProps } from '@graftini/graft';
 import { motion } from 'framer-motion';
-import { forwardRef } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
-const Button = forwardRef((_, ref) => {
+function Button(props) {
   const { padding, backgroundColor, color, children } = useComponentProps();
   return (
     <Outline>
       <motion.button
-        ref={ref}
+        {...props}
         style={{
           display: 'block',
           width: '100%',
@@ -30,7 +28,7 @@ const Button = forwardRef((_, ref) => {
       </motion.button>
     </Outline>
   );
-});
+}
 
 Button.Options = ({ componentId }) => {
   return (
@@ -42,22 +40,6 @@ Button.Options = ({ componentId }) => {
   );
 };
 
-function Preview() {
-  return (
-    <Box
-      width="140px"
-      height="32px"
-      borderRadius="md"
-      bg="preview.light"
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Box width="100px" height="12px" bg="preview.dark" borderRadius="sm" />
-    </Box>
-  );
-}
-
 Button.graftOptions = {
   defaultProps: {
     padding: { top: 4, right: 4, bottom: 4, left: 4 },
@@ -66,7 +48,6 @@ Button.graftOptions = {
     children: 'Button',
   },
   display: 'block',
-  preview: Preview,
 };
 
 export default Button;

@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import { Box } from '@chakra-ui/layout';
 import { useComponentId, useComponentProps, useEditorState } from '@graftini/graft';
 import { motion } from 'framer-motion';
-import { forwardRef, useCallback } from 'react';
+import { useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
@@ -12,7 +11,7 @@ import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
-const Container = forwardRef(({ children }, ref) => {
+function Container({ children, ...rest }) {
   const componentId = useComponentId();
   const hasChildren = useEditorState(
     useCallback((state) => state[componentId].childrenNodes.length > 0, [componentId])
@@ -24,7 +23,7 @@ const Container = forwardRef(({ children }, ref) => {
   return (
     <Outline>
       <motion.div
-        ref={ref}
+        {...rest}
         style={{
           width,
           // If there is no children and no height, give it some so that it is visible.
@@ -45,7 +44,7 @@ const Container = forwardRef(({ children }, ref) => {
       </motion.div>
     </Outline>
   );
-});
+}
 
 Container.Options = function Options({ componentId }) {
   return (
@@ -78,10 +77,6 @@ Container.Options = function Options({ componentId }) {
   );
 };
 
-function Preview() {
-  return <Box width="300px" height="200px" bg="preview.light" borderRadius="md" />;
-}
-
 Container.graftOptions = {
   defaultProps: {
     width: null,
@@ -92,7 +87,6 @@ Container.graftOptions = {
   },
   isCanvas: true,
   display: 'block',
-  preview: Preview,
 };
 
 export default Container;

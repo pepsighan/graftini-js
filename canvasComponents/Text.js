@@ -1,8 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import { Box } from '@chakra-ui/layout';
 import { useComponentProps } from '@graftini/graft';
 import { motion } from 'framer-motion';
-import { forwardRef, useCallback } from 'react';
+import { useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
@@ -11,17 +10,17 @@ import NumberInput from './form/NumberInput';
 import TextInput from './form/TextInput';
 import Outline from './Outline';
 
-const Text = forwardRef((_, ref) => {
+function Text(props) {
   const { content, color, fontSize } = useComponentProps();
 
   return (
     <Outline>
-      <motion.div ref={ref} style={{ color: rgbaToCss(color), fontSize }}>
+      <motion.div style={{ color: rgbaToCss(color), fontSize }} {...props}>
         {content}
       </motion.div>
     </Outline>
   );
-});
+}
 
 Text.Options = function Options({ componentId }) {
   return (
@@ -38,23 +37,12 @@ Text.Options = function Options({ componentId }) {
   );
 };
 
-function Preview() {
-  return (
-    <Box width="140px" bg="preview.light" borderRadius="md" p={4}>
-      <Box width="100%" height="10px" bg="preview.dark" borderRadius="sm" mb={2} />
-      <Box width="100%" height="10px" bg="preview.dark" borderRadius="sm" mb={2} />
-      <Box width="100%" height="10px" bg="preview.dark" borderRadius="sm" />
-    </Box>
-  );
-}
-
 Text.graftOptions = {
   defaultProps: {
     color: { r: 0, g: 0, b: 0, a: 1 },
     content: 'Lorem ipsum dolor sit amet.',
     fontSize: 16,
   },
-  preview: Preview,
 };
 
 export default Text;
