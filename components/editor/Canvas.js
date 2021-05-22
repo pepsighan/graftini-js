@@ -1,30 +1,38 @@
-import { Box } from '@chakra-ui/layout';
 import { Canvas as Canvs, ROOT_NODE_ID } from '@graftini/graft';
 import { useCallback } from 'react';
+import Frame from 'react-frame-component';
 import { useDesignerState } from 'store/designer';
 
 export default function Canvas() {
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
 
   return (
-    <Box
-      onClick={useCallback(() => {
-        // The selection is not actually the root node. But since the root node is directly below.
-        // Its the technically the same.
-        selectComponent(ROOT_NODE_ID);
-      }, [selectComponent])}
-      sx={{
+    <Frame
+      style={{
         width: '100%',
         // The height of the nav is substracted, so that the editor does not cause window-wide scroll.
         height: 'calc(100vh - 64px)',
         border: '1px',
         borderColor: 'gray.300',
-        userSelect: 'none',
         // Any content that overflows vertically will have the scrollbar on this box itself.
         overflowY: 'auto',
       }}
     >
-      <Canvs />
-    </Box>
+      <div
+        onClick={useCallback(() => {
+          // The selection is not actually the root node. But since the root node is directly below.
+          // Its the technically the same.
+          selectComponent(ROOT_NODE_ID);
+        }, [selectComponent])}
+        style={{
+          // Take full-width of the iframe.
+          width: '100vw',
+          height: '100vh',
+          userSelect: 'none',
+        }}
+      >
+        <Canvs />
+      </div>
+    </Frame>
   );
 }
