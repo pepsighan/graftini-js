@@ -7,11 +7,9 @@ import { MdArrowBack, MdCode, MdImportContacts } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 
 function DrawButton({ mr, label, component }) {
-  const ref = useCreateComponent({ type: component });
-
   return (
     <Button
-      ref={ref}
+      {...useCreateComponent({ type: component })}
       variant="outline"
       size="lg"
       sx={{ flexDirection: 'column', px: 3, color: 'gray.600', mr, width: '80px' }}
@@ -44,7 +42,7 @@ export default function EditorNavigation() {
       </Box>
 
       <Flex>
-        <DrawButton mr={4} label="Container" component="Container" canvas />
+        <DrawButton mr={4} label="Container" component="Container" />
         <DrawButton mr={4} label="Button" component="Button" />
         <DrawButton label="Text" component="Text" />
       </Flex>
