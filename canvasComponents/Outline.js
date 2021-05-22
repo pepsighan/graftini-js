@@ -1,7 +1,4 @@
 /** @jsxImportSource @emotion/react */
-
-import { IconButton } from '@chakra-ui/button';
-import { Box } from '@chakra-ui/layout';
 import { useComponentId, useEditor, useEditorState } from '@graftini/graft';
 import { useCallback } from 'react';
 import { MdDelete } from 'react-icons/md';
@@ -28,7 +25,7 @@ export default function Outline({ children }) {
   );
 
   return (
-    <Box
+    <div
       position="relative"
       outline={isSelected ? '1px solid #9999ff' : null}
       css={{
@@ -48,7 +45,7 @@ export default function Outline({ children }) {
         [componentId, selectComponent]
       )}
     >
-      <Box
+      <div
         className="component-toolbox"
         display="flex"
         alignItems="center"
@@ -62,11 +59,11 @@ export default function Outline({ children }) {
         backgroundColor="blue.200"
       >
         {name || 'Untitled'}
-        <IconButton size="xs" p={0.5} ml={2} height="unset" minWidth="unset" onClick={onDelete}>
+        <button size="xs" p={0.5} ml={2} height="unset" minWidth="unset" onClick={onDelete}>
           <MdDelete />
-        </IconButton>
-      </Box>
+        </button>
+      </div>
       {children}
-    </Box>
+    </div>
   );
 }

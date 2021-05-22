@@ -1,13 +1,19 @@
 import { Canvas as Canvs, ROOT_NODE_ID } from '@graftini/graft';
+import IFrame from 'components/IFrame';
 import { useCallback } from 'react';
-import Frame from 'react-frame-component';
 import { useDesignerState } from 'store/designer';
 
 export default function Canvas() {
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
 
+  const onRootSelection = useCallback(() => {
+    // The selection is not actually the root node. But since the root node is directly below.
+    // Its the technically the same.
+    selectComponent(ROOT_NODE_ID);
+  }, [selectComponent]);
+
   return (
-    <Frame
+    <IFrame
       style={{
         width: '100%',
         // The height of the nav is substracted, so that the editor does not cause window-wide scroll.
@@ -18,21 +24,19 @@ export default function Canvas() {
         overflowY: 'auto',
       }}
     >
-      <div
-        onClick={useCallback(() => {
-          // The selection is not actually the root node. But since the root node is directly below.
-          // Its the technically the same.
-          selectComponent(ROOT_NODE_ID);
-        }, [selectComponent])}
-        style={{
-          // Take full-width of the iframe.
-          width: '100vw',
-          height: '100vh',
-          userSelect: 'none',
-        }}
-      >
-        <Canvs />
-      </div>
-    </Frame>
+      {() => (
+        <div
+          onClick={onRootSelection}
+          style={{
+            // Take full-width of the iframe.
+            width: '100vw',
+            height: '100vh',
+            userSelect: 'none',
+          }}
+        >
+          <Canvs />
+        </div>
+      )}
+    </IFrame>
   );
 }
