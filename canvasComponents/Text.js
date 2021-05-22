@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { useComponentProps } from '@graftini/graft';
-import { motion } from 'framer-motion';
 import { useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parsePositiveInteger } from 'utils/parser';
@@ -15,9 +14,9 @@ function Text(props) {
 
   return (
     <Outline>
-      <motion.div style={{ color: rgbaToCss(color), fontSize }} {...props}>
+      <div drag {...props} style={{ color: rgbaToCss(color), fontSize }}>
         {content}
-      </motion.div>
+      </div>
     </Outline>
   );
 }

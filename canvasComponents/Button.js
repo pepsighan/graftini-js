@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { useComponentProps } from '@graftini/graft';
-import { motion } from 'framer-motion';
 import { rgbaToCss } from 'utils/colors';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -11,7 +10,7 @@ function Button(props) {
   const { padding, backgroundColor, color, children } = useComponentProps();
   return (
     <Outline>
-      <motion.button
+      <button
         {...props}
         style={{
           display: 'block',
@@ -25,7 +24,7 @@ function Button(props) {
         }}
       >
         {children}
-      </motion.button>
+      </button>
     </Outline>
   );
 }

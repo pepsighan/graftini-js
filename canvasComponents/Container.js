@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { useComponentId, useComponentProps, useEditorState } from '@graftini/graft';
-import { motion } from 'framer-motion';
 import { useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
@@ -22,7 +21,7 @@ function Container({ children, ...rest }) {
 
   return (
     <Outline>
-      <motion.div
+      <div
         {...rest}
         style={{
           width,
@@ -41,7 +40,7 @@ function Container({ children, ...rest }) {
         }}
       >
         {children}
-      </motion.div>
+      </div>
     </Outline>
   );
 }
