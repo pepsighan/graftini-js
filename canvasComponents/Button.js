@@ -49,4 +49,23 @@ Button.graftOptions = {
   display: 'block',
 };
 
+Button.Render = ({ padding, backgroundColor, color, children }) => {
+  return (
+    <button
+      style={{
+        display: 'block',
+        width: '100%',
+        paddingTop: padding?.top,
+        paddingRight: padding?.right,
+        paddingBottom: padding?.bottom,
+        paddingLeft: padding?.left,
+        backgroundColor: rgbaToCss(backgroundColor),
+        color: rgbaToCss(color),
+      }}
+    >
+      {children}
+    </button>
+  );
+};
+
 export default Button;
