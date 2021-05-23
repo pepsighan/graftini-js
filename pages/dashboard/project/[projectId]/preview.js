@@ -1,4 +1,6 @@
+import Preview from 'components/preview/Preview';
 import PreviewNavigation from 'components/preview/PreviewNavigation';
+import SEO from 'components/SEO';
 import NotFound from 'pages/404';
 import { protectedPage } from 'utils/auth';
 import { useProjectFromRouter } from '.';
@@ -17,7 +19,9 @@ export default protectedPage(function ProjectPreview() {
 
   return (
     <>
+      <SEO title={`Preview - ${project.name}`} />
       <PreviewNavigation projectName={project.name} />
+      <Preview initialRoute="/" />
     </>
   );
 });
