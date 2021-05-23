@@ -8,10 +8,14 @@ import { useMyProject } from 'store/projects';
 import { protectedPage } from 'utils/auth';
 import { decodeSlug } from 'utils/url';
 
-export default protectedPage(function Project() {
+export function useProjectFromRouter() {
   const { query } = useRouter();
   const projectId = useMemo(() => decodeSlug(query.projectId), [query.projectId]);
-  const { project, loading } = useMyProject({ projectId });
+  return useMyProject({ projectId });
+}
+
+export default protectedPage(function Project() {
+  const { project, loading } = useProjectFromRouter();
 
   if (loading) {
     // TODO: Show some skeleton loading of the editor here.
@@ -23,9 +27,9 @@ export default protectedPage(function Project() {
   }
 
   return (
-    <DesignerStateProvider key={projectId} initialPages={project.pages}>
+    <DesignerStateProvider key={project.id} initialPages={project.pages}>
       <SEO title="Project" />
-      <Designer projectId={projectId} />
+      <Designer projectId={project.id} />
     </DesignerStateProvider>
   );
 });

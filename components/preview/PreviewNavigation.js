@@ -1,9 +1,11 @@
-import { IconButton } from '@chakra-ui/button';
-import { Flex } from '@chakra-ui/layout';
+import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { MdArrowBack } from 'react-icons/md';
 
-export default function PreviewNavigation() {
+export default function PreviewNavigation({ projectName }) {
+  const { query } = useRouter();
+
   return (
     <Flex
       py={2}
@@ -13,10 +15,18 @@ export default function PreviewNavigation() {
       position="sticky"
       top={0}
       backgroundColor="gray.50"
+      borderBottom="1px"
+      borderBottomColor="gray.200"
     >
-      <Link href="/">
+      <Link href={`/dashboard/project/${query.projectId}`}>
         <IconButton ml={4} size="sm" icon={<MdArrowBack />} />
       </Link>
+
+      <Heading as="h6" size="xs">
+        Preview - {projectName}
+      </Heading>
+
+      <Box />
     </Flex>
   );
 }

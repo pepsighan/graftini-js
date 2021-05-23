@@ -4,17 +4,17 @@ import weakMemoize from '@emotion/weak-memoize';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 import { CSSReset } from './CSSReset';
 
-const cacheKey = 'designer-emotion-css';
+const cacheKey = 'app';
 
 /**
  * This is an iframe which supports emotion styles.
  */
-export default function IFrame({ style, children }) {
+export default function IFrame({ title, style, children }) {
   const initialContent = `
 <!DOCTYPE html>
 <html>
   <head data-emotion-cache-key="${cacheKey}">
-    <title>Designer</title>
+    <title>${title}</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
   </head>
   <body>

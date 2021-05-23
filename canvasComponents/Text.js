@@ -14,7 +14,7 @@ function Text(props) {
 
   return (
     <Outline>
-      <div drag {...props} style={{ color: rgbaToCss(color), fontSize }}>
+      <div {...props} style={{ color: rgbaToCss(color), fontSize }}>
         {content}
       </div>
     </Outline>
@@ -42,6 +42,10 @@ Text.graftOptions = {
     content: 'Lorem ipsum dolor sit amet.',
     fontSize: 16,
   },
+};
+
+Text.Render = ({ content, color, fontSize }) => {
+  return <div css={{ color: rgbaToCss(color), fontSize }}>{content}</div>;
 };
 
 export default Text;
