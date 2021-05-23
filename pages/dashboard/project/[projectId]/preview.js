@@ -17,7 +17,7 @@ export default protectedPage(function ProjectPreview() {
 
   return (
     <>
-      <PreviewNavigation />
+      <PreviewNavigation projectName={project.name} />
     </>
   );
 });
