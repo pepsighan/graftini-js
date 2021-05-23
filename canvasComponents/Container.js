@@ -91,7 +91,7 @@ Container.graftOptions = {
 Container.Render = ({ width, height, padding, margin, backgroundColor, children }) => {
   return (
     <div
-      style={{
+      css={{
         width,
         height,
         marginTop: margin?.top,

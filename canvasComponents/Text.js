@@ -45,7 +45,7 @@ Text.graftOptions = {
 };
 
 Text.Render = ({ content, color, fontSize }) => {
-  return <div style={{ color: rgbaToCss(color), fontSize }}>{content}</div>;
+  return <div css={{ color: rgbaToCss(color), fontSize }}>{content}</div>;
 };
 
 export default Text;

@@ -52,7 +52,7 @@ Button.graftOptions = {
 Button.Render = ({ padding, backgroundColor, color, children }) => {
   return (
     <button
-      style={{
+      css={{
         display: 'block',
         width: '100%',
         paddingTop: padding?.top,
