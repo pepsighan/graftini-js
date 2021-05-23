@@ -4,7 +4,7 @@ import weakMemoize from '@emotion/weak-memoize';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 import { CSSReset } from './CSSReset';
 
-const cacheKey = 'designer-emotion-css';
+const cacheKey = 'app';
 
 /**
  * This is an iframe which supports emotion styles.
