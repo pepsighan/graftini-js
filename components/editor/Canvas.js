@@ -14,6 +14,7 @@ export default function Canvas() {
 
   return (
     <IFrame
+      title="Designer"
       style={{
         width: '100%',
         // The height of the nav is substracted, so that the editor does not cause window-wide scroll.

@@ -22,6 +22,7 @@ export default function Preview({ initialRoute }) {
 
   return (
     <IFrame
+      title="Preview"
       style={{
         width: '100%',
         // The height of the nav is substracted, so that the preview does not cause window-wide scroll.
