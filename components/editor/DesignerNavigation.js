@@ -1,6 +1,7 @@
 import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
 import { useCreateComponent } from '@graftini/graft';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { CgScreen } from 'react-icons/cg';
 import { MdArrowBack, MdCode, MdImportContacts } from 'react-icons/md';
@@ -21,6 +22,7 @@ function DrawButton({ mr, label, component }) {
 }
 
 export default function EditorNavigation() {
+  const { query } = useRouter();
   const toggleQueryBuilderPane = useDesignerState(
     useCallback((state) => state.toggleQueryBuilderPane, [])
   );
@@ -49,7 +51,7 @@ export default function EditorNavigation() {
 
       <Flex>
         <IconButton icon={<MdCode />} onClick={toggleQueryBuilderPane} />
-        <Link href="/preview">
+        <Link href={`/dashboard/project/${query.projectId}/preview`}>
           <IconButton ml={4} icon={<CgScreen />} />
         </Link>
       </Flex>
