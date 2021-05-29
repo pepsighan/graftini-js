@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
+import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { useCallback } from 'react';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';

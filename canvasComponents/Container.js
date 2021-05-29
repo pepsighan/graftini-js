@@ -33,6 +33,7 @@ function Container({ children, ...rest }) {
 
 Container.graftOptions = {
   defaultProps: {
+    tag: 'div',
     width: null,
     height: null,
     padding: null,
