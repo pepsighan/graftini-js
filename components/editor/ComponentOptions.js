@@ -1,5 +1,5 @@
 import { Box, Text } from '@chakra-ui/react';
-import components from 'canvasComponents';
+import { componentOptions } from 'canvasComponents';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
@@ -26,15 +26,12 @@ export default function StyleOptions() {
     );
   }
 
-  const Component = type ? components[type] : null;
+  const Options = type ? componentOptions[type] : null;
 
   return (
     <>
-      <Text fontWeight="bold" mb={2}>
-        Styles
-      </Text>
-      {Component?.Options != null ? (
-        <Component.Options key={selectedComponentId} componentId={selectedComponentId} />
+      {Options != null ? (
+        <Options key={selectedComponentId} componentId={selectedComponentId} />
       ) : null}
     </>
   );

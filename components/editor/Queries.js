@@ -1,6 +1,6 @@
-import { Box, Button, Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
 import { useCallback } from 'react';
-import { MdDelete } from 'react-icons/md';
+import { MdAdd, MdDelete } from 'react-icons/md';
 import { useDeleteQuery, useMyProjectQueries } from 'store/projects';
 import { useProjectId } from './Designer';
 import QueryBuilderDialog from './graphqlQuery/QueryBuilderDialog';
@@ -26,9 +26,15 @@ export default function Queries() {
 
   return (
     <>
-      <Text fontWeight="bold" mb={2}>
-        Queries
-      </Text>
+      <Flex justifyContent="space-between" alignItems="center" mb={2}>
+        <Text as="span" fontSize="sm" fontWeight="semibold">
+          Queries
+        </Text>
+
+        <IconButton size="sm" onClick={onOpen}>
+          <MdAdd />
+        </IconButton>
+      </Flex>
 
       <Box mb={4}>
         {queries.map((it) => (
@@ -40,10 +46,13 @@ export default function Queries() {
           </Flex>
         ))}
 
-        {!loading && queries.length === 0 && <Text color="gray.500">There are no queries.</Text>}
+        {!loading && queries.length === 0 && (
+          <Text mt={2} fontSize="sm" color="gray.600">
+            There are no queries.
+          </Text>
+        )}
       </Box>
 
-      <Button onClick={onOpen}>New Query</Button>
       <QueryBuilderDialog key={isOpen ? 0 : 1} isOpen={isOpen} onClose={onClose} />
     </>
   );

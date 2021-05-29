@@ -29,8 +29,7 @@ export default function Canvas() {
         <div
           onClick={onRootSelection}
           style={{
-            // Take full-width of the iframe.
-            width: '100vw',
+            width: '100%',
             height: '100vh',
             userSelect: 'none',
           }}

@@ -1,7 +1,6 @@
-import { Box, Flex, Heading, IconButton } from '@chakra-ui/react';
-import Link from 'next/link';
+import { Box, Flex, Heading } from '@chakra-ui/react';
+import BackButton from 'components/BackButton';
 import { useRouter } from 'next/router';
-import { MdArrowBack } from 'react-icons/md';
 
 export default function PreviewNavigation({ projectName }) {
   const { query } = useRouter();
@@ -18,9 +17,7 @@ export default function PreviewNavigation({ projectName }) {
       borderBottom="1px"
       borderBottomColor="gray.200"
     >
-      <Link href={`/dashboard/project/${query.projectId}`}>
-        <IconButton ml={4} size="sm" icon={<MdArrowBack />} />
-      </Link>
+      <BackButton href={`/dashboard/project/${query.projectId}`} />
 
       <Heading as="h6" size="xs">
         Preview - {projectName}

@@ -7,7 +7,7 @@ import { ProjectPage } from './projects';
 
 export enum RightSidebarOpenPane {
   QueryBuilder,
-  StyleOptions,
+  ComponentOptions,
 }
 
 type UseDesignerState = {
@@ -30,7 +30,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
     const immerSet = (fn: (state: UseDesignerState) => void) => set(produce(fn));
 
     return {
-      rightSidebarOpenPane: RightSidebarOpenPane.StyleOptions,
+      rightSidebarOpenPane: RightSidebarOpenPane.ComponentOptions,
       currentOpenPage: pages.length > 0 ? pages[0].id : null,
       selectedComponentId: null,
       pages: pages.reduce((acc, cur) => {
@@ -52,7 +52,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
         immerSet((state) => {
           state.rightSidebarOpenPane =
             state.rightSidebarOpenPane === RightSidebarOpenPane.QueryBuilder
-              ? RightSidebarOpenPane.StyleOptions
+              ? RightSidebarOpenPane.ComponentOptions
               : RightSidebarOpenPane.QueryBuilder;
         });
       },

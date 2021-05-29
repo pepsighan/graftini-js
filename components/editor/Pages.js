@@ -1,9 +1,10 @@
 import { useDisclosure } from '@chakra-ui/hooks';
-import { Box, Button, Stack, Tag, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, Stack, Tag, Text } from '@chakra-ui/react';
 import NewPageDialog from 'components/NewPageDialog';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
+import { MdAdd } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 import { useMyProject } from 'store/projects';
 import { encode } from 'utils/url';
@@ -78,9 +79,17 @@ export default function Pages() {
 
   return (
     <Box mb={4}>
-      <Text fontWeight="bold">Pages</Text>
+      <Flex justifyContent="space-between" alignItems="center">
+        <Text as="span" fontSize="sm" fontWeight="bold">
+          Pages
+        </Text>
 
-      <Stack mt={2}>
+        <IconButton onClick={onOpen} size="sm">
+          <MdAdd />
+        </IconButton>
+      </Flex>
+
+      <Stack mt={1}>
         {project.pages.map((it) => (
           <PageItem
             key={it.id}
@@ -91,10 +100,6 @@ export default function Pages() {
           />
         ))}
       </Stack>
-
-      <Button mt={2} onClick={onOpen} isFullWidth size="sm">
-        New Page
-      </Button>
 
       <NewPageDialog key={isOpen} isOpen={isOpen} onClose={onClose} />
     </Box>

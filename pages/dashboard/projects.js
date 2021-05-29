@@ -26,7 +26,9 @@ export default protectedPage(function Projects() {
       <Navigation />
       <Container mt={4} maxW="container.lg">
         <Flex alignItems="center" justifyContent="space-between" mb={4}>
-          <Heading size="md">All Projects</Heading>
+          <Heading size="sm" fontWeight="bold">
+            All Projects
+          </Heading>
 
           <Button size="sm" colorScheme="blue" onClick={onOpen}>
             New
@@ -57,9 +59,15 @@ export default protectedPage(function Projects() {
 function ProjectItem({ id, name }) {
   return (
     <Link href={`/dashboard/project/${slugify({ id, name })}`} passHref>
-      <Button as="a" isFullWidth justifyContent="flex-start" height="unset" py={2}>
+      <Button
+        as="a"
+        isFullWidth
+        justifyContent="flex-start"
+        height="unset"
+        py={2}
+        fontWeight="normal"
+      >
         <Avatar name="P" size="sm" mr={3} />
-
         {name}
       </Button>
     </Link>

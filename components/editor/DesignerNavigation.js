@@ -1,23 +1,64 @@
-import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
 import { useCreateComponent } from '@graftini/graft';
+import BackButton from 'components/BackButton';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { CgScreen } from 'react-icons/cg';
-import { MdArrowBack, MdCode, MdImportContacts } from 'react-icons/md';
+import { MdCode } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
+import theme from 'utils/theme';
 
-function DrawButton({ mr, label, component }) {
+function DrawButton({ mr, label, icon, component }) {
   return (
-    <Button
-      {...useCreateComponent({ type: component })}
-      variant="outline"
-      size="lg"
-      sx={{ flexDirection: 'column', px: 3, color: 'gray.600', mr, width: '80px' }}
+    <motion.div
+      style={{
+        color: theme.colors.gray[800],
+        '--icon-color': theme.colors.gray[600],
+      }}
+      whileHover={{
+        color: theme.colors.primary[700],
+        '--icon-color': theme.colors.primary[500],
+      }}
     >
-      <MdImportContacts />
-      <Text sx={{ fontSize: 'xs', fontWeight: 'normal', mt: 1 }}>{label}</Text>
-    </Button>
+      <Button
+        {...useCreateComponent({ type: component })}
+        size="lg"
+        variant="ghost"
+        flexDirection="column"
+        px={3}
+        mr={mr}
+        width="70px"
+      >
+        {icon}
+        <Text fontSize="sm" fontWeight="normal" mt={1.5}>
+          {label}
+        </Text>
+      </Button>
+    </motion.div>
+  );
+}
+
+function ContainerIcon() {
+  return <Box width={5} height={5} bg="var(--icon-color)" borderRadius="sm" />;
+}
+
+function TextIcon() {
+  return (
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      width={5}
+      height={5}
+      bg="var(--icon-color)"
+      borderRadius="sm"
+      color="white"
+      fontSize="sm"
+      pointerEvents="none"
+    >
+      A
+    </Flex>
   );
 }
 
@@ -29,30 +70,29 @@ export default function EditorNavigation() {
 
   return (
     <Flex
-      py={2}
+      py={1.5}
       px={4}
       justifyContent="space-between"
       alignItems="center"
       position="sticky"
       top={0}
-      backgroundColor="gray.50"
+      backgroundColor="gray.100"
+      borderBottom="1px"
+      borderBottomColor="gray.400"
     >
       <Box>
-        <Link href="/dashboard/projects">
-          <IconButton icon={<MdArrowBack />} size="sm" />
-        </Link>
+        <BackButton href="/dashboard/projects" />
       </Box>
 
       <Flex>
-        <DrawButton mr={4} label="Container" component="Container" />
-        <DrawButton mr={4} label="Button" component="Button" />
-        <DrawButton label="Text" component="Text" />
+        <DrawButton mr={4} label="Container" component="Container" icon={<ContainerIcon />} />
+        <DrawButton label="Text" component="Text" icon={<TextIcon />} />
       </Flex>
 
       <Flex>
-        <IconButton icon={<MdCode />} onClick={toggleQueryBuilderPane} />
+        <IconButton icon={<Icon as={MdCode} fontSize="xl" />} onClick={toggleQueryBuilderPane} />
         <Link href={`/dashboard/project/${query.projectId}/preview`}>
-          <IconButton ml={4} icon={<CgScreen />} />
+          <IconButton ml={4} icon={<Icon as={CgScreen} fontSize="xl" />} />
         </Link>
       </Flex>
     </Flex>

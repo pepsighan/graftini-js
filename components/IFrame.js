@@ -2,7 +2,7 @@ import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import weakMemoize from '@emotion/weak-memoize';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
-import { CSSReset } from './CSSReset';
+import { Reset } from '@graftini/components';
 
 const cacheKey = 'app';
 
@@ -28,7 +28,8 @@ export default function IFrame({ title, style, children }) {
       <FrameContextConsumer>
         {({ document }) => (
           <CacheProvider value={memoizedCreateCache(document.head)}>
-            <CSSReset /> {children()}
+            <Reset />
+            {children()}
           </CacheProvider>
         )}
       </FrameContextConsumer>
