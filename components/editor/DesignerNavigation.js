@@ -1,11 +1,12 @@
 import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
 import { useCreateComponent } from '@graftini/graft';
+import BackButton from 'components/BackButton';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { CgScreen } from 'react-icons/cg';
-import { MdArrowBack, MdCode } from 'react-icons/md';
+import { MdCode } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
@@ -80,9 +81,7 @@ export default function EditorNavigation() {
       borderBottomColor="gray.400"
     >
       <Box>
-        <Link href="/dashboard/projects">
-          <IconButton icon={<MdArrowBack />} size="sm" />
-        </Link>
+        <BackButton href="/dashboard/projects" />
       </Box>
 
       <Flex>
