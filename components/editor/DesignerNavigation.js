@@ -1,4 +1,4 @@
-import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
 import { useCreateComponent } from '@graftini/graft';
 import BackButton from 'components/BackButton';
 import { motion } from 'framer-motion';
@@ -90,9 +90,9 @@ export default function EditorNavigation() {
       </Flex>
 
       <Flex>
-        <IconButton icon={<MdCode />} onClick={toggleQueryBuilderPane} />
+        <IconButton icon={<Icon as={MdCode} fontSize="xl" />} onClick={toggleQueryBuilderPane} />
         <Link href={`/dashboard/project/${query.projectId}/preview`}>
-          <IconButton ml={4} icon={<CgScreen />} />
+          <IconButton ml={4} icon={<Icon as={CgScreen} fontSize="xl" />} />
         </Link>
       </Flex>
     </Flex>
