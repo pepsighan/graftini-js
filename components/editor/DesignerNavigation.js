@@ -4,20 +4,56 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { CgScreen } from 'react-icons/cg';
-import { MdArrowBack, MdCode, MdImportContacts } from 'react-icons/md';
+import { MdArrowBack, MdCode } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
+import theme from 'utils/theme';
 
-function DrawButton({ mr, label, component }) {
+function DrawButton({ mr, label, icon, component }) {
   return (
     <Button
       {...useCreateComponent({ type: component })}
-      variant="outline"
       size="lg"
-      sx={{ flexDirection: 'column', px: 3, color: 'gray.600', mr, width: '80px' }}
+      variant="ghost"
+      flexDirection="column"
+      px={3}
+      color="gray.700"
+      mr={mr}
+      width="70px"
+      sx={{
+        '--icon-color': theme.colors.gray[500],
+      }}
+      _hover={{
+        color: 'primary.500',
+        '--icon-color': theme.colors.primary[500],
+      }}
     >
-      <MdImportContacts />
-      <Text sx={{ fontSize: 'xs', fontWeight: 'normal', mt: 1 }}>{label}</Text>
+      {icon}
+      <Text fontSize="xs" fontWeight="normal" mt={1.5}>
+        {label}
+      </Text>
     </Button>
+  );
+}
+
+function ContainerIcon() {
+  return <Box width={5} height={5} bg="var(--icon-color)" borderRadius="sm" />;
+}
+
+function TextIcon() {
+  return (
+    <Flex
+      justifyContent="center"
+      alignItems="center"
+      width={5}
+      height={5}
+      bg="var(--icon-color)"
+      borderRadius="sm"
+      color="white"
+      fontSize="sm"
+      pointerEvents="none"
+    >
+      A
+    </Flex>
   );
 }
 
@@ -29,13 +65,15 @@ export default function EditorNavigation() {
 
   return (
     <Flex
-      py={2}
+      py={1.5}
       px={4}
       justifyContent="space-between"
       alignItems="center"
       position="sticky"
       top={0}
-      backgroundColor="gray.50"
+      backgroundColor="gray.100"
+      borderBottom="1px"
+      borderBottomColor="gray.400"
     >
       <Box>
         <Link href="/dashboard/projects">
@@ -44,8 +82,8 @@ export default function EditorNavigation() {
       </Box>
 
       <Flex>
-        <DrawButton mr={4} label="Container" component="Container" />
-        <DrawButton label="Text" component="Text" />
+        <DrawButton mr={4} label="Container" component="Container" icon={<ContainerIcon />} />
+        <DrawButton label="Text" component="Text" icon={<TextIcon />} />
       </Flex>
 
       <Flex>
