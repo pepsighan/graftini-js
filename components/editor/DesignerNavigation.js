@@ -13,8 +13,8 @@ function DrawButton({ mr, label, icon, component }) {
   return (
     <motion.div
       style={{
-        color: theme.colors.gray[700],
-        '--icon-color': theme.colors.gray[500],
+        color: theme.colors.gray[800],
+        '--icon-color': theme.colors.gray[600],
       }}
       whileHover={{
         color: theme.colors.primary[700],

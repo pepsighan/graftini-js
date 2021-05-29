@@ -3,7 +3,7 @@ import Pages from './Pages';
 
 export default function LeftSidebar() {
   return (
-    <Box p={4} width={300} bg="gray.50">
+    <Box p={4} width={300} bg="gray.100" borderRight="1px" borderRightColor="gray.400">
       <Pages />
     </Box>
   );
