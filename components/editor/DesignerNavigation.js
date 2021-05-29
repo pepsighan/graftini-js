@@ -45,7 +45,6 @@ export default function EditorNavigation() {
 
       <Flex>
         <DrawButton mr={4} label="Container" component="Container" />
-        <DrawButton mr={4} label="Button" component="Button" />
         <DrawButton label="Text" component="Text" />
       </Flex>
 
