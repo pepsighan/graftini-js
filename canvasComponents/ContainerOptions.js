@@ -1,3 +1,4 @@
+import { Box, Text } from '@chakra-ui/layout';
 import { useCallback } from 'react';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
@@ -27,12 +28,53 @@ export default function ContainerOptions({ componentId }) {
         values.margin.left = parseInteger(values.margin?.left);
       }, [])}
     >
+      <PropertiesSection />
+      <AlignmentSection />
+      <LayoutSection />
+      <AppearanceSection />
+    </CanvasForm>
+  );
+}
+
+function PropertiesSection() {
+  return (
+    <>
       <TextInput name="name" label="Name" />
+      <TextInput name="tag" label="Tag" spaceTop />
+    </>
+  );
+}
+
+function AlignmentSection() {
+  return (
+    <>
+      <NumberInput name="mainAxisAlignment" label="Horizontal" spaceTop />
+      <NumberInput name="crossAxisAlignment" label="Vertical" spaceTop />
+    </>
+  );
+}
+
+function LayoutSection() {
+  return (
+    <Box mt={8}>
+      <Text fontSize="sm" fontWeight="bold" mb={3}>
+        Layout
+      </Text>
       <NumberInput name="width" label="Width" spaceTop />
       <NumberInput name="height" label="Height" spaceTop />
       <SpacingField name="padding" label="Padding" spaceTop />
       <SpacingField name="margin" label="Margin" spaceTop />
-      <ColorPicker name="color" label="Background Color" spaceTop />
-    </CanvasForm>
+    </Box>
+  );
+}
+
+function AppearanceSection() {
+  return (
+    <Box mt={8}>
+      <Text fontSize="sm" fontWeight="bold" mb={3}>
+        Appearance
+      </Text>
+      <ColorPicker name="color" label="Fill" />
+    </Box>
   );
 }
