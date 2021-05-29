@@ -1,4 +1,4 @@
-import { theme, extendTheme } from '@chakra-ui/react';
+import { extendTheme, theme } from '@chakra-ui/react';
 
 export default extendTheme({
   colors: {
@@ -52,11 +52,30 @@ export default extendTheme({
     extrabold: '',
     black: '',
   },
+  radii: {
+    none: '0',
+    sm: '2px',
+    base: '4px',
+    md: '4px',
+    lg: '6px',
+    xl: '8px',
+    '2xl': '10px',
+    '3xl': '12px',
+    full: '100%',
+  },
   styles: {
     global: {
       'html, body': {
         // The default font size is 14px.
         fontSize: 14,
+      },
+    },
+  },
+  components: {
+    Button: {
+      baseStyle: {
+        fontWeight: 500,
+        borderRadius: 'base',
       },
     },
   },

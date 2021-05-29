@@ -26,7 +26,9 @@ export default protectedPage(function Projects() {
       <Navigation />
       <Container mt={4} maxW="container.lg">
         <Flex alignItems="center" justifyContent="space-between" mb={4}>
-          <Heading size="md">All Projects</Heading>
+          <Heading size="sm" fontWeight={500}>
+            All Projects
+          </Heading>
 
           <Button size="sm" colorScheme="blue" onClick={onOpen}>
             New

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { loginWithGitHub, logout, useAuthUser } from 'store/auth';
 
-export default function Navigation() {
+export default function Navigation({ isTransparent }) {
   const { push } = useRouter();
 
   const onLogin = useCallback(async () => {
@@ -22,10 +22,10 @@ export default function Navigation() {
       alignItems="center"
       position="sticky"
       top={0}
-      backgroundColor="gray.50"
+      backgroundColor={isTransparent ? 'transparent' : 'gray.50'}
     >
       <Link href="/" passHref>
-        <Text as="a" fontWeight="bold">
+        <Text as="a" fontSize="xl" fontWeight={500} color={isTransparent ? 'white' : 'black'}>
           Graftini
         </Text>
       </Link>
