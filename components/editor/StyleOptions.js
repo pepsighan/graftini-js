@@ -30,7 +30,7 @@ export default function StyleOptions() {
 
   return (
     <>
-      <Text fontSize="sm" fontWeight={500} mb={2}>
+      <Text fontSize="sm" fontWeight="bold" mb={4}>
         Styles
       </Text>
       {Component?.Options != null ? (

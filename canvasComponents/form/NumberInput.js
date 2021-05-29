@@ -6,7 +6,7 @@ export default function NumberInput({ name, label, spaceTop }) {
 
   return (
     <Flex alignItems="center" mt={spaceTop ? 2 : 0}>
-      <Text fontSize="xs" mr={2}>
+      <Text fontSize="sm" mr={2}>
         {label}
       </Text>
       <Input {...register(name)} type="number" size="sm" bg="white" />

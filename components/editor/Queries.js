@@ -27,7 +27,7 @@ export default function Queries() {
   return (
     <>
       <Flex justifyContent="space-between" alignItems="center" mb={2}>
-        <Text as="span" fontSize="sm" fontWeight={500}>
+        <Text as="span" fontSize="sm" fontWeight="semibold">
           Queries
         </Text>
 

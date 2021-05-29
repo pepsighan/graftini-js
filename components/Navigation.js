@@ -25,7 +25,7 @@ export default function Navigation({ isTransparent }) {
       backgroundColor={isTransparent ? 'transparent' : 'gray.50'}
     >
       <Link href="/" passHref>
-        <Text as="a" fontSize="xl" fontWeight={500} color={isTransparent ? 'white' : 'black'}>
+        <Text as="a" fontSize="xl" fontWeight="semibold" color={isTransparent ? 'white' : 'black'}>
           Graftini
         </Text>
       </Link>

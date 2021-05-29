@@ -42,13 +42,13 @@ export default extendTheme({
   fontWeights: {
     light: 300,
     normal: 400,
-    medium: 500,
+    semibold: 600,
+    bold: 700,
     // Only the above font weights are needed. Rest are not present
     // in the font resource.
+    medium: '',
     hairline: '',
     thin: '',
-    semibold: '',
-    bold: '',
     extrabold: '',
     black: '',
   },
@@ -74,7 +74,7 @@ export default extendTheme({
   components: {
     Button: {
       baseStyle: {
-        fontWeight: 500,
+        fontWeight: 'semibold',
         borderRadius: 'base',
       },
     },

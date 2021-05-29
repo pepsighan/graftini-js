@@ -80,7 +80,7 @@ export default function Pages() {
   return (
     <Box mb={4}>
       <Flex justifyContent="space-between" alignItems="center">
-        <Text as="span" fontSize="sm" fontWeight={500}>
+        <Text as="span" fontSize="sm" fontWeight="bold">
           Pages
         </Text>
 

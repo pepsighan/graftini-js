@@ -14,7 +14,7 @@ export default function ColorPicker({ name, label, spaceTop }) {
 
   return (
     <Box mt={spaceTop ? 2 : 0} display="flex" alignItems="center">
-      <Text fontSize="xs" mr={2}>
+      <Text fontSize="sm" mr={2}>
         {label}
       </Text>
 

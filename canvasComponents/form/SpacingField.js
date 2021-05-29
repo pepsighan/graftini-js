@@ -6,7 +6,7 @@ export default function SpacingField({ name, label, spaceTop }) {
 
   return (
     <Flex mt={spaceTop ? 2 : 0} alignItems="center">
-      <Text fontSize="xs" mr={2}>
+      <Text fontSize="sm" mr={2}>
         {label}
       </Text>
       <Box flex={1}>

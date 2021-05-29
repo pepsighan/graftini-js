@@ -6,7 +6,7 @@ export default function TextInput({ name, label }) {
 
   return (
     <Flex alignItems="center">
-      <Text fontSize="xs" mr={2}>
+      <Text fontSize="sm" mr={2}>
         {label}
       </Text>
       <Input {...register(name)} size="sm" bg="white" />
