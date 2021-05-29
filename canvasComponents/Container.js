@@ -10,19 +10,16 @@ function Container({ children, ...rest }) {
   );
 
   // TODO: Provide a way to select a subsection of props.
-  const { width, height, padding, margin, color } = useComponentProps();
+  const { height, ...restProps } = useComponentProps();
 
   return (
     <Outline>
       <div {...rest}>
         <ContainerComp
-          width={width}
+          {...restProps}
           // If there is no children and no height, give it some so that it is visible.
           // TODO: https://github.com/pepsighan/nocode/issues/15.
           height={height ?? (hasChildren ? null : 80)}
-          margin={margin}
-          padding={padding}
-          color={color}
         >
           {children}
         </ContainerComp>
@@ -37,7 +34,7 @@ Container.graftOptions = {
     width: null,
     height: null,
     padding: null,
-    margin: {},
+    margin: null,
     color: { r: 220, g: 220, b: 255, a: 1 },
   },
   isCanvas: true,

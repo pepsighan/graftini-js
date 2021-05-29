@@ -62,6 +62,9 @@ function AlignmentSection() {
       <Labelled label="Vertical">
         <NumberInput name="crossAxisAlignment" />
       </Labelled>
+      <Labelled label="Direction">
+        <TextInput name="direction" />
+      </Labelled>
     </>
   );
 }
@@ -86,6 +89,9 @@ function LayoutSection() {
       <Labelled label="Margin">
         <SpacingField name="margin" />
       </Labelled>
+      <Labelled label="Overflow">
+        <ColorPicker name="overflow" />
+      </Labelled>
     </>
   );
 }
@@ -98,8 +104,20 @@ function AppearanceSection() {
           Appearance
         </Text>
       </GridItem>
+      <Labelled label="Opacity">
+        <ColorPicker name="opacity" />
+      </Labelled>
       <Labelled label="Fill">
         <ColorPicker name="color" />
+      </Labelled>
+      <Labelled label="Border">
+        <TextInput name="border" />
+      </Labelled>
+      <Labelled label="Radius">
+        <TextInput name="borderRadius" />
+      </Labelled>
+      <Labelled label="Shadow">
+        <TextInput name="shadow" />
       </Labelled>
     </>
   );
