@@ -39,4 +39,12 @@ export default extendTheme({
     heading: `"Inter", ${theme.fonts.heading}`,
     body: `"Inter", ${theme.fonts.body}`,
   },
+  styles: {
+    global: {
+      body: {
+        // The default font size is 14px.
+        fontSize: 14,
+      },
+    },
+  },
 });
