@@ -6,12 +6,12 @@ export default function SpacingField({ name }) {
   return (
     <Box>
       <Flex>
-        <Input size="sm" bg="white" {...register(`${name}.top`)} />
-        <Input size="sm" bg="white" {...register(`${name}.right`)} />
+        <Input size="sm" bg="white" {...register(`${name}.top`)} autoComplete="off" />
+        <Input size="sm" bg="white" {...register(`${name}.right`)} autoComplete="off" />
       </Flex>
       <Flex mt={1}>
-        <Input size="sm" bg="white" {...register(`${name}.left`)} />
-        <Input size="sm" bg="white" {...register(`${name}.bottom`)} />
+        <Input size="sm" bg="white" {...register(`${name}.left`)} autoComplete="off" />
+        <Input size="sm" bg="white" {...register(`${name}.bottom`)} autoComplete="off" />
       </Flex>
     </Box>
   );

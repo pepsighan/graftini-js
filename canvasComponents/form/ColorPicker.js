@@ -26,6 +26,7 @@ export default function ColorPicker({ name }) {
                 value={props.field.value ? rgbToHex(props.field.value) : ''}
                 readOnly
                 onClick={onPick}
+                autoComplete="off"
               />
 
               {picking && (
