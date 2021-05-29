@@ -21,6 +21,9 @@ Text.graftOptions = {
     color: { r: 0, g: 0, b: 0, a: 1 },
     content: 'Lorem ipsum dolor sit amet.',
     fontSize: 16,
+    fontFamily: 'sans-serif',
+    fontWeight: 'normal',
+    textAlign: 'left',
   },
 };
 

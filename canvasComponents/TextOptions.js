@@ -1,4 +1,4 @@
-import { Grid } from '@chakra-ui/layout';
+import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { useCallback } from 'react';
 import { parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
@@ -20,11 +20,29 @@ export default function TextOptions({ componentId }) {
         <Labelled label="Name">
           <TextInput name="name" />
         </Labelled>
+        <Labelled label="Tag">
+          <TextInput name="tag" />
+        </Labelled>
+
+        <GridItem colSpan={6} mt={4} mb={1}>
+          <Text fontSize="sm" fontWeight="bold">
+            Appearance
+          </Text>
+        </GridItem>
         <Labelled label="Font Size">
           <NumberInput name="fontSize" />
         </Labelled>
+        <Labelled label="Font">
+          <TextInput name="fontFamily" />
+        </Labelled>
+        <Labelled label="Font Weight">
+          <TextInput name="fontWeight" />
+        </Labelled>
         <Labelled label="Color">
           <ColorPicker name="color" />
+        </Labelled>
+        <Labelled label="Align">
+          <TextInput name="textAlign" />
         </Labelled>
       </Grid>
     </CanvasForm>
