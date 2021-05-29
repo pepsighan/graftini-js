@@ -2,7 +2,6 @@
 import { Container as ContainerComp } from '@graftini/components';
 import { useComponentId, useComponentProps, useEditorState } from '@graftini/graft';
 import { useCallback } from 'react';
-import { rgbaToCss } from 'utils/colors';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -18,7 +17,7 @@ function Container({ children, ...rest }) {
   );
 
   // TODO: Provide a way to select a subsection of props.
-  const { width, height, padding, margin, backgroundColor } = useComponentProps();
+  const { width, height, padding, margin, color } = useComponentProps();
 
   return (
     <Outline>
@@ -30,7 +29,7 @@ function Container({ children, ...rest }) {
           height={height ?? (hasChildren ? null : 80)}
           margin={margin}
           padding={padding}
-          color={rgbaToCss(backgroundColor)}
+          color={color}
         >
           {children}
         </ContainerComp>
@@ -65,7 +64,7 @@ Container.Options = function Options({ componentId }) {
       <NumberInput name="height" label="Height" spaceTop />
       <SpacingField name="padding" label="Padding" spaceTop />
       <SpacingField name="margin" label="Margin" spaceTop />
-      <ColorPicker name="backgroundColor" label="Background Color" spaceTop />
+      <ColorPicker name="color" label="Background Color" spaceTop />
     </CanvasForm>
   );
 };
@@ -76,7 +75,7 @@ Container.graftOptions = {
     height: null,
     padding: null,
     margin: {},
-    backgroundColor: { r: 220, g: 220, b: 255, a: 1 },
+    color: { r: 220, g: 220, b: 255, a: 1 },
   },
   isCanvas: true,
   display: 'block',
