@@ -30,9 +30,6 @@ export default function StyleOptions() {
 
   return (
     <>
-      <Text fontSize="sm" fontWeight="bold" mb={4}>
-        Styles
-      </Text>
       {Options != null ? (
         <Options key={selectedComponentId} componentId={selectedComponentId} />
       ) : null}
