@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { Container as ContainerComp } from '@graftini/components';
 import { useComponentId, useComponentProps, useEditorState } from '@graftini/graft';
 import { useCallback } from 'react';
 import { rgbaToCss } from 'utils/colors';
@@ -21,25 +22,18 @@ function Container({ children, ...rest }) {
 
   return (
     <Outline>
-      <div
-        {...rest}
-        style={{
-          width,
+      <div {...rest}>
+        <ContainerComp
+          width={width}
           // If there is no children and no height, give it some so that it is visible.
           // TODO: https://github.com/pepsighan/nocode/issues/15.
-          height: height ?? (hasChildren ? null : 80),
-          marginTop: margin?.top,
-          marginRight: margin?.right,
-          marginBottom: margin?.bottom,
-          marginLeft: margin?.left,
-          paddingTop: padding?.top,
-          paddingRight: padding?.right,
-          paddingBottom: padding?.bottom,
-          paddingLeft: padding?.left,
-          backgroundColor: rgbaToCss(backgroundColor),
-        }}
-      >
-        {children}
+          height={height ?? (hasChildren ? null : 80)}
+          margin={margin}
+          padding={padding}
+          color={rgbaToCss(backgroundColor)}
+        >
+          {children}
+        </ContainerComp>
       </div>
     </Outline>
   );
@@ -88,26 +82,5 @@ Container.graftOptions = {
   display: 'block',
 };
 
-Container.Render = ({ width, height, padding, margin, backgroundColor, children }) => {
-  return (
-    <div
-      css={{
-        width,
-        height,
-        marginTop: margin?.top,
-        marginRight: margin?.right,
-        marginBottom: margin?.bottom,
-        marginLeft: margin?.left,
-        paddingTop: padding?.top,
-        paddingRight: padding?.right,
-        paddingBottom: padding?.bottom,
-        paddingLeft: padding?.left,
-        backgroundColor: rgbaToCss(backgroundColor),
-      }}
-    >
-      {children}
-    </div>
-  );
-};
-
+Container.Render = ContainerComp;
 export default Container;
