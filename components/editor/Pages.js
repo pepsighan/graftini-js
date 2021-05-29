@@ -89,7 +89,7 @@ export default function Pages() {
         </IconButton>
       </Flex>
 
-      <Stack mt={2}>
+      <Stack mt={1}>
         {project.pages.map((it) => (
           <PageItem
             key={it.id}
