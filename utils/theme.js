@@ -39,6 +39,19 @@ export default extendTheme({
     heading: `"Inter", ${theme.fonts.heading}`,
     body: `"Inter", ${theme.fonts.body}`,
   },
+  fontWeights: {
+    light: 300,
+    normal: 400,
+    medium: 500,
+    // Only the above font weights are needed. Rest are not present
+    // in the font resource.
+    hairline: '',
+    thin: '',
+    semibold: '',
+    bold: '',
+    extrabold: '',
+    black: '',
+  },
   styles: {
     global: {
       'html, body': {

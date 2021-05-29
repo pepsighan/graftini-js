@@ -31,7 +31,7 @@ function DrawButton({ mr, label, icon, component }) {
         width="70px"
       >
         {icon}
-        <Text fontSize="xs" fontWeight="normal" mt={1.5}>
+        <Text fontSize="sm" fontWeight="normal" mt={1.5}>
           {label}
         </Text>
       </Button>

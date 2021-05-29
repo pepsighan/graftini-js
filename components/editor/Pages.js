@@ -80,9 +80,11 @@ export default function Pages() {
   return (
     <Box mb={4}>
       <Flex justifyContent="space-between" alignItems="center">
-        <Text fontWeight="bold">Pages</Text>
+        <Text as="span" fontSize="sm" fontWeight={500}>
+          Pages
+        </Text>
 
-        <IconButton onClick={onOpen} size="sm" variant="solid">
+        <IconButton onClick={onOpen} size="sm">
           <MdAdd />
         </IconButton>
       </Flex>
