@@ -1,8 +1,9 @@
-import { Box, Text } from '@chakra-ui/layout';
+import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
 import { useCallback } from 'react';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
+import Labelled from './form/Labelled';
 import NumberInput from './form/NumberInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
@@ -28,10 +29,13 @@ export default function ContainerOptions({ componentId }) {
         values.margin.left = parseInteger(values.margin?.left);
       }, [])}
     >
-      <PropertiesSection />
-      <AlignmentSection />
-      <LayoutSection />
-      <AppearanceSection />
+      {/* Making a 6 column grid system. */}
+      <Grid templateColumns="repeat(6, minmax(0, 1fr))" alignItems="center" gap={4}>
+        <PropertiesSection />
+        <AlignmentSection />
+        <LayoutSection />
+        <AppearanceSection />
+      </Grid>
     </CanvasForm>
   );
 }
@@ -39,8 +43,12 @@ export default function ContainerOptions({ componentId }) {
 function PropertiesSection() {
   return (
     <>
-      <TextInput name="name" label="Name" />
-      <TextInput name="tag" label="Tag" spaceTop />
+      <Labelled label="Name">
+        <TextInput name="name" />
+      </Labelled>
+      <Labelled label="Tag">
+        <TextInput name="tag" />
+      </Labelled>
     </>
   );
 }
@@ -48,33 +56,51 @@ function PropertiesSection() {
 function AlignmentSection() {
   return (
     <>
-      <NumberInput name="mainAxisAlignment" label="Horizontal" spaceTop />
-      <NumberInput name="crossAxisAlignment" label="Vertical" spaceTop />
+      <Labelled label="Horizontal">
+        <NumberInput name="mainAxisAlignment" />
+      </Labelled>
+      <Labelled label="Vertical">
+        <NumberInput name="crossAxisAlignment" />
+      </Labelled>
     </>
   );
 }
 
 function LayoutSection() {
   return (
-    <Box mt={8}>
-      <Text fontSize="sm" fontWeight="bold" mb={3}>
-        Layout
-      </Text>
-      <NumberInput name="width" label="Width" spaceTop />
-      <NumberInput name="height" label="Height" spaceTop />
-      <SpacingField name="padding" label="Padding" spaceTop />
-      <SpacingField name="margin" label="Margin" spaceTop />
-    </Box>
+    <>
+      <GridItem colSpan={6} mt={4} mb={1}>
+        <Text fontSize="sm" fontWeight="bold">
+          Layout
+        </Text>
+      </GridItem>
+      <Labelled label="Width">
+        <NumberInput name="width" />
+      </Labelled>
+      <Labelled label="Height">
+        <NumberInput name="height" />
+      </Labelled>
+      <Labelled label="Padding">
+        <SpacingField name="padding" />
+      </Labelled>
+      <Labelled label="Margin">
+        <SpacingField name="margin" />
+      </Labelled>
+    </>
   );
 }
 
 function AppearanceSection() {
   return (
-    <Box mt={8}>
-      <Text fontSize="sm" fontWeight="bold" mb={3}>
-        Appearance
-      </Text>
-      <ColorPicker name="color" label="Fill" />
-    </Box>
+    <>
+      <GridItem colSpan={6} mt={4} mb={1}>
+        <Text fontSize="sm" fontWeight="bold">
+          Appearance
+        </Text>
+      </GridItem>
+      <Labelled label="Fill">
+        <ColorPicker name="color" />
+      </Labelled>
+    </>
   );
 }
