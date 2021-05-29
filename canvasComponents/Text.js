@@ -1,51 +1,34 @@
 /** @jsxImportSource @emotion/react */
+import { Text as Txt } from '@graftini/components';
 import { useComponentProps } from '@graftini/graft';
-import { useCallback } from 'react';
-import { rgbaToCss } from 'utils/colors';
-import { parsePositiveInteger } from 'utils/parser';
-import CanvasForm from './form/CanvasForm';
-import ColorPicker from './form/ColorPicker';
-import NumberInput from './form/NumberInput';
-import TextInput from './form/TextInput';
 import Outline from './Outline';
 
 function Text(props) {
-  const { content, color, fontSize } = useComponentProps();
+  const { content, ...rest } = useComponentProps();
 
   return (
     <Outline>
-      <div {...props} style={{ color: rgbaToCss(color), fontSize }}>
-        {content}
+      <div {...props} style={{ width: '100%' }}>
+        <Txt {...rest}>{content}</Txt>
       </div>
     </Outline>
   );
 }
 
-Text.Options = function Options({ componentId }) {
-  return (
-    <CanvasForm
-      componentId={componentId}
-      onTransformValues={useCallback((values) => {
-        values.fontSize = parsePositiveInteger(values.fontSize);
-      }, [])}
-    >
-      <TextInput name="name" label="Name" />
-      <NumberInput name="fontSize" label="Font Size" spaceTop />
-      <ColorPicker name="color" label="Color" spaceTop />
-    </CanvasForm>
-  );
-};
-
 Text.graftOptions = {
   defaultProps: {
+    tag: 'p',
     color: { r: 0, g: 0, b: 0, a: 1 },
     content: 'Lorem ipsum dolor sit amet.',
     fontSize: 16,
+    fontFamily: 'sans-serif',
+    fontWeight: 'normal',
+    textAlign: 'left',
   },
 };
 
-Text.Render = ({ content, color, fontSize }) => {
-  return <div css={{ color: rgbaToCss(color), fontSize }}>{content}</div>;
+Text.Render = ({ content, ...rest }) => {
+  return <Txt {...rest}>{content}</Txt>;
 };
 
 export default Text;

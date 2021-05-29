@@ -30,6 +30,7 @@ export default function Outline({ children }) {
       css={{
         position: 'relative',
         outline: isSelected ? '1px solid #9999ff' : null,
+        width: '100%',
 
         '& > .component-toolbox': {
           display: isSelected ? 'block' : 'none',
