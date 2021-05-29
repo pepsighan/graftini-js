@@ -1,5 +1,6 @@
 import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
 import { useCreateComponent } from '@graftini/graft';
+import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
@@ -10,28 +11,31 @@ import theme from 'utils/theme';
 
 function DrawButton({ mr, label, icon, component }) {
   return (
-    <Button
-      {...useCreateComponent({ type: component })}
-      size="lg"
-      variant="ghost"
-      flexDirection="column"
-      px={3}
-      color="gray.700"
-      mr={mr}
-      width="70px"
-      sx={{
+    <motion.div
+      style={{
+        color: theme.colors.gray[700],
         '--icon-color': theme.colors.gray[500],
       }}
-      _hover={{
-        color: 'primary.500',
+      whileHover={{
+        color: theme.colors.primary[700],
         '--icon-color': theme.colors.primary[500],
       }}
     >
-      {icon}
-      <Text fontSize="xs" fontWeight="normal" mt={1.5}>
-        {label}
-      </Text>
-    </Button>
+      <Button
+        {...useCreateComponent({ type: component })}
+        size="lg"
+        variant="ghost"
+        flexDirection="column"
+        px={3}
+        mr={mr}
+        width="70px"
+      >
+        {icon}
+        <Text fontSize="xs" fontWeight="normal" mt={1.5}>
+          {label}
+        </Text>
+      </Button>
+    </motion.div>
   );
 }
 
