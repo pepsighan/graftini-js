@@ -41,7 +41,7 @@ export default extendTheme({
   },
   styles: {
     global: {
-      body: {
+      'html, body': {
         // The default font size is 14px.
         fontSize: 14,
       },
