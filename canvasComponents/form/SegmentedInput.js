@@ -1,27 +1,31 @@
 import { Button, ButtonGroup } from '@chakra-ui/button';
-import { useRadio, useRadioGroup } from '@chakra-ui/radio';
+import { Controller, useFormContext } from 'react-hook-form';
 
-function RadioButton(props) {
-  const { getInputProps, getCheckboxProps } = useRadio(props);
+export default function SegmentedInput({ name, options }) {
+  const { control } = useFormContext();
   return (
-    <>
-      <input {...getInputProps()} />
-      <Button {...getCheckboxProps()} bg="white">
-        {props.children}
-      </Button>
-    </>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <SegmentedInputInner options={options} value={field.value} onChange={field.onChange} />
+      )}
+    />
   );
 }
 
-export default function SegmentedInput({ name, options }) {
-  const { getRadioProps, getRootProps } = useRadioGroup({ name });
-
+function SegmentedInputInner({ options, value, onChange }) {
   return (
-    <ButtonGroup size="sm" isAttached variant="outline" {...getRootProps()}>
+    <ButtonGroup size="sm" isAttached variant="outline">
       {options.map((opt) => (
-        <RadioButton key={opt.value} {...getRadioProps({ value: opt.value })}>
+        <Button
+          key={opt.value}
+          bg={value === opt.value ? 'white' : 'gray.200'}
+          color={value === opt.value ? 'black' : 'gray.600'}
+          onClick={() => onChange(opt.value)}
+        >
           {opt.label}
-        </RadioButton>
+        </Button>
       ))}
     </ButtonGroup>
   );
