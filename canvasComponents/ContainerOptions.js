@@ -1,10 +1,19 @@
-import { Grid, GridItem, Text } from '@chakra-ui/layout';
+import Icon from '@chakra-ui/icon';
+import { Flex, Grid, GridItem, Text } from '@chakra-ui/layout';
 import { useCallback } from 'react';
+import {
+  CgAlignBottom,
+  CgAlignCenter,
+  CgAlignLeft,
+  CgAlignMiddle,
+  CgAlignRight,
+  CgAlignTop,
+} from 'react-icons/cg';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import Labelled from './form/Labelled';
-import NumberInput from './form/NumberInput';
+import SegmentedInput from './form/SegmentedInput';
 import SizeInput from './form/SizeInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
@@ -33,7 +42,6 @@ export default function ContainerOptions({ componentId }) {
       {/* Making a 6 column grid system. */}
       <Grid templateColumns="repeat(6, minmax(0, 1fr))" alignItems="center" gap={4}>
         <PropertiesSection />
-        <AlignmentSection />
         <LayoutSection />
         <AppearanceSection />
       </Grid>
@@ -54,22 +62,6 @@ function PropertiesSection() {
   );
 }
 
-function AlignmentSection() {
-  return (
-    <>
-      <Labelled label="Horizontal">
-        <NumberInput name="mainAxisAlignment" />
-      </Labelled>
-      <Labelled label="Vertical">
-        <NumberInput name="crossAxisAlignment" />
-      </Labelled>
-      <Labelled label="Direction">
-        <TextInput name="direction" />
-      </Labelled>
-    </>
-  );
-}
-
 function LayoutSection() {
   return (
     <>
@@ -78,6 +70,7 @@ function LayoutSection() {
           Layout
         </Text>
       </GridItem>
+      <Alignment />
       <Labelled label="Width">
         <SizeInput name="width" />
       </Labelled>
@@ -94,6 +87,32 @@ function LayoutSection() {
         <ColorPicker name="overflow" />
       </Labelled>
     </>
+  );
+}
+
+function Alignment() {
+  return (
+    <GridItem colSpan={6}>
+      <Flex justifyContent="space-between">
+        <SegmentedInput
+          name="mainAxisAlignment"
+          options={[
+            { value: 'flex-start', label: <Icon as={CgAlignLeft} fontSize="lg" /> },
+            { value: 'center', label: <Icon as={CgAlignMiddle} fontSize="lg" /> },
+            { value: 'flex-end', label: <Icon as={CgAlignRight} fontSize="lg" /> },
+          ]}
+        />
+
+        <SegmentedInput
+          name="crossAxisAlignment"
+          options={[
+            { value: 'flex-start', label: <Icon as={CgAlignTop} fontSize="lg" /> },
+            { value: 'center', label: <Icon as={CgAlignCenter} fontSize="lg" /> },
+            { value: 'flex-end', label: <Icon as={CgAlignBottom} fontSize="lg" /> },
+          ]}
+        />
+      </Flex>
+    </GridItem>
   );
 }
 
