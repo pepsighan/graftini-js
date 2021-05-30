@@ -40,6 +40,7 @@ Container.graftOptions = {
   // The default props defines all the props that the component can accept exhaustively.
   // This field is used by the update options logic.
   defaultProps: {
+    name: '',
     tag: 'div',
     direction: 'column',
     width: {
@@ -57,6 +58,9 @@ Container.graftOptions = {
     crossAxisAlignment: 'flex-start',
     opacity: 1,
     shadow: [],
+    border: null,
+    borderRadius: null,
+    cursor: null,
   } as ContainerProps,
   isCanvas: true,
   display: 'block',
