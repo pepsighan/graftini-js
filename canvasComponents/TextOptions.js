@@ -7,7 +7,7 @@ import {
   MdFormatAlignLeft,
   MdFormatAlignRight,
 } from 'react-icons/md';
-import { parsePositiveInteger } from 'utils/parser';
+import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
@@ -22,6 +22,7 @@ export default function TextOptions({ componentId }) {
       componentId={componentId}
       onTransformValues={useCallback((values) => {
         values.fontSize.size = parsePositiveInteger(values.fontSize.size);
+        values.fontWeight = parseInteger(values.fontWeight);
       }, [])}
     >
       {/* Making a 6 column grid system. */}

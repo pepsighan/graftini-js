@@ -140,9 +140,6 @@ function AppearanceSection() {
       <Labelled label="Radius">
         <TextInput name="borderRadius" />
       </Labelled>
-      <Labelled label="Shadow">
-        <TextInput name="shadow" />
-      </Labelled>
     </>
   );
 }

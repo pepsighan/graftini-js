@@ -1,12 +1,21 @@
-import { Container as ContainerComp } from '@graftini/components';
-import { useComponentId, useComponentProps, useEditorState } from '@graftini/graft';
+import { Container as ContainerComp, ContainerProps } from '@graftini/components';
+import {
+  GraftComponent,
+  GraftComponentProps,
+  useComponentId,
+  useComponentProps,
+  useEditorState,
+} from '@graftini/graft';
 import { useCallback } from 'react';
 import Outline from './Outline';
 
-function Container({ children, ...rest }) {
+const Container: GraftComponent = ({ children, ...rest }: GraftComponentProps) => {
   const componentId = useComponentId();
   const hasChildren = useEditorState(
-    useCallback((state) => state[componentId].childrenNodes.length > 0, [componentId])
+    useCallback(
+      (state) => (state[componentId].childrenNodes.length > 0) as unknown as object,
+      [componentId]
+    )
   );
 
   // TODO: Provide a way to select a subsection of props.
@@ -25,7 +34,7 @@ function Container({ children, ...rest }) {
       </div>
     </Outline>
   );
-}
+};
 
 Container.graftOptions = {
   defaultProps: {
@@ -45,10 +54,10 @@ Container.graftOptions = {
     mainAxisAlignment: 'flex-start',
     crossAxisAlignment: 'flex-start',
     opacity: 1,
-  },
+    shadow: [],
+  } as ContainerProps,
   isCanvas: true,
   display: 'block',
 };
 
-Container.Render = ContainerComp;
 export default Container;
