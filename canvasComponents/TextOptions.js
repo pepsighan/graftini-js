@@ -1,10 +1,18 @@
+import Icon from '@chakra-ui/icon';
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { useCallback } from 'react';
+import {
+  MdFormatAlignCenter,
+  MdFormatAlignJustify,
+  MdFormatAlignLeft,
+  MdFormatAlignRight,
+} from 'react-icons/md';
 import { parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
 import Labelled from './form/Labelled';
+import SegmentedInput from './form/SegmentedInput';
 import SelectInput from './form/SelectInput';
 import TextInput from './form/TextInput';
 
@@ -30,6 +38,17 @@ export default function TextOptions({ componentId }) {
             Appearance
           </Text>
         </GridItem>
+        <Labelled label="Align">
+          <SegmentedInput
+            name="textAlign"
+            options={[
+              { value: 'left', label: <Icon as={MdFormatAlignLeft} fontSize="md" /> },
+              { value: 'center', label: <Icon as={MdFormatAlignCenter} fontSize="md" /> },
+              { value: 'right', label: <Icon as={MdFormatAlignRight} fontSize="md" /> },
+              { value: 'justify', label: <Icon as={MdFormatAlignJustify} fontSize="md" /> },
+            ]}
+          />
+        </Labelled>
         <Labelled label="Font Size">
           <FontSize name="fontSize" />
         </Labelled>
@@ -55,9 +74,6 @@ export default function TextOptions({ componentId }) {
         </Labelled>
         <Labelled label="Color">
           <ColorPicker name="color" />
-        </Labelled>
-        <Labelled label="Align">
-          <TextInput name="textAlign" />
         </Labelled>
       </Grid>
     </CanvasForm>
