@@ -37,6 +37,8 @@ const Container: GraftComponent = ({ children, ...rest }: GraftComponentProps) =
 };
 
 Container.graftOptions = {
+  // The default props defines all the props that the component can accept exhaustively.
+  // This field is used by the update options logic.
   defaultProps: {
     tag: 'div',
     direction: 'column',
