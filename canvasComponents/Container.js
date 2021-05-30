@@ -32,8 +32,14 @@ Container.graftOptions = {
   defaultProps: {
     tag: 'div',
     direction: 'column',
-    width: null,
-    height: null,
+    width: {
+      size: null,
+      unit: 'px',
+    },
+    height: {
+      size: null,
+      unit: 'px',
+    },
     padding: null,
     margin: null,
     color: { r: 220, g: 220, b: 255, a: 1 },

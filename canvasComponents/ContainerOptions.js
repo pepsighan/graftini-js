@@ -5,6 +5,7 @@ import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import Labelled from './form/Labelled';
 import NumberInput from './form/NumberInput';
+import SizeInput from './form/SizeInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 
@@ -13,8 +14,8 @@ export default function ContainerOptions({ componentId }) {
     <CanvasForm
       componentId={componentId}
       onTransformValues={useCallback((values) => {
-        values.width = parsePositiveInteger(values.width);
-        values.height = parsePositiveInteger(values.height);
+        values.width.size = parsePositiveInteger(values.width.size);
+        values.height.size = parsePositiveInteger(values.height.size);
 
         values.padding = values.padding ?? {};
         values.padding.top = parseInteger(values.padding?.top);
@@ -78,10 +79,10 @@ function LayoutSection() {
         </Text>
       </GridItem>
       <Labelled label="Width">
-        <NumberInput name="width" />
+        <SizeInput name="width" />
       </Labelled>
       <Labelled label="Height">
-        <NumberInput name="height" />
+        <SizeInput name="height" />
       </Labelled>
       <Labelled label="Padding">
         <SpacingField name="padding" />
