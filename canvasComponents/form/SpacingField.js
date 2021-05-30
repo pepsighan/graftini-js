@@ -1,21 +1,20 @@
-import { Grid, GridItem, Input } from '@chakra-ui/react';
-import { useFormContext } from 'react-hook-form';
+import { Grid, GridItem } from '@chakra-ui/react';
+import NumberInput from './NumberInput';
 
 export default function SpacingField({ name }) {
-  const { register } = useFormContext();
   return (
     <Grid templateColumns="repeat(3, minmax(0, 1fr))">
       <GridItem colStart={2} colEnd={3}>
-        <Input size="sm" bg="white" {...register(`${name}.top`)} autoComplete="off" />
+        <NumberInput name={`${name}.top`} />
       </GridItem>
       <GridItem colStart={1} colEnd={2}>
-        <Input size="sm" bg="white" {...register(`${name}.right`)} autoComplete="off" />
+        <NumberInput name={`${name}.right`} />
       </GridItem>
       <GridItem colStart={3}>
-        <Input size="sm" bg="white" {...register(`${name}.left`)} autoComplete="off" />
+        <NumberInput name={`${name}.left`} />
       </GridItem>
       <GridItem colStart={2} colEnd={3}>
-        <Input size="sm" bg="white" {...register(`${name}.bottom`)} autoComplete="off" />
+        <NumberInput name={`${name}.bottom`} />
       </GridItem>
     </Grid>
   );
