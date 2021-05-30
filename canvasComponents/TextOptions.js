@@ -1,10 +1,19 @@
+import Icon from '@chakra-ui/icon';
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { useCallback } from 'react';
+import {
+  MdFormatAlignCenter,
+  MdFormatAlignJustify,
+  MdFormatAlignLeft,
+  MdFormatAlignRight,
+} from 'react-icons/md';
 import { parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
+import FontSize from './form/FontSize';
 import Labelled from './form/Labelled';
-import NumberInput from './form/NumberInput';
+import SegmentedInput from './form/SegmentedInput';
+import SelectInput from './form/SelectInput';
 import TextInput from './form/TextInput';
 
 export default function TextOptions({ componentId }) {
@@ -12,7 +21,7 @@ export default function TextOptions({ componentId }) {
     <CanvasForm
       componentId={componentId}
       onTransformValues={useCallback((values) => {
-        values.fontSize = parsePositiveInteger(values.fontSize);
+        values.fontSize.size = parsePositiveInteger(values.fontSize.size);
       }, [])}
     >
       {/* Making a 6 column grid system. */}
@@ -20,29 +29,48 @@ export default function TextOptions({ componentId }) {
         <Labelled label="Name">
           <TextInput name="name" />
         </Labelled>
-        <Labelled label="Tag">
-          <TextInput name="tag" />
-        </Labelled>
 
         <GridItem colSpan={6} mt={4} mb={1}>
           <Text fontSize="sm" fontWeight="bold">
             Appearance
           </Text>
         </GridItem>
+        <Labelled label="Align">
+          <SegmentedInput
+            name="textAlign"
+            options={[
+              { value: 'left', label: <Icon as={MdFormatAlignLeft} fontSize="md" /> },
+              { value: 'center', label: <Icon as={MdFormatAlignCenter} fontSize="md" /> },
+              { value: 'right', label: <Icon as={MdFormatAlignRight} fontSize="md" /> },
+              { value: 'justify', label: <Icon as={MdFormatAlignJustify} fontSize="md" /> },
+            ]}
+          />
+        </Labelled>
         <Labelled label="Font Size">
-          <NumberInput name="fontSize" />
+          <FontSize name="fontSize" />
         </Labelled>
         <Labelled label="Font">
-          <TextInput name="fontFamily" />
+          <SelectInput name="fontFamily">
+            <option value="sans-serif">Sans Serif</option>
+            <option value="serif">Serif</option>
+            <option value="monospace">Monospace</option>
+          </SelectInput>
         </Labelled>
-        <Labelled label="Font Weight">
-          <TextInput name="fontWeight" />
+        <Labelled label="Weight">
+          <SelectInput name="fontWeight">
+            <option value={100}>Extra Thin</option>
+            <option value={200}>Thin</option>
+            <option value={300}>Light</option>
+            <option value={400}>Normal</option>
+            <option value={500}>Medium</option>
+            <option value={600}>Semi Bold</option>
+            <option value={700}>Bold</option>
+            <option value={800}>Extra Bold</option>
+            <option value={900}>Extra Extra Bold</option>
+          </SelectInput>
         </Labelled>
         <Labelled label="Color">
           <ColorPicker name="color" />
-        </Labelled>
-        <Labelled label="Align">
-          <TextInput name="textAlign" />
         </Labelled>
       </Grid>
     </CanvasForm>
