@@ -1,7 +1,7 @@
 import { Box, Input, useDisclosure } from '@chakra-ui/react';
+import { rgbaToCss } from '@graftini/components';
 import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
-import { rgbToHex } from 'utils/colors';
 
 export default function ColorPicker({ name }) {
   const { control } = useFormContext();
@@ -25,7 +25,15 @@ export default function ColorPicker({ name }) {
                 cursor="pointer"
                 onClick={onOpen}
               >
-                {field.value ? rgbToHex(field.value) : ''}
+                {/* Show a chessboard bg to signify if there is transparency in the color. */}
+                <Box
+                  width={5}
+                  height={5}
+                  borderRadius="sm"
+                  bg={field.value ? rgbaToCss(field.value) : null}
+                  mr={3}
+                />
+                {field.value ? rgbaToCss({ ...field.value, a: null }) : ''}
               </Input>
 
               {isOpen && (
