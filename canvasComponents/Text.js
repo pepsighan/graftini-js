@@ -20,7 +20,10 @@ Text.graftOptions = {
     tag: 'p',
     color: { r: 0, g: 0, b: 0, a: 1 },
     content: 'Lorem ipsum dolor sit amet.',
-    fontSize: 16,
+    fontSize: {
+      size: 16,
+      unit: 'px',
+    },
     fontFamily: 'sans-serif',
     fontWeight: 'normal',
     textAlign: 'left',

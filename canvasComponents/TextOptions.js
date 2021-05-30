@@ -3,8 +3,8 @@ import { useCallback } from 'react';
 import { parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
+import FontSize from './form/FontSize';
 import Labelled from './form/Labelled';
-import NumberInput from './form/NumberInput';
 import TextInput from './form/TextInput';
 
 export default function TextOptions({ componentId }) {
@@ -12,7 +12,7 @@ export default function TextOptions({ componentId }) {
     <CanvasForm
       componentId={componentId}
       onTransformValues={useCallback((values) => {
-        values.fontSize = parsePositiveInteger(values.fontSize);
+        values.fontSize.size = parsePositiveInteger(values.fontSize.size);
       }, [])}
     >
       {/* Making a 6 column grid system. */}
@@ -30,7 +30,7 @@ export default function TextOptions({ componentId }) {
           </Text>
         </GridItem>
         <Labelled label="Font Size">
-          <NumberInput name="fontSize" />
+          <FontSize name="fontSize" />
         </Labelled>
         <Labelled label="Font">
           <TextInput name="fontFamily" />
