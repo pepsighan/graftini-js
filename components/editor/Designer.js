@@ -1,6 +1,5 @@
 import { Flex } from '@chakra-ui/layout';
-import { Editor, useEditor } from '@graftini/graft';
-import { cleanupComponentMap } from '@graftini/graft';
+import { cleanupComponentMap, Editor, useEditor } from '@graftini/graft';
 import components from 'canvasComponents';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
@@ -10,7 +9,6 @@ import { debounce } from 'lodash-es';
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import { useUpdateProjectDesign } from 'store/projects';
-import config from 'utils/config';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 
 export const ProjectIdContext = createContext();
@@ -48,7 +46,6 @@ function Editorial() {
 
   return (
     <Editor resolvers={components} initialState={editorState}>
-      {config.ENV === 'local' && <TrackChanges />}
       <SyncEditorAndDesignerState />
       <EditorNavigation />
       <Flex>
@@ -58,15 +55,6 @@ function Editorial() {
       </Flex>
     </Editor>
   );
-}
-
-// Add this component within the editor to track the changes of the state.
-// This is only to be use when debugging.
-// eslint-disable-next-line no-unused-vars
-function TrackChanges() {
-  const { subscribe } = useEditor();
-  useEffect(() => subscribe((state) => console.log(state)));
-  return <></>;
 }
 
 /**
