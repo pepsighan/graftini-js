@@ -33,6 +33,7 @@ export default function ColorPicker({ name }) {
                   bg={field.value ? rgbaToCss(field.value) : null}
                   mr={3}
                 />
+                {/* Only need to show the hex and no transparency as textual. */}
                 {field.value ? rgbaToCss({ ...field.value, a: null }) : ''}
               </Input>
 
