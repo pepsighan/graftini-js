@@ -24,7 +24,7 @@ Text.graftOptions = {
       unit: 'px',
     },
     fontFamily: 'sans-serif',
-    fontWeight: 'normal',
+    fontWeight: '400', // normal weight.
     textAlign: 'left',
   },
 };
