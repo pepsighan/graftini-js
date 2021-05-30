@@ -1092,10 +1092,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.4.1.tgz#600f2275ff54739ad5ac0102f1467b8963cd5f71"
   integrity sha512-0yPjzuzGMkW1GkrC8yWsiN7vt1OzkMIi9HgxRmKREZl2wnNPOKo/yScTjXf/O57HM8dltqxPF6jlNLFVtc2qdw==
 
-"@graftini/components@^0.3.1":
-  version "0.3.1"
-  resolved "https://npm.pkg.github.com/download/@graftini/components/0.3.1/4128a121817fba6fe711ec2d3c8fcc37394f5c572f0aa8d30a240b49aa52d5f8#64c2821dca3e4205fcb67ce7258d3e77bd94e348"
-  integrity sha512-Pas1MBY4kWgwYDHSw2++Uk8ktArmjrqvFpGTmhl+pCiYOQKLhlC2gnj23oTFeh0YXxW89GEYSlTLvqKGPmMfcw==
+"@graftini/components@^0.3.2":
+  version "0.3.2"
+  resolved "https://npm.pkg.github.com/download/@graftini/components/0.3.2/d6f60659bee6ac037ee6f1b4600ab3c465a65bf3f30a7087c3a6805cdf7b08c2#b024221eada451ccc8a2c5382a8288d46a13efe4"
+  integrity sha512-k1/tgVIDaCC7h17AR0ciFOnTawZDUOz0DmkTy1hdQ89Qg0gLeqStCzGbaujJhgeIv/tZYkiEo7PC3SRNXJ5T1A==
   dependencies:
     "@emotion/react" "^11.4.0"
 
