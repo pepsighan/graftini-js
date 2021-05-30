@@ -5,6 +5,7 @@ import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
 import Labelled from './form/Labelled';
+import SelectInput from './form/SelectInput';
 import TextInput from './form/TextInput';
 
 export default function TextOptions({ componentId }) {
@@ -33,10 +34,24 @@ export default function TextOptions({ componentId }) {
           <FontSize name="fontSize" />
         </Labelled>
         <Labelled label="Font">
-          <TextInput name="fontFamily" />
+          <SelectInput name="fontFamily">
+            <option value="sans-serif">Sans Serif</option>
+            <option value="serif">Serif</option>
+            <option value="monospace">Monospace</option>
+          </SelectInput>
         </Labelled>
-        <Labelled label="Font Weight">
-          <TextInput name="fontWeight" />
+        <Labelled label="Weight">
+          <SelectInput name="fontWeight">
+            <option value={100}>Extra Thin</option>
+            <option value={200}>Thin</option>
+            <option value={300}>Light</option>
+            <option value={400}>Normal</option>
+            <option value={500}>Medium</option>
+            <option value={600}>Semi Bold</option>
+            <option value={700}>Bold</option>
+            <option value={800}>Extra Bold</option>
+            <option value={900}>Extra Extra Bold</option>
+          </SelectInput>
         </Labelled>
         <Labelled label="Color">
           <ColorPicker name="color" />
