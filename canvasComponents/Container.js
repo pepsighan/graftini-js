@@ -19,7 +19,7 @@ function Container({ children, ...rest }) {
           {...restProps}
           // If there is no children and no height, give it some so that it is visible.
           // TODO: https://github.com/pepsighan/nocode/issues/15.
-          height={height ?? (hasChildren ? null : 80)}
+          height={height?.size ?? (hasChildren ? null : { size: 80, unit: 'px' })}
         >
           {children}
         </ContainerComp>
