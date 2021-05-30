@@ -29,9 +29,6 @@ export default function TextOptions({ componentId }) {
         <Labelled label="Name">
           <TextInput name="name" />
         </Labelled>
-        <Labelled label="Tag">
-          <TextInput name="tag" />
-        </Labelled>
 
         <GridItem colSpan={6} mt={4} mb={1}>
           <Text fontSize="sm" fontWeight="bold">
