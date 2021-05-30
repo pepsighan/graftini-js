@@ -3,7 +3,7 @@ import produce from 'immer';
 import { useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-export default function CanvasForm({ componentId, onTransformValues, children }) {
+export default function CanvasForm({ componentId, fieldNames, onTransformValues, children }) {
   const { getState, updateComponentProps } = useEditor();
   const componentProps = useMemo(() => getState()[componentId].props, [componentId, getState]);
 
@@ -17,7 +17,13 @@ export default function CanvasForm({ componentId, onTransformValues, children })
         transformed = produce(values, onTransformValues);
       }
 
-      updateComponentProps(componentId, (props) => ({ ...props, ...transformed }));
+      // Only pass those fields that are in the field names to the component props.
+      const filtered = fieldNames.reduce((acc, cur) => {
+        acc[cur] = transformed[cur];
+        return acc;
+      }, {});
+
+      updateComponentProps(componentId, (props) => ({ ...props, ...filtered }));
 
       // We do not do show any errors here.
       return { values, errors: {} };

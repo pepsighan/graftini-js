@@ -10,6 +10,7 @@ import {
   CgAlignTop,
 } from 'react-icons/cg';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
+import Container from './Container';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import Labelled from './form/Labelled';
@@ -23,6 +24,7 @@ export default function ContainerOptions({ componentId }) {
   return (
     <CanvasForm
       componentId={componentId}
+      fieldNames={Object.keys(Container.graftOptions.defaultProps)}
       onTransformValues={useCallback((values) => {
         values.width.size = parsePositiveInteger(values.width.size);
         values.height.size = parsePositiveInteger(values.height.size);

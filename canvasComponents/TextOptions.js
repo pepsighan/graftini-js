@@ -15,11 +15,13 @@ import Labelled from './form/Labelled';
 import SegmentedInput from './form/SegmentedInput';
 import SelectInput from './form/SelectInput';
 import TextInput from './form/TextInput';
+import Txt from './Text';
 
 export default function TextOptions({ componentId }) {
   return (
     <CanvasForm
       componentId={componentId}
+      fieldNames={Object.keys(Txt.graftOptions.defaultProps)}
       onTransformValues={useCallback((values) => {
         values.fontSize.size = parsePositiveInteger(values.fontSize.size);
         values.fontWeight = parseInteger(values.fontWeight);
