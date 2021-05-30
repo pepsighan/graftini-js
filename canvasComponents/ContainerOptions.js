@@ -28,16 +28,16 @@ export default function ContainerOptions({ componentId }) {
         values.height.size = parsePositiveInteger(values.height.size);
 
         values.padding = values.padding ?? {};
-        values.padding.top = parseInteger(values.padding?.top);
-        values.padding.right = parseInteger(values.padding?.right);
-        values.padding.bottom = parseInteger(values.padding?.bottom);
-        values.padding.left = parseInteger(values.padding?.left);
+        values.padding.top = parseInteger(values.padding?.top) || 0;
+        values.padding.right = parseInteger(values.padding?.right) || 0;
+        values.padding.bottom = parseInteger(values.padding?.bottom) || 0;
+        values.padding.left = parseInteger(values.padding?.left) || 0;
 
         values.margin = values.margin ?? {};
-        values.margin.top = parseInteger(values.margin?.top);
-        values.margin.right = parseInteger(values.margin?.right);
-        values.margin.bottom = parseInteger(values.margin?.bottom);
-        values.margin.left = parseInteger(values.margin?.left);
+        values.margin.top = parseInteger(values.margin?.top) || 0;
+        values.margin.right = parseInteger(values.margin?.right) || 0;
+        values.margin.bottom = parseInteger(values.margin?.bottom) || 0;
+        values.margin.left = parseInteger(values.margin?.left) || 0;
 
         values.opacity = parsePositiveFloat(values.opacity);
         values.opacity = values.opacity > 1 ? 1 : values.opacity;
