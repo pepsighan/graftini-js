@@ -9,10 +9,11 @@ import {
   CgAlignRight,
   CgAlignTop,
 } from 'react-icons/cg';
-import { parseInteger, parsePositiveInteger } from 'utils/parser';
+import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import Labelled from './form/Labelled';
+import OpacityInput from './form/OpacityInput';
 import SegmentedInput from './form/SegmentedInput';
 import SizeInput from './form/SizeInput';
 import SpacingField from './form/SpacingField';
@@ -37,6 +38,9 @@ export default function ContainerOptions({ componentId }) {
         values.margin.right = parseInteger(values.margin?.right);
         values.margin.bottom = parseInteger(values.margin?.bottom);
         values.margin.left = parseInteger(values.margin?.left);
+
+        values.opacity = parsePositiveFloat(values.opacity);
+        values.opacity = values.opacity > 1 ? 1 : values.opacity;
       }, [])}
     >
       {/* Making a 6 column grid system. */}
@@ -125,7 +129,7 @@ function AppearanceSection() {
         </Text>
       </GridItem>
       <Labelled label="Opacity">
-        <ColorPicker name="opacity" />
+        <OpacityInput name="opacity" />
       </Labelled>
       <Labelled label="Fill">
         <ColorPicker name="color" />

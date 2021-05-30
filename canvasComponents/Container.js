@@ -44,6 +44,7 @@ Container.graftOptions = {
     color: { r: 220, g: 220, b: 255, a: 1 },
     mainAxisAlignment: 'flex-start',
     crossAxisAlignment: 'flex-start',
+    opacity: 1,
   },
   isCanvas: true,
   display: 'block',

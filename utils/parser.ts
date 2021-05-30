@@ -27,3 +27,21 @@ export function parseInteger(value: unknown): number | null {
 
   return null;
 }
+
+/**
+ * Parses the value into a valid positive floating number. If it cannot, returns null.
+ */
+export function parsePositiveFloat(value: unknown): number | null {
+  if (typeof value === 'number') {
+    return !isNaN(value) ? value : null;
+  }
+
+  if (typeof value === 'string') {
+    const number = parseFloat(value);
+    if (!isNaN(number) && number >= 0) {
+      return number;
+    }
+  }
+
+  return null;
+}
