@@ -1,12 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import {
-  FontSize,
-  FontWeight,
-  RGBA,
-  Text as Txt,
-  TextAlign,
-  TextProps,
-} from '@graftini/components';
+import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from '@graftini/components';
 import { GraftComponent, useComponentProps } from '@graftini/graft';
 import Outline from './Outline';
 
@@ -43,7 +36,7 @@ Text.graftOptions = {
     fontFamily: 'sans-serif',
     fontWeight: 400, // normal weight.
     textAlign: 'left',
-  } as TextProps,
+  } as TextComponentProps,
 };
 
 export default Text;
