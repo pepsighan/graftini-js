@@ -1,76 +1,59 @@
 /** @jsxImportSource @emotion/react */
+import { Portal } from '@chakra-ui/portal';
 import { useComponentId, useEditor, useEditorState } from '@graftini/graft';
+import { useDimensions } from 'hooks/useDimensions';
 import { useCallback } from 'react';
-import { MdDelete } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
-export default function Outline({ children }) {
+export default function Outline({ componentRef }) {
   const componentId = useComponentId();
   const isSelected = useDesignerState(
     useCallback((state) => state.selectedComponentId === componentId, [componentId])
   );
-  const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+
+  return (
+    <>{isSelected && <ActualOutline componentId={componentId} componentRef={componentRef} />}</>
+  );
+}
+
+function ActualOutline({ componentId, componentRef }) {
   const name = useEditorState(useCallback((state) => state[componentId].props.name, [componentId]));
+  const dimensions = useDimensions(componentRef);
+  const { x, y, width, height } = dimensions ?? {};
 
-  const unselectComonent = useDesignerState(useCallback((state) => state.unselectComonent, []));
+  return (
+    <Portal>
+      {dimensions && (
+        <div
+          css={{
+            position: 'fixed',
+            top: y,
+            left: x,
+            width,
+            height,
+            border: `2px solid ${theme.colors.primary[300]}`,
+          }}
+        />
+      )}
+    </Portal>
+  );
+}
+
+export function useSelectComponent() {
+  return useDesignerState(useCallback((state) => state.selectComponent, []));
+}
+
+function useOnDelete({ componentId }) {
   const { deleteComponentNode } = useEditor();
+  const unselectComonent = useDesignerState(useCallback((state) => state.unselectComonent, []));
 
-  const onDelete = useCallback(
+  return useCallback(
     (ev) => {
       ev.stopPropagation();
       unselectComonent();
       deleteComponentNode(componentId);
     },
     [componentId, deleteComponentNode, unselectComonent]
-  );
-
-  return (
-    <div
-      css={{
-        position: 'relative',
-        outline: isSelected ? '1px solid #9999ff' : null,
-        width: '100%',
-
-        '& > .component-toolbox': {
-          display: isSelected ? 'block' : 'none',
-        },
-
-        '&:hover': {
-          outline: '1px solid #9999ff',
-        },
-      }}
-      onClick={useCallback(
-        (ev) => {
-          ev.stopPropagation();
-          return selectComponent(componentId);
-        },
-        [componentId, selectComponent]
-      )}
-    >
-      <div
-        className="component-toolbox"
-        css={{
-          paddingLeft: 8,
-          paddingRight: 8,
-          paddingTop: 2,
-          paddingBottom: 2,
-          backgroundColor: theme.colors.blue[200],
-          fontSize: 12,
-          transform: 'translateY(-100%)',
-          top: 0,
-          left: 0,
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-        }}
-      >
-        {name || 'Untitled'}
-        <button onClick={onDelete}>
-          <MdDelete />
-        </button>
-      </div>
-      {children}
-    </div>
   );
 }
