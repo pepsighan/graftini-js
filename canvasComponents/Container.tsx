@@ -50,11 +50,7 @@ const Container: GraftComponent<ContainerComponentProps> = ({
 
   // If there is no children and no height, give it some so that it is visible.
   // TODO: https://github.com/pepsighan/nocode/issues/15.
-  const resolvedHeight: DimensionSize = height.size
-    ? height
-    : hasChildren
-    ? null
-    : { size: 80, unit: 'px' };
+  const resolvedHeight: DimensionSize = height ?? hasChildren ? null : { size: 80, unit: 'px' };
 
   return (
     <Outline>
