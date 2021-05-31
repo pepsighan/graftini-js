@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from '@graftini/components';
-import { GraftComponent, useComponentProps } from '@graftini/graft';
+import { GraftComponent } from '@graftini/graft';
 import Outline from './Outline';
 
 export type TextComponentProps = {
@@ -12,11 +12,23 @@ export type TextComponentProps = {
   textAlign?: TextAlign;
 };
 
-const Text: GraftComponent = (props) => {
-  const { content, ...rest }: TextComponentProps = useComponentProps();
+const Text: GraftComponent<TextComponentProps> = ({
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  draggable,
+  content,
+  ...rest
+}) => {
   return (
     <Outline>
-      <div {...props} style={{ width: '100%' }}>
+      <div
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        draggable={draggable}
+        style={{ width: '100%' }}
+      >
         <Txt {...rest}>{content}</Txt>
       </div>
     </Outline>
@@ -36,7 +48,7 @@ Text.graftOptions = {
     fontFamily: 'sans-serif',
     fontWeight: 400, // normal weight.
     textAlign: 'left',
-  } as TextComponentProps,
+  },
 };
 
 export default Text;

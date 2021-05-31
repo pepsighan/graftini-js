@@ -1099,10 +1099,10 @@
   dependencies:
     "@emotion/react" "^11.4.0"
 
-"@graftini/graft@^0.4.1":
-  version "0.4.1"
-  resolved "https://npm.pkg.github.com/download/@graftini/graft/0.4.1/47ede5ac92a3b3435c202644755a97bb8ca51c39bc574478b45e9cf9c1a0749b#e43700b0b0055f36717ea9f8d1b4c317dd12c8f4"
-  integrity sha512-4C8FmCQQ+bRT8bd/Ef09gUrYdnEcS04B5mvURW+X7N+63uNVqV/sPnDy3Pf/8ZPMDL7hd0mySAlrJvxN1YLeQQ==
+"@graftini/graft@^0.5.0":
+  version "0.5.0"
+  resolved "https://npm.pkg.github.com/download/@graftini/graft/0.5.0/2422e0325af3920eec20b033930f7e79f8007336cf031407fd63755ef7dd9447#578dbd4f755af7b6552d40778cc6c3341eeeb1d1"
+  integrity sha512-BCVEopfj1l4udhXH0uPG+rgcpLg9V6muZpWnQavRR8MGk8vYzvCCQ5bwzPE2axI6BKCBgoYTo2KzZqtTmpd3RA==
   dependencies:
     immer "^9.0.2"
     nanoid "^3.1.23"
