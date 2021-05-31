@@ -1,12 +1,26 @@
 import { extendTheme, theme } from '@chakra-ui/react';
 
+const blue = {
+  50: '#b780ff',
+  100: '#a966ff',
+  200: '#9a4dff',
+  300: '#8c33ff',
+  400: '#7d1aff',
+  500: '#6f00ff',
+  600: '#6400e6',
+  700: '#5900cc',
+  800: '#4e00b3',
+  900: '#430099',
+};
+
 export default extendTheme({
   colors: {
-    primary: theme.colors.blue,
+    primary: blue,
+    blue,
     // The colors used in the previews of the components when dragging.
     preview: {
-      light: theme.colors.blue[200],
-      dark: theme.colors.blue[300],
+      light: blue[200],
+      dark: blue[300],
     },
     gray: {
       50: '#FCFCFC',

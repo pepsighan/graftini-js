@@ -11,8 +11,8 @@ import {
 } from '@graftini/components';
 import { GraftComponent, useComponentId, useEditorState } from '@graftini/graft';
 import { Property } from 'csstype';
-import { ReactNode, useCallback } from 'react';
-import Outline from './Outline';
+import { ReactNode, useCallback, useRef } from 'react';
+import Outline, { useSelectComponent } from './Outline';
 
 export type ContainerComponentProps = {
   name?: string;
@@ -54,19 +54,31 @@ const Container: GraftComponent<ContainerComponentProps> = ({
   // TODO: https://github.com/pepsighan/nocode/issues/15.
   const resolvedHeight: DimensionSize = height ?? hasChildren ? null : { size: 80, unit: 'px' };
 
+  const ref = useRef();
+  const selectComponent = useSelectComponent();
+
   return (
-    <Outline>
+    <>
       <div
+        ref={ref}
         onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         draggable={draggable}
+        onClick={useCallback(
+          (ev) => {
+            ev.stopPropagation();
+            return selectComponent(componentId);
+          },
+          [componentId, selectComponent]
+        )}
       >
         <ContainerComp {...rest} height={resolvedHeight} direction="column">
           {children}
         </ContainerComp>
       </div>
-    </Outline>
+      <Outline componentRef={ref} />
+    </>
   );
 };
 

@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from '@graftini/components';
-import { GraftComponent } from '@graftini/graft';
-import Outline from './Outline';
+import { GraftComponent, useComponentId } from '@graftini/graft';
+import { useCallback, useRef } from 'react';
+import Outline, { useSelectComponent } from './Outline';
 
 export type TextComponentProps = {
   color?: RGBA;
@@ -20,18 +21,32 @@ const Text: GraftComponent<TextComponentProps> = ({
   content,
   ...rest
 }) => {
+  const componentId = useComponentId();
+  const selectComponent = useSelectComponent();
+
+  const ref = useRef();
+
   return (
-    <Outline>
+    <>
       <div
+        ref={ref}
         onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDragLeave={onDragLeave}
         draggable={draggable}
         style={{ width: '100%' }}
+        onClick={useCallback(
+          (ev) => {
+            ev.stopPropagation();
+            return selectComponent(componentId);
+          },
+          [componentId, selectComponent]
+        )}
       >
         <Txt {...rest}>{content}</Txt>
       </div>
-    </Outline>
+      <Outline componentRef={ref} />
+    </>
   );
 };
 

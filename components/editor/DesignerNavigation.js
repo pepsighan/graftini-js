@@ -11,6 +11,19 @@ import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
 function DrawButton({ mr, label, icon, component }) {
+  const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
+  const { onDragStart, draggable } = useCreateComponent({ type: component });
+
+  const modifiedDragStart = useCallback(
+    (event) => {
+      onDragStart(event);
+
+      // Wait a bit until unselecting the component.
+      setTimeout(() => unselectComponent());
+    },
+    [onDragStart, unselectComponent]
+  );
+
   return (
     <motion.div
       style={{
@@ -23,13 +36,14 @@ function DrawButton({ mr, label, icon, component }) {
       }}
     >
       <Button
-        {...useCreateComponent({ type: component })}
         size="lg"
         variant="ghost"
         flexDirection="column"
         px={3}
         mr={mr}
         width="70px"
+        onDragStart={modifiedDragStart}
+        draggable={draggable}
       >
         {icon}
         <Text fontSize="sm" fontWeight="normal" mt={1.5}>
