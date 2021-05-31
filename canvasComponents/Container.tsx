@@ -33,15 +33,7 @@ export type ContainerComponentProps = {
   children?: ReactNode;
 };
 
-const Container: GraftComponent<ContainerComponentProps> = ({
-  onDragStart,
-  onDragOver,
-  onDragLeave,
-  draggable,
-  children,
-  height,
-  ...rest
-}) => {
+const Container: GraftComponent<ContainerComponentProps> = ({ children, height, ...rest }) => {
   const componentId = useComponentId();
   const hasChildren = useEditorState(
     useCallback(
@@ -59,12 +51,9 @@ const Container: GraftComponent<ContainerComponentProps> = ({
 
   return (
     <>
-      <div
+      <ContainerComp
         ref={ref}
-        onDragStart={onDragStart}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        draggable={draggable}
+        {...rest}
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();
@@ -72,11 +61,11 @@ const Container: GraftComponent<ContainerComponentProps> = ({
           },
           [componentId, selectComponent]
         )}
+        height={resolvedHeight}
+        direction="column"
       >
-        <ContainerComp {...rest} height={resolvedHeight} direction="column">
-          {children}
-        </ContainerComp>
-      </div>
+        {children}
+      </ContainerComp>
       <Outline componentRef={ref} />
     </>
   );
