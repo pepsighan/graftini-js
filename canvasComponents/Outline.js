@@ -37,7 +37,7 @@ function ActualOutline({ componentId, componentRef }) {
               alignItems: 'center',
               position: 'fixed',
               // If it overflows from the top, then show it to the bottom of the component.
-              top: y - 20 >= 0 ? y - 20 : y + height,
+              top: y - 19 >= 0 ? y - 19 : y + height - 1,
               left: x,
               backgroundColor: theme.colors.primary[300],
               fontSize: 12,
@@ -51,7 +51,7 @@ function ActualOutline({ componentId, componentRef }) {
               css={{ marginLeft: 4, cursor: 'pointer', color: theme.colors.white }}
               onClick={onDelete}
             >
-              <Icon path={mdiDelete} size={0.6} />
+              <Icon path={mdiDelete} css={{ height: 14 }} />
             </button>
           </div>
           <div
