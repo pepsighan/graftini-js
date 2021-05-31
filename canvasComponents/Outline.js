@@ -77,14 +77,14 @@ export function useSelectComponent() {
 
 function useOnDelete({ componentId }) {
   const { deleteComponentNode } = useEditor();
-  const unselectComonent = useDesignerState(useCallback((state) => state.unselectComonent, []));
+  const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
 
   return useCallback(
     (ev) => {
       ev.stopPropagation();
-      unselectComonent();
+      unselectComponent();
       deleteComponentNode(componentId);
     },
-    [componentId, deleteComponentNode, unselectComonent]
+    [componentId, deleteComponentNode, unselectComponent]
   );
 }
