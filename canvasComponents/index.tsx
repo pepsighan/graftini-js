@@ -11,6 +11,10 @@ const components = {
 
 export default components;
 
+export type OptionsProps = {
+  componentId: string;
+};
+
 export const componentOptions = {
   Container: ContainerOptions,
   Text: TextOptions,

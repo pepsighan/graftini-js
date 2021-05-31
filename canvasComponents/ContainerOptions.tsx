@@ -1,5 +1,6 @@
 import Icon from '@chakra-ui/icon';
 import { Flex, Grid, GridItem, Text } from '@chakra-ui/layout';
+import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import {
   CgAlignBottom,
@@ -10,7 +11,7 @@ import {
   CgAlignTop,
 } from 'react-icons/cg';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
-import Container from './Container';
+import Container, { ContainerComponentProps } from './Container';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import Labelled from './form/Labelled';
@@ -20,22 +21,22 @@ import SizeInput from './form/SizeInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 
-export default function ContainerOptions({ componentId }) {
+type ContainerOptionsFields = ContainerComponentProps & {};
+
+export default function ContainerOptions({ componentId }: OptionsProps) {
   return (
     <CanvasForm
       componentId={componentId}
       fieldNames={Object.keys(Container.graftOptions.defaultProps)}
-      onTransformValues={useCallback((values) => {
+      onTransformValues={useCallback((values: ContainerOptionsFields) => {
         values.width.size = parsePositiveInteger(values.width.size);
         values.height.size = parsePositiveInteger(values.height.size);
 
-        values.padding = values.padding ?? {};
         values.padding.top = parseInteger(values.padding?.top) || 0;
         values.padding.right = parseInteger(values.padding?.right) || 0;
         values.padding.bottom = parseInteger(values.padding?.bottom) || 0;
         values.padding.left = parseInteger(values.padding?.left) || 0;
 
-        values.margin = values.margin ?? {};
         values.margin.top = parseInteger(values.margin?.top) || 0;
         values.margin.right = parseInteger(values.margin?.right) || 0;
         values.margin.bottom = parseInteger(values.margin?.bottom) || 0;

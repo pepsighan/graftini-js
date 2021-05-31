@@ -1,5 +1,7 @@
 import Icon from '@chakra-ui/icon';
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
+import { FontWeight } from '@graftini/components';
+import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import {
   MdFormatAlignCenter,
@@ -15,16 +17,18 @@ import Labelled from './form/Labelled';
 import SegmentedInput from './form/SegmentedInput';
 import SelectInput from './form/SelectInput';
 import TextInput from './form/TextInput';
-import Txt from './Text';
+import Txt, { TextComponentProps } from './Text';
 
-export default function TextOptions({ componentId }) {
+type TextOptionsFields = TextComponentProps;
+
+export default function TextOptions({ componentId }: OptionsProps) {
   return (
     <CanvasForm
       componentId={componentId}
       fieldNames={Object.keys(Txt.graftOptions.defaultProps)}
-      onTransformValues={useCallback((values) => {
+      onTransformValues={useCallback((values: TextOptionsFields) => {
         values.fontSize.size = parsePositiveInteger(values.fontSize.size);
-        values.fontWeight = parseInteger(values.fontWeight);
+        values.fontWeight = parseInteger(values.fontWeight) as FontWeight;
       }, [])}
     >
       {/* Making a 6 column grid system. */}
