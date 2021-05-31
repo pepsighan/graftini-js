@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { Portal } from '@chakra-ui/portal';
 import { useComponentId, useEditor, useEditorState } from '@graftini/graft';
+import { mdiDelete } from '@mdi/js';
+import Icon from '@mdi/react';
 import { useDimensions } from 'hooks/useDimensions';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -22,6 +24,8 @@ function ActualOutline({ componentId, componentRef }) {
   const dimensions = useDimensions(componentRef);
   const { x, y, width, height } = dimensions ?? {};
 
+  const onDelete = useOnDelete({ componentId });
+
   return (
     <Portal>
       {dimensions && (
@@ -33,16 +37,22 @@ function ActualOutline({ componentId, componentRef }) {
               alignItems: 'center',
               position: 'fixed',
               // If it overflows from the top, then show it to the bottom of the component.
-              top: y - 18 >= 0 ? y - 18 : y + height,
+              top: y - 20 >= 0 ? y - 20 : y + height,
               left: x,
               backgroundColor: theme.colors.primary[300],
               fontSize: 12,
-              height: 18,
+              height: 20,
               paddingLeft: 8,
               paddingRight: 8,
             }}
           >
-            {name ?? 'Untitled'}
+            <span css={{ color: theme.colors.white }}>{name ?? 'Untitled'}</span>
+            <button
+              css={{ marginLeft: 4, cursor: 'pointer', color: theme.colors.white }}
+              onClick={onDelete}
+            >
+              <Icon path={mdiDelete} size={0.6} />
+            </button>
           </div>
           <div
             css={{
