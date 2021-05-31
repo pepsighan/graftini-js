@@ -4,6 +4,7 @@ import {
   BorderRadius,
   Container as ContainerComp,
   DimensionSize,
+  Overflow,
   RGBA,
   Shadow,
   Spacing,
@@ -28,6 +29,7 @@ export type ContainerComponentProps = {
   border?: Border;
   borderRadius?: BorderRadius;
   cursor?: Property.Cursor;
+  overflow?: Overflow;
   children?: ReactNode;
 };
 
@@ -86,6 +88,10 @@ Container.graftOptions = {
     border: null,
     borderRadius: null,
     cursor: null,
+    overflow: {
+      x: 'visible',
+      y: 'visible',
+    },
   },
   isCanvas: true,
   display: 'block',

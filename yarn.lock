@@ -1092,10 +1092,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.4.1.tgz#600f2275ff54739ad5ac0102f1467b8963cd5f71"
   integrity sha512-0yPjzuzGMkW1GkrC8yWsiN7vt1OzkMIi9HgxRmKREZl2wnNPOKo/yScTjXf/O57HM8dltqxPF6jlNLFVtc2qdw==
 
-"@graftini/components@^0.3.5":
-  version "0.3.5"
-  resolved "https://npm.pkg.github.com/download/@graftini/components/0.3.5/3f82d4305605672d181da9fa5431cbb871856390e84b18857e9c556b2956d33e#808527eaffe1d93bcc9f125c386fe8392047fe87"
-  integrity sha512-JpddQdTnhzgXOaYHaRwpmSsp1qp1R8tcTrwfSc7hL6gQ9RrP78Gs0AVvXtn/PrEbS4Rr/Y5mItiFVDMe9PlLug==
+"@graftini/components@^0.3.6":
+  version "0.3.6"
+  resolved "https://npm.pkg.github.com/download/@graftini/components/0.3.6/95791dfa82974b744c880192f53f8716cd33cef4a1fe1cd4bffb4b8a0da537b6#5ad2283158ec95aa4b342382430019ee6465564d"
+  integrity sha512-VE1G7ie6ZJUrbXzVB31dPQhwYk0ZdlCST7GCiZ8RBOsRVMF7YoXJ2cVl+gFdQ6P7mbbeNRjX4Ad0EZ1aICUOoA==
   dependencies:
     "@emotion/react" "^11.4.0"
 
@@ -1147,6 +1147,16 @@
   version "9.2.0"
   resolved "https://registry.yarnpkg.com/@hapi/hoek/-/hoek-9.2.0.tgz#f3933a44e365864f4dad5db94158106d511e8131"
   integrity sha512-sqKVVVOe5ivCaXDWivIJYVSaEgdQK9ul7a4Kity5Iw7u9+wBAPbX1RMSnLLmp7O4Vzj0WOWwMAJsTL00xwaNug==
+
+"@mdi/js@^5.9.55":
+  version "5.9.55"
+  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-5.9.55.tgz#8f5bc4d924c23f30dab20545ddc768e778bbc882"
+  integrity sha512-BbeHMgeK2/vjdJIRnx12wvQ6s8xAYfvMmEAVsUx9b+7GiQGQ9Za8jpwp17dMKr9CgKRvemlAM4S7S3QOtEbp4A==
+
+"@mdi/react@^1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@mdi/react/-/react-1.5.0.tgz#461d2064ba12d509723bffc95e2f7169a6ac884a"
+  integrity sha512-NztRgUxSYD+ImaKN94Tg66VVVqXj4SmlDGzZoz48H9riJ+Awha56sfXH2fegw819NWo7KI3oeS1Es0lNQqwr0w==
 
 "@next/bundle-analyzer@^10.2.3":
   version "10.2.3"

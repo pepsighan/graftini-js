@@ -1,5 +1,5 @@
 import Icon from '@chakra-ui/icon';
-import { Flex, Grid, GridItem, Text } from '@chakra-ui/layout';
+import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/layout';
 import { DimensionSize } from '@graftini/components';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
@@ -17,6 +17,7 @@ import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import Labelled from './form/Labelled';
 import OpacityInput from './form/OpacityInput';
+import { OverflowInputX, OverflowInputY } from './form/OverflowInput';
 import SegmentedInput from './form/SegmentedInput';
 import SelectInput from './form/SelectInput';
 import SizeInput from './form/SizeInput';
@@ -134,7 +135,10 @@ function LayoutSection() {
         <SpacingField name="margin" />
       </Labelled>
       <Labelled label="Overflow">
-        <ColorPicker name="overflow" />
+        <OverflowInputX name="overflow.x" />
+        <Box mt={2}>
+          <OverflowInputY name="overflow.y" />
+        </Box>
       </Labelled>
     </>
   );
