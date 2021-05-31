@@ -11,12 +11,13 @@ import {
   CgAlignTop,
 } from 'react-icons/cg';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
-import Container, { ContainerComponentProps } from './Container';
+import Container, { ContainerComponentProps, containerTags } from './Container';
 import CanvasForm from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import Labelled from './form/Labelled';
 import OpacityInput from './form/OpacityInput';
 import SegmentedInput from './form/SegmentedInput';
+import SelectInput from './form/SelectInput';
 import SizeInput from './form/SizeInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
@@ -63,7 +64,13 @@ function PropertiesSection() {
         <TextInput name="name" />
       </Labelled>
       <Labelled label="Tag">
-        <TextInput name="tag" />
+        <SelectInput name="tag">
+          {containerTags.map((tag) => (
+            <option key={tag} value={tag}>
+              {tag}
+            </option>
+          ))}
+        </SelectInput>
       </Labelled>
     </>
   );

@@ -15,7 +15,7 @@ import Outline from './Outline';
 
 export type ContainerComponentProps = {
   name?: string;
-  tag: string;
+  tag: ContainerTag;
   width: DimensionSize;
   height: DimensionSize;
   padding: Spacing;
@@ -102,3 +102,28 @@ Container.graftOptions = {
 };
 
 export default Container;
+
+export type ContainerTag =
+  | 'div'
+  | 'span'
+  | 'main'
+  | 'button'
+  | 'section'
+  | 'input'
+  | 'select'
+  | 'checkbox'
+  | 'header'
+  | 'footer';
+
+export const containerTags: ContainerTag[] = [
+  'div',
+  'span',
+  'button',
+  'input',
+  'select',
+  'checkbox',
+  'main',
+  'section',
+  'header',
+  'footer',
+];
