@@ -46,7 +46,7 @@ function ActualOutline({ componentId, componentRef }) {
               paddingRight: 8,
             }}
           >
-            <span css={{ color: theme.colors.white }}>{name ?? 'Untitled'}</span>
+            <span css={{ color: theme.colors.white }}>{name || 'Untitled'}</span>
             <button
               css={{ marginLeft: 4, cursor: 'pointer', color: theme.colors.white }}
               onClick={onDelete}
