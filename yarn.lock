@@ -1092,10 +1092,10 @@
   resolved "https://registry.yarnpkg.com/@firebase/webchannel-wrapper/-/webchannel-wrapper-0.4.1.tgz#600f2275ff54739ad5ac0102f1467b8963cd5f71"
   integrity sha512-0yPjzuzGMkW1GkrC8yWsiN7vt1OzkMIi9HgxRmKREZl2wnNPOKo/yScTjXf/O57HM8dltqxPF6jlNLFVtc2qdw==
 
-"@graftini/components@^0.3.4":
-  version "0.3.4"
-  resolved "https://npm.pkg.github.com/download/@graftini/components/0.3.4/9709dd19d8b0b70b29b57999f5716832c9cc5c7fb6356c522ec472e562dfccc8#ed87a03f779cd91953bb58bb7afa77ca593c00d2"
-  integrity sha512-rjYhcMiUDON7nXU+O69cWs02uZIpwMOXF7szu8Lkxfu3lqiiluYbP+HPms6KSVAEHVVjsYWtFp1CgP5t6e2SaA==
+"@graftini/components@^0.3.5":
+  version "0.3.5"
+  resolved "https://npm.pkg.github.com/download/@graftini/components/0.3.5/3f82d4305605672d181da9fa5431cbb871856390e84b18857e9c556b2956d33e#808527eaffe1d93bcc9f125c386fe8392047fe87"
+  integrity sha512-JpddQdTnhzgXOaYHaRwpmSsp1qp1R8tcTrwfSc7hL6gQ9RrP78Gs0AVvXtn/PrEbS4Rr/Y5mItiFVDMe9PlLug==
   dependencies:
     "@emotion/react" "^11.4.0"
 
@@ -2169,7 +2169,7 @@ cssnano-simple@2.0.0:
   dependencies:
     cssnano-preset-simple "^2.0.0"
 
-csstype@^3.0.2, csstype@^3.0.6:
+csstype@^3.0.2, csstype@^3.0.6, csstype@^3.0.8:
   version "3.0.8"
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-3.0.8.tgz#d2266a792729fb227cd216fb572f43728e1ad340"
   integrity sha512-jXKhWqXPmlUeoQnF/EhTtTl4C9SnrxSH/jZUih3jmO6lBKr99rP3/+FmrMj4EFpOXzMtXHAZkd3x0E6h6Fgflw==

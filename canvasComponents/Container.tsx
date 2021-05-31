@@ -1,4 +1,5 @@
 import {
+  Alignment,
   Border,
   BorderRadius,
   Container as ContainerComp,
@@ -8,6 +9,7 @@ import {
   Spacing,
 } from '@graftini/components';
 import { GraftComponent, useComponentId, useEditorState } from '@graftini/graft';
+import { Property } from 'csstype';
 import { ReactNode, useCallback } from 'react';
 import Outline from './Outline';
 
@@ -19,13 +21,13 @@ export type ContainerComponentProps = {
   padding: Spacing;
   margin: Spacing;
   color: RGBA;
-  mainAxisAlignment: 'flex-start' | 'center' | 'flex-end';
-  crossAxisAlignment: 'flex-start' | 'center' | 'flex-end';
+  mainAxisAlignment: Alignment;
+  crossAxisAlignment: Alignment;
   opacity: number;
   shadow: Shadow[];
   border?: Border;
   borderRadius?: BorderRadius;
-  cursor?: string;
+  cursor?: Property.Cursor;
   children?: ReactNode;
 };
 
