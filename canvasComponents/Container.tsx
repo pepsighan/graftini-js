@@ -86,7 +86,12 @@ Container.graftOptions = {
     opacity: 1,
     shadow: [],
     border: null,
-    borderRadius: null,
+    borderRadius: {
+      topLeft: 0,
+      topRight: 0,
+      bottomLeft: 0,
+      bottomRight: 0,
+    },
     cursor: null,
     overflow: {
       x: 'visible',

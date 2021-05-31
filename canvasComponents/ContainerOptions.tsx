@@ -18,6 +18,7 @@ import ColorPicker from './form/ColorPicker';
 import Labelled from './form/Labelled';
 import OpacityInput from './form/OpacityInput';
 import { OverflowInputX, OverflowInputY } from './form/OverflowInput';
+import RadiusInput from './form/RadiusInput';
 import SegmentedInput from './form/SegmentedInput';
 import SelectInput from './form/SelectInput';
 import SizeInput from './form/SizeInput';
@@ -188,7 +189,7 @@ function AppearanceSection() {
         <TextInput name="border" />
       </Labelled>
       <Labelled label="Radius">
-        <TextInput name="borderRadius" />
+        <RadiusInput name="borderRadius" />
       </Labelled>
     </>
   );
