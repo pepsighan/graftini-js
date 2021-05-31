@@ -9,7 +9,7 @@ import {
   Shadow,
   Spacing,
 } from '@graftini/components';
-import { GraftComponent, useComponentId, useEditorState } from '@graftini/graft';
+import { GraftComponent, useComponentId } from '@graftini/graft';
 import { Property } from 'csstype';
 import { ReactNode, useCallback, useRef } from 'react';
 import Outline, { useSelectComponent } from './Outline';
@@ -33,18 +33,8 @@ export type ContainerComponentProps = {
   children?: ReactNode;
 };
 
-const Container: GraftComponent<ContainerComponentProps> = ({ children, height, ...rest }) => {
+const Container: GraftComponent<ContainerComponentProps> = ({ children, ...rest }) => {
   const componentId = useComponentId();
-  const hasChildren = useEditorState(
-    useCallback(
-      (state) => (state[componentId].childrenNodes.length > 0) as unknown as object,
-      [componentId]
-    )
-  );
-
-  // If there is no children and no height, give it some so that it is visible.
-  // TODO: https://github.com/pepsighan/nocode/issues/15.
-  const resolvedHeight: DimensionSize = height ?? (hasChildren ? null : { size: 80, unit: 'px' });
 
   const ref = useRef();
   const selectComponent = useSelectComponent();
@@ -61,7 +51,6 @@ const Container: GraftComponent<ContainerComponentProps> = ({ children, height, 
           },
           [componentId, selectComponent]
         )}
-        height={resolvedHeight}
         direction="column"
       >
         {children}
@@ -77,8 +66,14 @@ Container.graftOptions = {
   defaultProps: {
     name: null,
     tag: 'div',
-    width: null,
-    height: null,
+    width: {
+      size: 100,
+      unit: '%',
+    },
+    height: {
+      size: 200,
+      unit: 'px',
+    },
     padding: { top: 0, right: 0, bottom: 0, left: 0 },
     margin: { top: 0, right: 0, bottom: 0, left: 0 },
     color: { r: 220, g: 220, b: 255, a: 1 },
