@@ -33,15 +33,7 @@ export type ContainerComponentProps = {
   children?: ReactNode;
 };
 
-const Container: GraftComponent<ContainerComponentProps> = ({
-  onDragStart,
-  onDragOver,
-  onDragLeave,
-  draggable,
-  children,
-  height,
-  ...rest
-}) => {
+const Container: GraftComponent<ContainerComponentProps> = ({ children, height, ...rest }) => {
   const componentId = useComponentId();
   const hasChildren = useEditorState(
     useCallback(
@@ -52,19 +44,16 @@ const Container: GraftComponent<ContainerComponentProps> = ({
 
   // If there is no children and no height, give it some so that it is visible.
   // TODO: https://github.com/pepsighan/nocode/issues/15.
-  const resolvedHeight: DimensionSize = height ?? hasChildren ? null : { size: 80, unit: 'px' };
+  const resolvedHeight: DimensionSize = height ?? (hasChildren ? null : { size: 80, unit: 'px' });
 
   const ref = useRef();
   const selectComponent = useSelectComponent();
 
   return (
     <>
-      <div
+      <ContainerComp
         ref={ref}
-        onDragStart={onDragStart}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        draggable={draggable}
+        {...rest}
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();
@@ -72,11 +61,11 @@ const Container: GraftComponent<ContainerComponentProps> = ({
           },
           [componentId, selectComponent]
         )}
+        height={resolvedHeight}
+        direction="column"
       >
-        <ContainerComp {...rest} height={resolvedHeight} direction="column">
-          {children}
-        </ContainerComp>
-      </div>
+        {children}
+      </ContainerComp>
       <Outline componentRef={ref} />
     </>
   );

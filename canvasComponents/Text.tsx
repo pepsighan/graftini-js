@@ -13,14 +13,7 @@ export type TextComponentProps = {
   textAlign?: TextAlign;
 };
 
-const Text: GraftComponent<TextComponentProps> = ({
-  onDragStart,
-  onDragOver,
-  onDragLeave,
-  draggable,
-  content,
-  ...rest
-}) => {
+const Text: GraftComponent<TextComponentProps> = ({ content, ...rest }) => {
   const componentId = useComponentId();
   const selectComponent = useSelectComponent();
 
@@ -28,13 +21,9 @@ const Text: GraftComponent<TextComponentProps> = ({
 
   return (
     <>
-      <div
+      <Txt
         ref={ref}
-        onDragStart={onDragStart}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        draggable={draggable}
-        style={{ width: '100%' }}
+        {...rest}
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();
@@ -43,8 +32,8 @@ const Text: GraftComponent<TextComponentProps> = ({
           [componentId, selectComponent]
         )}
       >
-        <Txt {...rest}>{content}</Txt>
-      </div>
+        {content}
+      </Txt>
       <Outline componentRef={ref} />
     </>
   );
