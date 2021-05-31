@@ -1,5 +1,6 @@
 import Icon from '@chakra-ui/icon';
 import { Flex, Grid, GridItem, Text } from '@chakra-ui/layout';
+import { DimensionSize } from '@graftini/components';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import {
@@ -12,7 +13,7 @@ import {
 } from 'react-icons/cg';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
 import Container, { ContainerComponentProps, containerTags } from './Container';
-import CanvasForm from './form/CanvasForm';
+import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import Labelled from './form/Labelled';
 import OpacityInput from './form/OpacityInput';
@@ -22,16 +23,51 @@ import SizeInput from './form/SizeInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 
-type ContainerOptionsFields = ContainerComponentProps & {};
+type RawDimension = {
+  size: string;
+  unit: 'px' | '%';
+};
+
+type ContainerOptionsFields = ContainerComponentProps & {
+  widthRaw: RawDimension;
+  heightRaw: RawDimension;
+};
+
+function parseDimension(dim?: RawDimension): DimensionSize | null {
+  if (!dim || !dim.size) {
+    return null;
+  }
+
+  return {
+    size: parsePositiveInteger(dim.size),
+    unit: dim.unit,
+  };
+}
 
 export default function ContainerOptions({ componentId }: OptionsProps) {
+  const CF = CanvasForm as CanvasFormComponent<ContainerComponentProps, ContainerOptionsFields>;
+
   return (
-    <CanvasForm
+    <CF
       componentId={componentId}
       fieldNames={Object.keys(Container.graftOptions.defaultProps)}
+      onInitialize={useCallback(
+        (initialState) => ({
+          ...initialState,
+          widthRaw: {
+            size: initialState.width?.size?.toString() ?? '',
+            unit: initialState.width?.unit,
+          },
+          heightRaw: {
+            size: initialState.height?.size?.toString() ?? '',
+            unit: initialState.height?.unit,
+          },
+        }),
+        []
+      )}
       onTransformValues={useCallback((values: ContainerOptionsFields) => {
-        values.width.size = parsePositiveInteger(values.width.size);
-        values.height.size = parsePositiveInteger(values.height.size);
+        values.width = parseDimension(values.widthRaw);
+        values.height = parseDimension(values.heightRaw);
 
         values.padding.top = parseInteger(values.padding?.top) || 0;
         values.padding.right = parseInteger(values.padding?.right) || 0;
@@ -53,7 +89,7 @@ export default function ContainerOptions({ componentId }: OptionsProps) {
         <LayoutSection />
         <AppearanceSection />
       </Grid>
-    </CanvasForm>
+    </CF>
   );
 }
 
@@ -86,10 +122,10 @@ function LayoutSection() {
       </GridItem>
       <Alignment />
       <Labelled label="Width">
-        <SizeInput name="width" />
+        <SizeInput name="widthRaw" />
       </Labelled>
       <Labelled label="Height">
-        <SizeInput name="height" />
+        <SizeInput name="heightRaw" />
       </Labelled>
       <Labelled label="Padding">
         <SpacingField name="padding" />

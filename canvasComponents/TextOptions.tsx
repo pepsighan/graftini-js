@@ -10,7 +10,7 @@ import {
   MdFormatAlignRight,
 } from 'react-icons/md';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
-import CanvasForm from './form/CanvasForm';
+import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
 import Labelled from './form/Labelled';
@@ -22,10 +22,13 @@ import Txt, { TextComponentProps } from './Text';
 type TextOptionsFields = TextComponentProps;
 
 export default function TextOptions({ componentId }: OptionsProps) {
+  const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
+
   return (
-    <CanvasForm
+    <CF
       componentId={componentId}
       fieldNames={Object.keys(Txt.graftOptions.defaultProps)}
+      onInitialize={useCallback((initialState) => initialState, [])}
       onTransformValues={useCallback((values: TextOptionsFields) => {
         values.fontSize.size = parsePositiveInteger(values.fontSize.size);
         values.fontWeight = parseInteger(values.fontWeight) as FontWeight;
@@ -80,6 +83,6 @@ export default function TextOptions({ componentId }: OptionsProps) {
           <ColorPicker name="color" />
         </Labelled>
       </Grid>
-    </CanvasForm>
+    </CF>
   );
 }
