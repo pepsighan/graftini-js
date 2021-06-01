@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { Portal } from '@chakra-ui/portal';
-import { useComponentId, useEditor, useEditorState } from '@graftini/graft';
+import { useComponentId, useEditor, useEditorState } from 'graft';
 import { mdiDelete } from '@mdi/js';
 import Icon from '@mdi/react';
 import { useDimensions } from 'hooks/useDimensions';

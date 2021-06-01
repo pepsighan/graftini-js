@@ -2,7 +2,7 @@ import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import weakMemoize from '@emotion/weak-memoize';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
-import { Reset } from '@graftini/components';
+import { Reset } from 'bricks';
 
 const cacheKey = 'app';
 

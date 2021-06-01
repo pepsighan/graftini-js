@@ -1,4 +1,4 @@
-import { ComponentMap } from '@graftini/graft';
+import { ComponentMap } from 'graft';
 import produce from 'immer';
 import { ReactNode, useState } from 'react';
 import create from 'zustand';

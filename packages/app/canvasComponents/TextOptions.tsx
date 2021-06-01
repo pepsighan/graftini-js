@@ -1,6 +1,6 @@
 import Icon from '@chakra-ui/icon';
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
-import { FontWeight } from '@graftini/components';
+import { FontWeight } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import {

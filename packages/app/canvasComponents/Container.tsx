@@ -8,8 +8,8 @@ import {
   RGBA,
   Shadow,
   Spacing,
-} from '@graftini/components';
-import { GraftComponent, useComponentId } from '@graftini/graft';
+} from 'bricks';
+import { GraftComponent, useComponentId } from 'graft';
 import { Property } from 'csstype';
 import { ReactNode, useCallback, useRef } from 'react';
 import Outline, { useSelectComponent } from './Outline';

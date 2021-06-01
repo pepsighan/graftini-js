@@ -1,4 +1,4 @@
-import { Canvas as Canvs, ROOT_NODE_ID } from '@graftini/graft';
+import { Canvas as Canvs, ROOT_NODE_ID } from 'graft';
 import IFrame from 'components/IFrame';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';

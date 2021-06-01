@@ -1,4 +1,4 @@
-import { ComponentMap } from '@graftini/graft';
+import { ComponentMap } from 'graft';
 import components from 'canvasComponents';
 
 type ComponentRenderProps = {

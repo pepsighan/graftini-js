@@ -1,6 +1,6 @@
 import Icon from '@chakra-ui/icon';
 import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/layout';
-import { DimensionSize } from '@graftini/components';
+import { DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import {

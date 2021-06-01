@@ -2,7 +2,7 @@ import Container from './Container';
 import ContainerOptions from './ContainerOptions';
 import Text from './Text';
 import TextOptions from './TextOptions';
-import { Container as Contain } from '@graftini/components';
+import { Container as Contain } from 'bricks';
 
 const components = {
   Container,

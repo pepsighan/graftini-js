@@ -1,5 +1,5 @@
 import { Box, Button, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
-import { useCreateComponent } from '@graftini/graft';
+import { useCreateComponent } from 'graft';
 import BackButton from 'components/BackButton';
 import { motion } from 'framer-motion';
 import Link from 'next/link';

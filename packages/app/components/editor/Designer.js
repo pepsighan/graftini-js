@@ -1,5 +1,5 @@
 import { Flex } from '@chakra-ui/layout';
-import { cleanupComponentMap, Editor, useEditor } from '@graftini/graft';
+import { cleanupComponentMap, Editor, useEditor } from 'graft';
 import components from 'canvasComponents';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';

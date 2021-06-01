@@ -1,5 +1,5 @@
 import { Box, Input, useDisclosure } from '@chakra-ui/react';
-import { rgbaToCss } from '@graftini/components';
+import { rgbaToCss } from 'bricks';
 import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -74,12 +74,11 @@ function ColorPickerInner({ value, onChange, onClose }) {
           borderRadius: 'none',
           height: 4,
         },
-        '& .react-colorful__saturation-pointer, & .react-colorful__hue-pointer, & .react-colorful__alpha-pointer':
-          {
-            height: 4,
-            width: 4,
-            cursor: 'pointer',
-          },
+        '& .react-colorful__saturation-pointer, & .react-colorful__hue-pointer, & .react-colorful__alpha-pointer': {
+          height: 4,
+          width: 4,
+          cursor: 'pointer',
+        },
       }}
     >
       {/* When clicked outside the picker, close it. */}

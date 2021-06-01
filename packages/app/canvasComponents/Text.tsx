@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from '@graftini/components';
-import { GraftComponent, useComponentId } from '@graftini/graft';
+import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
+import { GraftComponent, useComponentId } from 'graft';
 import { useCallback, useRef } from 'react';
 import Outline, { useSelectComponent } from './Outline';
 
