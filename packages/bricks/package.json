@@ -1,0 +1,59 @@
+{
+  "name": "bricks",
+  "version": "0.1.0",
+  "description": "The core components for the UI built with Graftini.",
+  "main": "dist/bricks.cjs.js",
+  "module": "dist/bricks.esm.js",
+  "types": "dist/types/bricks.d.ts",
+  "author": "Graftini Team <team@graftini.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
+  },
+  "dependencies": {
+    "@emotion/react": "^11.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.14.3",
+    "@rollup/plugin-commonjs": "^19.0.0",
+    "@rollup/plugin-typescript": "^8.2.1",
+    "@storybook/addon-actions": "^6.2.9",
+    "@storybook/addon-essentials": "^6.2.9",
+    "@storybook/addon-links": "^6.2.9",
+    "@storybook/react": "^6.2.9",
+    "@types/react": "^17.0.5",
+    "@typescript-eslint/eslint-plugin": "^4.22.1",
+    "@typescript-eslint/parser": "^4.22.1",
+    "babel-eslint": "^10.0.0",
+    "babel-loader": "^8.2.2",
+    "csstype": "^3.0.8",
+    "eslint": "^7.25.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-config-react-app": "^6.0.0",
+    "eslint-plugin-flowtype": "^5.7.2",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.8",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
+    "rollup": "^2.47.0",
+    "tslib": "^2.2.0",
+    "typescript": "^4.2.4"
+  },
+  "peerDependencies": {
+    "react": ">= 16.8 || ^17.0.0"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "printWidth": 100
+  },
+  "files": [
+    "dist"
+  ]
+}
