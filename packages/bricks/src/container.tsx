@@ -105,14 +105,16 @@ export type BorderRadius = {
 };
 
 export type Border = {
+  top?: BorderSide;
+  bottom?: BorderSide;
+  left?: BorderSide;
+  right?: BorderSide;
+};
+
+export type BorderSide = {
   color: RGBA;
-  style: 'solid' | 'dashed' | 'dotted';
-  width: {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-  };
+  style: BorderStyle;
+  width: number;
 };
 
 export type DimensionSize = {
@@ -142,6 +144,7 @@ export type JustifyContent =
   | 'space-between'
   | 'space-evenly';
 export type AlignItems = 'flex-start' | 'center' | 'flex-end';
+export type BorderStyle = 'solid' | 'dashed' | 'dotted';
 
 export type DragProps = {
   onDragStart?: DragEventHandler;
@@ -202,10 +205,10 @@ function appearanceStyles({ color, opacity }: AppearanceStyles): CSSObject {
 
 function boundaryStyles({ borderRadius, border, shadow, overflow }: BoundaryStyles): CSSObject {
   return {
-    borderTop: border ? borderStyle(border.width.top, border.style, border.color) : undefined,
-    borderBottom: border ? borderStyle(border.width.bottom, border.style, border.color) : undefined,
-    borderLeft: border ? borderStyle(border.width.left, border.style, border.color) : undefined,
-    borderRight: border ? borderStyle(border.width.right, border.style, border.color) : undefined,
+    borderTop: borderStyle(border?.top),
+    borderBottom: borderStyle(border?.bottom),
+    borderLeft: borderStyle(border?.left),
+    borderRight: borderStyle(border?.right),
     borderRadius: borderRadius
       ? `${borderRadius.topLeft ?? 0}px ${borderRadius.topRight ?? 0}px ${
           borderRadius.bottomRight
@@ -308,8 +311,10 @@ function inputProps({
   };
 }
 
-function borderStyle(width: number, style: string, color: RGBA): string {
-  return `${width}px ${style} ${rgbaToCss(color)}`;
+function borderStyle(borderSide?: BorderSide): string | undefined {
+  return borderSide
+    ? `${borderSide.width}px ${borderSide.style} ${rgbaToCss(borderSide.color)}`
+    : undefined;
 }
 
 export function dragProps({ onDragStart, onDragOver, onDragLeave, draggable }: DragProps): any {

@@ -5,6 +5,8 @@ export {
   BaseComponentProps,
   Border,
   BorderRadius,
+  BorderSide,
+  BorderStyle,
   BoundaryStyles,
   ContainerProps,
   default as Container,
