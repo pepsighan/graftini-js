@@ -18,10 +18,12 @@ const units = ['px', '%'];
 
 export default function SizeInput({ name, isWidth }) {
   const { register, watch, setValue } = useFormContext();
-
   const toggle = watch(`${name}.toggle`);
 
-  const unsetToggle = useCallback(() => setValue(`${name}.toggle`, null), []);
+  const unsetToggle = useCallback(
+    () => setValue(`${name}.toggle`, null, { shouldDirty: true, shouldValidate: true }),
+    [name, setValue]
+  );
 
   return (
     <Flex>

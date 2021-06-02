@@ -38,11 +38,7 @@ type ContainerOptionsFields = ContainerComponentProps & {
   heightRaw: RawDimension;
 };
 
-function parseDimension(dim?: RawDimension): ContainerDimension | null {
-  if (!dim) {
-    return null;
-  }
-
+function parseDimension(dim: RawDimension): ContainerDimension {
   if (dim.toggle) {
     return dim.toggle;
   }
