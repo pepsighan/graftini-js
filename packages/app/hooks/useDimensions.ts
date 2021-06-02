@@ -1,4 +1,4 @@
-import { MutableRefObject, useLayoutEffect, useState } from 'react';
+import { DependencyList, MutableRefObject, useLayoutEffect, useState } from 'react';
 
 type UseDimensions = {
   left: number;
@@ -12,7 +12,10 @@ type UseDimensions = {
 /**
  * Gets the dimensios for the element pointed by the ref object.
  */
-export function useDimensions(ref: MutableRefObject<HTMLElement>): UseDimensions {
+export function useDimensions(
+  ref: MutableRefObject<HTMLElement>,
+  deps: DependencyList = []
+): UseDimensions {
   const [dimensions, setDimensions] = useState<UseDimensions>({
     left: 0,
     right: 0,
@@ -48,7 +51,9 @@ export function useDimensions(ref: MutableRefObject<HTMLElement>): UseDimensions
         window.removeEventListener('scroll', measure);
       };
     }
-  }, [ref]);
+    // Any deps that are passed will cause the dimensions to be re-calculated.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref, ...deps]);
 
   return dimensions;
 }
