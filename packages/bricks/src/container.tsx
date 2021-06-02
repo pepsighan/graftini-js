@@ -144,7 +144,7 @@ export type JustifyContent =
   | 'flex-end'
   | 'space-between'
   | 'space-evenly';
-export type AlignItems = 'flex-start' | 'center' | 'flex-end';
+export type AlignItems = 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
 export type BorderStyle = 'solid' | 'dashed' | 'dotted';
 export type DimensionUnit = 'px' | '%';
 export type Position = 'absolute' | 'fixed' | 'relative' | 'static' | 'sticky';
