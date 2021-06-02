@@ -5,12 +5,12 @@ import {
   Box as BoxComp,
   Cursor,
   FlexDirection,
+  FlexWrap,
   JustifyContent,
   Overflow,
   RGBA,
   Shadow,
   Spacing,
-  FlexWrap,
 } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { ReactNode, useCallback, useRef } from 'react';
@@ -38,6 +38,7 @@ export type BoxComponentProps = {
   flexGrow: number;
   flexShrink: number;
   flexWrap: FlexWrap;
+  flexGap: number;
   children?: ReactNode;
 };
 
@@ -115,6 +116,7 @@ Box.graftOptions = {
     flexGrow: 0,
     flexShrink: 0,
     flexWrap: 'nowrap',
+    flexGap: 0,
   },
   isCanvas: true,
   display: 'block',

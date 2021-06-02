@@ -170,6 +170,12 @@ function FlexSection() {
           ]}
         />
       </Labelled>
+
+      <GridItem colSpan={4}>
+        <Labelled label="Gap">
+          <NumberInput name="flexGap" />
+        </Labelled>
+      </GridItem>
     </>
   );
 }
