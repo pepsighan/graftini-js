@@ -4,13 +4,15 @@ import { RightSidebarOpenPane, useDesignerState } from 'store/designer';
 import Queries from './Queries';
 import ComponentOptions from './ComponentOptions';
 
+export const rightSidebarWidth = 300;
+
 export default function RightSidebar() {
   const openPane = useDesignerState(useCallback((state) => state.rightSidebarOpenPane, []));
 
   return (
     <Box
-      minWidth="300px"
-      width="300px"
+      minWidth={rightSidebarWidth + 'px'}
+      width={rightSidebarWidth + 'px'}
       height="100%"
       overflowY="scroll"
       bg="gray.100"

@@ -1,11 +1,14 @@
 import { Box, Input, useDisclosure } from '@chakra-ui/react';
 import { rgbaToCss } from 'bricks';
+import { useRef } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
+import StickyBox from './StickyBox';
 
 export default function ColorPicker({ name }) {
   const { control } = useFormContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const ref = useRef();
 
   return (
     <Controller
@@ -16,6 +19,7 @@ export default function ColorPicker({ name }) {
           <>
             <Box flex={1} position="relative">
               <Input
+                ref={ref}
                 as="div"
                 size="sm"
                 bg="white"
@@ -38,7 +42,12 @@ export default function ColorPicker({ name }) {
               </Input>
 
               {isOpen && (
-                <ColorPickerInner value={field.value} onChange={field.onChange} onClose={onClose} />
+                <ColorPickerInner
+                  value={field.value}
+                  onChange={field.onChange}
+                  onClose={onClose}
+                  stickToRef={ref}
+                />
               )}
             </Box>
           </>
@@ -48,31 +57,31 @@ export default function ColorPicker({ name }) {
   );
 }
 
-function ColorPickerInner({ value, onChange, onClose }) {
+function ColorPickerInner({ stickToRef, value, onChange, onClose }) {
   return (
-    <Box
-      position="absolute"
-      top="32px"
-      right={0}
-      zIndex="popover"
+    <StickyBox
+      stickToRef={stickToRef}
+      heightOfContent={200}
       sx={{
         '& .react-colorful': {
           padding: 3,
           backgroundColor: 'white',
           borderRadius: 'md',
+          border: '1px',
+          borderColor: 'gray.300',
           shadow: 'md',
+          height: 200,
         },
         '& .react-colorful__saturation': {
           borderRadius: 'none',
-          height: '240px',
-          borderBottomWidth: 4,
+          borderBottomWidth: 2,
         },
         '& .react-colorful__hue': {
           my: 3,
         },
         '& .react-colorful__hue, & .react-colorful__alpha': {
           borderRadius: 'none',
-          height: 4,
+          height: 2,
         },
         '& .react-colorful__saturation-pointer, & .react-colorful__hue-pointer, & .react-colorful__alpha-pointer': {
           height: 4,
@@ -81,9 +90,7 @@ function ColorPickerInner({ value, onChange, onClose }) {
         },
       }}
     >
-      {/* When clicked outside the picker, close it. */}
-      <Box position="fixed" top={0} right={0} bottom={0} left={0} onClick={onClose} />
       <RgbaColorPicker color={value} onChange={onChange} />
-    </Box>
+    </StickyBox>
   );
 }
