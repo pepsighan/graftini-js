@@ -21,7 +21,10 @@ export default function Outline({ componentRef }) {
 
 function ActualOutline({ componentId, componentRef }) {
   const name = useEditorState(useCallback((state) => state[componentId].props.name, [componentId]));
-  const { top, left, width, height } = useDimensions(componentRef);
+
+  // Re-render the outline if the props changes. The props may cause the component to change its size.
+  const props = useEditorState(useCallback((state) => state[componentId].props, [componentId]));
+  const { top, left, width, height } = useDimensions(componentRef, [props]);
 
   const isNotVisible = width === 0 && height === 0;
 
