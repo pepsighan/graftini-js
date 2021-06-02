@@ -1,6 +1,6 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
 import { mdiTableColumn, mdiTableRow } from '@mdi/js';
-import { DimensionLimit, DimensionSize } from 'bricks';
+import { DimensionMaxLimit, DimensionMinLimit, DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
 import Icon from 'components/Icon';
 import { useCallback } from 'react';
@@ -39,7 +39,7 @@ type BoxOptionsFields = BoxComponentProps & {
   maxHeightRaw: RawDimension;
 };
 
-function parseDimension(dim: RawDimension): BoxDimension | DimensionLimit {
+function parseDimension(dim: RawDimension): BoxDimension | DimensionMinLimit | DimensionMaxLimit {
   if (dim.toggle) {
     return dim.toggle;
   }
@@ -96,10 +96,10 @@ export default function BoxOptions({ componentId }: OptionsProps) {
       onTransformValues={useCallback((values: BoxOptionsFields) => {
         values.width = parseDimension(values.widthRaw) as BoxDimension;
         values.height = parseDimension(values.heightRaw) as BoxDimension;
-        values.minWidth = parseDimension(values.minWidthRaw) as DimensionLimit;
-        values.maxWidth = parseDimension(values.maxWidthRaw) as DimensionLimit;
-        values.minHeight = parseDimension(values.minHeightRaw) as DimensionLimit;
-        values.maxHeight = parseDimension(values.maxHeightRaw) as DimensionLimit;
+        values.minWidth = parseDimension(values.minWidthRaw) as DimensionMinLimit;
+        values.maxWidth = parseDimension(values.maxWidthRaw) as DimensionMaxLimit;
+        values.minHeight = parseDimension(values.minHeightRaw) as DimensionMinLimit;
+        values.maxHeight = parseDimension(values.maxHeightRaw) as DimensionMaxLimit;
 
         values.padding.top = parseInteger(values.padding?.top) || 0;
         values.padding.right = parseInteger(values.padding?.right) || 0;
@@ -229,22 +229,22 @@ function LayoutSection() {
       </Labelled>
       <GridItem colSpan={4}>
         <Labelled label="Min Width">
-          <SizeLimitInput name="minWidthRaw" isWidth />
+          <SizeLimitInput name="minWidthRaw" isWidth isMin />
         </Labelled>
       </GridItem>
       <GridItem colSpan={4}>
         <Labelled label="Max Width">
-          <SizeLimitInput name="maxWidthRaw" isWidth={false} />
+          <SizeLimitInput name="maxWidthRaw" isWidth={false} isMin={false} />
         </Labelled>
       </GridItem>
       <GridItem colSpan={4}>
         <Labelled label="Min Height">
-          <SizeLimitInput name="minHeightRaw" isWidth />
+          <SizeLimitInput name="minHeightRaw" isWidth isMin />
         </Labelled>
       </GridItem>
       <GridItem colSpan={4}>
         <Labelled label="Max Height">
-          <SizeLimitInput name="maxHeightRaw" isWidth={false} />
+          <SizeLimitInput name="maxHeightRaw" isWidth={false} isMin={false} />
         </Labelled>
       </GridItem>
       <Labelled label="Padding">

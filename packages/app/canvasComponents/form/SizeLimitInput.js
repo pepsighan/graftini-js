@@ -10,7 +10,7 @@ import SegmentedInput from './SegmentedInput';
 
 const units = ['px', '%'];
 
-export default function SizeLimitInput({ name, isWidth }) {
+export default function SizeLimitInput({ name, isWidth, isMin }) {
   const { register, watch, setValue } = useFormContext();
   const toggle = watch(`${name}.toggle`);
 
@@ -69,7 +69,7 @@ export default function SizeLimitInput({ name, isWidth }) {
             borderTopRightRadius="none"
             borderBottomRightRadius="none"
           >
-            None
+            {isMin ? 'Auto' : 'None'}
             <IconButton size="sm" bg="transparent" onClick={unsetToggle}>
               <Icon icon={mdiClose} fontSize="md" />
             </IconButton>
@@ -81,7 +81,7 @@ export default function SizeLimitInput({ name, isWidth }) {
         name={`${name}.toggle`}
         options={[
           {
-            value: 'none',
+            value: isMin ? 'auto' : 'none',
             label: (
               <Icon
                 icon={isWidth ? mdiArrowCollapseHorizontal : mdiArrowCollapseVertical}
