@@ -1,12 +1,12 @@
-import Container from './Container';
-import ContainerOptions from './ContainerOptions';
-import ContainerRender from './ContainerRender';
+import Box from './Box';
+import BoxOptions from './BoxOptions';
+import BoxRender from './BoxRender';
 import Text from './Text';
 import TextOptions from './TextOptions';
 import TextRender from './TextRender';
 
 const components = {
-  Container,
+  Box,
   Text,
 };
 
@@ -17,11 +17,11 @@ export type OptionsProps = {
 };
 
 export const componentOptions = {
-  Container: ContainerOptions,
+  Box: BoxOptions,
   Text: TextOptions,
 };
 
 export const componentRender = {
-  Container: ContainerRender,
+  Box: BoxRender,
   Text: TextRender,
 };

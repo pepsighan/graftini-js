@@ -5,7 +5,7 @@ import { OptionsProps } from 'canvasComponents';
 import Icon from 'components/Icon';
 import { useCallback } from 'react';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
-import Container, { ContainerComponentProps, containerTags } from './Container';
+import { default as CanvasBox, BoxComponentProps, boxTags } from './Box';
 import AlignItems from './form/AlignItems';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -21,7 +21,7 @@ import SizeInput from './form/SizeInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 
-export type ContainerDimension = DimensionSize | 'full';
+export type BoxDimension = DimensionSize | 'full';
 
 type RawDimension = {
   size: string;
@@ -29,12 +29,12 @@ type RawDimension = {
   toggle?: 'auto' | 'full';
 };
 
-type ContainerOptionsFields = ContainerComponentProps & {
+type BoxOptionsFields = BoxComponentProps & {
   widthRaw: RawDimension;
   heightRaw: RawDimension;
 };
 
-function parseDimension(dim: RawDimension): ContainerDimension {
+function parseDimension(dim: RawDimension): BoxDimension {
   if (dim.toggle) {
     return dim.toggle;
   }
@@ -45,13 +45,13 @@ function parseDimension(dim: RawDimension): ContainerDimension {
   };
 }
 
-export default function ContainerOptions({ componentId }: OptionsProps) {
-  const CF = CanvasForm as CanvasFormComponent<ContainerComponentProps, ContainerOptionsFields>;
+export default function BoxOptions({ componentId }: OptionsProps) {
+  const CF = CanvasForm as CanvasFormComponent<BoxComponentProps, BoxOptionsFields>;
 
   return (
     <CF
       componentId={componentId}
-      fieldNames={Object.keys(Container.graftOptions.defaultProps)}
+      fieldNames={Object.keys(CanvasBox.graftOptions.defaultProps)}
       onInitialize={useCallback(
         (initialState) => ({
           ...initialState,
@@ -68,7 +68,7 @@ export default function ContainerOptions({ componentId }: OptionsProps) {
         }),
         []
       )}
-      onTransformValues={useCallback((values: ContainerOptionsFields) => {
+      onTransformValues={useCallback((values: BoxOptionsFields) => {
         values.width = parseDimension(values.widthRaw);
         values.height = parseDimension(values.heightRaw);
 
@@ -105,7 +105,7 @@ function PropertiesSection() {
       </Labelled>
       <Labelled label="Tag">
         <SelectInput name="tag">
-          {containerTags.map((tag) => (
+          {boxTags.map((tag) => (
             <option key={tag} value={tag}>
               {tag}
             </option>

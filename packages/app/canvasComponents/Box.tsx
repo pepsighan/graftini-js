@@ -2,7 +2,7 @@ import {
   AlignItems,
   Border,
   BorderRadius,
-  Container as ContainerComp,
+  Box as BoxComp,
   Cursor,
   FlexDirection,
   JustifyContent,
@@ -13,15 +13,15 @@ import {
 } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { ReactNode, useCallback, useRef } from 'react';
-import { ContainerDimension } from './ContainerOptions';
-import { useContainerTransformedProps } from './ContainerRender';
+import { BoxDimension } from './BoxOptions';
+import { useBoxTransformedProps } from './BoxRender';
 import Outline, { useSelectComponent } from './Outline';
 
-export type ContainerComponentProps = {
+export type BoxComponentProps = {
   name?: string;
-  tag: ContainerTag;
-  width: ContainerDimension;
-  height: ContainerDimension;
+  tag: BoxTag;
+  width: BoxDimension;
+  height: BoxDimension;
   padding: Spacing;
   margin: Spacing;
   color: RGBA;
@@ -39,7 +39,7 @@ export type ContainerComponentProps = {
   children?: ReactNode;
 };
 
-const Container: GraftComponent<ContainerComponentProps> = ({
+const Box: GraftComponent<BoxComponentProps> = ({
   children,
   draggable,
   onDragStart,
@@ -54,9 +54,9 @@ const Container: GraftComponent<ContainerComponentProps> = ({
 
   return (
     <>
-      <ContainerComp
+      <BoxComp
         ref={ref}
-        {...useContainerTransformedProps(rest)}
+        {...useBoxTransformedProps(rest)}
         draggable={draggable}
         onDragStart={onDragStart}
         onDragOver={onDragOver}
@@ -70,14 +70,14 @@ const Container: GraftComponent<ContainerComponentProps> = ({
         )}
       >
         {children}
-      </ContainerComp>
+      </BoxComp>
       <Outline componentRef={ref} />
     </>
   );
 };
 
-Container.graftOptions = {
-  // The default props defines all the props that the component can accept exhaustively.
+Box.graftOptions = {
+  // The default props defines all the props that the box can accept exhaustively.
   // This field is used by the update options logic.
   defaultProps: {
     name: null,
@@ -117,9 +117,9 @@ Container.graftOptions = {
   display: 'block',
 };
 
-export default Container;
+export default Box;
 
-export type ContainerTag =
+export type BoxTag =
   | 'div'
   | 'span'
   | 'main'
@@ -131,7 +131,7 @@ export type ContainerTag =
   | 'header'
   | 'footer';
 
-export const containerTags: ContainerTag[] = [
+export const boxTags: BoxTag[] = [
   'div',
   'span',
   'button',
