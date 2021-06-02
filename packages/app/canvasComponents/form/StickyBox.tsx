@@ -14,15 +14,11 @@ export default function StickyBox({ stickToRef, heightOfContent, ...rest }: Stic
   const { height } = useWindowSize();
 
   const boxBottom = stickToDim.top + heightOfContent;
-  const bottom = boxBottom > height ? 10 : boxBottom - height;
+
+  // If the content is well below the window height then pull it up.
+  const top = boxBottom > height ? height - heightOfContent - 10 : stickToDim.top;
 
   return (
-    <Box
-      position="fixed"
-      bottom={bottom}
-      right={rightSidebarWidth + 10}
-      zIndex="popover"
-      {...rest}
-    />
+    <Box position="fixed" top={top} right={rightSidebarWidth + 10} zIndex="popover" {...rest} />
   );
 }
