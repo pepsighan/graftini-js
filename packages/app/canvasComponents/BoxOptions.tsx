@@ -84,6 +84,10 @@ export default function BoxOptions({ componentId }: OptionsProps) {
 
         values.opacity = parsePositiveFloat(values.opacity);
         values.opacity = values.opacity > 1 ? 1 : values.opacity;
+
+        values.flexShrink = parsePositiveInteger(values.flexShrink);
+        values.flexGrow = parsePositiveInteger(values.flexGrow);
+        values.flexGap = parsePositiveInteger(values.flexGap);
       }, [])}
     >
       {/* Making a 6 column grid system. */}
