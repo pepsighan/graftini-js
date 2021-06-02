@@ -183,7 +183,7 @@ function LayoutSection() {
 function AppearanceSection() {
   return (
     <>
-      <GridItem colSpan={6} mt={4} mb={1}>
+      <GridItem colSpan={8} mt={4} mb={1}>
         <Text fontSize="sm" fontWeight="bold">
           Appearance
         </Text>
