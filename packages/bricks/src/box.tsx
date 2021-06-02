@@ -43,6 +43,7 @@ export type FlexStyles = {
   flexGrow?: number;
   flexShrink?: number;
   flexWrap?: FlexWrap;
+  flexGap?: number;
 };
 
 export type AppearanceStyles = {
@@ -240,6 +241,7 @@ function flexStyles({
   flexGrow,
   flexShrink,
   flexWrap,
+  flexGap,
 }: FlexStyles): CSSObject {
   return {
     flexDirection,
@@ -248,6 +250,7 @@ function flexStyles({
     flexGrow,
     flexShrink,
     flexWrap,
+    gap: flexGap,
   };
 }
 
