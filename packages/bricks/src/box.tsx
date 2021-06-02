@@ -42,6 +42,7 @@ export type FlexStyles = {
   alignItems?: AlignItems;
   flexGrow?: number;
   flexShrink?: number;
+  flexWrap?: FlexWrap;
 };
 
 export type AppearanceStyles = {
@@ -149,6 +150,7 @@ export type BorderStyle = 'solid' | 'dashed' | 'dotted';
 export type DimensionUnit = 'px' | '%';
 export type Position = 'absolute' | 'fixed' | 'relative' | 'static' | 'sticky';
 export type Cursor = 'pointer'; // Will need to add more as needed.
+export type FlexWrap = 'wrap' | 'nowrap';
 
 export type DragProps = {
   onDragStart?: DragEventHandler;
@@ -237,6 +239,7 @@ function flexStyles({
   alignItems,
   flexGrow,
   flexShrink,
+  flexWrap,
 }: FlexStyles): CSSObject {
   return {
     flexDirection,
@@ -244,6 +247,7 @@ function flexStyles({
     alignItems,
     flexGrow,
     flexShrink,
+    flexWrap,
   };
 }
 

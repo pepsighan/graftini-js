@@ -15,6 +15,7 @@ export {
   DragProps,
   FlexDirection,
   FlexStyles,
+  FlexWrap,
   InputProps,
   InputStyles,
   InteractionProps,
