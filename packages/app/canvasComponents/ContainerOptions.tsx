@@ -86,7 +86,7 @@ export default function ContainerOptions({ componentId }: OptionsProps) {
       }, [])}
     >
       {/* Making a 6 column grid system. */}
-      <Grid templateColumns="repeat(6, minmax(0, 1fr))" alignItems="center" gap={4}>
+      <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
         <PropertiesSection />
         <LayoutSection />
         <AppearanceSection />
@@ -117,17 +117,17 @@ function PropertiesSection() {
 function LayoutSection() {
   return (
     <>
-      <GridItem colSpan={6} mt={4} mb={1}>
+      <GridItem colSpan={8} mt={4} mb={1}>
         <Text fontSize="sm" fontWeight="bold">
           Layout
         </Text>
       </GridItem>
       <Alignment />
       <Labelled label="Width">
-        <SizeInput name="widthRaw" />
+        <SizeInput name="widthRaw" isWidth />
       </Labelled>
       <Labelled label="Height">
-        <SizeInput name="heightRaw" />
+        <SizeInput name="heightRaw" isWidth={false} />
       </Labelled>
       <Labelled label="Padding">
         <SpacingField name="padding" />
@@ -147,7 +147,7 @@ function LayoutSection() {
 
 function Alignment() {
   return (
-    <GridItem colSpan={6}>
+    <GridItem colSpan={8}>
       <Flex justifyContent="space-between">
         <SegmentedInput
           name="mainAxisAlignment"

@@ -8,7 +8,7 @@ export default function Labelled({ label, children }) {
           {label}
         </Text>
       </GridItem>
-      <GridItem colSpan={4}>{children}</GridItem>
+      <GridItem colSpan={6}>{children}</GridItem>
     </>
   );
 }
