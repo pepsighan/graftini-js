@@ -17,7 +17,7 @@ export type ContainerProps = BaseComponentProps &
   LayoutStyles &
   AppearanceStyles &
   BoundaryStyles &
-  AlignmentStyles &
+  FlexStyles &
   PositionStyles &
   InteractionStyles &
   InteractionProps &
@@ -37,6 +37,14 @@ export type LayoutStyles = {
   padding?: Spacing;
 };
 
+export type FlexStyles = {
+  flexDirection?: FlexDirection;
+  justifyContent?: JustifyContent;
+  alignItems?: AlignItems;
+  flexGrow?: number;
+  flexShrink?: number;
+};
+
 export type AppearanceStyles = {
   opacity?: number;
   color?: RGBA;
@@ -47,12 +55,6 @@ export type BoundaryStyles = {
   border?: Border;
   shadow?: Shadow[];
   overflow?: Overflow;
-};
-
-export type AlignmentStyles = {
-  mainAxisAlignment?: Alignment;
-  crossAxisAlignment?: Alignment;
-  direction?: Direction;
 };
 
 export type InteractionStyles = {
@@ -131,9 +133,15 @@ export type Shadow = {
   color: RGBA;
 };
 
-export type Direction = 'column' | 'row';
+export type FlexDirection = 'column' | 'row';
 export type OverflowBehavior = 'visible' | 'auto' | 'scroll' | 'hidden';
-export type Alignment = 'flex-start' | 'center' | 'flex-end';
+export type JustifyContent =
+  | 'flex-start'
+  | 'center'
+  | 'flex-end'
+  | 'space-between'
+  | 'space-evenly';
+export type AlignItems = 'flex-start' | 'center' | 'flex-end';
 
 export type DragProps = {
   onDragStart?: DragEventHandler;
@@ -159,7 +167,7 @@ const Container = forwardRef((props: ContainerProps, ref) => {
         ...layoutStyles(props),
         ...appearanceStyles(props),
         ...boundaryStyles(props),
-        ...alignmentStyles(props),
+        ...flexStyles(props),
         ...interactionStyles(props),
         ...positionStyles(props),
         ...inputStyles(props),
@@ -216,15 +224,19 @@ function boundaryStyles({ borderRadius, border, shadow, overflow }: BoundaryStyl
   };
 }
 
-function alignmentStyles({
-  direction = 'row',
-  mainAxisAlignment,
-  crossAxisAlignment,
-}: AlignmentStyles): CSSObject {
+function flexStyles({
+  flexDirection,
+  justifyContent,
+  alignItems,
+  flexGrow,
+  flexShrink,
+}: FlexStyles): CSSObject {
   return {
-    flexDirection: direction,
-    justifyContent: direction === 'row' ? mainAxisAlignment : crossAxisAlignment,
-    alignItems: direction === 'row' ? crossAxisAlignment : mainAxisAlignment,
+    flexDirection,
+    justifyContent,
+    alignItems,
+    flexGrow,
+    flexShrink,
   };
 }
 
