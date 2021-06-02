@@ -24,22 +24,23 @@ export default function SegmentedInput({ name, size = 'sm', isFullWidth = false,
 function SegmentedInputInner({ size, options, value, isFullWidth, onChange }) {
   return (
     <ButtonGroup size={size} isAttached variant="outline" width={isFullWidth ? '100%' : null}>
-      {options.map((opt) => {
+      {options.map(({ value: valueOpt, label, tooltip, ...rest }) => {
         const button = (
           <Button
-            key={opt.value}
-            bg={value === opt.value ? 'white' : 'gray.200'}
-            color={value === opt.value ? 'black' : 'gray.600'}
-            onClick={() => onChange(opt.value)}
+            key={valueOpt}
+            bg={valueOpt === value ? 'white' : 'gray.200'}
+            color={valueOpt === value ? 'black' : 'gray.600'}
+            onClick={() => onChange(valueOpt)}
             flex={isFullWidth ? 1 : null}
+            {...rest}
           >
-            {opt.label}
+            {label}
           </Button>
         );
 
-        if (opt.tooltip) {
+        if (tooltip) {
           return (
-            <Tooltip key={opt.value} label={opt.tooltip}>
+            <Tooltip key={valueOpt} label={tooltip}>
               {button}
             </Tooltip>
           );

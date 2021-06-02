@@ -36,8 +36,20 @@ export default function SizeInput({ name, isWidth }) {
             bg="white"
             autoComplete="off"
             flex={1}
+            borderRight="none"
+            borderTopRightRadius="none"
+            borderBottomRightRadius="none"
           />
-          <Select {...register(`${name}.unit`)} size="sm" bg="white" autoComplete="off" flex={1}>
+          <Select
+            {...register(`${name}.unit`)}
+            size="sm"
+            bg="white"
+            autoComplete="off"
+            flex={1}
+            borderLeft="none"
+            borderRadius="none"
+            sx={{ paddingInlineStart: 1 }}
+          >
             {units.map((it) => (
               <option key={it} value={it}>
                 {it}
@@ -60,6 +72,8 @@ export default function SizeInput({ name, isWidth }) {
             justifyContent="space-between"
             paddingRight={0}
             userSelect="none"
+            borderTopRightRadius="none"
+            borderBottomRightRadius="none"
           >
             {toggle === 'auto' ? 'Auto' : `Full ${isWidth ? 'Width' : 'Height'}`}
             <IconButton size="sm" bg="transparent" onClick={unsetToggle}>
@@ -75,6 +89,8 @@ export default function SizeInput({ name, isWidth }) {
           {
             value: 'full',
             label: <Icon icon={isWidth ? mdiArrowLeftRight : mdiArrowUpDown} fontSize="md" />,
+            borderTopLeftRadius: 'none',
+            borderBottomLeftRadius: 'none',
           },
           {
             value: 'auto',
