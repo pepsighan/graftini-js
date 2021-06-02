@@ -34,6 +34,8 @@ export type ContainerComponentProps = {
   cursor?: Cursor;
   overflow?: Overflow;
   flexDirection: FlexDirection;
+  flexGrow: number;
+  flexShrink: number;
   children?: ReactNode;
 };
 
@@ -108,6 +110,8 @@ Container.graftOptions = {
       y: 'visible',
     },
     flexDirection: 'column',
+    flexGrow: 0,
+    flexShrink: 0,
   },
   isCanvas: true,
   display: 'block',

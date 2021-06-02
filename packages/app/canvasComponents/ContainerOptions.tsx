@@ -11,6 +11,7 @@ import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import JustifyContent from './form/JustifyContent';
 import Labelled from './form/Labelled';
+import NumberInput from './form/NumberInput';
 import OpacityInput from './form/OpacityInput';
 import { OverflowInputX, OverflowInputY } from './form/OverflowInput';
 import RadiusInput from './form/RadiusInput';
@@ -145,6 +146,18 @@ function FlexSection() {
         <Box mt={4}>
           <AlignItems />
         </Box>
+      </GridItem>
+
+      <GridItem colSpan={4}>
+        <Labelled label="Flex Grow">
+          <NumberInput name="flexGrow" />
+        </Labelled>
+      </GridItem>
+
+      <GridItem colSpan={4}>
+        <Labelled label="Flex Shrink">
+          <NumberInput name="flexShrink" />
+        </Labelled>
       </GridItem>
     </>
   );
