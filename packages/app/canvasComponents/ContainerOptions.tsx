@@ -25,10 +25,12 @@ import SizeInput from './form/SizeInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 
+export type ContainerDimension = DimensionSize | 'full';
+
 type RawDimension = {
   size: string;
   unit: 'px' | '%';
-  toggle?: 'auto' | 'full-width';
+  toggle?: 'auto' | 'full';
 };
 
 type ContainerOptionsFields = ContainerComponentProps & {
@@ -36,9 +38,13 @@ type ContainerOptionsFields = ContainerComponentProps & {
   heightRaw: RawDimension;
 };
 
-function parseDimension(dim?: RawDimension): DimensionSize | null {
-  if (!dim || !dim.size) {
+function parseDimension(dim?: RawDimension): ContainerDimension | null {
+  if (!dim) {
     return null;
+  }
+
+  if (dim.toggle) {
+    return dim.toggle;
   }
 
   return {
@@ -58,12 +64,14 @@ export default function ContainerOptions({ componentId }: OptionsProps) {
         (initialState) => ({
           ...initialState,
           widthRaw: {
-            size: initialState.width?.size?.toString() ?? '',
-            unit: initialState.width?.unit,
+            size: ((initialState.width as any)?.size ?? 100).toString(),
+            unit: (initialState.width as any)?.unit ?? '%',
+            toggle: typeof initialState.width === 'string' ? initialState.width : null,
           },
           heightRaw: {
-            size: initialState.height?.size?.toString() ?? '',
-            unit: initialState.height?.unit,
+            size: ((initialState.height as any)?.size ?? 200).toString(),
+            unit: (initialState.height as any)?.unit ?? 'px',
+            toggle: typeof initialState.height === 'string' ? initialState.height : null,
           },
         }),
         []

@@ -4,7 +4,6 @@ import {
   BorderRadius,
   Container as ContainerComp,
   Cursor,
-  DimensionSize,
   JustifyContent,
   Overflow,
   RGBA,
@@ -13,13 +12,15 @@ import {
 } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { ReactNode, useCallback, useRef } from 'react';
+import { ContainerDimension } from './ContainerOptions';
+import { useContainerTransformedProps } from './ContainerRender';
 import Outline, { useSelectComponent } from './Outline';
 
 export type ContainerComponentProps = {
   name?: string;
   tag: ContainerTag;
-  width: DimensionSize;
-  height: DimensionSize;
+  width: ContainerDimension;
+  height: ContainerDimension;
   padding: Spacing;
   margin: Spacing;
   color: RGBA;
@@ -34,7 +35,14 @@ export type ContainerComponentProps = {
   children?: ReactNode;
 };
 
-const Container: GraftComponent<ContainerComponentProps> = ({ children, ...rest }) => {
+const Container: GraftComponent<ContainerComponentProps> = ({
+  children,
+  draggable,
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  ...rest
+}) => {
   const componentId = useComponentId();
 
   const ref = useRef();
@@ -44,7 +52,11 @@ const Container: GraftComponent<ContainerComponentProps> = ({ children, ...rest 
     <>
       <ContainerComp
         ref={ref}
-        {...rest}
+        {...useContainerTransformedProps(rest)}
+        draggable={draggable}
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();

@@ -71,7 +71,7 @@ export default function SizeInput({ name, isWidth }) {
         name={`${name}.toggle`}
         options={[
           {
-            value: 'full-width',
+            value: 'full',
             label: <Icon icon={isWidth ? mdiArrowLeftRight : mdiArrowUpDown} fontSize="md" />,
           },
           {

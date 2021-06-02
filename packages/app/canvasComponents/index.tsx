@@ -1,8 +1,9 @@
 import Container from './Container';
 import ContainerOptions from './ContainerOptions';
+import ContainerRender from './ContainerRender';
 import Text from './Text';
 import TextOptions from './TextOptions';
-import { Container as Contain } from 'bricks';
+import TextRender from './TextRender';
 
 const components = {
   Container,
@@ -21,5 +22,6 @@ export const componentOptions = {
 };
 
 export const componentRender = {
-  Container: Contain,
+  Container: ContainerRender,
+  Text: TextRender,
 };
