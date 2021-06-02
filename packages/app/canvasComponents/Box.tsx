@@ -10,6 +10,7 @@ import {
   RGBA,
   Shadow,
   Spacing,
+  FlexWrap,
 } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { ReactNode, useCallback, useRef } from 'react';
@@ -36,6 +37,7 @@ export type BoxComponentProps = {
   flexDirection: FlexDirection;
   flexGrow: number;
   flexShrink: number;
+  flexWrap: FlexWrap;
   children?: ReactNode;
 };
 
@@ -112,6 +114,7 @@ Box.graftOptions = {
     flexDirection: 'column',
     flexGrow: 0,
     flexShrink: 0,
+    flexWrap: 'nowrap',
   },
   isCanvas: true,
   display: 'block',

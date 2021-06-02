@@ -149,16 +149,27 @@ function FlexSection() {
       </GridItem>
 
       <GridItem colSpan={4}>
-        <Labelled label="Flex Grow">
+        <Labelled label="Grow">
           <NumberInput name="flexGrow" />
         </Labelled>
       </GridItem>
 
       <GridItem colSpan={4}>
-        <Labelled label="Flex Shrink">
+        <Labelled label="Shrink">
           <NumberInput name="flexShrink" />
         </Labelled>
       </GridItem>
+
+      <Labelled label="Wrap">
+        <SegmentedInput
+          name="flexWrap"
+          isFullWidth
+          options={[
+            { value: 'wrap', label: 'Wrap' },
+            { value: 'nowrap', label: 'No Wrap' },
+          ]}
+        />
+      </Labelled>
     </>
   );
 }
