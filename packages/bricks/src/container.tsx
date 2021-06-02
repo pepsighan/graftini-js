@@ -116,10 +116,12 @@ export type BorderSide = {
   width: number;
 };
 
-export type DimensionSize = {
-  size: number;
-  unit: DimensionUnit;
-};
+export type DimensionSize =
+  | {
+      size: number;
+      unit: DimensionUnit;
+    }
+  | 'auto';
 
 export type Overflow = {
   x: OverflowBehavior;
@@ -185,8 +187,8 @@ const Container = forwardRef((props: ContainerProps, ref) => {
 
 function layoutStyles({ width, height, margin, padding }: LayoutStyles): CSSObject {
   return {
-    width: width ? `${width.size}${width.unit}` : undefined,
-    height: height ? `${height.size}${height.unit}` : undefined,
+    width: dimensionSize(width),
+    height: dimensionSize(height),
     marginLeft: margin?.left,
     marginRight: margin?.right,
     marginTop: margin?.top,
@@ -326,6 +328,18 @@ export function dragProps({ onDragStart, onDragOver, onDragLeave, draggable }: D
     onDragLeave,
     draggable,
   };
+}
+
+function dimensionSize(size?: DimensionSize): string | undefined {
+  if (!size) {
+    return undefined;
+  }
+
+  if (size === 'auto') {
+    return size;
+  }
+
+  return `${size.size}${size.unit}`;
 }
 
 export default Container;
