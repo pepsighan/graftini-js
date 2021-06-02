@@ -105,10 +105,10 @@ export type BorderRadius = {
 };
 
 export type Border = {
-  top?: BorderSide;
-  bottom?: BorderSide;
-  left?: BorderSide;
-  right?: BorderSide;
+  top: BorderSide;
+  bottom: BorderSide;
+  left: BorderSide;
+  right: BorderSide;
 };
 
 export type BorderSide = {
