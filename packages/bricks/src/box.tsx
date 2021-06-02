@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
 import { CSSObject } from '@emotion/react';
-import { Property } from 'csstype';
 import {
   ChangeEventHandler,
   DragEventHandler,
@@ -13,11 +12,11 @@ import {
 import { RGBA, rgbaToCss } from './colors';
 import { FontSize, FontWeight, TextAlign } from './text';
 
-export type ContainerProps = BaseComponentProps &
+export type BoxProps = BaseBoxProps &
   LayoutStyles &
   AppearanceStyles &
   BoundaryStyles &
-  AlignmentStyles &
+  FlexStyles &
   PositionStyles &
   InteractionStyles &
   InteractionProps &
@@ -25,7 +24,7 @@ export type ContainerProps = BaseComponentProps &
   InputProps &
   DragProps;
 
-export type BaseComponentProps = {
+export type BaseBoxProps = {
   tag?: string;
   children?: ReactNode;
 };
@@ -33,8 +32,22 @@ export type BaseComponentProps = {
 export type LayoutStyles = {
   width?: DimensionSize;
   height?: DimensionSize;
+  minWidth?: DimensionMinLimit;
+  maxWidth?: DimensionMaxLimit;
+  minHeight?: DimensionMinLimit;
+  maxHeight?: DimensionMaxLimit;
   margin?: Spacing;
   padding?: Spacing;
+};
+
+export type FlexStyles = {
+  flexDirection?: FlexDirection;
+  justifyContent?: JustifyContent;
+  alignItems?: AlignItems;
+  flexGrow?: number;
+  flexShrink?: number;
+  flexWrap?: FlexWrap;
+  flexGap?: number;
 };
 
 export type AppearanceStyles = {
@@ -49,14 +62,8 @@ export type BoundaryStyles = {
   overflow?: Overflow;
 };
 
-export type AlignmentStyles = {
-  mainAxisAlignment?: Alignment;
-  crossAxisAlignment?: Alignment;
-  direction?: Direction;
-};
-
 export type InteractionStyles = {
-  cursor?: Property.Cursor;
+  cursor?: Cursor;
 };
 
 export type InteractionProps = {
@@ -65,7 +72,7 @@ export type InteractionProps = {
 };
 
 export type PositionStyles = {
-  position?: Property.Position;
+  position?: Position;
   top?: number;
   left?: number;
   right?: number;
@@ -103,20 +110,38 @@ export type BorderRadius = {
 };
 
 export type Border = {
-  color: RGBA;
-  style: 'solid' | 'dashed' | 'dotted';
-  width: {
-    top: number;
-    bottom: number;
-    left: number;
-    right: number;
-  };
+  top: BorderSide;
+  bottom: BorderSide;
+  left: BorderSide;
+  right: BorderSide;
 };
 
-export type DimensionSize = {
-  size: number;
-  unit: 'px' | '%';
+export type BorderSide = {
+  color: RGBA;
+  style: BorderStyle;
+  width: number;
 };
+
+export type DimensionSize =
+  | {
+      size: number;
+      unit: DimensionUnit;
+    }
+  | 'auto';
+
+export type DimensionMinLimit =
+  | {
+      size: number;
+      unit: DimensionUnit;
+    }
+  | 'auto';
+
+export type DimensionMaxLimit =
+  | {
+      size: number;
+      unit: DimensionUnit;
+    }
+  | 'none';
 
 export type Overflow = {
   x: OverflowBehavior;
@@ -131,9 +156,20 @@ export type Shadow = {
   color: RGBA;
 };
 
-export type Direction = 'column' | 'row';
+export type FlexDirection = 'column' | 'row';
 export type OverflowBehavior = 'visible' | 'auto' | 'scroll' | 'hidden';
-export type Alignment = 'flex-start' | 'center' | 'flex-end';
+export type JustifyContent =
+  | 'flex-start'
+  | 'center'
+  | 'flex-end'
+  | 'space-between'
+  | 'space-evenly';
+export type AlignItems = 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
+export type BorderStyle = 'solid' | 'dashed' | 'dotted';
+export type DimensionUnit = 'px' | '%';
+export type Position = 'absolute' | 'fixed' | 'relative' | 'static' | 'sticky';
+export type Cursor = 'pointer'; // Will need to add more as needed.
+export type FlexWrap = 'wrap' | 'nowrap';
 
 export type DragProps = {
   onDragStart?: DragEventHandler;
@@ -142,7 +178,7 @@ export type DragProps = {
   draggable?: boolean;
 };
 
-const Container = forwardRef((props: ContainerProps, ref) => {
+const Box = forwardRef((props: BoxProps, ref) => {
   const { tag, children } = props;
   const Component = (tag ?? 'div') as ElementType;
 
@@ -153,13 +189,13 @@ const Container = forwardRef((props: ContainerProps, ref) => {
       {...interactionProps(props)}
       {...dragProps(props)}
       css={{
-        // Append -gr in class names rather than -Container.
+        // Append -gr in class names rather than -Box.
         label: 'gr',
         display: 'flex',
         ...layoutStyles(props),
         ...appearanceStyles(props),
         ...boundaryStyles(props),
-        ...alignmentStyles(props),
+        ...flexStyles(props),
         ...interactionStyles(props),
         ...positionStyles(props),
         ...inputStyles(props),
@@ -170,10 +206,23 @@ const Container = forwardRef((props: ContainerProps, ref) => {
   );
 });
 
-function layoutStyles({ width, height, margin, padding }: LayoutStyles): CSSObject {
+function layoutStyles({
+  width,
+  height,
+  minWidth,
+  maxWidth,
+  minHeight,
+  maxHeight,
+  margin,
+  padding,
+}: LayoutStyles): CSSObject {
   return {
-    width: width ? `${width.size}${width.unit}` : undefined,
-    height: height ? `${height.size}${height.unit}` : undefined,
+    width: dimensionSize(width),
+    height: dimensionSize(height),
+    minWidth: dimensionSize(minWidth),
+    maxWidth: dimensionSize(maxWidth),
+    minHeight: dimensionSize(minHeight),
+    maxHeight: dimensionSize(maxHeight),
     marginLeft: margin?.left,
     marginRight: margin?.right,
     marginTop: margin?.top,
@@ -194,10 +243,10 @@ function appearanceStyles({ color, opacity }: AppearanceStyles): CSSObject {
 
 function boundaryStyles({ borderRadius, border, shadow, overflow }: BoundaryStyles): CSSObject {
   return {
-    borderTop: border ? borderStyle(border.width.top, border.style, border.color) : undefined,
-    borderBottom: border ? borderStyle(border.width.bottom, border.style, border.color) : undefined,
-    borderLeft: border ? borderStyle(border.width.left, border.style, border.color) : undefined,
-    borderRight: border ? borderStyle(border.width.right, border.style, border.color) : undefined,
+    borderTop: borderStyle(border?.top),
+    borderBottom: borderStyle(border?.bottom),
+    borderLeft: borderStyle(border?.left),
+    borderRight: borderStyle(border?.right),
     borderRadius: borderRadius
       ? `${borderRadius.topLeft ?? 0}px ${borderRadius.topRight ?? 0}px ${
           borderRadius.bottomRight
@@ -216,15 +265,23 @@ function boundaryStyles({ borderRadius, border, shadow, overflow }: BoundaryStyl
   };
 }
 
-function alignmentStyles({
-  direction = 'row',
-  mainAxisAlignment,
-  crossAxisAlignment,
-}: AlignmentStyles): CSSObject {
+function flexStyles({
+  flexDirection,
+  justifyContent,
+  alignItems,
+  flexGrow,
+  flexShrink,
+  flexWrap,
+  flexGap,
+}: FlexStyles): CSSObject {
   return {
-    flexDirection: direction,
-    justifyContent: direction === 'row' ? mainAxisAlignment : crossAxisAlignment,
-    alignItems: direction === 'row' ? crossAxisAlignment : mainAxisAlignment,
+    flexDirection,
+    justifyContent,
+    alignItems,
+    flexGrow,
+    flexShrink,
+    flexWrap,
+    gap: flexGap,
   };
 }
 
@@ -234,7 +291,7 @@ function interactionStyles({ cursor }: InteractionStyles): CSSObject {
   };
 }
 
-function interactionProps({ tag, href, onClick }: InteractionProps & BaseComponentProps): any {
+function interactionProps({ tag, href, onClick }: InteractionProps & BaseBoxProps): any {
   const props: any = {};
   if (tag === 'a') {
     props.href = href;
@@ -261,7 +318,7 @@ function inputStyles({
   fontWeight,
   fontSize,
   fontFamily,
-}: BaseComponentProps & InputStyles): CSSObject {
+}: BaseBoxProps & InputStyles): CSSObject {
   if (tag !== 'input' && tag !== 'textarea') {
     return {};
   }
@@ -282,7 +339,7 @@ function inputProps({
   placeholder,
   onChange,
   onBlur,
-}: BaseComponentProps & InputProps): any {
+}: BaseBoxProps & InputProps): any {
   if (tag !== 'input' && tag !== 'textarea') {
     return;
   }
@@ -296,8 +353,10 @@ function inputProps({
   };
 }
 
-function borderStyle(width: number, style: string, color: RGBA): string {
-  return `${width}px ${style} ${rgbaToCss(color)}`;
+function borderStyle(borderSide?: BorderSide): string | undefined {
+  return borderSide
+    ? `${borderSide.width}px ${borderSide.style} ${rgbaToCss(borderSide.color)}`
+    : undefined;
 }
 
 export function dragProps({ onDragStart, onDragOver, onDragLeave, draggable }: DragProps): any {
@@ -309,4 +368,18 @@ export function dragProps({ onDragStart, onDragOver, onDragLeave, draggable }: D
   };
 }
 
-export default Container;
+function dimensionSize(
+  size?: DimensionSize | DimensionMinLimit | DimensionMaxLimit
+): string | undefined {
+  if (!size) {
+    return undefined;
+  }
+
+  if (size === 'auto' || size === 'none') {
+    return size;
+  }
+
+  return `${size.size}${size.unit}`;
+}
+
+export default Box;

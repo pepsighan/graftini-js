@@ -1,39 +1,61 @@
 import {
-  Alignment,
+  AlignItems,
   Border,
   BorderRadius,
-  Container as ContainerComp,
-  DimensionSize,
+  Box as BoxComp,
+  Cursor,
+  DimensionMaxLimit,
+  DimensionMinLimit,
+  FlexDirection,
+  FlexWrap,
+  JustifyContent,
   Overflow,
   RGBA,
   Shadow,
   Spacing,
 } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
-import { Property } from 'csstype';
 import { ReactNode, useCallback, useRef } from 'react';
+import { BoxDimension } from './BoxOptions';
+import { useBoxTransformedProps } from './BoxRender';
 import Outline, { useSelectComponent } from './Outline';
 
-export type ContainerComponentProps = {
+export type BoxComponentProps = {
   name?: string;
-  tag: ContainerTag;
-  width: DimensionSize;
-  height: DimensionSize;
+  tag: BoxTag;
+  width: BoxDimension;
+  height: BoxDimension;
+  minWidth: DimensionMinLimit;
+  maxWidth: DimensionMaxLimit;
+  minHeight: DimensionMinLimit;
+  maxHeight: DimensionMaxLimit;
   padding: Spacing;
   margin: Spacing;
   color: RGBA;
-  mainAxisAlignment: Alignment;
-  crossAxisAlignment: Alignment;
+  justifyContent: JustifyContent;
+  alignItems: AlignItems;
   opacity: number;
   shadow: Shadow[];
   border?: Border;
   borderRadius?: BorderRadius;
-  cursor?: Property.Cursor;
+  cursor?: Cursor;
   overflow?: Overflow;
+  flexDirection: FlexDirection;
+  flexGrow: number;
+  flexShrink: number;
+  flexWrap: FlexWrap;
+  flexGap: number;
   children?: ReactNode;
 };
 
-const Container: GraftComponent<ContainerComponentProps> = ({ children, ...rest }) => {
+const Box: GraftComponent<BoxComponentProps> = ({
+  children,
+  draggable,
+  onDragStart,
+  onDragOver,
+  onDragLeave,
+  ...rest
+}) => {
   const componentId = useComponentId();
 
   const ref = useRef();
@@ -41,9 +63,13 @@ const Container: GraftComponent<ContainerComponentProps> = ({ children, ...rest 
 
   return (
     <>
-      <ContainerComp
+      <BoxComp
         ref={ref}
-        {...rest}
+        {...useBoxTransformedProps(rest)}
+        draggable={draggable}
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();
@@ -51,17 +77,16 @@ const Container: GraftComponent<ContainerComponentProps> = ({ children, ...rest 
           },
           [componentId, selectComponent]
         )}
-        direction="column"
       >
         {children}
-      </ContainerComp>
+      </BoxComp>
       <Outline componentRef={ref} />
     </>
   );
 };
 
-Container.graftOptions = {
-  // The default props defines all the props that the component can accept exhaustively.
+Box.graftOptions = {
+  // The default props defines all the props that the box can accept exhaustively.
   // This field is used by the update options logic.
   defaultProps: {
     name: null,
@@ -74,11 +99,15 @@ Container.graftOptions = {
       size: 200,
       unit: 'px',
     },
+    minWidth: 'auto',
+    maxWidth: 'none',
+    minHeight: 'auto',
+    maxHeight: 'none',
     padding: { top: 0, right: 0, bottom: 0, left: 0 },
     margin: { top: 0, right: 0, bottom: 0, left: 0 },
-    color: { r: 220, g: 220, b: 255, a: 1 },
-    mainAxisAlignment: 'flex-start',
-    crossAxisAlignment: 'flex-start',
+    color: { r: 111, g: 0, b: 255, a: 0.2 },
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     opacity: 1,
     shadow: [],
     border: null,
@@ -93,14 +122,19 @@ Container.graftOptions = {
       x: 'visible',
       y: 'visible',
     },
+    flexDirection: 'column',
+    flexGrow: 0,
+    flexShrink: 0,
+    flexWrap: 'nowrap',
+    flexGap: 0,
   },
   isCanvas: true,
   display: 'block',
 };
 
-export default Container;
+export default Box;
 
-export type ContainerTag =
+export type BoxTag =
   | 'div'
   | 'span'
   | 'main'
@@ -112,7 +146,7 @@ export type ContainerTag =
   | 'header'
   | 'footer';
 
-export const containerTags: ContainerTag[] = [
+export const boxTags: BoxTag[] = [
   'div',
   'span',
   'button',

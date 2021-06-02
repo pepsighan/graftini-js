@@ -1,7 +1,7 @@
 import { Box, Button, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
-import { useCreateComponent } from 'graft';
 import BackButton from 'components/BackButton';
 import { motion } from 'framer-motion';
+import { useCreateComponent } from 'graft';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
@@ -54,7 +54,7 @@ function DrawButton({ mr, label, icon, component }) {
   );
 }
 
-function ContainerIcon() {
+function BoxIcon() {
   return <Box width={5} height={5} bg="var(--icon-color)" borderRadius="sm" />;
 }
 
@@ -84,7 +84,7 @@ export default function EditorNavigation() {
 
   return (
     <Flex
-      py={1.5}
+      height="54px"
       px={4}
       justifyContent="space-between"
       alignItems="center"
@@ -99,7 +99,7 @@ export default function EditorNavigation() {
       </Box>
 
       <Flex>
-        <DrawButton mr={4} label="Container" component="Container" icon={<ContainerIcon />} />
+        <DrawButton mr={4} label="Box" component="Box" icon={<BoxIcon />} />
         <DrawButton label="Text" component="Text" icon={<TextIcon />} />
       </Flex>
 

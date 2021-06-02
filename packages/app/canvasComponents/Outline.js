@@ -21,14 +21,15 @@ export default function Outline({ componentRef }) {
 
 function ActualOutline({ componentId, componentRef }) {
   const name = useEditorState(useCallback((state) => state[componentId].props.name, [componentId]));
-  const dimensions = useDimensions(componentRef);
-  const { x, y, width, height } = dimensions ?? {};
+  const { top, left, width, height } = useDimensions(componentRef);
+
+  const isNotVisible = width === 0 && height === 0;
 
   const onDelete = useOnDelete({ componentId });
 
   return (
     <Portal>
-      {dimensions && (
+      {!isNotVisible && (
         <>
           {/* This is the panel on which options of the components are show. */}
           <div
@@ -37,8 +38,8 @@ function ActualOutline({ componentId, componentRef }) {
               alignItems: 'center',
               position: 'fixed',
               // If it overflows from the top, then show it to the bottom of the component.
-              top: y - 19 >= 0 ? y - 19 : y + height - 1,
-              left: x,
+              top: top - 19 >= 0 ? top - 19 : top + height - 1,
+              left: left,
               backgroundColor: theme.colors.primary[300],
               fontSize: 12,
               height: 20,
@@ -57,8 +58,8 @@ function ActualOutline({ componentId, componentRef }) {
           <div
             css={{
               position: 'fixed',
-              top: y,
-              left: x,
+              top: top,
+              left: left,
               width,
               height,
               border: `2px solid ${theme.colors.primary[300]}`,

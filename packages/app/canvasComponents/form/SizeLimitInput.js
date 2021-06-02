@@ -2,13 +2,7 @@ import { IconButton } from '@chakra-ui/button';
 import { Input } from '@chakra-ui/input';
 import { Flex } from '@chakra-ui/layout';
 import { Select } from '@chakra-ui/select';
-import {
-  mdiArrowCollapseHorizontal,
-  mdiArrowCollapseVertical,
-  mdiArrowLeftRight,
-  mdiArrowUpDown,
-  mdiClose,
-} from '@mdi/js';
+import { mdiArrowCollapseHorizontal, mdiArrowCollapseVertical, mdiClose } from '@mdi/js';
 import Icon from 'components/Icon';
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
@@ -16,7 +10,7 @@ import SegmentedInput from './SegmentedInput';
 
 const units = ['px', '%'];
 
-export default function SizeInput({ name, isWidth }) {
+export default function SizeLimitInput({ name, isWidth, isMin }) {
   const { register, watch, setValue } = useFormContext();
   const toggle = watch(`${name}.toggle`);
 
@@ -75,7 +69,7 @@ export default function SizeInput({ name, isWidth }) {
             borderTopRightRadius="none"
             borderBottomRightRadius="none"
           >
-            {toggle === 'auto' ? 'Auto' : `Full ${isWidth ? 'Width' : 'Height'}`}
+            {isMin ? 'Auto' : 'None'}
             <IconButton size="sm" bg="transparent" onClick={unsetToggle}>
               <Icon icon={mdiClose} fontSize="md" />
             </IconButton>
@@ -87,13 +81,7 @@ export default function SizeInput({ name, isWidth }) {
         name={`${name}.toggle`}
         options={[
           {
-            value: 'full',
-            label: <Icon icon={isWidth ? mdiArrowLeftRight : mdiArrowUpDown} fontSize="md" />,
-            borderTopLeftRadius: 'none',
-            borderBottomLeftRadius: 'none',
-          },
-          {
-            value: 'auto',
+            value: isMin ? 'auto' : 'none',
             label: (
               <Icon
                 icon={isWidth ? mdiArrowCollapseHorizontal : mdiArrowCollapseVertical}

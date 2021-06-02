@@ -6,6 +6,7 @@ export function OverflowInputX({ name }) {
   return (
     <SegmentedInput
       name={name}
+      isFullWidth
       options={[
         { value: 'visible', label: <Icon icon={mdiEye} fontSize="md" />, tooltip: 'Show' },
         { value: 'hidden', label: <Icon icon={mdiEyeOff} fontSize="md" />, tooltip: 'Hide' },
@@ -24,6 +25,7 @@ export function OverflowInputY({ name }) {
   return (
     <SegmentedInput
       name={name}
+      isFullWidth
       options={[
         { value: 'visible', label: <Icon icon={mdiEye} fontSize="md" />, tooltip: 'Show' },
         { value: 'hidden', label: <Icon icon={mdiEyeOff} fontSize="md" />, tooltip: 'Hide' },

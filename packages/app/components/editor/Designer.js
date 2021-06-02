@@ -1,10 +1,10 @@
 import { Flex } from '@chakra-ui/layout';
-import { cleanupComponentMap, Editor, useEditor } from 'graft';
 import components from 'canvasComponents';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
+import { cleanupComponentMap, Editor, useEditor } from 'graft';
 import { debounce } from 'lodash-es';
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
@@ -48,7 +48,9 @@ function Editorial() {
     <Editor resolvers={components} initialState={editorState}>
       <SyncEditorAndDesignerState />
       <EditorNavigation />
-      <Flex>
+      {/* The height of the nav is substracted, so that any of the following does not cause window-wide scroll. 
+          Any scroll they have should be within their boundaries.*/}
+      <Flex height="calc(100vh - 54px)">
         <LeftSidebar />
         <Canvas />
         <RightSidebar />
