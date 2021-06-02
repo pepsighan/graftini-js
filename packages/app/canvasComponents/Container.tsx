@@ -4,6 +4,7 @@ import {
   BorderRadius,
   Container as ContainerComp,
   Cursor,
+  FlexDirection,
   JustifyContent,
   Overflow,
   RGBA,
@@ -32,6 +33,7 @@ export type ContainerComponentProps = {
   borderRadius?: BorderRadius;
   cursor?: Cursor;
   overflow?: Overflow;
+  flexDirection: FlexDirection;
   children?: ReactNode;
 };
 
@@ -105,6 +107,7 @@ Container.graftOptions = {
       x: 'visible',
       y: 'visible',
     },
+    flexDirection: 'column',
   },
   isCanvas: true,
   display: 'block',

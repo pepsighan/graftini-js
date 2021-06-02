@@ -1,5 +1,5 @@
 import Icon from '@chakra-ui/icon';
-import { Box, Flex, Grid, GridItem, Text } from '@chakra-ui/layout';
+import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
 import { DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
@@ -93,6 +93,7 @@ export default function ContainerOptions({ componentId }: OptionsProps) {
       {/* Making a 6 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
         <PropertiesSection />
+        <FlexSection />
         <LayoutSection />
         <AppearanceSection />
       </Grid>
@@ -119,6 +120,50 @@ function PropertiesSection() {
   );
 }
 
+function FlexSection() {
+  return (
+    <>
+      <GridItem colSpan={8} mt={4} mb={1}>
+        <Text fontSize="sm" fontWeight="bold">
+          Flex
+        </Text>
+      </GridItem>
+
+      <Labelled label="Direction">
+        <SegmentedInput
+          name="flexDirection"
+          options={[
+            { value: 'column', label: 'Column' },
+            { value: 'row', label: 'Row' },
+          ]}
+        />
+      </Labelled>
+
+      <Labelled label="Justify">
+        <SegmentedInput
+          name="justifyContent"
+          options={[
+            { value: 'flex-start', label: <Icon as={CgAlignLeft} fontSize="lg" /> },
+            { value: 'center', label: <Icon as={CgAlignMiddle} fontSize="lg" /> },
+            { value: 'flex-end', label: <Icon as={CgAlignRight} fontSize="lg" /> },
+          ]}
+        />
+      </Labelled>
+
+      <Labelled label="Align">
+        <SegmentedInput
+          name="alignItems"
+          options={[
+            { value: 'flex-start', label: <Icon as={CgAlignTop} fontSize="lg" /> },
+            { value: 'center', label: <Icon as={CgAlignCenter} fontSize="lg" /> },
+            { value: 'flex-end', label: <Icon as={CgAlignBottom} fontSize="lg" /> },
+          ]}
+        />
+      </Labelled>
+    </>
+  );
+}
+
 function LayoutSection() {
   return (
     <>
@@ -127,7 +172,6 @@ function LayoutSection() {
           Layout
         </Text>
       </GridItem>
-      <Alignment />
       <Labelled label="Width">
         <SizeInput name="widthRaw" isWidth />
       </Labelled>
@@ -147,32 +191,6 @@ function LayoutSection() {
         </Box>
       </Labelled>
     </>
-  );
-}
-
-function Alignment() {
-  return (
-    <GridItem colSpan={8}>
-      <Flex justifyContent="space-between">
-        <SegmentedInput
-          name="mainAxisAlignment"
-          options={[
-            { value: 'flex-start', label: <Icon as={CgAlignLeft} fontSize="lg" /> },
-            { value: 'center', label: <Icon as={CgAlignMiddle} fontSize="lg" /> },
-            { value: 'flex-end', label: <Icon as={CgAlignRight} fontSize="lg" /> },
-          ]}
-        />
-
-        <SegmentedInput
-          name="crossAxisAlignment"
-          options={[
-            { value: 'flex-start', label: <Icon as={CgAlignTop} fontSize="lg" /> },
-            { value: 'center', label: <Icon as={CgAlignCenter} fontSize="lg" /> },
-            { value: 'flex-end', label: <Icon as={CgAlignBottom} fontSize="lg" /> },
-          ]}
-        />
-      </Flex>
-    </GridItem>
   );
 }
 
