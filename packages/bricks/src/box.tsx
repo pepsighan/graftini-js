@@ -32,10 +32,10 @@ export type BaseBoxProps = {
 export type LayoutStyles = {
   width?: DimensionSize;
   height?: DimensionSize;
-  minWidth?: DimensionLimit;
-  maxWidth?: DimensionLimit;
-  minHeight?: DimensionLimit;
-  maxHeight?: DimensionLimit;
+  minWidth?: DimensionMinLimit;
+  maxWidth?: DimensionMaxLimit;
+  minHeight?: DimensionMinLimit;
+  maxHeight?: DimensionMaxLimit;
   margin?: Spacing;
   padding?: Spacing;
 };
@@ -129,7 +129,14 @@ export type DimensionSize =
     }
   | 'auto';
 
-export type DimensionLimit =
+export type DimensionMinLimit =
+  | {
+      size: number;
+      unit: DimensionUnit;
+    }
+  | 'auto';
+
+export type DimensionMaxLimit =
   | {
       size: number;
       unit: DimensionUnit;
@@ -212,10 +219,10 @@ function layoutStyles({
   return {
     width: dimensionSize(width),
     height: dimensionSize(height),
-    minWidth: dimensionLimit(minWidth),
-    maxWidth: dimensionLimit(maxWidth),
-    minHeight: dimensionLimit(minHeight),
-    maxHeight: dimensionLimit(maxHeight),
+    minWidth: dimensionSize(minWidth),
+    maxWidth: dimensionSize(maxWidth),
+    minHeight: dimensionSize(minHeight),
+    maxHeight: dimensionSize(maxHeight),
     marginLeft: margin?.left,
     marginRight: margin?.right,
     marginTop: margin?.top,
@@ -361,24 +368,14 @@ export function dragProps({ onDragStart, onDragOver, onDragLeave, draggable }: D
   };
 }
 
-function dimensionSize(size?: DimensionSize): string | undefined {
+function dimensionSize(
+  size?: DimensionSize | DimensionMinLimit | DimensionMaxLimit
+): string | undefined {
   if (!size) {
     return undefined;
   }
 
-  if (size === 'auto') {
-    return size;
-  }
-
-  return `${size.size}${size.unit}`;
-}
-
-function dimensionLimit(size?: DimensionLimit): string | undefined {
-  if (!size) {
-    return undefined;
-  }
-
-  if (size === 'none') {
+  if (size === 'auto' || size === 'none') {
     return size;
   }
 
