@@ -1,16 +1,17 @@
 import {
-  Alignment,
+  AlignItems,
   Border,
   BorderRadius,
   Container as ContainerComp,
+  Cursor,
   DimensionSize,
+  JustifyContent,
   Overflow,
   RGBA,
   Shadow,
   Spacing,
 } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
-import { Property } from 'csstype';
 import { ReactNode, useCallback, useRef } from 'react';
 import Outline, { useSelectComponent } from './Outline';
 
@@ -22,13 +23,13 @@ export type ContainerComponentProps = {
   padding: Spacing;
   margin: Spacing;
   color: RGBA;
-  mainAxisAlignment: Alignment;
-  crossAxisAlignment: Alignment;
+  justifyContent: JustifyContent;
+  alignItems: AlignItems;
   opacity: number;
   shadow: Shadow[];
   border?: Border;
   borderRadius?: BorderRadius;
-  cursor?: Property.Cursor;
+  cursor?: Cursor;
   overflow?: Overflow;
   children?: ReactNode;
 };
@@ -51,7 +52,6 @@ const Container: GraftComponent<ContainerComponentProps> = ({ children, ...rest 
           },
           [componentId, selectComponent]
         )}
-        direction="column"
       >
         {children}
       </ContainerComp>
@@ -77,8 +77,8 @@ Container.graftOptions = {
     padding: { top: 0, right: 0, bottom: 0, left: 0 },
     margin: { top: 0, right: 0, bottom: 0, left: 0 },
     color: { r: 220, g: 220, b: 255, a: 1 },
-    mainAxisAlignment: 'flex-start',
-    crossAxisAlignment: 'flex-start',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
     opacity: 1,
     shadow: [],
     border: null,
