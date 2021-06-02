@@ -84,7 +84,7 @@ export default function EditorNavigation() {
 
   return (
     <Flex
-      py={1.5}
+      height="54px"
       px={4}
       justifyContent="space-between"
       alignItems="center"
