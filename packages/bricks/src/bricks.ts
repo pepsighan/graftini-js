@@ -11,6 +11,7 @@ export {
   ContainerProps,
   default as Container,
   DimensionSize,
+  DimensionUnit,
   DragProps,
   FlexDirection,
   FlexStyles,

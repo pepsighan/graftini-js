@@ -119,7 +119,7 @@ export type BorderSide = {
 
 export type DimensionSize = {
   size: number;
-  unit: 'px' | '%';
+  unit: DimensionUnit;
 };
 
 export type Overflow = {
@@ -145,6 +145,7 @@ export type JustifyContent =
   | 'space-evenly';
 export type AlignItems = 'flex-start' | 'center' | 'flex-end';
 export type BorderStyle = 'solid' | 'dashed' | 'dotted';
+export type DimensionUnit = 'px' | '%';
 
 export type DragProps = {
   onDragStart?: DragEventHandler;
