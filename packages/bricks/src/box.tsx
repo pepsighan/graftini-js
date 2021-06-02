@@ -12,7 +12,7 @@ import {
 import { RGBA, rgbaToCss } from './colors';
 import { FontSize, FontWeight, TextAlign } from './text';
 
-export type ContainerProps = BaseComponentProps &
+export type BoxProps = BaseBoxProps &
   LayoutStyles &
   AppearanceStyles &
   BoundaryStyles &
@@ -24,7 +24,7 @@ export type ContainerProps = BaseComponentProps &
   InputProps &
   DragProps;
 
-export type BaseComponentProps = {
+export type BaseBoxProps = {
   tag?: string;
   children?: ReactNode;
 };
@@ -157,7 +157,7 @@ export type DragProps = {
   draggable?: boolean;
 };
 
-const Container = forwardRef((props: ContainerProps, ref) => {
+const Box = forwardRef((props: BoxProps, ref) => {
   const { tag, children } = props;
   const Component = (tag ?? 'div') as ElementType;
 
@@ -168,7 +168,7 @@ const Container = forwardRef((props: ContainerProps, ref) => {
       {...interactionProps(props)}
       {...dragProps(props)}
       css={{
-        // Append -gr in class names rather than -Container.
+        // Append -gr in class names rather than -Box.
         label: 'gr',
         display: 'flex',
         ...layoutStyles(props),
@@ -253,7 +253,7 @@ function interactionStyles({ cursor }: InteractionStyles): CSSObject {
   };
 }
 
-function interactionProps({ tag, href, onClick }: InteractionProps & BaseComponentProps): any {
+function interactionProps({ tag, href, onClick }: InteractionProps & BaseBoxProps): any {
   const props: any = {};
   if (tag === 'a') {
     props.href = href;
@@ -280,7 +280,7 @@ function inputStyles({
   fontWeight,
   fontSize,
   fontFamily,
-}: BaseComponentProps & InputStyles): CSSObject {
+}: BaseBoxProps & InputStyles): CSSObject {
   if (tag !== 'input' && tag !== 'textarea') {
     return {};
   }
@@ -301,7 +301,7 @@ function inputProps({
   placeholder,
   onChange,
   onBlur,
-}: BaseComponentProps & InputProps): any {
+}: BaseBoxProps & InputProps): any {
   if (tag !== 'input' && tag !== 'textarea') {
     return;
   }
@@ -342,4 +342,4 @@ function dimensionSize(size?: DimensionSize): string | undefined {
   return `${size.size}${size.unit}`;
 }
 
-export default Container;
+export default Box;

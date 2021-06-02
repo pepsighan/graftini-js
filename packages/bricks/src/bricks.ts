@@ -1,16 +1,15 @@
-export { RGBA, rgbaToCss } from './colors';
 export {
   AlignItems,
   AppearanceStyles,
-  BaseComponentProps,
+  BaseBoxProps,
   Border,
   BorderRadius,
   BorderSide,
   BorderStyle,
   BoundaryStyles,
-  ContainerProps,
+  BoxProps,
   Cursor,
-  default as Container,
+  default as Box,
   DimensionSize,
   DimensionUnit,
   DragProps,
@@ -28,7 +27,8 @@ export {
   PositionStyles,
   Shadow,
   Spacing,
-} from './container';
+} from './box';
+export { RGBA, rgbaToCss } from './colors';
 export { default as Reset } from './reset';
 export {
   BaseTextProps,

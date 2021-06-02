@@ -2,7 +2,7 @@
 import { CSSObject } from '@emotion/react';
 import { ElementType, forwardRef, MouseEventHandler, ReactNode } from 'react';
 import { RGBA, rgbaToCss } from './colors';
-import { DragProps, dragProps } from './container';
+import { DragProps, dragProps } from './box';
 
 export type TextProps = BaseTextProps & DragProps & TextInteractionProps & TextInteractionProps;
 
