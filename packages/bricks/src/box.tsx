@@ -32,6 +32,10 @@ export type BaseBoxProps = {
 export type LayoutStyles = {
   width?: DimensionSize;
   height?: DimensionSize;
+  minWidth?: DimensionLimit;
+  maxWidth?: DimensionLimit;
+  minHeight?: DimensionLimit;
+  maxHeight?: DimensionLimit;
   margin?: Spacing;
   padding?: Spacing;
 };
@@ -125,6 +129,13 @@ export type DimensionSize =
     }
   | 'auto';
 
+export type DimensionLimit =
+  | {
+      size: number;
+      unit: DimensionUnit;
+    }
+  | 'none';
+
 export type Overflow = {
   x: OverflowBehavior;
   y: OverflowBehavior;
@@ -188,10 +199,23 @@ const Box = forwardRef((props: BoxProps, ref) => {
   );
 });
 
-function layoutStyles({ width, height, margin, padding }: LayoutStyles): CSSObject {
+function layoutStyles({
+  width,
+  height,
+  minWidth,
+  maxWidth,
+  minHeight,
+  maxHeight,
+  margin,
+  padding,
+}: LayoutStyles): CSSObject {
   return {
     width: dimensionSize(width),
     height: dimensionSize(height),
+    minWidth: dimensionLimit(minWidth),
+    maxWidth: dimensionLimit(maxWidth),
+    minHeight: dimensionLimit(minHeight),
+    maxHeight: dimensionLimit(maxHeight),
     marginLeft: margin?.left,
     marginRight: margin?.right,
     marginTop: margin?.top,
@@ -343,6 +367,18 @@ function dimensionSize(size?: DimensionSize): string | undefined {
   }
 
   if (size === 'auto') {
+    return size;
+  }
+
+  return `${size.size}${size.unit}`;
+}
+
+function dimensionLimit(size?: DimensionLimit): string | undefined {
+  if (!size) {
+    return undefined;
+  }
+
+  if (size === 'none') {
     return size;
   }
 

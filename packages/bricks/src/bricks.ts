@@ -10,6 +10,7 @@ export {
   BoxProps,
   Cursor,
   default as Box,
+  DimensionLimit,
   DimensionSize,
   DimensionUnit,
   DragProps,
