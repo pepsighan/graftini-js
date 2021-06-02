@@ -90,7 +90,7 @@ Container.graftOptions = {
     },
     padding: { top: 0, right: 0, bottom: 0, left: 0 },
     margin: { top: 0, right: 0, bottom: 0, left: 0 },
-    color: { r: 220, g: 220, b: 255, a: 1 },
+    color: { r: 111, g: 0, b: 255, a: 0.2 },
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
     opacity: 1,
