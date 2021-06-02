@@ -1,6 +1,8 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
+import { mdiTableColumn, mdiTableRow } from '@mdi/js';
 import { DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
+import Icon from 'components/Icon';
 import { useCallback } from 'react';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
 import Container, { ContainerComponentProps, containerTags } from './Container';
@@ -125,9 +127,15 @@ function FlexSection() {
       <Labelled label="Direction">
         <SegmentedInput
           name="flexDirection"
+          isFullWidth
+          size="md"
           options={[
-            { value: 'column', label: 'Column' },
-            { value: 'row', label: 'Row' },
+            {
+              value: 'column',
+              label: <Icon icon={mdiTableColumn} fontSize="xl" />,
+              tooltip: 'Column',
+            },
+            { value: 'row', label: <Icon icon={mdiTableRow} fontSize="3xl" />, tooltip: 'Row' },
           ]}
         />
       </Labelled>
