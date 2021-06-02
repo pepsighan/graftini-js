@@ -11,6 +11,8 @@ export default function RightSidebar() {
     <Box
       minWidth="300px"
       width="300px"
+      height="100%"
+      overflowY="scroll"
       bg="gray.100"
       py={4}
       px={3}

@@ -1,5 +1,5 @@
-import { Canvas as Canvs, ROOT_NODE_ID } from 'graft';
 import IFrame from 'components/IFrame';
+import { Canvas as Canvs, ROOT_NODE_ID } from 'graft';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
@@ -17,8 +17,7 @@ export default function Canvas() {
       title="Designer"
       style={{
         width: '100%',
-        // The height of the nav is substracted, so that the editor does not cause window-wide scroll.
-        height: 'calc(100vh - 64px)',
+        height: '100%',
         border: '1px',
         borderColor: 'gray.300',
         // Any content that overflows vertically will have the scrollbar on this box itself.
