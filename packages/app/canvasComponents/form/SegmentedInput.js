@@ -2,22 +2,28 @@ import { Button, ButtonGroup } from '@chakra-ui/button';
 import { Tooltip } from '@chakra-ui/tooltip';
 import { Controller, useFormContext } from 'react-hook-form';
 
-export default function SegmentedInput({ name, options }) {
+export default function SegmentedInput({ name, size = 'sm', isFullWidth = false, options }) {
   const { control } = useFormContext();
   return (
     <Controller
       name={name}
       control={control}
       render={({ field }) => (
-        <SegmentedInputInner options={options} value={field.value} onChange={field.onChange} />
+        <SegmentedInputInner
+          options={options}
+          value={field.value}
+          size={size}
+          isFullWidth={isFullWidth}
+          onChange={field.onChange}
+        />
       )}
     />
   );
 }
 
-function SegmentedInputInner({ options, value, onChange }) {
+function SegmentedInputInner({ size, options, value, isFullWidth, onChange }) {
   return (
-    <ButtonGroup size="sm" isAttached variant="outline">
+    <ButtonGroup size={size} isAttached variant="outline" width={isFullWidth ? '100%' : null}>
       {options.map((opt) => {
         const button = (
           <Button
@@ -25,6 +31,7 @@ function SegmentedInputInner({ options, value, onChange }) {
             bg={value === opt.value ? 'white' : 'gray.200'}
             color={value === opt.value ? 'black' : 'gray.600'}
             onClick={() => onChange(opt.value)}
+            flex={isFullWidth ? 1 : null}
           >
             {opt.label}
           </Button>

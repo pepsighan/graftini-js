@@ -1,20 +1,13 @@
-import Icon from '@chakra-ui/icon';
 import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
 import { DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
-import {
-  CgAlignBottom,
-  CgAlignCenter,
-  CgAlignLeft,
-  CgAlignMiddle,
-  CgAlignRight,
-  CgAlignTop,
-} from 'react-icons/cg';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
 import Container, { ContainerComponentProps, containerTags } from './Container';
+import AlignItems from './form/AlignItems';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
+import JustifyContent from './form/JustifyContent';
 import Labelled from './form/Labelled';
 import OpacityInput from './form/OpacityInput';
 import { OverflowInputX, OverflowInputY } from './form/OverflowInput';
@@ -139,27 +132,12 @@ function FlexSection() {
         />
       </Labelled>
 
-      <Labelled label="Justify">
-        <SegmentedInput
-          name="justifyContent"
-          options={[
-            { value: 'flex-start', label: <Icon as={CgAlignLeft} fontSize="lg" /> },
-            { value: 'center', label: <Icon as={CgAlignMiddle} fontSize="lg" /> },
-            { value: 'flex-end', label: <Icon as={CgAlignRight} fontSize="lg" /> },
-          ]}
-        />
-      </Labelled>
-
-      <Labelled label="Align">
-        <SegmentedInput
-          name="alignItems"
-          options={[
-            { value: 'flex-start', label: <Icon as={CgAlignTop} fontSize="lg" /> },
-            { value: 'center', label: <Icon as={CgAlignCenter} fontSize="lg" /> },
-            { value: 'flex-end', label: <Icon as={CgAlignBottom} fontSize="lg" /> },
-          ]}
-        />
-      </Labelled>
+      <GridItem colSpan={8}>
+        <JustifyContent />
+        <Box mt={4}>
+          <AlignItems />
+        </Box>
+      </GridItem>
     </>
   );
 }
