@@ -1,11 +1,11 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
 import { mdiTableColumn, mdiTableRow } from '@mdi/js';
-import { DimensionSize } from 'bricks';
+import { DimensionLimit, DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
 import Icon from 'components/Icon';
 import { useCallback } from 'react';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
-import { default as CanvasBox, BoxComponentProps, boxTags } from './Box';
+import { BoxComponentProps, boxTags, default as CanvasBox } from './Box';
 import AlignItems from './form/AlignItems';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -18,6 +18,7 @@ import RadiusInput from './form/RadiusInput';
 import SegmentedInput from './form/SegmentedInput';
 import SelectInput from './form/SelectInput';
 import SizeInput from './form/SizeInput';
+import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 
@@ -26,15 +27,19 @@ export type BoxDimension = DimensionSize | 'full';
 type RawDimension = {
   size: string;
   unit: 'px' | '%';
-  toggle?: 'auto' | 'full';
+  toggle?: 'auto' | 'full' | 'none';
 };
 
 type BoxOptionsFields = BoxComponentProps & {
   widthRaw: RawDimension;
   heightRaw: RawDimension;
+  minWidthRaw: RawDimension;
+  maxWidthRaw: RawDimension;
+  minHeightRaw: RawDimension;
+  maxHeightRaw: RawDimension;
 };
 
-function parseDimension(dim: RawDimension): BoxDimension {
+function parseDimension(dim: RawDimension): BoxDimension | DimensionLimit {
   if (dim.toggle) {
     return dim.toggle;
   }
@@ -65,12 +70,36 @@ export default function BoxOptions({ componentId }: OptionsProps) {
             unit: (initialState.height as any)?.unit ?? 'px',
             toggle: typeof initialState.height === 'string' ? initialState.height : null,
           },
+          minWidthRaw: {
+            size: (initialState.minWidth as any)?.size?.toString(),
+            unit: (initialState.minWidth as any)?.unit ?? 'px',
+            toggle: typeof initialState.minWidth === 'string' ? initialState.minWidth : null,
+          },
+          maxWidthRaw: {
+            size: (initialState.maxWidth as any)?.size?.toString(),
+            unit: (initialState.maxWidth as any)?.unit ?? 'px',
+            toggle: typeof initialState.maxWidth === 'string' ? initialState.maxWidth : null,
+          },
+          minHeightRaw: {
+            size: (initialState.minHeight as any)?.size?.toString(),
+            unit: (initialState.minHeight as any)?.unit ?? 'px',
+            toggle: typeof initialState.minHeight === 'string' ? initialState.minHeight : null,
+          },
+          maxHeightRaw: {
+            size: (initialState.maxHeight as any)?.size?.toString(),
+            unit: (initialState.maxHeight as any)?.unit ?? 'px',
+            toggle: typeof initialState.maxHeight === 'string' ? initialState.maxHeight : null,
+          },
         }),
         []
       )}
       onTransformValues={useCallback((values: BoxOptionsFields) => {
-        values.width = parseDimension(values.widthRaw);
-        values.height = parseDimension(values.heightRaw);
+        values.width = parseDimension(values.widthRaw) as BoxDimension;
+        values.height = parseDimension(values.heightRaw) as BoxDimension;
+        values.minWidth = parseDimension(values.minWidthRaw) as DimensionLimit;
+        values.maxWidth = parseDimension(values.maxWidthRaw) as DimensionLimit;
+        values.minHeight = parseDimension(values.minHeightRaw) as DimensionLimit;
+        values.maxHeight = parseDimension(values.maxHeightRaw) as DimensionLimit;
 
         values.padding.top = parseInteger(values.padding?.top) || 0;
         values.padding.right = parseInteger(values.padding?.right) || 0;
@@ -197,6 +226,18 @@ function LayoutSection() {
       </Labelled>
       <Labelled label="Height">
         <SizeInput name="heightRaw" isWidth={false} />
+      </Labelled>
+      <Labelled label="Min Width">
+        <SizeLimitInput name="minWidthRaw" isWidth />
+      </Labelled>
+      <Labelled label="Max Width">
+        <SizeLimitInput name="maxWidthRaw" isWidth={false} />
+      </Labelled>
+      <Labelled label="Min Height">
+        <SizeLimitInput name="minHeightRaw" isWidth />
+      </Labelled>
+      <Labelled label="Max Height">
+        <SizeLimitInput name="maxHeightRaw" isWidth={false} />
       </Labelled>
       <Labelled label="Padding">
         <SpacingField name="padding" />

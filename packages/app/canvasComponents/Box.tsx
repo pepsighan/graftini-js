@@ -4,6 +4,7 @@ import {
   BorderRadius,
   Box as BoxComp,
   Cursor,
+  DimensionLimit,
   FlexDirection,
   FlexWrap,
   JustifyContent,
@@ -23,6 +24,10 @@ export type BoxComponentProps = {
   tag: BoxTag;
   width: BoxDimension;
   height: BoxDimension;
+  minWidth: DimensionLimit;
+  maxWidth: DimensionLimit;
+  minHeight: DimensionLimit;
+  maxHeight: DimensionLimit;
   padding: Spacing;
   margin: Spacing;
   color: RGBA;
@@ -93,6 +98,10 @@ Box.graftOptions = {
       size: 200,
       unit: 'px',
     },
+    minWidth: 'none',
+    maxWidth: 'none',
+    minHeight: 'none',
+    maxHeight: 'none',
     padding: { top: 0, right: 0, bottom: 0, left: 0 },
     margin: { top: 0, right: 0, bottom: 0, left: 0 },
     color: { r: 111, g: 0, b: 255, a: 0.2 },
