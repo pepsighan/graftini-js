@@ -1,4 +1,4 @@
-import { Box, Input, useDisclosure } from '@chakra-ui/react';
+import { Box, Input, useDisclosure, useOutsideClick } from '@chakra-ui/react';
 import { rgbaToCss } from 'bricks';
 import { useRef } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
@@ -58,6 +58,9 @@ export default function ColorPicker({ name }) {
 }
 
 function ColorPickerInner({ stickToRef, value, onChange, onClose }) {
+  const ref = useRef();
+  useOutsideClick({ ref, handler: onClose });
+
   return (
     <StickyBox
       stickToRef={stickToRef}
@@ -90,7 +93,9 @@ function ColorPickerInner({ stickToRef, value, onChange, onClose }) {
         },
       }}
     >
-      <RgbaColorPicker color={value} onChange={onChange} />
+      <div ref={ref}>
+        <RgbaColorPicker color={value} onChange={onChange} />
+      </div>
     </StickyBox>
   );
 }
