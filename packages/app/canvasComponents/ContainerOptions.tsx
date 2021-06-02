@@ -28,6 +28,7 @@ import TextInput from './form/TextInput';
 type RawDimension = {
   size: string;
   unit: 'px' | '%';
+  toggle?: 'auto' | 'full-width';
 };
 
 type ContainerOptionsFields = ContainerComponentProps & {
