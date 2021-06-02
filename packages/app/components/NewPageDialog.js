@@ -50,8 +50,8 @@ export default function NewPageDialog({ isOpen, onClose }) {
           <ModalCloseButton />
           <ModalBody>
             <Stack>
-              <Input {...register('name')} placeholder="Name" />
-              <Input {...register('route')} placeholder="Route" />
+              <Input {...register('name')} placeholder="Name" autoComplete="off" />
+              <Input {...register('route')} placeholder="Route" autoComplete="off" />
             </Stack>
           </ModalBody>
           <ModalFooter>
