@@ -83,6 +83,7 @@ function Container({ children, ...rest }) {
         bottom: border,
       }}
       color={{ r: 100, g: 100, b: 230, a: 0.3 }}
+      width={{ size: 100, unit: "%" }}
       height={
         noChildren
           ? {
@@ -93,8 +94,7 @@ function Container({ children, ...rest }) {
       }
       padding={{ top: 8, left: 8, right: 8, bottom: 8 }}
     >
-      {id}
-      <div>{children}</div>
+      {children}
     </Box>
   );
 }
