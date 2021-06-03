@@ -25,9 +25,6 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
           return;
         }
 
-        const dimensions = event.currentTarget.getBoundingClientRect();
-        const lastChildDimensions = (event.currentTarget.lastChild as any)?.getBoundingClientRect();
-
         let siblingId = componentId;
 
         let isCanvas = false;
@@ -37,6 +34,11 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
         } else {
           isCanvas = state.componentMap[siblingId!].isCanvas;
         }
+
+        const dimensions = event.currentTarget.getBoundingClientRect();
+        const lastChildDimensions = isCanvas
+          ? (event.currentTarget.lastChild as any)?.getBoundingClientRect()
+          : null;
 
         state.draggedOver.hoveredOver = {
           canvasId,
