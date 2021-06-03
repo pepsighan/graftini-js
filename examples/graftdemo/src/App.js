@@ -1,83 +1,117 @@
-import { Box, Button, ChakraProvider, Flex } from '@chakra-ui/react';
-import { Canvas, Editor, useComponentId, useCreateComponent, useEditorState } from 'graft';
-import { useCallback, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { Box, Text as Txt } from "bricks";
+import {
+  Canvas,
+  Editor,
+  useComponentId,
+  useCreateComponent,
+  useEditorState,
+} from "graft";
+import { useCallback, useState } from "react";
+import { createPortal } from "react-dom";
 
 function IFrame({ children }) {
   const [ref, setRef] = useState();
   const container = ref?.contentWindow?.document?.body;
 
   return (
-    <Box as="iframe" ref={setRef} mt={16} title="iframe" width="100%" height="100vh" bg="white">
+    <iframe
+      ref={setRef}
+      title="iframe"
+      style={{
+        backgroundColor: "white",
+        width: "100%",
+        height: "100vh",
+        marginTop: 32,
+      }}
+    >
       {container && createPortal(children, container)}
-    </Box>
+    </iframe>
   );
 }
 
 export default function App() {
   return (
-    <ChakraProvider>
-      <Editor resolvers={{ Container, Button: MyButton }}>
-        <Menu />
-        <IFrame>
-          <Canvas />
-        </IFrame>
-      </Editor>
-    </ChakraProvider>
+    <Editor resolvers={{ Container, Text }}>
+      <Menu />
+      <IFrame>
+        <Canvas />
+      </IFrame>
+    </Editor>
   );
 }
 
 function Menu() {
   return (
-    <Flex p={4} justifyContent="center" bg="blue.400" position="sticky" top={0}>
-      <Button {...useCreateComponent({ type: 'Container' })}>Container</Button>
-      <Button {...useCreateComponent({ type: 'Button' })} ml={2}>
-        Button
-      </Button>
-    </Flex>
+    <div
+      style={{
+        display: "flex",
+        padding: 16,
+        justifyContent: "center",
+        backgroundColor: "#5894DD",
+        position: "sticky",
+        top: 0,
+      }}
+    >
+      <button
+        {...useCreateComponent({ type: "Container" })}
+        style={{ padding: 16 }}
+      >
+        Container
+      </button>
+      <button
+        {...useCreateComponent({ type: "Text" })}
+        style={{ padding: 16, marginLeft: 16 }}
+      >
+        Text
+      </button>
+    </div>
   );
 }
 
-function Container({ children, border, backgroundColor, ...rest }) {
+function Container({ children, ...rest }) {
   const id = useComponentId();
   const noChildren = useEditorState(
     useCallback((state) => state[id].childrenNodes.length === 0, [id])
   );
 
+  const border = { color: { r: 0, g: 0, b: 0 }, style: "solid", width: 1 };
+
   return (
-    <div
+    <Box
       {...rest}
-      style={{
-        p: 1,
-        border,
-        backgroundColor,
-        height: noChildren ? 180 : null,
+      border={{
+        left: border,
+        right: border,
+        top: border,
+        bottom: border,
       }}
+      color={{ r: 100, g: 100, b: 230, a: 0.3 }}
+      height={
+        noChildren
+          ? "auto"
+          : {
+              size: 180,
+              unit: "px",
+            }
+      }
+      padding={{ top: 8, left: 8, right: 8, bottom: 8 }}
     >
       {id}
       <div>{children}</div>
-    </div>
+    </Box>
   );
 }
 
 Container.graftOptions = {
-  display: 'block',
+  display: "block",
   isCanvas: true,
-  defaultProps: {
-    border: '1px solid #000000',
-    backgroundColor: '#95da53',
-  },
 };
 
-function MyButton(props) {
+function Text(props) {
   const id = useComponentId();
-  return (
-    <button {...props} style={{ padding: 8, background: '#dadada' }}>
-      Click {id}
-    </button>
-  );
+  return <Txt {...props}>Click {id}</Txt>;
 }
 
-MyButton.graftOptions = {
-  display: 'inline',
+Text.graftOptions = {
+  display: "inline",
 };
