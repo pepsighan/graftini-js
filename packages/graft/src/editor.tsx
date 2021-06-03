@@ -1,7 +1,6 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
 import { Root__Graft__Component } from './canvas';
-import { DefaultDropMarker, DropMarkerProvider, RenderDropMarker } from './dropMarker';
 import { ResolverMap, ResolverProvider } from './resolver';
 import {
   ComponentMap,
@@ -35,17 +34,12 @@ export type EditorProps = {
    * is that it must have a single Canvas component down the tree.
    */
   children: ReactNode;
-  /**
-   * If you want to provide your own drop marker, then provide a component that accepts the given
-   * props. If not provided, its going to use a default one.
-   */
-  renderDropMarker?: RenderDropMarker;
 };
 
 /**
  * An editor which stores the state of the elements drawn in the canvas.
  */
-export function Editor({ initialState, resolvers, renderDropMarker, children }: EditorProps) {
+export function Editor({ initialState, resolvers, children }: EditorProps) {
   if (!resolvers) {
     throw new Error(
       '`resolvers` prop on Editor is required. We cannot render anything on canvas if ' +
@@ -56,9 +50,7 @@ export function Editor({ initialState, resolvers, renderDropMarker, children }: 
   return (
     <EditorStateProvider elementMap={initialState}>
       <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
-        <DropMarkerProvider value={renderDropMarker ?? DefaultDropMarker}>
-          {children}
-        </DropMarkerProvider>
+        {children}
       </ResolverProvider>
     </EditorStateProvider>
   );

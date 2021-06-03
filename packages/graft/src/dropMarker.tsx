@@ -1,33 +1,6 @@
-import React, { createContext, useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useCanvasId, useComponentId } from './context';
 import { DraggedOver, useEditorStateInternal } from './schema';
-
-export type RenderDropMarkerProps = {
-  /**
-   * The dimensions of the component or canvas that is currently hovered during a drag operation.
-   * This only has value when this drop marker is active.
-   */
-  dimensions?: {
-    width: number;
-    height: number;
-  } | null;
-  /**
-   * The kind of component that is currently hovered on. This is provided by you when creating
-   * a component in Tool.
-   */
-  display: 'block' | 'inline';
-  /**
-   * Whether this drop marker is active. This is active when a dragged component is hovering on
-   * top of the location.
-   */
-  isActive: boolean;
-};
-
-export type RenderDropMarker = (props: RenderDropMarkerProps) => JSX.Element;
-
-const DropMarkerContext = createContext<RenderDropMarker | null>(null);
-/** @internal */
-export const DropMarkerProvider = DropMarkerContext.Provider;
 
 /**
  * This is a component which signifies the drop location of an element that is being dragged.
@@ -84,12 +57,6 @@ function DropMarkerInner({ activeWhen }: DropMarkerInnerProps) {
     useCallback((state) => (isActive ? state.draggedOver.dimensions : null), [isActive])
   );
 
-  const RenderDropMarker = useContext(DropMarkerContext)!;
-  return <RenderDropMarker display={display} isActive={isActive} dimensions={dimensions} />;
-}
-
-/** @internal */
-export function DefaultDropMarker({ dimensions, isActive, display }: RenderDropMarkerProps) {
   const margin = isActive ? 8 : 0;
   const crossAxisDimension = (display === 'block' ? dimensions?.width : dimensions?.height) ?? 0;
   const mainAxisDimension = isActive ? 12 : 0;
