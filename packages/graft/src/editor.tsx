@@ -83,6 +83,7 @@ type UseEditor = {
   getComponentNode(componentId: string): ComponentNode | null;
   updateComponentProps(componentId: string, props: ComponentProps | PropsUpdater): void;
   deleteComponentNode(componentId: string): void;
+  setIsCanvas(componentId: string, isCanvas: boolean): void;
 };
 
 /**
@@ -91,6 +92,8 @@ type UseEditor = {
  */
 export function useEditor(): UseEditor {
   const { getState, subscribe, setState } = useEditorStoreApiInternal();
+
+  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   const getEditorState = useCallback(() => getState().componentMap, [getState]);
   const getComponentNode = useCallback(
@@ -172,12 +175,22 @@ export function useEditor(): UseEditor {
     [setState]
   );
 
+  const setIsCanvas = useCallback(
+    (componentId: string, isCanvas: boolean) => {
+      immerSet((state) => {
+        state.componentMap[componentId].isCanvas = isCanvas;
+      });
+    },
+    [immerSet]
+  );
+
   return {
     getState: getEditorState,
     subscribe: subscribeEditorState as EditorStateSubscribe,
     getComponentNode,
     updateComponentProps,
     deleteComponentNode,
+    setIsCanvas,
   };
 }
 
