@@ -6,35 +6,32 @@ import {
   useCreateComponent,
   useEditorState,
 } from "graft";
-import { useCallback, useState } from "react";
-import { createPortal } from "react-dom";
-
-function IFrame({ children }) {
-  const [ref, setRef] = useState();
-  const container = ref?.contentWindow?.document?.body;
-
-  return (
-    <iframe
-      ref={setRef}
-      title="iframe"
-      style={{
-        backgroundColor: "white",
-        width: "100%",
-        height: "100vh",
-        marginTop: 32,
-      }}
-    >
-      {container && createPortal(children, container)}
-    </iframe>
-  );
-}
+import { useCallback } from "react";
+import IFrame from "./IFrame";
 
 export default function App() {
   return (
     <Editor resolvers={{ Container, Text }}>
       <Menu />
-      <IFrame>
-        <Canvas />
+      <IFrame
+        style={{
+          height: "80vh",
+          width: "100%",
+          marginTop: 32,
+          backgroundColor: "white",
+        }}
+      >
+        {() => (
+          <div
+            style={{
+              width: "100%",
+              height: "100vh",
+              userSelect: "none",
+            }}
+          >
+            <Canvas />
+          </div>
+        )}
       </IFrame>
     </Editor>
   );
