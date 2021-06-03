@@ -1,11 +1,11 @@
 import { Box, Text as Txt } from "bricks";
 import {
   Canvas,
+  DropMarker,
   Editor,
   useComponentId,
   useCreateComponent,
   useEditorState,
-  DropMarker,
 } from "graft";
 import { useCallback } from "react";
 import IFrame from "./IFrame";
@@ -78,6 +78,8 @@ function Container({ children, ...rest }) {
   );
 
   const border = { color: { r: 0, g: 0, b: 0 }, style: "solid", width: 1 };
+
+  console.log(rest.pointerEvents);
 
   return (
     <Box

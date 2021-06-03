@@ -23,6 +23,7 @@ export type ResolverMap = {
 export type GraftComponentProps = {
   onDragStart: EventHandler<DragEvent>;
   onDragOver?: EventHandler<DragEvent>;
+  pointerEvents?: 'none' | null;
   draggable: true;
   children?: ReactNode;
 };

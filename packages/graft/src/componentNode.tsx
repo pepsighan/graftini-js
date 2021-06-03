@@ -85,8 +85,9 @@ function ComponentWrapper({
     <Component
       onDragStart={onDragStart}
       // Do not let it to be dropped at the same location.
-      onDragOver={!isDragging ? onDragOver : undefined}
+      onDragOver={onDragOver}
       draggable
+      pointerEvents={isDragging ? 'none' : null}
       {...componentProps}
     >
       {children}
