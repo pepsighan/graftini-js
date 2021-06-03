@@ -52,7 +52,7 @@ export function useOnComponentDrag(): EventHandler<DragEvent> {
  * is outside any canvas, ignore it.
  */
 /** @internal */
-export function useOnDrop() {
+export function useOnDragEnd() {
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   return useCallback(() => {

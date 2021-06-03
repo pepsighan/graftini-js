@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
-import { DragEvent, EventHandler, useCallback } from 'react';
+import { DragEventHandler, useCallback } from 'react';
+import { useOnDragEnd } from './drag';
 import { useResolver } from './resolver';
 import { ChildAppendDirection, ComponentProps, useEditorStoreApiInternal } from './schema';
 
@@ -14,7 +15,8 @@ export type CreateComponentOptions = {
 };
 
 type CreateComponentHandlers = {
-  onDragStart: EventHandler<DragEvent>;
+  onDragStart: DragEventHandler;
+  onDragEnd: DragEventHandler;
   draggable: true;
 };
 
@@ -62,6 +64,7 @@ export function useCreateComponent({
 
   return {
     onDragStart,
+    onDragEnd: useOnDragEnd(),
     draggable: true,
   };
 }

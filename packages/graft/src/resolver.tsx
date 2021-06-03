@@ -1,9 +1,8 @@
 import {
   ComponentType,
   createContext,
-  DragEvent,
+  DragEventHandler,
   ElementType,
-  EventHandler,
   ReactNode,
   useContext,
 } from 'react';
@@ -21,8 +20,9 @@ export type ResolverMap = {
  * component to be made draggable within the canvas.
  */
 export type GraftComponentProps = {
-  onDragStart: EventHandler<DragEvent>;
-  onDragOver?: EventHandler<DragEvent>;
+  onDragStart: DragEventHandler;
+  onDragOver?: DragEventHandler;
+  onDragEnd: DragEventHandler;
   pointerEvents?: 'none' | null;
   draggable: true;
   children?: ReactNode;

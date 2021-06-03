@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback } from 'react';
 import { CanvasContext, ComponentContext, useComponentId } from './context';
-import { useOnComponentDrag } from './drag';
+import { useOnComponentDrag, useOnDragEnd } from './drag';
 import { useIdentifyCurrentDropLocation } from './dropLocation';
 import { GraftComponent, useResolver } from './resolver';
 import { ComponentProps, useEditorStateInternal } from './schema';
@@ -71,6 +71,7 @@ function ComponentWrapper({
 }: DragOverNotifierProps) {
   const onDragOver = useIdentifyCurrentDropLocation();
   const onDragStart = useOnComponentDrag();
+  const onDragEnd = useOnDragEnd();
 
   const comonentId = useComponentId();
   const isDragging = useEditorStateInternal(
@@ -86,6 +87,7 @@ function ComponentWrapper({
       onDragStart={onDragStart}
       // Do not let it to be dropped at the same location.
       onDragOver={onDragOver}
+      onDragEnd={onDragEnd}
       draggable
       pointerEvents={isDragging ? 'none' : null}
       {...componentProps}

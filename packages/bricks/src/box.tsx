@@ -175,6 +175,7 @@ export type PointerEvents = 'auto' | 'none';
 
 export type DragProps = {
   onDragStart?: DragEventHandler;
+  onDragEnd?: DragEventHandler;
   onDragOver?: DragEventHandler;
   onDragLeave?: DragEventHandler;
   draggable?: boolean;
@@ -362,9 +363,16 @@ function borderStyle(borderSide?: BorderSide): string | undefined {
     : undefined;
 }
 
-export function dragProps({ onDragStart, onDragOver, onDragLeave, draggable }: DragProps): any {
+export function dragProps({
+  onDragStart,
+  onDragEnd,
+  onDragOver,
+  onDragLeave,
+  draggable,
+}: DragProps): any {
   return {
     onDragStart,
+    onDragEnd,
     onDragOver,
     onDragLeave,
     draggable,
