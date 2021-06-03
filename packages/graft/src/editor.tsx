@@ -3,6 +3,7 @@ import { StateListener, StateSelector } from 'zustand';
 import { Root__Graft__Component } from './canvas';
 import { ResolverMap, ResolverProvider } from './resolver';
 import {
+  ChildAppendDirection,
   ComponentMap,
   ComponentNode,
   ComponentProps,
@@ -84,6 +85,7 @@ type UseEditor = {
   updateComponentProps(componentId: string, props: ComponentProps | PropsUpdater): void;
   deleteComponentNode(componentId: string): void;
   setIsCanvas(componentId: string, isCanvas: boolean): void;
+  setChildAppendDirection(componentId: string, childAppendDirection: ChildAppendDirection): void;
 };
 
 /**
@@ -184,6 +186,15 @@ export function useEditor(): UseEditor {
     [immerSet]
   );
 
+  const setChildAppendDirection = useCallback(
+    (componentId: string, childAppendDirection: ChildAppendDirection) => {
+      immerSet((state) => {
+        state.componentMap[componentId].childAppendDirection = childAppendDirection;
+      });
+    },
+    [immerSet]
+  );
+
   return {
     getState: getEditorState,
     subscribe: subscribeEditorState as EditorStateSubscribe,
@@ -191,6 +202,7 @@ export function useEditor(): UseEditor {
     updateComponentProps,
     deleteComponentNode,
     setIsCanvas,
+    setChildAppendDirection,
   };
 }
 
