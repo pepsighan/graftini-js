@@ -101,14 +101,11 @@ export type DraggedOver = {
     /**
      * The dimensions of the canvas or a sibling that is hovered over while dragging a component.
      */
-    dimensions: {
-      width: number;
-      height: number;
-      left: number;
-      right: number;
-      top: number;
-      bottom: number;
-    };
+    dimensions: Dimensions;
+    /**
+     * The dimensions of the last child for the cases where a canvas is being hovered over.
+     */
+    lastChildDimensions?: Dimensions | null;
     /**
      * Whether the component is a canvas that is being hovered over.
      */
@@ -128,6 +125,19 @@ export type DraggedOver = {
      */
     index: number;
   };
+};
+
+/**
+ * The dimensions of the component.
+ */
+/** @internal */
+type Dimensions = {
+  width: number;
+  height: number;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
 };
 
 /**

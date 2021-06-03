@@ -8,7 +8,7 @@ import { useEditorStateInternal } from './schema';
 /** @internal */
 export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
   const canvasId = useCanvasId();
-  const parentId = useComponentId();
+  const componentId = useComponentId();
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   // Sets the current drag location.
@@ -19,24 +19,16 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
       // After adding this `onDrop` works. Don't know why.
       event.preventDefault();
 
-      const dimensions = event.currentTarget.getBoundingClientRect();
-
-      let siblingId: string | null;
-      if (canvasId === parentId) {
-        // If the parent and the canvas are the same, then there are no siblings.
-        // The component is to be pushed as a child of the canvas.
-        siblingId = null;
-      } else {
-        // If the parent is not a canvas, then the component is to be added after this parent.
-        // Hence, the parent becomes a sibling to the component being dropped.
-        siblingId = parentId;
-      }
-
       // Only set if component is being dragged over.
       immerSet((state) => {
         if (!state.draggedOver.isDragging) {
           return;
         }
+
+        const dimensions = event.currentTarget.getBoundingClientRect();
+        const lastChildDimensions = (event.currentTarget.lastChild as any)?.getBoundingClientRect();
+
+        let siblingId = componentId;
 
         let isCanvas = false;
         if (!siblingId) {
@@ -57,11 +49,21 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
             left: dimensions.left,
             bottom: dimensions.bottom,
           },
+          lastChildDimensions: lastChildDimensions
+            ? {
+                width: lastChildDimensions.width,
+                height: lastChildDimensions.height,
+                top: lastChildDimensions.top,
+                right: lastChildDimensions.right,
+                left: lastChildDimensions.left,
+                bottom: lastChildDimensions.bottom,
+              }
+            : null,
           isCanvas,
         };
       });
     },
-    [canvasId, immerSet, parentId]
+    [canvasId, immerSet, componentId]
   );
 
   return onDragOver;

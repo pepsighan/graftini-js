@@ -21,9 +21,27 @@ export function DropMarker() {
   const dimensions = useEditorStateInternal(
     useCallback((state) => state.draggedOver.hoveredOver?.dimensions, [])
   );
+
+  const lastChildDimensions = useEditorStateInternal(
+    useCallback((state) => state.draggedOver.hoveredOver?.lastChildDimensions, [])
+  );
+
   const isCanvas = useEditorStateInternal(
     useCallback((state) => state.draggedOver.hoveredOver?.isCanvas, [])
   );
+
+  let top = dimensions?.top;
+  let left = isCanvas
+    ? dimensions?.left
+    : // Within the boundaries of the currently hovered component.
+      (dimensions?.right ?? 0) - 8;
+
+  if (lastChildDimensions && direction === 'horizontal') {
+    left = lastChildDimensions.right;
+  }
+  if (lastChildDimensions && direction === 'vertical') {
+    top = lastChildDimensions.bottom;
+  }
 
   return (
     <>
@@ -32,11 +50,8 @@ export function DropMarker() {
           layout
           style={{
             position: 'fixed',
-            top: dimensions.top,
-            left: isCanvas
-              ? dimensions.left
-              : // Within the boundaries of the currently hovered component.
-                dimensions.right - 8,
+            top,
+            left,
             width: direction === 'horizontal' ? 8 : dimensions.width,
             height: direction === 'horizontal' ? dimensions.height : 8,
             backgroundColor: '#9090DD',
