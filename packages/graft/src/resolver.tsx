@@ -39,16 +39,6 @@ export type GraftComponent<T> = ComponentType<GraftComponentProps & T> & {
  */
 export type GraftComponentOptions<T> = {
   /**
-   * The kind of display the component is. This is useful when showing drop markers.
-   * The default value is block.
-   */
-  display?: 'block' | 'inline';
-  /**
-   * Whether this component is a canvas. If it is then the component must accept a children
-   * prop.
-   */
-  isCanvas?: boolean;
-  /**
    * The default properties of the component. This can also be provided during creation and
    * the values provided here will be overrided.
    */

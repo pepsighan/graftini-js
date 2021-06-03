@@ -52,7 +52,11 @@ function Menu() {
       }}
     >
       <button
-        {...useCreateComponent({ type: "Container" })}
+        {...useCreateComponent({
+          type: "Container",
+          childAppendDirection: "horizontal",
+          isCanvas: true,
+        })}
         style={{ padding: 16 }}
       >
         Container
@@ -100,10 +104,6 @@ function Container({ children, ...rest }) {
     </Box>
   );
 }
-
-Container.graftOptions = {
-  isCanvas: true,
-};
 
 function Text(props) {
   const id = useComponentId();

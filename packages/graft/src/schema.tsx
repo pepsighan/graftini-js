@@ -21,10 +21,6 @@ export type ComponentNode = {
    */
   type: string;
   /**
-   * The kind of display an component is. This is used to show drop location appropriately.
-   */
-  display: 'inline' | 'block';
-  /**
    * The properties of the component defined by the user.
    */
   props: ComponentProps;
@@ -43,6 +39,11 @@ export type ComponentNode = {
    */
   childrenNodes: string[];
   /**
+   * In what way to append the children of this component. This is only valid if this component is a
+   * canvas. This is useful to show the drop marker accordingly.
+   */
+  childAppendDirection?: ChildAppendDirection;
+  /**
    * Whether the component node is no longer present in the tree. This is a remnant that is stored
    * temporarily so that the canvas does not error (because the component may yet not have been
    * destroyed). Call `cleanupComponentMap` function to remove the deleted nodes manually before using
@@ -50,6 +51,12 @@ export type ComponentNode = {
    */
   isDeleted?: boolean;
 };
+
+/**
+ * The direction in which to append a child in the canvas. This is useful to show the drop marker
+ * accordingly.
+ */
+export type ChildAppendDirection = 'horizontal' | 'vertical';
 
 /**
  * A map of components where the key is a unique id. The following type defines the relationship
@@ -163,7 +170,7 @@ function createEditorState(componentMap?: ComponentMap) {
     [ROOT_NODE_ID]: {
       id: ROOT_NODE_ID,
       type: ROOT_NODE_COMPONENT,
-      display: 'block',
+      childAppendDirection: 'vertical',
       props: {},
       isCanvas: true,
       parentId: null,

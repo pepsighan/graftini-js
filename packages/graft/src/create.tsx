@@ -1,13 +1,15 @@
 import { nanoid } from 'nanoid';
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useResolver } from './resolver';
-import { ComponentProps, useEditorStoreApiInternal } from './schema';
+import { ChildAppendDirection, ComponentProps, useEditorStoreApiInternal } from './schema';
 
 /**
  * Options to configure the kind of components to create during drag operation.
  */
 export type CreateComponentOptions = {
   type: string;
+  isCanvas?: boolean;
+  childAppendDirection?: ChildAppendDirection;
   defaultProps?: ComponentProps;
 };
 
@@ -22,14 +24,14 @@ type CreateComponentHandlers = {
  */
 export function useCreateComponent({
   type,
+  isCanvas = false,
+  childAppendDirection,
   defaultProps,
 }: CreateComponentOptions): CreateComponentHandlers {
   const { setState } = useEditorStoreApiInternal();
 
   // Use the configuration provided in the component definition.
   const Component = useResolver(type);
-  const display = Component.graftOptions?.display ?? 'block';
-  const isCanvas = Component.graftOptions?.isCanvas ?? false;
   const elementDefaultProps = Component.graftOptions?.defaultProps;
 
   const onDragStart = useCallback(() => {
@@ -46,7 +48,7 @@ export function useCreateComponent({
         component: {
           id,
           type,
-          display: display,
+          childAppendDirection,
           // The default props provided in the hook have higher precedence.
           props: { ...(elementDefaultProps ?? []), ...(defaultProps ?? {}) },
           isCanvas: isCanvas,
@@ -56,7 +58,7 @@ export function useCreateComponent({
         },
       },
     }));
-  }, [defaultProps, display, elementDefaultProps, isCanvas, setState, type]);
+  }, [childAppendDirection, defaultProps, elementDefaultProps, isCanvas, setState, type]);
 
   return {
     onDragStart,
