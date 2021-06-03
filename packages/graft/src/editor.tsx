@@ -204,9 +204,27 @@ export function useEditorState<T extends object>(
   return state;
 }
 
+export type DragState = {
+  isDragging: boolean;
+  componentId?: string | null;
+};
+
 /**
  * Hook to see whether a component is being dragged right now.
  */
-export function useIsDragging(): boolean {
-  return useEditorStateInternal(useCallback((state) => state.draggedOver.isDragging, []));
+export function useDragState(): DragState {
+  return useEditorStateInternal<DragState>(
+    useCallback(
+      (state) => ({
+        isDragging: state.draggedOver.isDragging,
+        componentId: state.draggedOver.component?.id,
+      }),
+      []
+    ),
+    useCallback(
+      (left: DragState, right: DragState) =>
+        left.isDragging === right.isDragging && left.componentId === right.componentId,
+      []
+    )
+  );
 }
