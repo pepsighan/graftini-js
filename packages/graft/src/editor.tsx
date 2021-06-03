@@ -93,7 +93,7 @@ type UseEditor = {
  * within the context of an editor.
  */
 export function useEditor(): UseEditor {
-  const { getState, subscribe, setState } = useEditorStoreApiInternal();
+  const { getState, subscribe } = useEditorStoreApiInternal();
 
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
@@ -113,7 +113,7 @@ export function useEditor(): UseEditor {
 
   const updateComponentProps = useCallback(
     (componentId: string, props: ComponentProps) => {
-      setState((state) => {
+      immerSet((state) => {
         const component = state.componentMap[componentId];
 
         if (!component) {
@@ -125,56 +125,32 @@ export function useEditor(): UseEditor {
         // Merge the props if it is an object type or replace the props if it is a callback.
         const newProps =
           typeof props === 'function' ? props(component.props) : { ...component.props, props };
-
-        return {
-          ...state,
-          componentMap: {
-            ...state.componentMap,
-            [componentId]: {
-              ...component,
-              props: newProps,
-            },
-          },
-        };
+        state.componentMap[componentId].props = newProps;
       });
     },
-    [setState]
+    [immerSet]
   );
 
   const deleteComponentNode = useCallback(
     (componentId: string) => {
-      setState((state) => {
+      immerSet((state) => {
         const component = state.componentMap[componentId];
         if (!component) {
-          return state;
+          return;
         }
 
-        const parent = {
-          ...state.componentMap[component.parentId!],
-          childrenNodes: state.componentMap[component.parentId!].childrenNodes.filter(
-            (it) => it !== component.id
-          ),
-        };
+        // Remove the component from the parent's children nodes.
+        state.componentMap[component.parentId!].childrenNodes = state.componentMap[
+          component.parentId!
+        ].childrenNodes.filter((it) => it !== component.id);
 
-        const newComponentMap = {
-          ...state.componentMap,
-          [component.parentId!]: parent,
-          [component.id]: {
-            ...component,
-            // We just mark the component to be deleted.
-            // We do this because the canvas may be dependent still
-            // on this component until it is destroyed in the next render-cycle.
-            isDeleted: true,
-          },
-        };
-
-        return {
-          ...state,
-          componentMap: newComponentMap,
-        };
+        // We just mark the component to be deleted.
+        // We do this because the canvas may be dependent still
+        // on this component until it is destroyed in the next render-cycle.
+        state.componentMap[component.id].isDeleted = true;
       });
     },
-    [setState]
+    [immerSet]
   );
 
   const setIsCanvas = useCallback(
