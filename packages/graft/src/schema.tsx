@@ -89,7 +89,14 @@ export type DraggedOver = {
   /**
    * The dimensions of the canvas or a sibling that is hovered over while dragging a component.
    */
-  dimensions?: { width: number; height: number } | null;
+  dimensions?: {
+    width: number;
+    height: number;
+    left: number;
+    right: number;
+    top: number;
+    bottom: number;
+  } | null;
   /**
    * For an existing component that is dragged, this stores its previous location in the canvas.
    * This is useful when the drag action is to be ignored.

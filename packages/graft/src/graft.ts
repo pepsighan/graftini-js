@@ -1,6 +1,7 @@
 export { Canvas } from './canvas';
 export { useCanvasId, useComponentId } from './context';
 export { CreateComponentOptions, useCreateComponent } from './create';
+export { DropMarker } from './dropMarker';
 export { Editor, EditorProps, useEditor, useEditorState, useIsDragging } from './editor';
 export { GraftComponent, GraftComponentOptions, GraftComponentProps } from './resolver';
 export {

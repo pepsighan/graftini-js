@@ -44,6 +44,10 @@ export function useIdentifyCurrentDropLocation(): [
           ? {
               width: dimensions.width,
               height: dimensions.height,
+              top: dimensions.top,
+              right: dimensions.right,
+              left: dimensions.left,
+              bottom: dimensions.bottom,
             }
           : null;
       });

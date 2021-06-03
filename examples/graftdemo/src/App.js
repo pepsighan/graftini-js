@@ -5,6 +5,7 @@ import {
   useComponentId,
   useCreateComponent,
   useEditorState,
+  DropMarker,
 } from "graft";
 import { useCallback } from "react";
 import IFrame from "./IFrame";
@@ -30,6 +31,7 @@ export default function App() {
             }}
           >
             <Canvas />
+            <DropMarker />
           </div>
         )}
       </IFrame>
