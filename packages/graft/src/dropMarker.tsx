@@ -8,7 +8,10 @@ import { useEditorStateInternal } from './schema';
  */
 export function DropMarker() {
   const dimensions = useEditorStateInternal(
-    useCallback((state) => state.draggedOver.dimensions, [])
+    useCallback((state) => state.draggedOver.hoveredOver?.dimensions, [])
+  );
+  const isCanvas = useEditorStateInternal(
+    useCallback((state) => state.draggedOver.hoveredOver?.isCanvas, [])
   );
 
   return (
@@ -19,7 +22,10 @@ export function DropMarker() {
           style={{
             position: 'fixed',
             top: dimensions.top,
-            left: dimensions.left,
+            left: isCanvas
+              ? dimensions.left
+              : // Within the boundaries of the currently hovered component.
+                dimensions.right - 8,
             width: 8,
             height: dimensions.height,
             backgroundColor: '#9090DD',

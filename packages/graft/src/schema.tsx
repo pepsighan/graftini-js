@@ -77,25 +77,35 @@ export type DraggedOver = {
    */
   component?: ComponentNode | null;
   /**
-   * The id of the canvas where the component is being dragged over. This is the nearest canvas to the
-   * dragged cursor.
+   * The properties of the components that are hovered over when dragging.
    */
-  canvasId?: string | null;
-  /**
-   * The sibling over which the component is being dragged over. The dragged component is to be placed
-   * after this sibling.
-   */
-  siblingId?: string | null;
-  /**
-   * The dimensions of the canvas or a sibling that is hovered over while dragging a component.
-   */
-  dimensions?: {
-    width: number;
-    height: number;
-    left: number;
-    right: number;
-    top: number;
-    bottom: number;
+  hoveredOver?: {
+    /**
+     * The id of the canvas where the component is being dragged over. This is the nearest canvas to the
+     * dragged cursor.
+     */
+    canvasId: string;
+    /**
+     * The sibling over which the component is being dragged over. The dragged component is to be placed
+     * after this sibling. If it a sibling is not hovered over then the component is appended as a child
+     * of the canvas.
+     */
+    siblingId?: string | null;
+    /**
+     * The dimensions of the canvas or a sibling that is hovered over while dragging a component.
+     */
+    dimensions: {
+      width: number;
+      height: number;
+      left: number;
+      right: number;
+      top: number;
+      bottom: number;
+    };
+    /**
+     * Whether the component is a canvas that is being hovered over.
+     */
+    isCanvas: boolean;
   } | null;
   /**
    * For an existing component that is dragged, this stores its previous location in the canvas.

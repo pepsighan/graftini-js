@@ -34,18 +34,31 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
 
       // Only set if component is being dragged over.
       immerSet((state) => {
-        state.draggedOver.canvasId = state.draggedOver.isDragging ? canvasId : null;
-        state.draggedOver.siblingId = state.draggedOver.isDragging ? siblingId : null;
-        state.draggedOver.dimensions = state.draggedOver.isDragging
-          ? {
-              width: dimensions.width,
-              height: dimensions.height,
-              top: dimensions.top,
-              right: dimensions.right,
-              left: dimensions.left,
-              bottom: dimensions.bottom,
-            }
-          : null;
+        if (!state.draggedOver.isDragging) {
+          return;
+        }
+
+        let isCanvas = false;
+        if (!siblingId) {
+          // When it is being dragged over no sibling, then it is being dragged over a canvas.
+          isCanvas = true;
+        } else {
+          isCanvas = state.componentMap[siblingId!].isCanvas;
+        }
+
+        state.draggedOver.hoveredOver = {
+          canvasId,
+          siblingId,
+          dimensions: {
+            width: dimensions.width,
+            height: dimensions.height,
+            top: dimensions.top,
+            right: dimensions.right,
+            left: dimensions.left,
+            bottom: dimensions.bottom,
+          },
+          isCanvas,
+        };
       });
     },
     [canvasId, immerSet, parentId]
@@ -62,9 +75,7 @@ export function useOnDragLeave() {
     (event: DragEvent) => {
       if (event.currentTarget === event.target) {
         immerSet((state) => {
-          state.draggedOver.dimensions = null;
-          state.draggedOver.canvasId = null;
-          state.draggedOver.siblingId = null;
+          state.draggedOver.hoveredOver = null;
         });
       }
     },

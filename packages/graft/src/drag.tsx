@@ -57,10 +57,9 @@ export function useOnDrop() {
 
   return useCallback(() => {
     immerSet((state) => {
-      const parentId = state.draggedOver.canvasId;
-      const siblingId = state.draggedOver.siblingId;
+      const hoveredOver = state.draggedOver.hoveredOver;
 
-      if (!parentId) {
+      if (!hoveredOver) {
         // Since there is no canvas to drop the component on:
         //  - for new components: ignore them.
         //  - for existing components: reset to their original location.
@@ -68,9 +67,11 @@ export function useOnDrop() {
         return;
       }
 
+      const { canvasId, siblingId } = hoveredOver;
+
       // The following is adding the component in a new location.
 
-      const canvasElement = state.componentMap[parentId];
+      const canvasElement = state.componentMap[canvasId];
       const indexOfSibling = siblingId ? canvasElement.childrenNodes.indexOf(siblingId) : null;
 
       if (state.draggedOver.componentKind === 'existing' && state.draggedOver.previousLocation) {
@@ -97,9 +98,9 @@ export function useOnDrop() {
 
       state.componentMap[state.draggedOver.component!.id] = {
         ...state.draggedOver.component!,
-        parentId,
+        parentId: canvasId,
       };
-      state.componentMap[parentId].childrenNodes = childrenNodes;
+      state.componentMap[canvasId].childrenNodes = childrenNodes;
       state.draggedOver = {
         isDragging: false,
       };
