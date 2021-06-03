@@ -287,9 +287,10 @@ function flexStyles({
   };
 }
 
-function interactionStyles({ cursor }: InteractionStyles): CSSObject {
+function interactionStyles({ cursor, pointerEvents }: InteractionStyles): CSSObject {
   return {
     cursor,
+    pointerEvents,
   };
 }
 
