@@ -85,11 +85,11 @@ function Container({ children, ...rest }) {
       color={{ r: 100, g: 100, b: 230, a: 0.3 }}
       height={
         noChildren
-          ? "auto"
-          : {
+          ? {
               size: 180,
               unit: "px",
             }
+          : "auto"
       }
       padding={{ top: 8, left: 8, right: 8, bottom: 8 }}
     >
@@ -100,7 +100,6 @@ function Container({ children, ...rest }) {
 }
 
 Container.graftOptions = {
-  display: "block",
   isCanvas: true,
 };
 
@@ -108,7 +107,3 @@ function Text(props) {
   const id = useComponentId();
   return <Txt {...props}>Click {id}</Txt>;
 }
-
-Text.graftOptions = {
-  display: "inline",
-};
