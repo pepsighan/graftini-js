@@ -64,6 +64,7 @@ export type BoundaryStyles = {
 
 export type InteractionStyles = {
   cursor?: Cursor;
+  pointerEvents?: PointerEvents;
 };
 
 export type InteractionProps = {
@@ -170,6 +171,7 @@ export type DimensionUnit = 'px' | '%';
 export type Position = 'absolute' | 'fixed' | 'relative' | 'static' | 'sticky';
 export type Cursor = 'pointer'; // Will need to add more as needed.
 export type FlexWrap = 'wrap' | 'nowrap';
+export type PointerEvents = 'auto' | 'none';
 
 export type DragProps = {
   onDragStart?: DragEventHandler;

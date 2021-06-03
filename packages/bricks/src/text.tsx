@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { CSSObject } from '@emotion/react';
 import { ElementType, forwardRef, MouseEventHandler, ReactNode } from 'react';
+import { DragProps, dragProps, PointerEvents } from './box';
 import { RGBA, rgbaToCss } from './colors';
-import { DragProps, dragProps } from './box';
 
-export type TextProps = BaseTextProps & DragProps & TextInteractionProps & TextInteractionProps;
+export type TextProps = BaseTextProps & DragProps & TextInteractionStyles & TextInteractionProps;
 
 export type BaseTextProps = {
   tag?: string;
@@ -25,6 +25,10 @@ export type FontWeight = 100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900;
 export type FontSizeUnit = 'px' | 'rem';
 export type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
+export type TextInteractionStyles = {
+  pointerEvents?: PointerEvents;
+};
+
 export type TextInteractionProps = {
   onClick?: MouseEventHandler;
 };
@@ -41,6 +45,7 @@ const Text = forwardRef((props: TextProps, ref) => {
         label: 'gr',
         display: 'block',
         width: '100%',
+        pointerEvents: props.pointerEvents,
         ...baseStyles(props),
       }}
     >
