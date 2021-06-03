@@ -1,6 +1,7 @@
 import React from 'react';
 import { ComponentNode } from './componentNode';
 import { useOnDrop } from './drag';
+import { useOnDragLeave } from './dropLocation';
 import { GraftComponentProps } from './resolver';
 import { ROOT_NODE_ID } from './schema';
 
@@ -8,8 +9,9 @@ import { ROOT_NODE_ID } from './schema';
  * A canvas root component returns the children as-is.
  */
 /** @internal */
-export function Root__Graft__Component({ onDragOver, onDragLeave, children }: GraftComponentProps) {
+export function Root__Graft__Component({ onDragOver, children }: GraftComponentProps) {
   const onDrop = useOnDrop();
+  const onDragLeave = useOnDragLeave();
 
   return (
     <div

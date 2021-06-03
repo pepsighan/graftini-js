@@ -3,14 +3,10 @@ import { useCanvasId, useComponentId } from './context';
 import { useEditorStateInternal } from './schema';
 
 /**
- * Returns two event handlers which tracks whether a component is being dragged over the canvas. A component:after or
- * canvas becomes a drop location if the cursor is hovering over the component references by the given ref.
+ * Returns an event handler which tracks whether a component is being dragged over the canvas.
  */
 /** @internal */
-export function useIdentifyCurrentDropLocation(): [
-  EventHandler<DragEvent>,
-  EventHandler<DragEvent>
-] {
+export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
   const canvasId = useCanvasId();
   const parentId = useComponentId();
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
@@ -55,14 +51,25 @@ export function useIdentifyCurrentDropLocation(): [
     [canvasId, immerSet, parentId]
   );
 
-  // Resets the drag location.
-  const onDragLeave = useCallback(() => {
-    immerSet((state) => {
-      state.draggedOver.dimensions = null;
-      state.draggedOver.canvasId = null;
-      state.draggedOver.siblingId = null;
-    });
-  }, [immerSet]);
+  return onDragOver;
+}
 
-  return [onDragOver, onDragLeave];
+export function useOnDragLeave() {
+  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+
+  // Resets the drag location.
+  const onDragLeave = useCallback(
+    (event: DragEvent) => {
+      if (event.currentTarget === event.target) {
+        immerSet((state) => {
+          state.draggedOver.dimensions = null;
+          state.draggedOver.canvasId = null;
+          state.draggedOver.siblingId = null;
+        });
+      }
+    },
+    [immerSet]
+  );
+
+  return onDragLeave;
 }

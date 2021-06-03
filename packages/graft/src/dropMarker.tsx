@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React, { useCallback } from 'react';
 import { useEditorStateInternal } from './schema';
 
@@ -13,7 +14,8 @@ export function DropMarker() {
   return (
     <>
       {dimensions && (
-        <div
+        <motion.div
+          layout
           style={{
             position: 'fixed',
             top: dimensions.top,

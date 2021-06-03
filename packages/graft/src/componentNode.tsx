@@ -69,7 +69,7 @@ function ComponentWrapper({
   componentProps,
   children,
 }: DragOverNotifierProps) {
-  const [onDragOver, onDragLeave] = useIdentifyCurrentDropLocation();
+  const onDragOver = useIdentifyCurrentDropLocation();
   const onDragStart = useOnComponentDrag();
 
   const comonentId = useComponentId();
@@ -86,7 +86,6 @@ function ComponentWrapper({
       onDragStart={onDragStart}
       // Do not let it to be dropped at the same location.
       onDragOver={!isDragging ? onDragOver : undefined}
-      onDragLeave={!isDragging ? onDragLeave : undefined}
       draggable
       {...componentProps}
     >
