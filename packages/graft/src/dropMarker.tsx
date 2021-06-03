@@ -7,6 +7,17 @@ import { useEditorStateInternal } from './schema';
  * It is shown whenever the pointer is in drag mode and the component preceding it is hovered.
  */
 export function DropMarker() {
+  const direction = useEditorStateInternal(
+    useCallback((state) => {
+      const canvasId = state.draggedOver.hoveredOver?.canvasId;
+      if (!canvasId) {
+        return null;
+      }
+
+      return state.componentMap[canvasId].childAppendDirection!;
+    }, [])
+  );
+
   const dimensions = useEditorStateInternal(
     useCallback((state) => state.draggedOver.hoveredOver?.dimensions, [])
   );
@@ -26,8 +37,8 @@ export function DropMarker() {
               ? dimensions.left
               : // Within the boundaries of the currently hovered component.
                 dimensions.right - 8,
-            width: 8,
-            height: dimensions.height,
+            width: direction === 'horizontal' ? 8 : dimensions.width,
+            height: direction === 'horizontal' ? dimensions.height : 8,
             backgroundColor: '#9090DD',
             pointerEvents: 'none',
           }}
