@@ -2,8 +2,11 @@ import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { useEditorStateInternal } from './schema';
 
-// Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
-function hideDefaultDragPreview(event: DragEvent) {
+/**
+ * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
+ */
+/** @internal */
+export function hideDefaultDragPreview(event: DragEvent) {
   var crt = document.createElement('div');
   crt.style.backgroundColor = 'red';
   crt.style.display = 'none';

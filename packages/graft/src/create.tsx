@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
-import { DragEventHandler, useCallback } from 'react';
-import { useOnDragEnd } from './drag';
+import { DragEvent, DragEventHandler, useCallback } from 'react';
+import { hideDefaultDragPreview, useOnDragEnd } from './drag';
 import { useResolver } from './resolver';
 import { ChildAppendDirection, ComponentProps, useEditorStoreApiInternal } from './schema';
 
@@ -36,31 +36,36 @@ export function useCreateComponent({
   const Component = useResolver(type);
   const elementDefaultProps = Component.graftOptions?.defaultProps;
 
-  const onDragStart = useCallback(() => {
-    const id = nanoid();
+  const onDragStart = useCallback(
+    (event: DragEvent) => {
+      hideDefaultDragPreview(event);
 
-    // We are just registering the new component here and preparing for a
-    // drag.
-    setState((state) => ({
-      ...state,
-      draggedOver: {
-        ...state.draggedOver,
-        isDragging: true,
-        componentKind: 'new',
-        component: {
-          id,
-          type,
-          childAppendDirection,
-          // The default props provided in the hook have higher precedence.
-          props: { ...(elementDefaultProps ?? []), ...(defaultProps ?? {}) },
-          isCanvas: isCanvas,
-          // This null is temporary until it dropped at some location.
-          parentId: null,
-          childrenNodes: [],
+      const id = nanoid();
+
+      // We are just registering the new component here and preparing for a
+      // drag.
+      setState((state) => ({
+        ...state,
+        draggedOver: {
+          ...state.draggedOver,
+          isDragging: true,
+          componentKind: 'new',
+          component: {
+            id,
+            type,
+            childAppendDirection,
+            // The default props provided in the hook have higher precedence.
+            props: { ...(elementDefaultProps ?? []), ...(defaultProps ?? {}) },
+            isCanvas: isCanvas,
+            // This null is temporary until it dropped at some location.
+            parentId: null,
+            childrenNodes: [],
+          },
         },
-      },
-    }));
-  }, [childAppendDirection, defaultProps, elementDefaultProps, isCanvas, setState, type]);
+      }));
+    },
+    [childAppendDirection, defaultProps, elementDefaultProps, isCanvas, setState, type]
+  );
 
   return {
     onDragStart,
