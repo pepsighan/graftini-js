@@ -1,6 +1,8 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useCanvasId, useComponentId } from './context';
 import {
+  ChildAppendDirection,
+  ComponentMap,
   Dimensions,
   DraggingState,
   isComponentWithinSubTree,
@@ -47,6 +49,17 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
         const lastChildDimensions = isCanvas
           ? (event.currentTarget.lastChild as any)?.getBoundingClientRect()
           : null;
+
+        // console.log(dimensions, { clientX: event.clientX, clientY: event.clientY });
+        console.log(
+          resolveAppendPosition(
+            lastChildDimensions ?? dimensions,
+            event,
+            canvasId,
+            componentId,
+            state.componentMap
+          )
+        );
 
         // Updating the state this way because immer only causes a re-render if there is a change.
 
@@ -107,4 +120,57 @@ function setDimensions(dim: Dimensions, rect: DOMRect) {
   dim.right = rect.right;
   dim.left = rect.left;
   dim.bottom = rect.bottom;
+}
+
+enum AppendPosition {
+  PrependAsSibling = 'prependAsSibling',
+  PushAsChild = 'pushAsChild',
+  AppendAsSibling = 'appendAsSibling',
+}
+
+/**
+ * Finds the append position of the component based on where the cursor is hovering at.
+ */
+function resolveAppendPosition(
+  dim: Dimensions,
+  event: DragEvent,
+  canvasId: string,
+  componentId: string,
+  componentMap: ComponentMap
+): AppendPosition {
+  let parentCanvasId = canvasId;
+
+  const isCanvas = componentMap[componentId].isCanvas;
+  if (isCanvas) {
+    const parentId = componentMap[componentId].parentId;
+    if (!parentId) {
+      // You can only append as child since there is no parent. This happens only for
+      // the root.
+      return AppendPosition.PushAsChild;
+    }
+
+    parentCanvasId = parentId;
+  }
+
+  const childAppendDirection = componentMap[parentCanvasId].childAppendDirection!;
+
+  let length: number;
+  let normalizedPos: number;
+  if (childAppendDirection === 'horizontal') {
+    length = dim.width;
+    normalizedPos = event.clientX - dim.left;
+  } else {
+    length = dim.height;
+    normalizedPos = event.clientY - dim.top;
+  }
+
+  if (normalizedPos <= length / 3) {
+    return AppendPosition.PrependAsSibling;
+  }
+
+  if (normalizedPos >= (2 * length) / 3) {
+    return AppendPosition.AppendAsSibling;
+  }
+
+  return AppendPosition.PushAsChild;
 }
