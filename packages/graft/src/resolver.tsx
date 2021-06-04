@@ -23,7 +23,6 @@ export type GraftComponentProps = {
   onDragStart: DragEventHandler;
   onDragOver?: DragEventHandler;
   onDragEnd: DragEventHandler;
-  displayNone: boolean;
   draggable: true;
   children?: ReactNode;
 };

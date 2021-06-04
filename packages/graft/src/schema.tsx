@@ -274,3 +274,24 @@ export function cleanupComponentMap(componentMap: ComponentMap): ComponentMap {
 
   return componentMap;
 }
+
+/**
+ * Checks whether a component is within the tree of another component. If both the components are same,
+ * then also it holds true.
+ */
+export function isComponentWithinSubTree(
+  subtreeComponentId: string,
+  componentId: string,
+  componentMap: ComponentMap
+): boolean {
+  if (subtreeComponentId === componentId) {
+    return true;
+  }
+
+  const parentId = componentMap[componentId].parentId;
+  if (!parentId) {
+    return false;
+  }
+
+  return isComponentWithinSubTree(subtreeComponentId, parentId, componentMap);
+}

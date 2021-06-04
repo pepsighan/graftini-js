@@ -1,5 +1,5 @@
 import React, { ReactNode, useCallback } from 'react';
-import { CanvasContext, ComponentContext, useComponentId } from './context';
+import { CanvasContext, ComponentContext } from './context';
 import { useOnDragEnd, useOnDragStart } from './drag';
 import { useIdentifyCurrentDropLocation } from './dropLocation';
 import { GraftComponent, useResolver } from './resolver';
@@ -73,23 +73,12 @@ function ComponentWrapper({
   const onDragStart = useOnDragStart();
   const onDragEnd = useOnDragEnd();
 
-  const comonentId = useComponentId();
-  const isDragging = useEditorStateInternal(
-    useCallback(
-      (state) => state.draggedOver.isDragging && state.draggedOver.component?.id === comonentId,
-      [comonentId]
-    )
-  );
-
-  // Root components are not draggable.
   return (
     <Component
       onDragStart={onDragStart}
-      // Do not let it to be dropped at the same location.
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
       draggable
-      displayNone={isDragging}
       {...componentProps}
     >
       {children}

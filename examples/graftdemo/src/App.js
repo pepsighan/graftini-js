@@ -105,17 +105,8 @@ function Container({ children, ...rest }) {
   );
 }
 
-function Text({ dragCursorPosition, ...rest }) {
+function Text({ ...rest }) {
   const id = useComponentId();
 
-  return (
-    <Txt
-      {...rest}
-      position={dragCursorPosition ? "fixed" : null}
-      top={dragCursorPosition?.y}
-      left={dragCursorPosition?.x}
-    >
-      Click {id}
-    </Txt>
-  );
+  return <Txt {...rest}>Click {id}</Txt>;
 }

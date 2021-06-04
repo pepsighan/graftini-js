@@ -1,6 +1,6 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useCanvasId, useComponentId } from './context';
-import { useEditorStateInternal } from './schema';
+import { isComponentWithinSubTree, useEditorStateInternal } from './schema';
 
 /**
  * Returns an event handler which tracks whether a component is being dragged over the canvas.
@@ -22,6 +22,17 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
       // Only set if component is being dragged over.
       immerSet((state) => {
         if (!state.draggedOver.isDragging) {
+          return;
+        }
+
+        const isDraggingOnItself = isComponentWithinSubTree(
+          state.draggedOver.component!.id,
+          componentId,
+          state.componentMap
+        );
+        if (isDraggingOnItself) {
+          // If dragging over itself, it has no effect.
+          state.draggedOver.hoveredOver = null;
           return;
         }
 
