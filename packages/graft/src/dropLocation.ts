@@ -1,7 +1,6 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useCanvasId, useComponentId } from './context';
 import {
-  ChildAppendDirection,
   ComponentMap,
   Dimensions,
   DraggingState,
@@ -15,7 +14,7 @@ import {
 /** @internal */
 export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
   const canvasId = useCanvasId();
-  const componentId = useComponentId();
+  const siblingId = useComponentId();
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   // Sets the current drag location.
@@ -34,7 +33,7 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
 
         const isDraggingOnItself = isComponentWithinSubTree(
           state.draggedOver.component!.id,
-          componentId,
+          siblingId,
           state.componentMap
         );
         if (isDraggingOnItself) {
@@ -43,29 +42,26 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
           return;
         }
 
-        const isCanvas = state.componentMap[componentId!].isCanvas;
+        const isCanvas = state.componentMap[siblingId!].isCanvas;
 
         const dimensions = event.currentTarget.getBoundingClientRect();
         const lastChildDimensions = isCanvas
           ? (event.currentTarget.lastChild as any)?.getBoundingClientRect()
           : null;
 
-        // console.log(dimensions, { clientX: event.clientX, clientY: event.clientY });
-        console.log(
-          resolveAppendPosition(
-            lastChildDimensions ?? dimensions,
-            event,
-            canvasId,
-            componentId,
-            state.componentMap
-          )
+        const { canvasId: newCanvasId, siblingId: newSiblingId } = resolvePosition(
+          lastChildDimensions ?? dimensions,
+          event,
+          canvasId,
+          siblingId,
+          state.componentMap
         );
 
         // Updating the state this way because immer only causes a re-render if there is a change.
 
         state.draggedOver.hoveredOver ??= {} as any;
-        state.draggedOver.hoveredOver!.canvasId = canvasId;
-        state.draggedOver.hoveredOver!.siblingId = componentId;
+        state.draggedOver.hoveredOver!.canvasId = newCanvasId;
+        state.draggedOver.hoveredOver!.siblingId = newSiblingId;
 
         state.draggedOver.hoveredOver!.dimensions ??= {} as any;
         setDimensions(state.draggedOver.hoveredOver!.dimensions!, dimensions);
@@ -81,7 +77,7 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
         state.draggedOver.isDragging = DraggingState.DraggingInCanvas;
       });
     },
-    [canvasId, immerSet, componentId]
+    [canvasId, immerSet, siblingId]
   );
 
   return onDragOver;
@@ -128,28 +124,29 @@ enum AppendPosition {
   AppendAsSibling = 'appendAsSibling',
 }
 
+type NewPosition = {
+  canvasId: string;
+  siblingId?: string | null;
+};
+
 /**
  * Finds the append position of the component based on where the cursor is hovering at.
  */
-function resolveAppendPosition(
+function resolvePosition(
   dim: Dimensions,
   event: DragEvent,
   canvasId: string,
-  componentId: string,
+  siblingId: string,
   componentMap: ComponentMap
-): AppendPosition {
+): NewPosition {
   let parentCanvasId = canvasId;
 
-  const isCanvas = componentMap[componentId].isCanvas;
+  const isCanvas = componentMap[siblingId].isCanvas;
   if (isCanvas) {
-    const parentId = componentMap[componentId].parentId;
-    if (!parentId) {
-      // You can only append as child since there is no parent. This happens only for
-      // the root.
-      return AppendPosition.PushAsChild;
+    const parentId = componentMap[siblingId].parentId;
+    if (parentId) {
+      parentCanvasId = parentId;
     }
-
-    parentCanvasId = parentId;
   }
 
   const childAppendDirection = componentMap[parentCanvasId].childAppendDirection!;
@@ -164,11 +161,44 @@ function resolveAppendPosition(
     normalizedPos = event.clientY - dim.top;
   }
 
-  if (normalizedPos <= length / 3) {
+  const appendPosition = resolveAppendPosition(length, normalizedPos);
+
+  if (appendPosition === AppendPosition.PrependAsSibling) {
+    const index = componentMap[parentCanvasId].childrenNodes.indexOf(siblingId);
+
+    return {
+      canvasId: parentCanvasId,
+      siblingId: index >= 1 ? componentMap[parentCanvasId].childrenNodes[index - 1] : null,
+    };
+  }
+
+  if (!isCanvas) {
+    // In case of when hovering over non-canvas. If it is hovered to the initial portion, then
+    // prepend the component. If hovered at center or end, append it.
+    return {
+      canvasId: parentCanvasId,
+      siblingId: siblingId,
+    };
+  }
+
+  if (appendPosition === AppendPosition.PushAsChild) {
+    return {
+      canvasId: canvasId,
+    };
+  }
+
+  return {
+    canvasId: parentCanvasId,
+    siblingId: siblingId,
+  };
+}
+
+function resolveAppendPosition(length: number, position: number): AppendPosition {
+  if (position <= length / 3) {
     return AppendPosition.PrependAsSibling;
   }
 
-  if (normalizedPos >= (2 * length) / 3) {
+  if (position >= (2 * length) / 3) {
     return AppendPosition.AppendAsSibling;
   }
 
