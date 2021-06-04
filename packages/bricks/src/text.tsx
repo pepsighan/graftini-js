@@ -13,7 +13,7 @@ export type BaseTextProps = {
   fontFamily?: string;
   fontWeight?: FontWeight;
   textAlign?: TextAlign;
-  hidden?: boolean;
+  displayNone?: boolean;
   children?: ReactNode;
 };
 
@@ -44,7 +44,7 @@ const Text = forwardRef((props: TextProps, ref) => {
       css={{
         // Append -gr in class names rather than -Text.
         label: 'gr',
-        display: props.hidden ? 'none' : 'block',
+        display: props.displayNone ? 'none' : 'block',
         width: '100%',
         pointerEvents: props.pointerEvents,
         ...baseStyles(props),

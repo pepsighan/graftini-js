@@ -89,7 +89,7 @@ function ComponentWrapper({
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
       draggable
-      hidden={isDragging}
+      displayNone={isDragging}
       {...componentProps}
     >
       {children}
