@@ -2,6 +2,15 @@ import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { useEditorStateInternal } from './schema';
 
+// Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
+function hideDefaultDragPreview(event: DragEvent) {
+  var crt = document.createElement('div');
+  crt.style.backgroundColor = 'red';
+  crt.style.display = 'none';
+  document.body.appendChild(crt);
+  event.dataTransfer.setDragImage(crt, 0, 0);
+}
+
 /**
  * Function to that is invoked when the component drawn on the canvas is to be dragged.
  */
@@ -13,6 +22,7 @@ export function useOnDragStart(): EventHandler<DragEvent> {
   return useCallback(
     (event: DragEvent) => {
       event.stopPropagation();
+      hideDefaultDragPreview(event);
 
       // The component is not yet being dragged. It will only start dragging once it moves a few pixels
       // away. We are just storing the data of the current component that is to be dragged.
