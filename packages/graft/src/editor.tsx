@@ -1,6 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
 import { Root__Graft__Component } from './canvas';
+import { DragPreview } from './preview';
 import { ResolverMap, ResolverProvider } from './resolver';
 import {
   ChildAppendDirection,
@@ -52,6 +53,7 @@ export function Editor({ initialState, resolvers, children }: EditorProps) {
     <EditorStateProvider elementMap={initialState}>
       <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
         {children}
+        <DragPreview />
       </ResolverProvider>
     </EditorStateProvider>
   );

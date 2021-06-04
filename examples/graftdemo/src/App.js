@@ -105,8 +105,28 @@ function Container({ children, ...rest }) {
   );
 }
 
+Container.graftOptions = {
+  preview: () => (
+    <Box
+      width={{ size: 100, unit: "px" }}
+      height={{ size: 100, unit: "px" }}
+      color={{ r: 100, g: 100, b: 200 }}
+    />
+  ),
+};
+
 function Text({ ...rest }) {
   const id = useComponentId();
 
   return <Txt {...rest}>Click {id}</Txt>;
 }
+
+Text.graftOptions = {
+  preview: () => (
+    <Box
+      width={{ size: 100, unit: "px" }}
+      height={{ size: 32, unit: "px" }}
+      color={{ r: 100, g: 100, b: 200 }}
+    />
+  ),
+};
