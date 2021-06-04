@@ -1,7 +1,7 @@
+import { produce } from 'immer';
 import React, { ReactNode, useState } from 'react';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import createContext from 'zustand/context';
-import { produce } from 'immer';
 
 export type ComponentProps = {
   [key: string]: any;
@@ -74,11 +74,7 @@ export type DraggedOver = {
   /**
    * Whether a component is being dragged.
    */
-  isDragging: boolean;
-  /**
-   * Whether a component is being dragged and the cursor is on canvas.
-   */
-  isDraggingOnCanvas?: boolean;
+  isDragging: DraggingState;
   /**
    * The position of the cursor when dragging.
    */
@@ -134,6 +130,16 @@ export type DraggedOver = {
     index: number;
   };
 };
+
+/**
+ * The different states of drag.
+ */
+export enum DraggingState {
+  DraggingInCanvas = 'draggingInCanvas',
+  DraggingOutsideCanvas = 'draggingOutsideCanvas',
+  DraggingOutsideBrowser = 'draggingOutsideBrowser',
+  NotDragging = 'notDragging',
+}
 
 /**
  * The dimensions of the component.
@@ -221,7 +227,7 @@ function createEditorState(componentMap?: ComponentMap) {
   return create<EditorState>((set) => ({
     componentMap: map,
     draggedOver: {
-      isDragging: false,
+      isDragging: DraggingState.NotDragging,
     },
     immerSet: (fn) => set(produce(fn)),
   }));

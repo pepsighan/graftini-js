@@ -1,6 +1,6 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
-import { useEditorStateInternal } from './schema';
+import { DraggingState, useEditorStateInternal } from './schema';
 
 /**
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
@@ -52,7 +52,7 @@ export function useOnDragStart(): EventHandler<DragEvent> {
       // is rendered afterwards.
       setTimeout(() => {
         immerSet((state) => {
-          state.draggedOver.isDragging = true;
+          state.draggedOver.isDragging = DraggingState.DraggingInCanvas;
         });
       });
     },
@@ -96,7 +96,7 @@ export function useOnDragEnd() {
         // Since there is no canvas to drop the component on:
         //  - for new components: ignore them.
         //  - for existing components: reset to their original location.
-        state.draggedOver = { isDragging: false };
+        state.draggedOver = { isDragging: DraggingState.NotDragging };
         return;
       }
 
@@ -135,7 +135,7 @@ export function useOnDragEnd() {
       };
       state.componentMap[canvasId].childrenNodes = childrenNodes;
       state.draggedOver = {
-        isDragging: false,
+        isDragging: DraggingState.NotDragging,
       };
     });
   }, [immerSet]);
