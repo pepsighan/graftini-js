@@ -6,6 +6,7 @@ import {
   ReactNode,
   useContext,
 } from 'react';
+import { Position } from './schema';
 
 /**
  * Resolvers is a map of components which are used to render based on the component names
@@ -24,6 +25,7 @@ export type GraftComponentProps = {
   onDragOver?: DragEventHandler;
   onDragEnd: DragEventHandler;
   pointerEvents?: 'none' | null;
+  dragCursorPosition?: Position | null;
   draggable: true;
   children?: ReactNode;
 };

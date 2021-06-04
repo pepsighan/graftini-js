@@ -63,6 +63,11 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
             : null,
           isCanvas,
         };
+
+        state.draggedOver.cursorPosition = {
+          x: event.clientX,
+          y: event.clientY,
+        };
       });
     },
     [canvasId, immerSet, componentId]

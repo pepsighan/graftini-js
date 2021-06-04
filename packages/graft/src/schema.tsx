@@ -76,6 +76,10 @@ export type DraggedOver = {
    */
   isDragging: boolean;
   /**
+   * The position of the cursor when dragging.
+   */
+  cursorPosition?: Position | null;
+  /**
    * What kind of component is being dragged new or existing.
    */
   componentKind?: 'new' | 'existing' | null;
@@ -138,6 +142,14 @@ type Dimensions = {
   right: number;
   top: number;
   bottom: number;
+};
+
+/**
+ * The position on the screen.
+ */
+export type Position = {
+  x: number;
+  y: number;
 };
 
 /**

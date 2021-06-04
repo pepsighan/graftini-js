@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback } from 'react';
 import { CanvasContext, ComponentContext, useComponentId } from './context';
-import { useOnDragStart, useOnDragEnd } from './drag';
+import { useOnDragEnd, useOnDragStart } from './drag';
 import { useIdentifyCurrentDropLocation } from './dropLocation';
 import { GraftComponent, useResolver } from './resolver';
 import { ComponentProps, useEditorStateInternal } from './schema';
@@ -81,6 +81,16 @@ function ComponentWrapper({
     )
   );
 
+  const dragCursorPosition = useEditorStateInternal(
+    useCallback(
+      (state) =>
+        state.draggedOver.isDragging && state.draggedOver.component?.id === comonentId
+          ? state.draggedOver.cursorPosition
+          : null,
+      [comonentId]
+    )
+  );
+
   // Root components are not draggable.
   return (
     <Component
@@ -90,6 +100,7 @@ function ComponentWrapper({
       onDragEnd={onDragEnd}
       draggable
       pointerEvents={isDragging ? 'none' : null}
+      dragCursorPosition={dragCursorPosition}
       {...componentProps}
     >
       {children}
