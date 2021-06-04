@@ -20,7 +20,6 @@ type DragPreviewProps = {
  */
 export function DragPreview({ correction }: DragPreviewProps) {
   const { subscribe } = useEditorStoreApiInternal();
-  const position = useMotionValue<string | null>(null);
   const posX = useMotionValue(0);
   const posY = useMotionValue(0);
   const [component, setComponent] = useState<string | null>(null);
@@ -31,26 +30,34 @@ export function DragPreview({ correction }: DragPreviewProps) {
         if (draggedOver?.cursorPosition) {
           const isOnCanvas = draggedOver.isDraggingOnCanvas;
 
-          position.set('fixed');
           posX.set(draggedOver.cursorPosition.x + (isOnCanvas ? correction?.x ?? 0 : 0));
           posY.set(draggedOver.cursorPosition.y + (isOnCanvas ? correction?.y ?? 0 : 0));
           setComponent(draggedOver.component!.type);
           return;
         }
 
-        position.set(null);
         posX.set(0);
         posY.set(0);
         setComponent(null);
       },
       (state) => state.draggedOver
     );
-  }, [correction?.x, correction?.y, posX, posY, position, subscribe]);
+  }, [correction?.x, correction?.y, posX, posY, subscribe]);
 
   return (
     <>
       {component && (
-        <motion.div layout style={{ position, left: posX, top: posY, pointerEvents: 'none' }}>
+        <motion.div
+          layout
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            x: posX,
+            y: posY,
+            pointerEvents: 'none',
+          }}
+        >
           <PreviewInner component={component} />
         </motion.div>
       )}
