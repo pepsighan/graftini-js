@@ -38,44 +38,40 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
           return;
         }
 
-        let siblingId = componentId;
-
-        let isCanvas = false;
-        if (!siblingId) {
-          // When it is being dragged over no sibling, then it is being dragged over a canvas.
-          isCanvas = true;
-        } else {
-          isCanvas = state.componentMap[siblingId!].isCanvas;
-        }
+        const isCanvas = state.componentMap[componentId!].isCanvas;
 
         const dimensions = event.currentTarget.getBoundingClientRect();
         const lastChildDimensions = isCanvas
           ? (event.currentTarget.lastChild as any)?.getBoundingClientRect()
           : null;
 
-        state.draggedOver.hoveredOver = {
-          canvasId,
-          siblingId,
-          dimensions: {
-            width: dimensions.width,
-            height: dimensions.height,
-            top: dimensions.top,
-            right: dimensions.right,
-            left: dimensions.left,
-            bottom: dimensions.bottom,
-          },
-          lastChildDimensions: lastChildDimensions
-            ? {
-                width: lastChildDimensions.width,
-                height: lastChildDimensions.height,
-                top: lastChildDimensions.top,
-                right: lastChildDimensions.right,
-                left: lastChildDimensions.left,
-                bottom: lastChildDimensions.bottom,
-              }
-            : null,
-          isCanvas,
-        };
+        // Updating the state this way because immer only causes a re-render if there is a change.
+
+        state.draggedOver.hoveredOver ??= {} as any;
+        state.draggedOver.hoveredOver!.canvasId = canvasId;
+        state.draggedOver.hoveredOver!.siblingId = componentId;
+
+        state.draggedOver.hoveredOver!.dimensions ??= {} as any;
+        state.draggedOver.hoveredOver!.dimensions.width = dimensions.width;
+        state.draggedOver.hoveredOver!.dimensions.height = dimensions.height;
+        state.draggedOver.hoveredOver!.dimensions.top = dimensions.top;
+        state.draggedOver.hoveredOver!.dimensions.right = dimensions.right;
+        state.draggedOver.hoveredOver!.dimensions.left = dimensions.left;
+        state.draggedOver.hoveredOver!.dimensions.bottom = dimensions.bottom;
+
+        if (lastChildDimensions) {
+          state.draggedOver.hoveredOver!.lastChildDimensions ??= {} as any;
+          state.draggedOver.hoveredOver!.lastChildDimensions!.width = lastChildDimensions.width;
+          state.draggedOver.hoveredOver!.lastChildDimensions!.height = lastChildDimensions.height;
+          state.draggedOver.hoveredOver!.lastChildDimensions!.top = lastChildDimensions.top;
+          state.draggedOver.hoveredOver!.lastChildDimensions!.right = lastChildDimensions.right;
+          state.draggedOver.hoveredOver!.lastChildDimensions!.left = lastChildDimensions.left;
+          state.draggedOver.hoveredOver!.lastChildDimensions!.bottom = lastChildDimensions.bottom;
+        } else {
+          state.draggedOver.hoveredOver!.lastChildDimensions = null;
+        }
+
+        state.draggedOver.hoveredOver!.isCanvas = isCanvas;
       });
     },
     [canvasId, immerSet, componentId]
