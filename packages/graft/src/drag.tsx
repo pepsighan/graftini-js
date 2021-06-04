@@ -61,6 +61,26 @@ export function useOnDragStart(): EventHandler<DragEvent> {
 }
 
 /**
+ * Track the current position of the cursor during a drag operation.
+ */
+/** @internal */
+export function useOnDrag() {
+  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+
+  return useCallback(
+    (event: DragEvent) => {
+      immerSet((state) => {
+        state.draggedOver.cursorPosition = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+      });
+    },
+    [immerSet]
+  );
+}
+
+/**
  * Add the component to the map once it has been dropped onto the canvas. If the mouse
  * is outside any canvas, ignore it.
  */
