@@ -1,7 +1,7 @@
+import { produce } from 'immer';
 import React, { ReactNode, useState } from 'react';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import createContext from 'zustand/context';
-import { produce } from 'immer';
 
 export type ComponentProps = {
   [key: string]: any;
@@ -21,10 +21,6 @@ export type ComponentNode = {
    */
   type: string;
   /**
-   * The kind of display an component is. This is used to show drop location appropriately.
-   */
-  display: 'inline' | 'block';
-  /**
    * The properties of the component defined by the user.
    */
   props: ComponentProps;
@@ -43,6 +39,11 @@ export type ComponentNode = {
    */
   childrenNodes: string[];
   /**
+   * In what way to append the children of this component. This is only valid if this component is a
+   * canvas. This is useful to show the drop marker accordingly.
+   */
+  childAppendDirection?: ChildAppendDirection;
+  /**
    * Whether the component node is no longer present in the tree. This is a remnant that is stored
    * temporarily so that the canvas does not error (because the component may yet not have been
    * destroyed). Call `cleanupComponentMap` function to remove the deleted nodes manually before using
@@ -50,6 +51,12 @@ export type ComponentNode = {
    */
   isDeleted?: boolean;
 };
+
+/**
+ * The direction in which to append a child in the canvas. This is useful to show the drop marker
+ * accordingly.
+ */
+export type ChildAppendDirection = 'horizontal' | 'vertical';
 
 /**
  * A map of components where the key is a unique id. The following type defines the relationship
@@ -67,7 +74,11 @@ export type DraggedOver = {
   /**
    * Whether a component is being dragged.
    */
-  isDragging: boolean;
+  isDragging: DraggingState;
+  /**
+   * The position of the cursor when dragging.
+   */
+  cursorPosition?: Position | null;
   /**
    * What kind of component is being dragged new or existing.
    */
@@ -77,19 +88,33 @@ export type DraggedOver = {
    */
   component?: ComponentNode | null;
   /**
-   * The id of the canvas where the component is being dragged over. This is the nearest canvas to the
-   * dragged cursor.
+   * The properties of the components that are hovered over when dragging.
    */
-  canvasId?: string | null;
-  /**
-   * The sibling over which the component is being dragged over. The dragged component is to be placed
-   * after this sibling.
-   */
-  siblingId?: string | null;
-  /**
-   * The dimensions of the canvas or a sibling that is hovered over while dragging a component.
-   */
-  dimensions?: { width: number; height: number } | null;
+  hoveredOver?: {
+    /**
+     * The id of the canvas where the component is being dragged over. This is the nearest canvas to the
+     * dragged cursor.
+     */
+    canvasId: string;
+    /**
+     * The sibling over which the component is being dragged over. The dragged component is to be placed
+     * after this sibling. If it a sibling is not hovered over then the component is appended as a child
+     * of the canvas.
+     */
+    siblingId?: string | null;
+    /**
+     * The dimensions of the canvas or a sibling that is hovered over while dragging a component.
+     */
+    dimensions: Dimensions;
+    /**
+     * The dimensions of the last child for the cases where a canvas is being hovered over.
+     */
+    lastChildDimensions?: Dimensions | null;
+    /**
+     * Whether the component is a canvas that is being hovered over.
+     */
+    isCanvas: boolean;
+  } | null;
   /**
    * For an existing component that is dragged, this stores its previous location in the canvas.
    * This is useful when the drag action is to be ignored.
@@ -104,6 +129,37 @@ export type DraggedOver = {
      */
     index: number;
   };
+};
+
+/**
+ * The different states of drag.
+ */
+export enum DraggingState {
+  DraggingInCanvas = 'draggingInCanvas',
+  DraggingOutsideCanvas = 'draggingOutsideCanvas',
+  DraggingOutsideBrowser = 'draggingOutsideBrowser',
+  NotDragging = 'notDragging',
+}
+
+/**
+ * The dimensions of the component.
+ */
+/** @internal */
+export type Dimensions = {
+  width: number;
+  height: number;
+  left: number;
+  right: number;
+  top: number;
+  bottom: number;
+};
+
+/**
+ * The position on the screen.
+ */
+export type Position = {
+  x: number;
+  y: number;
 };
 
 /**
@@ -146,7 +202,7 @@ function createEditorState(componentMap?: ComponentMap) {
     [ROOT_NODE_ID]: {
       id: ROOT_NODE_ID,
       type: ROOT_NODE_COMPONENT,
-      display: 'block',
+      childAppendDirection: 'vertical',
       props: {},
       isCanvas: true,
       parentId: null,
@@ -171,7 +227,7 @@ function createEditorState(componentMap?: ComponentMap) {
   return create<EditorState>((set) => ({
     componentMap: map,
     draggedOver: {
-      isDragging: false,
+      isDragging: DraggingState.NotDragging,
     },
     immerSet: (fn) => set(produce(fn)),
   }));
@@ -227,4 +283,25 @@ export function cleanupComponentMap(componentMap: ComponentMap): ComponentMap {
   });
 
   return componentMap;
+}
+
+/**
+ * Checks whether a component is within the tree of another component. If both the components are same,
+ * then also it holds true.
+ */
+export function isComponentWithinSubTree(
+  subtreeComponentId: string,
+  componentId: string,
+  componentMap: ComponentMap
+): boolean {
+  if (subtreeComponentId === componentId) {
+    return true;
+  }
+
+  const parentId = componentMap[componentId].parentId;
+  if (!parentId) {
+    return false;
+  }
+
+  return isComponentWithinSubTree(subtreeComponentId, parentId, componentMap);
 }

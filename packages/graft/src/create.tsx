@@ -1,18 +1,28 @@
 import { nanoid } from 'nanoid';
-import { DragEvent, EventHandler, useCallback } from 'react';
+import { DragEvent, DragEventHandler, useCallback } from 'react';
+import { hideDefaultDragPreview, useOnDrag, useOnDragEnd } from './drag';
 import { useResolver } from './resolver';
-import { ComponentProps, useEditorStoreApiInternal } from './schema';
+import {
+  ChildAppendDirection,
+  ComponentProps,
+  DraggingState,
+  useEditorStoreApiInternal,
+} from './schema';
 
 /**
  * Options to configure the kind of components to create during drag operation.
  */
 export type CreateComponentOptions = {
   type: string;
+  isCanvas?: boolean;
+  childAppendDirection?: ChildAppendDirection;
   defaultProps?: ComponentProps;
 };
 
 type CreateComponentHandlers = {
-  onDragStart: EventHandler<DragEvent>;
+  onDragStart: DragEventHandler;
+  onDrag: DragEventHandler;
+  onDragEnd: DragEventHandler;
   draggable: true;
 };
 
@@ -22,44 +32,51 @@ type CreateComponentHandlers = {
  */
 export function useCreateComponent({
   type,
+  isCanvas = false,
+  childAppendDirection,
   defaultProps,
 }: CreateComponentOptions): CreateComponentHandlers {
   const { setState } = useEditorStoreApiInternal();
 
   // Use the configuration provided in the component definition.
   const Component = useResolver(type);
-  const display = Component.graftOptions?.display ?? 'block';
-  const isCanvas = Component.graftOptions?.isCanvas ?? false;
   const elementDefaultProps = Component.graftOptions?.defaultProps;
 
-  const onDragStart = useCallback(() => {
-    const id = nanoid();
+  const onDragStart = useCallback(
+    (event: DragEvent) => {
+      hideDefaultDragPreview(event);
 
-    // We are just registering the new component here and preparing for a
-    // drag.
-    setState((state) => ({
-      ...state,
-      draggedOver: {
-        ...state.draggedOver,
-        isDragging: true,
-        componentKind: 'new',
-        component: {
-          id,
-          type,
-          display: display,
-          // The default props provided in the hook have higher precedence.
-          props: { ...(elementDefaultProps ?? []), ...(defaultProps ?? {}) },
-          isCanvas: isCanvas,
-          // This null is temporary until it dropped at some location.
-          parentId: null,
-          childrenNodes: [],
+      const id = nanoid();
+
+      // We are just registering the new component here and preparing for a
+      // drag.
+      setState((state) => ({
+        ...state,
+        draggedOver: {
+          ...state.draggedOver,
+          isDragging: DraggingState.DraggingOutsideCanvas,
+          componentKind: 'new',
+          component: {
+            id,
+            type,
+            childAppendDirection,
+            // The default props provided in the hook have higher precedence.
+            props: { ...(elementDefaultProps ?? []), ...(defaultProps ?? {}) },
+            isCanvas: isCanvas,
+            // This null is temporary until it dropped at some location.
+            parentId: null,
+            childrenNodes: [],
+          },
         },
-      },
-    }));
-  }, [defaultProps, display, elementDefaultProps, isCanvas, setState, type]);
+      }));
+    },
+    [childAppendDirection, defaultProps, elementDefaultProps, isCanvas, setState, type]
+  );
 
   return {
     onDragStart,
+    onDrag: useOnDrag(),
+    onDragEnd: useOnDragEnd(),
     draggable: true,
   };
 }

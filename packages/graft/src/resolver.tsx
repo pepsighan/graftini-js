@@ -1,9 +1,8 @@
 import {
   ComponentType,
   createContext,
-  DragEvent,
+  DragEventHandler,
   ElementType,
-  EventHandler,
   ReactNode,
   useContext,
 } from 'react';
@@ -21,9 +20,10 @@ export type ResolverMap = {
  * component to be made draggable within the canvas.
  */
 export type GraftComponentProps = {
-  onDragStart: EventHandler<DragEvent>;
-  onDragOver?: EventHandler<DragEvent>;
-  onDragLeave?: EventHandler<DragEvent>;
+  onDragStart: DragEventHandler;
+  onDrag: DragEventHandler;
+  onDragEnd: DragEventHandler;
+  onDragOver: DragEventHandler;
   draggable: true;
   children?: ReactNode;
 };
@@ -39,16 +39,6 @@ export type GraftComponent<T> = ComponentType<GraftComponentProps & T> & {
  * Configuration for the component.
  */
 export type GraftComponentOptions<T> = {
-  /**
-   * The kind of display the component is. This is useful when showing drop markers.
-   * The default value is block.
-   */
-  display?: 'block' | 'inline';
-  /**
-   * Whether this component is a canvas. If it is then the component must accept a children
-   * prop.
-   */
-  isCanvas?: boolean;
   /**
    * The default properties of the component. This can also be provided during creation and
    * the values provided here will be overrided.

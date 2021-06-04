@@ -1,18 +1,19 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useCanvasId, useComponentId } from './context';
-import { useEditorStateInternal } from './schema';
+import {
+  Dimensions,
+  DraggingState,
+  isComponentWithinSubTree,
+  useEditorStateInternal,
+} from './schema';
 
 /**
- * Returns two event handlers which tracks whether a component is being dragged over the canvas. A component:after or
- * canvas becomes a drop location if the cursor is hovering over the component references by the given ref.
+ * Returns an event handler which tracks whether a component is being dragged over the canvas.
  */
 /** @internal */
-export function useIdentifyCurrentDropLocation(): [
-  EventHandler<DragEvent>,
-  EventHandler<DragEvent>
-] {
+export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
   const canvasId = useCanvasId();
-  const parentId = useComponentId();
+  const componentId = useComponentId();
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   // Sets the current drag location.
@@ -23,42 +24,87 @@ export function useIdentifyCurrentDropLocation(): [
       // After adding this `onDrop` works. Don't know why.
       event.preventDefault();
 
-      const dimensions = event.currentTarget.getBoundingClientRect();
-
-      let siblingId: string | null;
-      if (canvasId === parentId) {
-        // If the parent and the canvas are the same, then there are no siblings.
-        // The component is to be pushed as a child of the canvas.
-        siblingId = null;
-      } else {
-        // If the parent is not a canvas, then the component is to be added after this parent.
-        // Hence, the parent becomes a sibling to the component being dropped.
-        siblingId = parentId;
-      }
-
       // Only set if component is being dragged over.
       immerSet((state) => {
-        state.draggedOver.canvasId = state.draggedOver.isDragging ? canvasId : null;
-        state.draggedOver.siblingId = state.draggedOver.isDragging ? siblingId : null;
-        state.draggedOver.dimensions = state.draggedOver.isDragging
-          ? {
-              width: dimensions.width,
-              height: dimensions.height,
-            }
+        if (!state.draggedOver.isDragging) {
+          return;
+        }
+
+        const isDraggingOnItself = isComponentWithinSubTree(
+          state.draggedOver.component!.id,
+          componentId,
+          state.componentMap
+        );
+        if (isDraggingOnItself) {
+          // If dragging over itself, it has no effect.
+          state.draggedOver.hoveredOver = null;
+          return;
+        }
+
+        const isCanvas = state.componentMap[componentId!].isCanvas;
+
+        const dimensions = event.currentTarget.getBoundingClientRect();
+        const lastChildDimensions = isCanvas
+          ? (event.currentTarget.lastChild as any)?.getBoundingClientRect()
           : null;
+
+        // Updating the state this way because immer only causes a re-render if there is a change.
+
+        state.draggedOver.hoveredOver ??= {} as any;
+        state.draggedOver.hoveredOver!.canvasId = canvasId;
+        state.draggedOver.hoveredOver!.siblingId = componentId;
+
+        state.draggedOver.hoveredOver!.dimensions ??= {} as any;
+        setDimensions(state.draggedOver.hoveredOver!.dimensions!, dimensions);
+
+        if (lastChildDimensions) {
+          state.draggedOver.hoveredOver!.lastChildDimensions ??= {} as any;
+          setDimensions(state.draggedOver.hoveredOver!.lastChildDimensions!, lastChildDimensions);
+        } else {
+          state.draggedOver.hoveredOver!.lastChildDimensions = null;
+        }
+
+        state.draggedOver.hoveredOver!.isCanvas = isCanvas;
+        state.draggedOver.isDragging = DraggingState.DraggingInCanvas;
       });
     },
-    [canvasId, immerSet, parentId]
+    [canvasId, immerSet, componentId]
   );
 
-  // Resets the drag location.
-  const onDragLeave = useCallback(() => {
-    immerSet((state) => {
-      state.draggedOver.dimensions = null;
-      state.draggedOver.canvasId = null;
-      state.draggedOver.siblingId = null;
-    });
-  }, [immerSet]);
+  return onDragOver;
+}
 
-  return [onDragOver, onDragLeave];
+export function useOnDragLeave() {
+  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+
+  // Resets the drag location.
+  const onDragLeave = useCallback(
+    (event: DragEvent) => {
+      const isChildren = event.relatedTarget
+        ? event.currentTarget.contains(event.relatedTarget as any)
+        : false;
+
+      if (isChildren) {
+        // This is actually not a drag leave because it enters the children of this component.
+        return;
+      }
+
+      immerSet((state) => {
+        state.draggedOver.hoveredOver = null;
+        state.draggedOver.isDragging = DraggingState.DraggingOutsideCanvas;
+      });
+    },
+    [immerSet]
+  );
+
+  return onDragLeave;
+}
+
+function setDimensions(dim: Dimensions, rect: DOMRect) {
+  dim.width = rect.width;
+  dim.height = rect.height;
+  dim.top = rect.top;
+  dim.right = rect.right;
+  dim.left = rect.left;
+  dim.bottom = rect.bottom;
 }

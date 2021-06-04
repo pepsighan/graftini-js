@@ -53,6 +53,7 @@ export type FlexStyles = {
 export type AppearanceStyles = {
   opacity?: number;
   color?: RGBA;
+  displayNone?: boolean;
 };
 
 export type BoundaryStyles = {
@@ -64,6 +65,7 @@ export type BoundaryStyles = {
 
 export type InteractionStyles = {
   cursor?: Cursor;
+  pointerEvents?: PointerEvents;
 };
 
 export type InteractionProps = {
@@ -170,9 +172,12 @@ export type DimensionUnit = 'px' | '%';
 export type Position = 'absolute' | 'fixed' | 'relative' | 'static' | 'sticky';
 export type Cursor = 'pointer'; // Will need to add more as needed.
 export type FlexWrap = 'wrap' | 'nowrap';
+export type PointerEvents = 'auto' | 'none';
 
 export type DragProps = {
   onDragStart?: DragEventHandler;
+  onDrag?: DragEventHandler;
+  onDragEnd?: DragEventHandler;
   onDragOver?: DragEventHandler;
   onDragLeave?: DragEventHandler;
   draggable?: boolean;
@@ -234,11 +239,17 @@ function layoutStyles({
   };
 }
 
-function appearanceStyles({ color, opacity }: AppearanceStyles): CSSObject {
-  return {
+function appearanceStyles({ color, opacity, displayNone }: AppearanceStyles): CSSObject {
+  const styles: CSSObject = {
     backgroundColor: color ? rgbaToCss(color) : undefined,
     opacity,
   };
+
+  if (displayNone) {
+    styles.display = 'none';
+  }
+
+  return styles;
 }
 
 function boundaryStyles({ borderRadius, border, shadow, overflow }: BoundaryStyles): CSSObject {
@@ -285,9 +296,10 @@ function flexStyles({
   };
 }
 
-function interactionStyles({ cursor }: InteractionStyles): CSSObject {
+function interactionStyles({ cursor, pointerEvents }: InteractionStyles): CSSObject {
   return {
     cursor,
+    pointerEvents,
   };
 }
 
@@ -301,7 +313,7 @@ function interactionProps({ tag, href, onClick }: InteractionProps & BaseBoxProp
   return props;
 }
 
-function positionStyles({ position, top, right, bottom, left }: PositionStyles): CSSObject {
+export function positionStyles({ position, top, right, bottom, left }: PositionStyles): CSSObject {
   return {
     position,
     top,
@@ -359,9 +371,18 @@ function borderStyle(borderSide?: BorderSide): string | undefined {
     : undefined;
 }
 
-export function dragProps({ onDragStart, onDragOver, onDragLeave, draggable }: DragProps): any {
+export function dragProps({
+  onDragStart,
+  onDrag,
+  onDragEnd,
+  onDragOver,
+  onDragLeave,
+  draggable,
+}: DragProps): any {
   return {
     onDragStart,
+    onDrag,
+    onDragEnd,
     onDragOver,
     onDragLeave,
     draggable,

@@ -1,18 +1,31 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
-import { useEditorStateInternal } from './schema';
+import { DraggingState, useEditorStateInternal } from './schema';
+
+/**
+ * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
+ */
+/** @internal */
+export function hideDefaultDragPreview(event: DragEvent) {
+  var crt = document.createElement('div');
+  crt.style.backgroundColor = 'red';
+  crt.style.display = 'none';
+  document.body.appendChild(crt);
+  event.dataTransfer.setDragImage(crt, 0, 0);
+}
 
 /**
  * Function to that is invoked when the component drawn on the canvas is to be dragged.
  */
 /** @internal */
-export function useOnComponentDrag(): EventHandler<DragEvent> {
+export function useOnDragStart(): EventHandler<DragEvent> {
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
   const componentId = useComponentId();
 
   return useCallback(
     (event: DragEvent) => {
       event.stopPropagation();
+      hideDefaultDragPreview(event);
 
       // The component is not yet being dragged. It will only start dragging once it moves a few pixels
       // away. We are just storing the data of the current component that is to be dragged.
@@ -39,7 +52,7 @@ export function useOnComponentDrag(): EventHandler<DragEvent> {
       // is rendered afterwards.
       setTimeout(() => {
         immerSet((state) => {
-          state.draggedOver.isDragging = true;
+          state.draggedOver.isDragging = DraggingState.DraggingInCanvas;
         });
       });
     },
@@ -48,29 +61,50 @@ export function useOnComponentDrag(): EventHandler<DragEvent> {
 }
 
 /**
+ * Track the current position of the cursor during a drag operation.
+ */
+/** @internal */
+export function useOnDrag() {
+  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+
+  return useCallback(
+    (event: DragEvent) => {
+      immerSet((state) => {
+        state.draggedOver.cursorPosition = {
+          x: event.clientX,
+          y: event.clientY,
+        };
+      });
+    },
+    [immerSet]
+  );
+}
+
+/**
  * Add the component to the map once it has been dropped onto the canvas. If the mouse
  * is outside any canvas, ignore it.
  */
 /** @internal */
-export function useOnDrop() {
+export function useOnDragEnd() {
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   return useCallback(() => {
     immerSet((state) => {
-      const parentId = state.draggedOver.canvasId;
-      const siblingId = state.draggedOver.siblingId;
+      const hoveredOver = state.draggedOver.hoveredOver;
 
-      if (!parentId) {
+      if (!hoveredOver) {
         // Since there is no canvas to drop the component on:
         //  - for new components: ignore them.
         //  - for existing components: reset to their original location.
-        state.draggedOver = { isDragging: false };
+        state.draggedOver = { isDragging: DraggingState.NotDragging };
         return;
       }
 
+      const { canvasId, siblingId } = hoveredOver;
+
       // The following is adding the component in a new location.
 
-      const canvasElement = state.componentMap[parentId];
+      const canvasElement = state.componentMap[canvasId];
       const indexOfSibling = siblingId ? canvasElement.childrenNodes.indexOf(siblingId) : null;
 
       if (state.draggedOver.componentKind === 'existing' && state.draggedOver.previousLocation) {
@@ -97,11 +131,11 @@ export function useOnDrop() {
 
       state.componentMap[state.draggedOver.component!.id] = {
         ...state.draggedOver.component!,
-        parentId,
+        parentId: canvasId,
       };
-      state.componentMap[parentId].childrenNodes = childrenNodes;
+      state.componentMap[canvasId].childrenNodes = childrenNodes;
       state.draggedOver = {
-        isDragging: false,
+        isDragging: DraggingState.NotDragging,
       };
     });
   }, [immerSet]);

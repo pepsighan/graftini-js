@@ -26,6 +26,7 @@ export {
   LayoutStyles,
   Overflow,
   OverflowBehavior,
+  PointerEvents,
   Position,
   PositionStyles,
   Shadow,
@@ -41,5 +42,6 @@ export {
   FontWeight,
   TextAlign,
   TextInteractionProps,
+  TextInteractionStyles,
   TextProps,
 } from './text';
