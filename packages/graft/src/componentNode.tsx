@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback } from 'react';
 import { CanvasContext, ComponentContext, useComponentId } from './context';
-import { useOnComponentDrag, useOnDragEnd } from './drag';
+import { useOnDragStart, useOnDragEnd } from './drag';
 import { useIdentifyCurrentDropLocation } from './dropLocation';
 import { GraftComponent, useResolver } from './resolver';
 import { ComponentProps, useEditorStateInternal } from './schema';
@@ -70,7 +70,7 @@ function ComponentWrapper({
   children,
 }: DragOverNotifierProps) {
   const onDragOver = useIdentifyCurrentDropLocation();
-  const onDragStart = useOnComponentDrag();
+  const onDragStart = useOnDragStart();
   const onDragEnd = useOnDragEnd();
 
   const comonentId = useComponentId();

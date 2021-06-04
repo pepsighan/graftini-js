@@ -6,7 +6,7 @@ import { useEditorStateInternal } from './schema';
  * Function to that is invoked when the component drawn on the canvas is to be dragged.
  */
 /** @internal */
-export function useOnComponentDrag(): EventHandler<DragEvent> {
+export function useOnDragStart(): EventHandler<DragEvent> {
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
   const componentId = useComponentId();
 
