@@ -33,7 +33,7 @@ export function DragPreview() {
   return (
     <>
       {component && (
-        <motion.div style={{ position, x: posX, y: posY }}>
+        <motion.div layout style={{ position, left: posX, top: posY }}>
           <PreviewInner component={component} />
         </motion.div>
       )}
