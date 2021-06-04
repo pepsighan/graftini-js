@@ -53,6 +53,7 @@ export type FlexStyles = {
 export type AppearanceStyles = {
   opacity?: number;
   color?: RGBA;
+  hidden?: boolean;
 };
 
 export type BoundaryStyles = {
@@ -237,11 +238,17 @@ function layoutStyles({
   };
 }
 
-function appearanceStyles({ color, opacity }: AppearanceStyles): CSSObject {
-  return {
+function appearanceStyles({ color, opacity, hidden }: AppearanceStyles): CSSObject {
+  const styles: CSSObject = {
     backgroundColor: color ? rgbaToCss(color) : undefined,
     opacity,
   };
+
+  if (hidden) {
+    styles.display = 'none';
+  }
+
+  return styles;
 }
 
 function boundaryStyles({ borderRadius, border, shadow, overflow }: BoundaryStyles): CSSObject {
