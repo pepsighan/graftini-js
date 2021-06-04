@@ -81,16 +81,6 @@ function ComponentWrapper({
     )
   );
 
-  const dragCursorPosition = useEditorStateInternal(
-    useCallback(
-      (state) =>
-        state.draggedOver.isDragging && state.draggedOver.component?.id === comonentId
-          ? state.draggedOver.cursorPosition
-          : null,
-      [comonentId]
-    )
-  );
-
   // Root components are not draggable.
   return (
     <Component
@@ -99,8 +89,7 @@ function ComponentWrapper({
       onDragOver={onDragOver}
       onDragEnd={onDragEnd}
       draggable
-      pointerEvents={isDragging ? 'none' : null}
-      dragCursorPosition={dragCursorPosition}
+      hidden={isDragging}
       {...componentProps}
     >
       {children}

@@ -79,8 +79,6 @@ function Container({ children, ...rest }) {
 
   const border = { color: { r: 0, g: 0, b: 0 }, style: "solid", width: 1 };
 
-  console.log(rest.pointerEvents);
-
   return (
     <Box
       {...rest}
@@ -107,7 +105,17 @@ function Container({ children, ...rest }) {
   );
 }
 
-function Text(props) {
+function Text({ dragCursorPosition, ...rest }) {
   const id = useComponentId();
-  return <Txt {...props}>Click {id}</Txt>;
+
+  return (
+    <Txt
+      {...rest}
+      position={dragCursorPosition ? "fixed" : null}
+      top={dragCursorPosition?.y}
+      left={dragCursorPosition?.x}
+    >
+      Click {id}
+    </Txt>
+  );
 }
