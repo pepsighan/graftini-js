@@ -14,33 +14,31 @@ import IFrame from "./IFrame";
 
 export default function App() {
   return (
-    <div style={{ position: "relative" }}>
-      <Editor resolvers={{ Container, Text }}>
-        <Menu />
-        <IFrame
-          style={{
-            height: "80vh",
-            width: "100%",
-            marginTop: 32,
-            backgroundColor: "white",
-          }}
-        >
-          {() => (
-            <div
-              style={{
-                width: "100%",
-                height: "100vh",
-                userSelect: "none",
-              }}
-            >
-              <Canvas />
-              <DropMarker />
-            </div>
-          )}
-        </IFrame>
-        <DragPreview correction={{ y: 32 + 83 }} />
-      </Editor>
-    </div>
+    <Editor resolvers={{ Container, Text }}>
+      <Menu />
+      <IFrame
+        style={{
+          height: "80vh",
+          width: "100%",
+          marginTop: 32,
+          backgroundColor: "white",
+        }}
+      >
+        {() => (
+          <div
+            style={{
+              width: "100%",
+              height: "100vh",
+              userSelect: "none",
+            }}
+          >
+            <Canvas />
+            <DropMarker />
+          </div>
+        )}
+      </IFrame>
+      <DragPreview correction={{ y: 32 + 83 }} />
+    </Editor>
   );
 }
 

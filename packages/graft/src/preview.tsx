@@ -28,10 +28,10 @@ export function DragPreview({ correction }: DragPreviewProps) {
   useEffect(() => {
     return subscribe(
       (draggedOver: DraggedOver) => {
-        if (draggedOver.cursorPosition) {
+        if (draggedOver?.cursorPosition) {
           const isOnCanvas = draggedOver.isDraggingOnCanvas;
 
-          position.set('absolute');
+          position.set('fixed');
           posX.set(draggedOver.cursorPosition.x + (isOnCanvas ? correction?.x ?? 0 : 0));
           posY.set(draggedOver.cursorPosition.y + (isOnCanvas ? correction?.y ?? 0 : 0));
           setComponent(draggedOver.component!.type);
