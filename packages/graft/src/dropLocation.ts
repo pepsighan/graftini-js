@@ -90,9 +90,16 @@ export function useOnDragLeave() {
   // Resets the drag location.
   const onDragLeave = useCallback(
     (event: DragEvent) => {
-      // TODO: On drag leave is invoked when going inside its own children. Why?
-      // Need to fix it.
       if (event.currentTarget === event.target) {
+        const isChildren = event.relatedTarget
+          ? event.currentTarget.contains(event.relatedTarget as any)
+          : false;
+
+        if (isChildren) {
+          // This is actually not a drag leave because it enters the children of this component.
+          return;
+        }
+
         immerSet((state) => {
           state.draggedOver.hoveredOver = null;
           state.draggedOver.isDraggingOnCanvas = false;
