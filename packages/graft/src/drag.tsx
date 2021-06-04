@@ -116,17 +116,17 @@ export function useOnDragEnd() {
       }
 
       let childrenNodes = canvasElement.childrenNodes;
-      if (typeof indexOfSibling === 'number') {
+      if (typeof indexOfSibling === 'number' && indexOfSibling >= 0) {
         // Add the node after the sibling.
         childrenNodes = [
           ...childrenNodes.slice(0, indexOfSibling + 1),
           state.draggedOver.component!.id,
           ...childrenNodes.slice(indexOfSibling + 1),
         ];
-      } else if (childrenNodes.length === 0) {
-        // If there is no sibling provided, then it means that there are no existing children.
-        // As such the created node will be the only child.
-        childrenNodes = [state.draggedOver.component!.id];
+      } else {
+        // If there is no sibling provided, then it means that it is to be added to the start.
+        childrenNodes ??= [];
+        childrenNodes.unshift(state.draggedOver.component!.id);
       }
 
       state.componentMap[state.draggedOver.component!.id] = {
