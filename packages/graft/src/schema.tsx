@@ -76,6 +76,10 @@ export type DraggedOver = {
    */
   isDragging: boolean;
   /**
+   * Whether a component is being dragged and the cursor is on canvas.
+   */
+  isDraggingOnCanvas?: boolean;
+  /**
    * The position of the cursor when dragging.
    */
   cursorPosition?: Position | null;

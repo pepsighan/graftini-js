@@ -1,12 +1,24 @@
 import { motion, useMotionValue } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useResolver } from './resolver';
-import { useEditorStoreApiInternal } from './schema';
+import { DraggedOver, useEditorStoreApiInternal } from './schema';
+
+type DragPreviewProps = {
+  /**
+   * The correction is useful when the canvas is within an iframe. The correction will be
+   * added to the actual cursor position when dragging over an iframe. This is equal to
+   * the position of the iframe relative to the browser page.
+   */
+  correction?: {
+    x: number;
+    y: number;
+  };
+};
 
 /**
  * Shows a drag preview which is snapped to the cursor.
  */
-export function DragPreview() {
+export function DragPreview({ correction }: DragPreviewProps) {
   const { subscribe } = useEditorStoreApiInternal();
   const position = useMotionValue<string | null>(null);
   const posX = useMotionValue(0);
@@ -14,26 +26,31 @@ export function DragPreview() {
   const [component, setComponent] = useState<string | null>(null);
 
   useEffect(() => {
-    return subscribe((state) => {
-      if (state.draggedOver.cursorPosition) {
-        position.set('fixed');
-        posX.set(state.draggedOver.cursorPosition.x);
-        posY.set(state.draggedOver.cursorPosition.y);
-        setComponent(state.draggedOver.component!.type);
-        return;
-      }
+    return subscribe(
+      (draggedOver: DraggedOver) => {
+        if (draggedOver.cursorPosition) {
+          const isOnCanvas = draggedOver.isDraggingOnCanvas;
 
-      position.set(null);
-      posX.set(0);
-      posY.set(0);
-      setComponent(null);
-    });
-  }, [posX, posY, position, subscribe]);
+          position.set('absolute');
+          posX.set(draggedOver.cursorPosition.x + (isOnCanvas ? correction?.x ?? 0 : 0));
+          posY.set(draggedOver.cursorPosition.y + (isOnCanvas ? correction?.y ?? 0 : 0));
+          setComponent(draggedOver.component!.type);
+          return;
+        }
+
+        position.set(null);
+        posX.set(0);
+        posY.set(0);
+        setComponent(null);
+      },
+      (state) => state.draggedOver
+    );
+  }, [correction?.x, correction?.y, posX, posY, position, subscribe]);
 
   return (
     <>
       {component && (
-        <motion.div layout style={{ position, left: posX, top: posY }}>
+        <motion.div layout style={{ position, left: posX, top: posY, pointerEvents: 'none' }}>
           <PreviewInner component={component} />
         </motion.div>
       )}

@@ -25,6 +25,8 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
           return;
         }
 
+        state.draggedOver.isDraggingOnCanvas = true;
+
         const isDraggingOnItself = isComponentWithinSubTree(
           state.draggedOver.component!.id,
           componentId,
@@ -88,9 +90,12 @@ export function useOnDragLeave() {
   // Resets the drag location.
   const onDragLeave = useCallback(
     (event: DragEvent) => {
+      // TODO: On drag leave is invoked when going inside its own children. Why?
+      // Need to fix it.
       if (event.currentTarget === event.target) {
         immerSet((state) => {
           state.draggedOver.hoveredOver = null;
+          state.draggedOver.isDraggingOnCanvas = false;
         });
       }
     },
