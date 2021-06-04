@@ -145,7 +145,7 @@ export enum DraggingState {
  * The dimensions of the component.
  */
 /** @internal */
-type Dimensions = {
+export type Dimensions = {
   width: number;
   height: number;
   left: number;

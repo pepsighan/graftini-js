@@ -1,6 +1,11 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useCanvasId, useComponentId } from './context';
-import { DraggingState, isComponentWithinSubTree, useEditorStateInternal } from './schema';
+import {
+  Dimensions,
+  DraggingState,
+  isComponentWithinSubTree,
+  useEditorStateInternal,
+} from './schema';
 
 /**
  * Returns an event handler which tracks whether a component is being dragged over the canvas.
@@ -50,21 +55,11 @@ export function useIdentifyCurrentDropLocation(): EventHandler<DragEvent> {
         state.draggedOver.hoveredOver!.siblingId = componentId;
 
         state.draggedOver.hoveredOver!.dimensions ??= {} as any;
-        state.draggedOver.hoveredOver!.dimensions.width = dimensions.width;
-        state.draggedOver.hoveredOver!.dimensions.height = dimensions.height;
-        state.draggedOver.hoveredOver!.dimensions.top = dimensions.top;
-        state.draggedOver.hoveredOver!.dimensions.right = dimensions.right;
-        state.draggedOver.hoveredOver!.dimensions.left = dimensions.left;
-        state.draggedOver.hoveredOver!.dimensions.bottom = dimensions.bottom;
+        setDimensions(state.draggedOver.hoveredOver!.dimensions!, dimensions);
 
         if (lastChildDimensions) {
           state.draggedOver.hoveredOver!.lastChildDimensions ??= {} as any;
-          state.draggedOver.hoveredOver!.lastChildDimensions!.width = lastChildDimensions.width;
-          state.draggedOver.hoveredOver!.lastChildDimensions!.height = lastChildDimensions.height;
-          state.draggedOver.hoveredOver!.lastChildDimensions!.top = lastChildDimensions.top;
-          state.draggedOver.hoveredOver!.lastChildDimensions!.right = lastChildDimensions.right;
-          state.draggedOver.hoveredOver!.lastChildDimensions!.left = lastChildDimensions.left;
-          state.draggedOver.hoveredOver!.lastChildDimensions!.bottom = lastChildDimensions.bottom;
+          setDimensions(state.draggedOver.hoveredOver!.lastChildDimensions!, lastChildDimensions);
         } else {
           state.draggedOver.hoveredOver!.lastChildDimensions = null;
         }
@@ -103,4 +98,13 @@ export function useOnDragLeave() {
   );
 
   return onDragLeave;
+}
+
+function setDimensions(dim: Dimensions, rect: DOMRect) {
+  dim.width = rect.width;
+  dim.height = rect.height;
+  dim.top = rect.top;
+  dim.right = rect.right;
+  dim.left = rect.left;
+  dim.bottom = rect.bottom;
 }
