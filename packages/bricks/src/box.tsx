@@ -305,7 +305,7 @@ function interactionProps({ tag, href, onClick }: InteractionProps & BaseBoxProp
   return props;
 }
 
-function positionStyles({ position, top, right, bottom, left }: PositionStyles): CSSObject {
+export function positionStyles({ position, top, right, bottom, left }: PositionStyles): CSSObject {
   return {
     position,
     top,

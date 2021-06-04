@@ -1,10 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { CSSObject } from '@emotion/react';
 import { ElementType, forwardRef, MouseEventHandler, ReactNode } from 'react';
-import { DragProps, dragProps, PointerEvents } from './box';
+import { DragProps, dragProps, PointerEvents, PositionStyles, positionStyles } from './box';
 import { RGBA, rgbaToCss } from './colors';
 
-export type TextProps = BaseTextProps & DragProps & TextInteractionStyles & TextInteractionProps;
+export type TextProps = BaseTextProps &
+  DragProps &
+  TextInteractionStyles &
+  TextInteractionProps &
+  PositionStyles;
 
 export type BaseTextProps = {
   tag?: string;
@@ -47,6 +51,7 @@ const Text = forwardRef((props: TextProps, ref) => {
         width: '100%',
         pointerEvents: props.pointerEvents,
         ...baseStyles(props),
+        ...positionStyles(props),
       }}
     >
       {props.children}
