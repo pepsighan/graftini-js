@@ -259,6 +259,24 @@ function identifyEmptyCanvasDropRegion(
   componentMap: ComponentMap,
   cursor: Position
 ): DropRegion | null {
+  for (let componentId of Object.keys(componentMap)) {
+    const component = componentMap[componentId];
+    if (!component.isCanvas) {
+      continue;
+    }
+    if (component.childrenNodes.length !== 0) {
+      continue;
+    }
+
+    if (isCursorWithinRegion(component.region, cursor)) {
+      return {
+        componentId,
+        dropMarkerRegion: component.region,
+        dropKind: DropKind.AddAsChild,
+      };
+    }
+  }
+
   return null;
 }
 
