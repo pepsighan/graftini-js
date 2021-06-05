@@ -90,53 +90,7 @@ export function useOnDragEnd() {
 
   return useCallback(() => {
     immerSet((state) => {
-      const hoveredOver = state.draggedOver.hoveredOver;
-
-      if (!hoveredOver) {
-        // Since there is no canvas to drop the component on:
-        //  - for new components: ignore them.
-        //  - for existing components: reset to their original location.
-        state.draggedOver = { isDragging: DraggingState.NotDragging };
-        return;
-      }
-
-      const { canvasId, siblingId } = hoveredOver;
-
-      // The following is adding the component in a new location.
-
-      const canvasElement = state.componentMap[canvasId];
-      const indexOfSibling = siblingId ? canvasElement.childrenNodes.indexOf(siblingId) : null;
-
-      if (state.draggedOver.componentKind === 'existing' && state.draggedOver.previousLocation) {
-        // Remove the component from its older location if this component was moved.
-        state.componentMap[state.draggedOver.previousLocation!.parentId].childrenNodes.splice(
-          state.draggedOver.previousLocation!.index,
-          1
-        );
-      }
-
-      let childrenNodes = canvasElement.childrenNodes;
-      if (typeof indexOfSibling === 'number') {
-        // Add the node after the sibling.
-        childrenNodes = [
-          ...childrenNodes.slice(0, indexOfSibling + 1),
-          state.draggedOver.component!.id,
-          ...childrenNodes.slice(indexOfSibling + 1),
-        ];
-      } else if (childrenNodes.length === 0) {
-        // If there is no sibling provided, then it means that there are no existing children.
-        // As such the created node will be the only child.
-        childrenNodes = [state.draggedOver.component!.id];
-      }
-
-      state.componentMap[state.draggedOver.component!.id] = {
-        ...state.draggedOver.component!,
-        parentId: canvasId,
-      };
-      state.componentMap[canvasId].childrenNodes = childrenNodes;
-      state.draggedOver = {
-        isDragging: DraggingState.NotDragging,
-      };
+      // TODO: Cause side-effects to the component positions here once drag stops.
     });
   }, [immerSet]);
 }

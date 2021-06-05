@@ -1,11 +1,4 @@
-import React, {
-  DependencyList,
-  Ref,
-  SetStateAction,
-  useCallback,
-  useLayoutEffect,
-  useState,
-} from 'react';
+import { DependencyList, Ref, useCallback, useLayoutEffect, useState } from 'react';
 import { useEditorStateInternal } from './schema';
 
 /**
