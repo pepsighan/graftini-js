@@ -305,8 +305,6 @@ function identifyEmptyCanvasDropRegion(
       continue;
     }
 
-    console.log({ ...component.region });
-
     if (isCursorWithinRegion(component.region, cursor)) {
       return {
         componentId,
