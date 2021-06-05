@@ -2,6 +2,7 @@ import { produce } from 'immer';
 import React, { ReactNode, useState } from 'react';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import createContext from 'zustand/context';
+import { DropRegion } from './dropLocation';
 import { Region } from './useRegion';
 
 export type ComponentProps = {
@@ -93,6 +94,10 @@ export type DraggedOver = {
    * The currently dragged component. This has value when isDragging is true.
    */
   component?: ComponentNode | null;
+  /**
+   * The region where the component is going to be dropped if the drag action ends.
+   */
+  dropRegion?: DropRegion | null;
 };
 
 /**

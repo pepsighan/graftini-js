@@ -1,5 +1,6 @@
 import React from 'react';
 import { ComponentNode } from './componentNode';
+import { useSyncDropRegion } from './dropLocation';
 import { GraftComponentProps } from './resolver';
 import { ROOT_NODE_ID } from './schema';
 
@@ -18,5 +19,8 @@ export function Root__Graft__Component({ children }: GraftComponentProps) {
  * Also, as you can see, a root canvas is just a component node with `ROOT_NODE_ID`.
  */
 export function Canvas() {
+  // Sync the drop region whenever a cursor is dragged.
+  useSyncDropRegion();
+
   return <ComponentNode componentId={ROOT_NODE_ID} isRoot />;
 }

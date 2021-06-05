@@ -1,9 +1,13 @@
+import { useCallback, useEffect } from 'react';
 import {
   ChildAppendDirection,
   cleanupComponentMap,
   ComponentMap,
+  DraggingState,
   Position,
   ROOT_NODE_ID,
+  useEditorStateInternal,
+  useEditorStoreApiInternal,
 } from './schema';
 import { Region } from './useRegion';
 
@@ -11,6 +15,52 @@ import { Region } from './useRegion';
  * Read the paper around how the drop location is identified:
  * https://www.notion.so/Drag-and-Drop-Location-Resolver-df4de60c835e409f849c9c8b959f2484
  */
+
+/**
+ * Sync the drop region to the state when the cursor position changes.
+ */
+export function useSyncDropRegion() {
+  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const { subscribe } = useEditorStoreApiInternal();
+
+  useEffect(() => {
+    // Only react to when the cursor position changes.
+    return subscribe(
+      () => {
+        immerSet((state) => {
+          // Only update the drop region if the cursor is being dragged.
+          if (
+            state.draggedOver.isDragging !== DraggingState.NotDragging &&
+            state.draggedOver.cursorPosition
+          ) {
+            state.draggedOver.dropRegion = identifyDropRegion(
+              state.componentMap,
+              state.draggedOver.cursorPosition!
+            );
+          }
+        });
+      },
+      (state) => state.draggedOver.cursorPosition
+    );
+  }, [immerSet, subscribe]);
+}
+
+/**
+ * Identify the drop region where a new/old component should be dragged into.
+ */
+function identifyDropRegion(componentMap: ComponentMap, cursor: Position): DropRegion | null {
+  const cleanMap = cleanupComponentMap(componentMap) as ComponentMap;
+
+  // Incrementally try to identify the drop regions for each case. If it finds one at any point
+  // then it immediately returns. This mechanism hard-codes the precedence of the drop regions
+  // as outlined in the document.
+  return (
+    identifyMarkerDropRegion(cleanMap, cursor) ??
+    identifyNonCanvasDropRegion(cleanMap, cursor) ??
+    identifyEmptyCanvasDropRegion(cleanMap, cursor) ??
+    identifyNonEmptyCanvasDropRegion(cleanMap, cursor)
+  );
+}
 
 /**
  * The width of the drop marker.
@@ -106,28 +156,11 @@ enum DropKind {
   AddAsChild = 'addAsChild',
 }
 
-type DropRegion = {
+export type DropRegion = {
   componentId: string;
   dropMarkerRegion: Region;
   dropKind: DropKind;
 };
-
-/**
- * Identify the drop region where a new/old component should be dragged into.
- */
-function identifyDropRegion(componentMap: ComponentMap, cursor: Position): DropRegion | null {
-  const cleanMap = cleanupComponentMap(componentMap) as ComponentMap;
-
-  // Incrementally try to identify the drop regions for each case. If it finds one at any point
-  // then it immediately returns. This mechanism hard-codes the precedence of the drop regions
-  // as outlined in the document.
-  return (
-    identifyMarkerDropRegion(cleanMap, cursor) ??
-    identifyNonCanvasDropRegion(cleanMap, cursor) ??
-    identifyEmptyCanvasDropRegion(cleanMap, cursor) ??
-    identifyNonEmptyCanvasDropRegion(cleanMap, cursor)
-  );
-}
 
 /**
  * Identifies a drop region if the cursor is over any drop marker.
