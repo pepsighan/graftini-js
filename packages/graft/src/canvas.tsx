@@ -9,9 +9,9 @@ import { ROOT_NODE_ID } from './schema';
  */
 /** @internal */
 export const Root__Graft__Component = forwardRef(
-  ({ children }: GraftComponentProps, ref: ForwardedRef<any>) => {
+  ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
     return (
-      <div ref={ref} style={{ width: '100%', height: '100%' }}>
+      <div ref={ref} style={{ width: '100%', height: '100%' }} onDragOver={onDragOver}>
         {children}
       </div>
     );

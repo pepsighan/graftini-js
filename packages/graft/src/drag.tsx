@@ -50,12 +50,6 @@ export function useOnDrag() {
   return useCallback(
     (event: DragEvent) => {
       immerSet((state) => {
-        if (!state.draggedOver.isDragging) {
-          return;
-        }
-
-        console.log(event.clientX);
-
         state.draggedOver.cursorPosition = {
           x: event.clientX,
           y: event.clientY,
@@ -64,6 +58,16 @@ export function useOnDrag() {
     },
     [immerSet]
   );
+}
+
+/**
+ * Fixes the issue with regards to cursor position during a drag operation.
+ */
+export function useOnDragOver() {
+  return useCallback((event: DragEvent) => {
+    // This lets the onDrag to not reset the co-ordinates to (0,0) when dropping.
+    event.preventDefault();
+  }, []);
 }
 
 /**

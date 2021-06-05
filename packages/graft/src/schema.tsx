@@ -163,17 +163,6 @@ export type InitialComponentMap = {
   [id: string]: Omit<ComponentNode, 'region'>;
 };
 
-const log = (config: any) => (set: any, get: any, api: any) =>
-  config(
-    (args: any) => {
-      console.log('  applying', args);
-      set(args);
-      console.log('  new state', get());
-    },
-    get,
-    api
-  );
-
 function createEditorState(componentMap?: InitialComponentMap) {
   const map = (componentMap ?? {
     [ROOT_NODE_ID]: {
@@ -209,7 +198,7 @@ function createEditorState(componentMap?: InitialComponentMap) {
   return create<EditorState>((set: any) => ({
     componentMap: map,
     draggedOver: {
-      isDragging: true,
+      isDragging: false,
     },
     immerSet: (fn: any) => set(produce(fn)),
   }));

@@ -1,6 +1,6 @@
 import React, { ReactNode, useCallback } from 'react';
 import { CanvasContext, ComponentContext, useComponentId } from './context';
-import { useOnDrag, useOnDragEnd, useOnDragStart } from './drag';
+import { useOnDrag, useOnDragEnd, useOnDragOver, useOnDragStart } from './drag';
 import { GraftComponent, useResolver } from './resolver';
 import { ComponentProps, useEditorStateInternal } from './schema';
 import { useSyncRegion } from './useRegion';
@@ -75,6 +75,7 @@ function ComponentWrapper({
   const onDragStart = useOnDragStart();
   const onDrag = useOnDrag();
   const onDragEnd = useOnDragEnd();
+  const onDragOver = useOnDragOver();
 
   return (
     <Component
@@ -82,6 +83,7 @@ function ComponentWrapper({
       onDragStart={onDragStart}
       onDrag={onDrag}
       onDragEnd={onDragEnd}
+      onDragOver={onDragOver}
       draggable
       {...componentProps}
     >
