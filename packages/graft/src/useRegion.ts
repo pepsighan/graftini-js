@@ -38,6 +38,8 @@ export function useSyncRegion(componentId: string, deps?: DependencyList) {
         });
       });
 
+    measureRegion();
+
     window.addEventListener('resize', measureRegion);
     window.addEventListener('scroll', measureRegion);
 
