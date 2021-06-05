@@ -17,21 +17,11 @@ enum MarkerPosition {
 }
 
 /**
- * Checks whether the cursor is within the drop marker region.
+ * Checks if the cursor is within the region.
  */
-function isCursorWithinDropMarker(
-  region: Region,
-  cursor: Position,
-  whichMarker: MarkerPosition,
-  childAppendDirection: ChildAppendDirection
-): boolean {
-  const dropMarkerRegion = resolveDropMarkerRegion(region, whichMarker, childAppendDirection);
-
-  const isWithinXAxis =
-    cursor.x >= dropMarkerRegion.x && cursor.x <= dropMarkerRegion.x + dropMarkerRegion.width;
-
-  const isWithinYAxis =
-    cursor.y >= dropMarkerRegion.y && cursor.y <= dropMarkerRegion.y + dropMarkerRegion.height;
+function isCursorWithinRegion(region: Region, cursor: Position): boolean {
+  const isWithinXAxis = cursor.x >= region.x && cursor.x <= region.x + region.width;
+  const isWithinYAxis = cursor.y >= region.y && cursor.y <= region.y + region.height;
 
   return isWithinXAxis && isWithinYAxis;
 }
