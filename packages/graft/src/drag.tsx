@@ -1,7 +1,7 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
-import { DraggingState, useEditorStateInternal } from './schema';
 import { DropKind, nearestCanvasId } from './dropLocation';
+import { useEditorStateInternal } from './schema';
 
 /**
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
@@ -35,20 +35,6 @@ export function useOnDragStart(): EventHandler<DragEvent> {
         state.draggedOver.componentKind = 'existing';
         state.draggedOver.component = component;
       });
-
-      // Setting the isDragging flag a little late, so that the UI gets time to
-      // snap the component to the cursor. If isDragging is set above, then it
-      // does not snap in the given scenario:
-      // When there is a canvas component and a non-canvas component & the non-canvas
-      // container is dragged. This happens because the drop location expands immediately
-      // causing the non-canvas component to be flung away (may be re-rendered or something).
-      // Setting isDragging a little late gives time for it to snap and the drop location
-      // is rendered afterwards.
-      setTimeout(() => {
-        immerSet((state) => {
-          state.draggedOver.isDragging = DraggingState.DraggingInCanvas;
-        });
-      });
     },
     [componentId, immerSet]
   );
@@ -64,6 +50,12 @@ export function useOnDrag() {
   return useCallback(
     (event: DragEvent) => {
       immerSet((state) => {
+        if (!state.draggedOver.isDragging) {
+          return;
+        }
+
+        console.log(event.clientX);
+
         state.draggedOver.cursorPosition = {
           x: event.clientX,
           y: event.clientY,
@@ -86,7 +78,9 @@ export function useOnDragEnd() {
     immerSet((state) => {
       const dropRegion = state.draggedOver.dropRegion;
       if (!dropRegion) {
-        state.draggedOver = { isDragging: DraggingState.NotDragging };
+        state.draggedOver = {
+          isDragging: false,
+        };
         return;
       }
 
@@ -131,7 +125,7 @@ export function useOnDragEnd() {
         ];
       }
 
-      state.draggedOver = { isDragging: DraggingState.NotDragging };
+      state.draggedOver = { isDragging: false };
     });
   }, [immerSet]);
 }

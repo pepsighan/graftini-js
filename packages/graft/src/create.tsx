@@ -2,12 +2,7 @@ import { nanoid } from 'nanoid';
 import { DragEvent, DragEventHandler, useCallback } from 'react';
 import { hideDefaultDragPreview, useOnDrag, useOnDragEnd } from './drag';
 import { useResolver } from './resolver';
-import {
-  ChildAppendDirection,
-  ComponentProps,
-  DraggingState,
-  useEditorStateInternal,
-} from './schema';
+import { ChildAppendDirection, ComponentProps, useEditorStateInternal } from './schema';
 
 /**
  * Options to configure the kind of components to create during drag operation.
@@ -51,7 +46,7 @@ export function useCreateComponent({
       // We are just registering the new component here and preparing for a
       // drag.
       immerSet((state) => {
-        state.draggedOver.isDragging = DraggingState.DraggingOutsideCanvas;
+        state.draggedOver.isDragging = true;
         state.draggedOver.componentKind = 'new';
         state.draggedOver.component = {
           id,

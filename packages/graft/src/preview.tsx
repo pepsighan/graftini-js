@@ -1,7 +1,7 @@
 import { motion, useMotionValue } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useResolver } from './resolver';
-import { DraggedOver, DraggingState, useEditorStoreApiInternal } from './schema';
+import { DraggedOver, useEditorStoreApiInternal } from './schema';
 
 type DragPreviewProps = {
   /**
@@ -29,7 +29,7 @@ export function DragPreview({ correction }: DragPreviewProps) {
     return subscribe(
       (draggedOver: DraggedOver) => {
         if (draggedOver?.cursorPosition) {
-          const isInCanvas = draggedOver.isDragging === DraggingState.DraggingInCanvas;
+          const isInCanvas = !!draggedOver.dropRegion;
 
           posX.set(draggedOver.cursorPosition.x + (isInCanvas ? correction?.x ?? 0 : 0));
           posY.set(draggedOver.cursorPosition.y + (isInCanvas ? correction?.y ?? 0 : 0));

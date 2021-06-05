@@ -3,7 +3,6 @@ import {
   ChildAppendDirection,
   cleanupDeletedComponents,
   ComponentMap,
-  DraggingState,
   Position,
   ROOT_NODE_ID,
   useEditorStateInternal,
@@ -29,10 +28,7 @@ export function useSyncDropRegion() {
       () => {
         immerSet((state) => {
           // Only update the drop region if the cursor is being dragged.
-          if (
-            state.draggedOver.isDragging !== DraggingState.NotDragging &&
-            state.draggedOver.cursorPosition
-          ) {
+          if (state.draggedOver.isDragging && state.draggedOver.cursorPosition) {
             state.draggedOver.dropRegion = identifyDropRegion(
               state.componentMap,
               state.draggedOver.cursorPosition!

@@ -81,7 +81,7 @@ export type DraggedOver = {
   /**
    * Whether a component is being dragged.
    */
-  isDragging: DraggingState;
+  isDragging: boolean;
   /**
    * The position of the cursor when dragging.
    */
@@ -99,16 +99,6 @@ export type DraggedOver = {
    */
   dropRegion?: DropRegion | null;
 };
-
-/**
- * The different states of drag.
- */
-export enum DraggingState {
-  DraggingInCanvas = 'draggingInCanvas',
-  DraggingOutsideCanvas = 'draggingOutsideCanvas',
-  DraggingOutsideBrowser = 'draggingOutsideBrowser',
-  NotDragging = 'notDragging',
-}
 
 /**
  * The dimensions of the component.
@@ -173,6 +163,17 @@ export type InitialComponentMap = {
   [id: string]: Omit<ComponentNode, 'region'>;
 };
 
+const log = (config: any) => (set: any, get: any, api: any) =>
+  config(
+    (args: any) => {
+      console.log('  applying', args);
+      set(args);
+      console.log('  new state', get());
+    },
+    get,
+    api
+  );
+
 function createEditorState(componentMap?: InitialComponentMap) {
   const map = (componentMap ?? {
     [ROOT_NODE_ID]: {
@@ -205,12 +206,12 @@ function createEditorState(componentMap?: InitialComponentMap) {
     );
   }
 
-  return create<EditorState>((set) => ({
+  return create<EditorState>((set: any) => ({
     componentMap: map,
     draggedOver: {
-      isDragging: DraggingState.NotDragging,
+      isDragging: true,
     },
-    immerSet: (fn) => set(produce(fn)),
+    immerSet: (fn: any) => set(produce(fn)),
   }));
 }
 
