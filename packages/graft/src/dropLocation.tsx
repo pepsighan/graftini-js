@@ -292,7 +292,179 @@ function identifyNonEmptyCanvasDropRegion(
   componentMap: ComponentMap,
   cursor: Position
 ): DropRegion | null {
+  const contenderCanvasComponents: string[] = [];
+
+  // Try to fill all the canvas components that are not empty which are under the cursor.
+  identifyNonEmptyCanvasesForSubtree(ROOT_NODE_ID, componentMap, cursor, contenderCanvasComponents);
+
+  if (contenderCanvasComponents.length === 0) {
+    // None found.
+    return null;
+  }
+
+  const selectedCanvasId = contenderCanvasComponents.pop()!;
+  const canvas = componentMap[selectedCanvasId];
+
+  for (let index = 0; index < canvas.childrenNodes.length + 1; index++) {
+    const component =
+      index !== canvas.childrenNodes.length ? componentMap[canvas.childrenNodes[index]] : null;
+    const center = component
+      ? resolveCenterOfGravity(component.region, canvas.childAppendDirection!)
+      : null;
+
+    // For the first item, check if the cursor is before it. If the cursor if before it,
+    // then prepend the new component before it.
+    if (index === 0) {
+      if (canvas.childAppendDirection === 'horizontal') {
+        if (cursor.x <= center!) {
+          return {
+            componentId: component!.id,
+            dropMarkerRegion: resolveDropMarkerRegion(
+              component!.region,
+              MarkerPosition.Start,
+              canvas.childAppendDirection
+            ),
+            dropKind: DropKind.PrependAsSibling,
+          };
+        }
+        continue;
+      }
+
+      if (cursor.y <= center!) {
+        return {
+          componentId: component!.id,
+          dropMarkerRegion: resolveDropMarkerRegion(
+            component!.region,
+            MarkerPosition.Start,
+            canvas.childAppendDirection!
+          ),
+          dropKind: DropKind.PrependAsSibling,
+        };
+      }
+
+      continue;
+    }
+
+    // This component is always present on 2nd loop onward.
+    const previousComponent = componentMap[canvas.childrenNodes[index - 1]];
+    const previousCenter = resolveCenterOfGravity(
+      previousComponent.region,
+      canvas.childAppendDirection!
+    );
+
+    // For the last item, check if the cursor is after it. If it is after the last item,
+    // then append the new component after it.
+    if (index === canvas.childrenNodes.length) {
+      if (canvas.childAppendDirection === 'horizontal') {
+        if (cursor.x >= previousCenter!) {
+          return {
+            componentId: previousComponent!.id,
+            dropMarkerRegion: resolveDropMarkerRegion(
+              previousComponent!.region,
+              MarkerPosition.End,
+              canvas.childAppendDirection
+            ),
+            dropKind: DropKind.AppendAsSibling,
+          };
+        }
+        continue;
+      }
+
+      if (cursor.y >= previousCenter!) {
+        return {
+          componentId: previousComponent!.id,
+          dropMarkerRegion: resolveDropMarkerRegion(
+            previousComponent!.region,
+            MarkerPosition.End,
+            canvas.childAppendDirection!
+          ),
+          dropKind: DropKind.AppendAsSibling,
+        };
+      }
+
+      continue;
+    }
+
+    // For the non-boundary child components, check if the cursor is between them.
+
+    if (canvas.childAppendDirection === 'horizontal') {
+      if (cursor.x >= previousCenter! && cursor.x <= center!) {
+        // The cursor is in-between the previous and the current component.
+
+        if (cursor.x - previousCenter < center! - cursor.x) {
+          // The cursor is near to the previous component.
+          return {
+            componentId: previousComponent.id,
+            dropMarkerRegion: previousComponent.region,
+            dropKind: DropKind.AppendAsSibling,
+          };
+        }
+
+        // The cursor is near to the current component.
+        return {
+          componentId: component!.id,
+          dropMarkerRegion: component!.region,
+          dropKind: DropKind.PrependAsSibling,
+        };
+      }
+
+      continue;
+    }
+
+    if (cursor.y >= previousCenter! && cursor.y <= center!) {
+      // The cursor is in-between the previous and the current component.
+
+      if (cursor.y - previousCenter < center! - cursor.y) {
+        // The cursor is near to the previous component.
+        return {
+          componentId: previousComponent.id,
+          dropMarkerRegion: previousComponent.region,
+          dropKind: DropKind.AppendAsSibling,
+        };
+      }
+
+      // The cursor is near to the current component.
+      return {
+        componentId: component!.id,
+        dropMarkerRegion: component!.region,
+        dropKind: DropKind.PrependAsSibling,
+      };
+    }
+  }
+
   return null;
+}
+
+/**
+ * Identifies a list of canvases which are not empty and onto which the cursor is hovering.
+ */
+function identifyNonEmptyCanvasesForSubtree(
+  componentId: string,
+  componentMap: ComponentMap,
+  cursor: Position,
+  contenderCanvasComponents: string[]
+) {
+  const component = componentMap[componentId];
+  if (!component.isCanvas) {
+    return;
+  }
+
+  if (!isCursorWithinRegion(component.region, cursor)) {
+    // The cursor is not on this canvas, so ignore this tree.
+    return;
+  }
+
+  contenderCanvasComponents.push(componentId);
+
+  // Do the same for all its children.
+  component.childrenNodes.forEach((nestedComponentId) => {
+    identifyNonEmptyCanvasesForSubtree(
+      nestedComponentId,
+      componentMap,
+      cursor,
+      contenderCanvasComponents
+    );
+  });
 }
 
 /**
