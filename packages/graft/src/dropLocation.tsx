@@ -70,6 +70,36 @@ function resolveCenterOfGravity(
   return (region.y + region.height) / 2;
 }
 
+/**
+ * Slice the region into two based on how you slice them.
+ */
+function sliceRegionInHalf(
+  region: Region,
+  childAppendDirection: ChildAppendDirection
+): [Region, Region] {
+  if (childAppendDirection === 'horizontal') {
+    return [
+      { x: region.x, y: region.y, width: region.width / 2, height: region.height },
+      {
+        x: region.x + region.width / 2,
+        y: region.y,
+        width: region.width / 2,
+        height: region.height,
+      },
+    ];
+  }
+
+  return [
+    { x: region.x, y: region.y, width: region.width, height: region.height / 2 },
+    {
+      x: region.x,
+      y: region.y + region.height / 2,
+      width: region.width,
+      height: region.height / 2,
+    },
+  ];
+}
+
 enum DropKind {
   PrependAsSibling = 'prependAsSibling',
   AppendAsSibling = 'appendAsSibling',
@@ -78,7 +108,7 @@ enum DropKind {
 
 type DropRegion = {
   componentId: string;
-  region: Region;
+  dropMarkerRegion: Region;
   dropKind: DropKind;
 };
 
@@ -141,7 +171,7 @@ function identifyMarkerDropRegionForSubtree(
   if (isCursorWithinRegion(startRegion, cursor)) {
     contenderDropRegions.push({
       componentId,
-      region: startRegion,
+      dropMarkerRegion: startRegion,
       dropKind: DropKind.PrependAsSibling,
     });
   }
@@ -154,7 +184,7 @@ function identifyMarkerDropRegionForSubtree(
   if (isCursorWithinRegion(endRegion, cursor)) {
     contenderDropRegions.push({
       componentId,
-      region: endRegion,
+      dropMarkerRegion: endRegion,
       dropKind: DropKind.AppendAsSibling,
     });
   }
@@ -173,6 +203,52 @@ function identifyNonCanvasDropRegion(
   componentMap: ComponentMap,
   cursor: Position
 ): DropRegion | null {
+  for (let componentId of Object.keys(componentMap)) {
+    const component = componentMap[componentId];
+
+    // Ignore the canvas components.
+    if (component.isCanvas) {
+      continue;
+    }
+
+    // Canvas Id is absolutely present, because a non-canvas component can only be present
+    // in a canvas.
+    const canvasId = nearestCanvasId(componentMap, componentId)!;
+
+    const childAppendDirection = componentMap[canvasId].childAppendDirection!;
+
+    // Try to check if the cursor is on the starting or ending half.
+    const [startHalf, endHalf] = sliceRegionInHalf(component.region, childAppendDirection);
+
+    if (isCursorWithinRegion(startHalf, cursor)) {
+      const dropMarker = resolveDropMarkerRegion(
+        component.region,
+        MarkerPosition.Start,
+        childAppendDirection
+      );
+
+      return {
+        componentId,
+        dropMarkerRegion: dropMarker,
+        dropKind: DropKind.PrependAsSibling,
+      };
+    }
+
+    if (isCursorWithinRegion(endHalf, cursor)) {
+      const dropMarker = resolveDropMarkerRegion(
+        component.region,
+        MarkerPosition.End,
+        childAppendDirection
+      );
+
+      return {
+        componentId,
+        dropMarkerRegion: dropMarker,
+        dropKind: DropKind.AppendAsSibling,
+      };
+    }
+  }
+
   return null;
 }
 
