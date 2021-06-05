@@ -1,4 +1,4 @@
-import { ChildAppendDirection, Position } from './schema';
+import { ChildAppendDirection, ComponentMap, Position, ROOT_NODE_ID } from './schema';
 import { Region } from './useRegion';
 
 /**
@@ -62,4 +62,69 @@ function resolveCenterOfGravity(
   }
 
   return (region.y + region.height) / 2;
+}
+
+enum DropKind {
+  PrependAsSibling = 'prependAsSibling',
+  AppendAsSibling = 'appendAsSibling',
+  AddAsChild = 'addAsChild',
+}
+
+type DropRegion = {
+  componentId: string;
+  region: Region;
+  dropKind: DropKind;
+};
+
+/**
+ * Identify the drop region where a new/old component should be dragged into.
+ */
+function identifyDropRegion(componentMap: ComponentMap, cursor: Position): DropRegion | null {
+  // Incrementally try to identify the drop regions for each case. If it finds one at any point
+  // then it immediately returns. This mechanism hard-codes the precedence of the drop regions
+  // as outlined in the document.
+  return (
+    identifyMarkerDropRegion(componentMap, cursor) ??
+    identifyNonCanvasDropRegion(componentMap, cursor) ??
+    identifyEmptyCanvasDropRegion(componentMap, cursor) ??
+    identifyNonEmptyCanvasDropRegion(componentMap, cursor)
+  );
+}
+
+/**
+ * Identifies a drop region if the cursor is over any drop marker.
+ */
+function identifyMarkerDropRegion(componentMap: ComponentMap, cursor: Position): DropRegion | null {
+  return null;
+}
+
+/**
+ * Identifies a drop region if the cursor is over a non canvas component.
+ */
+function identifyNonCanvasDropRegion(
+  componentMap: ComponentMap,
+  cursor: Position
+): DropRegion | null {
+  return null;
+}
+
+/**
+ * Idenitifies a drop region if the cursor is over a canvas component that is empty.
+ */
+function identifyEmptyCanvasDropRegion(
+  componentMap: ComponentMap,
+  cursor: Position
+): DropRegion | null {
+  return null;
+}
+
+/**
+ * Identifies a drop region if the cursor is over a canvas component that is not empty and
+ * it is also not over any of the children components.
+ */
+function identifyNonEmptyCanvasDropRegion(
+  componentMap: ComponentMap,
+  cursor: Position
+): DropRegion | null {
+  return null;
 }
