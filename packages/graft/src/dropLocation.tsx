@@ -80,6 +80,8 @@ type DropRegion = {
  * Identify the drop region where a new/old component should be dragged into.
  */
 function identifyDropRegion(componentMap: ComponentMap, cursor: Position): DropRegion | null {
+  const cleanMap = cleanupComponentMap(componentMap) as ComponentMap;
+
   // Incrementally try to identify the drop regions for each case. If it finds one at any point
   // then it immediately returns. This mechanism hard-codes the precedence of the drop regions
   // as outlined in the document.
