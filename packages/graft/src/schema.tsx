@@ -161,8 +161,15 @@ export const ROOT_NODE_ID = 'ROOT';
 /** @internal */
 export const ROOT_NODE_COMPONENT = 'Root__Graft__Component';
 
-function createEditorState(componentMap?: ComponentMap) {
-  const map = componentMap ?? {
+/**
+ * The initial component map state for the editor.
+ */
+export type InitialComponentMap = {
+  [id: string]: Omit<ComponentNode, 'region'>;
+};
+
+function createEditorState(componentMap?: InitialComponentMap) {
+  const map = (componentMap ?? {
     [ROOT_NODE_ID]: {
       id: ROOT_NODE_ID,
       type: ROOT_NODE_COMPONENT,
@@ -170,15 +177,14 @@ function createEditorState(componentMap?: ComponentMap) {
       props: {},
       isCanvas: true,
       parentId: null,
-      region: {
-        x: 0,
-        y: 0,
-        width: 0,
-        height: 0,
-      },
       childrenNodes: [],
     },
-  };
+  }) as ComponentMap;
+
+  // Initialize the default region for key component in the map.
+  Object.keys(map).forEach((key) => {
+    map[key].region = { x: 0, y: 0, width: 0, height: 0 };
+  });
 
   if (map[ROOT_NODE_ID]?.id !== ROOT_NODE_ID) {
     throw new Error(
@@ -243,16 +249,27 @@ export function EditorStateProvider({ elementMap, children }: EditorStateProvide
 }
 
 /**
- * Removes all the deleted component nodes from the map.
+ * A clean version of the component map that can be stored for later usage.
  */
-export function cleanupComponentMap(componentMap: ComponentMap): ComponentMap {
+export type CleanedComponentMap = {
+  [id: string]: Omit<ComponentNode, 'isDeleted' | 'region'>;
+};
+
+/**
+ * Removes all the deleted component nodes from the map and also remove unwanted properties
+ * from each components.
+ */
+export function cleanupComponentMap(componentMap: ComponentMap): CleanedComponentMap {
   Object.keys(componentMap).forEach((key) => {
+    const component = componentMap[key];
+    delete (component as any).region;
+
     if (componentMap[key].isDeleted) {
       delete componentMap[key];
     }
   });
 
-  return componentMap;
+  return componentMap as CleanedComponentMap;
 }
 
 /**
