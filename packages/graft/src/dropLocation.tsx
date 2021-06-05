@@ -48,3 +48,18 @@ function resolveDropMarkerRegion(
   const height = region.height;
   return { x, y, width, height };
 }
+
+/**
+ * Resolves the center of gravity for a region in a given child append direction. This
+ * is the midpoint in a given axis.
+ */
+function resolveCenterOfGravity(
+  region: Region,
+  childAppendDirection: ChildAppendDirection
+): number {
+  if (childAppendDirection === 'horizontal') {
+    return (region.x + region.width) / 2;
+  }
+
+  return (region.y + region.height) / 2;
+}
