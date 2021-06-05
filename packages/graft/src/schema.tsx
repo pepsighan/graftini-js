@@ -269,12 +269,26 @@ export function cleanupComponentMap(componentMap: ComponentMap): CleanedComponen
     const component = componentMap[key];
     delete (component as any).region;
 
-    if (componentMap[key].isDeleted) {
+    if (component.isDeleted) {
       delete componentMap[key];
     }
   });
 
   return componentMap as CleanedComponentMap;
+}
+
+/**
+ * Removes all the deleted components nodes from the map.
+ */
+/** @internal */
+export function cleanupDeletedComponents(componentMap: ComponentMap): ComponentMap {
+  Object.keys(componentMap).forEach((key) => {
+    if (componentMap[key].isDeleted) {
+      delete componentMap[key];
+    }
+  });
+
+  return componentMap;
 }
 
 /**
