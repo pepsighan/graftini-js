@@ -44,12 +44,27 @@ export type ComponentNode = {
    */
   childAppendDirection?: ChildAppendDirection;
   /**
+   * The region on the screen that this component occupies. This is automatically updated based on
+   * where it renders.
+   */
+  region: Region;
+  /**
    * Whether the component node is no longer present in the tree. This is a remnant that is stored
    * temporarily so that the canvas does not error (because the component may yet not have been
    * destroyed). Call `cleanupComponentMap` function to remove the deleted nodes manually before using
    * the component for something else.
    */
   isDeleted?: boolean;
+};
+
+/**
+ * A region on the canvas with the position and its dimension.
+ */
+export type Region = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
 };
 
 /**
@@ -206,6 +221,12 @@ function createEditorState(componentMap?: ComponentMap) {
       props: {},
       isCanvas: true,
       parentId: null,
+      region: {
+        x: 0,
+        y: 0,
+        width: 0,
+        height: 0,
+      },
       childrenNodes: [],
     },
   };
