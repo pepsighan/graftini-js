@@ -203,6 +203,8 @@ function identifyNonCanvasDropRegion(
   componentMap: ComponentMap,
   cursor: Position
 ): DropRegion | null {
+  // We are checking for the non-canvas components without recursion because these
+  // are leaf components.
   for (let componentId of Object.keys(componentMap)) {
     const component = componentMap[componentId];
 
@@ -259,6 +261,8 @@ function identifyEmptyCanvasDropRegion(
   componentMap: ComponentMap,
   cursor: Position
 ): DropRegion | null {
+  // We can check for empty canvases without recursion because the ones we are interested
+  // in are leaf canvas components anyways.
   for (let componentId of Object.keys(componentMap)) {
     const component = componentMap[componentId];
     if (!component.isCanvas) {
