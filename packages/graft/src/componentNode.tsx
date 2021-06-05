@@ -1,9 +1,10 @@
 import React, { ReactNode, useCallback } from 'react';
-import { CanvasContext, ComponentContext } from './context';
+import { CanvasContext, ComponentContext, useComponentId } from './context';
 import { useOnDrag, useOnDragEnd, useOnDragStart } from './drag';
 import { useIdentifyCurrentDropLocation } from './dropLocation';
 import { GraftComponent, useResolver } from './resolver';
 import { ComponentProps, useEditorStateInternal } from './schema';
+import { useSyncRegion } from './useRegion';
 
 type ComponentNodeProps = {
   componentId: string;
@@ -69,6 +70,9 @@ function ComponentWrapper({
   componentProps,
   children,
 }: DragOverNotifierProps) {
+  // Sync the region of the component whenever components update.
+  useSyncRegion(useComponentId(), [componentProps]);
+
   const onDragOver = useIdentifyCurrentDropLocation();
   const onDragStart = useOnDragStart();
   const onDrag = useOnDrag();

@@ -2,6 +2,7 @@ import { produce } from 'immer';
 import React, { ReactNode, useState } from 'react';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import createContext from 'zustand/context';
+import { Region } from './useRegion';
 
 export type ComponentProps = {
   [key: string]: any;
@@ -55,16 +56,6 @@ export type ComponentNode = {
    * the component for something else.
    */
   isDeleted?: boolean;
-};
-
-/**
- * A region on the canvas with the position and its dimension.
- */
-export type Region = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
 };
 
 /**
