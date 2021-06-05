@@ -150,7 +150,7 @@ function sliceRegionInHalf(
   ];
 }
 
-enum DropKind {
+export enum DropKind {
   PrependAsSibling = 'prependAsSibling',
   AppendAsSibling = 'appendAsSibling',
   AddAsChild = 'addAsChild',
@@ -451,7 +451,7 @@ function identifyNonEmptyCanvasesForSubtree(
 /**
  * Gets the nearest canvas id up in the tree for the component.
  */
-function nearestCanvasId(componentMap: ComponentMap, componentId: string): string | null {
+export function nearestCanvasId(componentMap: ComponentMap, componentId: string): string | null {
   const parentId = componentMap[componentId].parentId;
   if (!parentId) {
     // Only in the case

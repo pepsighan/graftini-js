@@ -1,6 +1,7 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { DraggingState, useEditorStateInternal } from './schema';
+import { DropKind, nearestCanvasId } from './dropLocation';
 
 /**
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
@@ -83,7 +84,54 @@ export function useOnDragEnd() {
 
   return useCallback(() => {
     immerSet((state) => {
-      // TODO: Cause side-effects to the component positions here once drag stops.
+      const dropRegion = state.draggedOver.dropRegion;
+      if (!dropRegion) {
+        state.draggedOver = { isDragging: DraggingState.NotDragging };
+        return;
+      }
+
+      const { componentId, dropKind } = dropRegion;
+      const component = state.draggedOver.component!;
+
+      if (state.draggedOver.componentKind === 'new') {
+        // Register this new component in the map.
+        state.componentMap[component.id] = component;
+      } else {
+        // Remove the component from the older position.
+        const index = state.componentMap[component.parentId!].childrenNodes.indexOf(component.id);
+        state.componentMap[component.parentId!].childrenNodes.splice(index);
+
+        state.componentMap[component.parentId!].childrenNodes = [
+          ...state.componentMap[component.parentId!].childrenNodes,
+        ];
+      }
+
+      if (dropKind === DropKind.AddAsChild) {
+        // Add the dragged component as a child of the component and it becomes the parent.
+        const parentId = componentId;
+        state.componentMap[parentId].childrenNodes.push(state.draggedOver.component!.id);
+
+        state.componentMap[parentId].childrenNodes = [
+          ...state.componentMap[parentId].childrenNodes,
+        ];
+      } else {
+        // Add the dragged component to the canvas before or after the componentId as it is
+        // the sibling.
+        const canvasId = nearestCanvasId(state.componentMap, componentId);
+        const index = state.componentMap[canvasId!].childrenNodes.indexOf(componentId);
+
+        if (dropKind === DropKind.AppendAsSibling) {
+          state.componentMap[canvasId!].childrenNodes.splice(index, 0, componentId);
+        } else {
+          state.componentMap[canvasId!].childrenNodes.splice(index + 1, 0, componentId);
+        }
+
+        state.componentMap[canvasId!].childrenNodes = [
+          ...state.componentMap[canvasId!].childrenNodes,
+        ];
+      }
+
+      state.draggedOver = { isDragging: DraggingState.NotDragging };
     });
   }, [immerSet]);
 }
