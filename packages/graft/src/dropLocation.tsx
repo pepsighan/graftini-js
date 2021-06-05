@@ -315,22 +315,7 @@ function identifyNonEmptyCanvasDropRegion(
     // For the first item, check if the cursor is before it. If the cursor if before it,
     // then prepend the new component before it.
     if (index === 0) {
-      if (canvas.childAppendDirection === 'horizontal') {
-        if (cursor.x <= center!) {
-          return {
-            componentId: component!.id,
-            dropMarkerRegion: resolveDropMarkerRegion(
-              component!.region,
-              MarkerPosition.Start,
-              canvas.childAppendDirection
-            ),
-            dropKind: DropKind.PrependAsSibling,
-          };
-        }
-        continue;
-      }
-
-      if (cursor.y <= center!) {
+      if (isCursorBeforeTheCenterOfComponent(cursor, canvas.childAppendDirection!, center!)) {
         return {
           componentId: component!.id,
           dropMarkerRegion: resolveDropMarkerRegion(
@@ -355,22 +340,7 @@ function identifyNonEmptyCanvasDropRegion(
     // For the last item, check if the cursor is after it. If it is after the last item,
     // then append the new component after it.
     if (index === canvas.childrenNodes.length) {
-      if (canvas.childAppendDirection === 'horizontal') {
-        if (cursor.x >= previousCenter!) {
-          return {
-            componentId: previousComponent!.id,
-            dropMarkerRegion: resolveDropMarkerRegion(
-              previousComponent!.region,
-              MarkerPosition.End,
-              canvas.childAppendDirection
-            ),
-            dropKind: DropKind.AppendAsSibling,
-          };
-        }
-        continue;
-      }
-
-      if (cursor.y >= previousCenter!) {
+      if (isCursorAfterTheCenterOfComponent(cursor, canvas.childAppendDirection!, previousCenter)) {
         return {
           componentId: previousComponent!.id,
           dropMarkerRegion: resolveDropMarkerRegion(
@@ -386,35 +356,13 @@ function identifyNonEmptyCanvasDropRegion(
     }
 
     // For the non-boundary child components, check if the cursor is between them.
-
-    if (canvas.childAppendDirection === 'horizontal') {
-      if (cursor.x >= previousCenter! && cursor.x <= center!) {
-        // The cursor is in-between the previous and the current component.
-
-        if (cursor.x - previousCenter < center! - cursor.x) {
-          // The cursor is near to the previous component.
-          return {
-            componentId: previousComponent.id,
-            dropMarkerRegion: previousComponent.region,
-            dropKind: DropKind.AppendAsSibling,
-          };
-        }
-
-        // The cursor is near to the current component.
-        return {
-          componentId: component!.id,
-          dropMarkerRegion: component!.region,
-          dropKind: DropKind.PrependAsSibling,
-        };
-      }
-
-      continue;
-    }
-
-    if (cursor.y >= previousCenter! && cursor.y <= center!) {
+    if (
+      isCursorAfterTheCenterOfComponent(cursor, canvas.childAppendDirection!, previousCenter) &&
+      isCursorBeforeTheCenterOfComponent(cursor, canvas.childAppendDirection!, center!)
+    ) {
       // The cursor is in-between the previous and the current component.
 
-      if (cursor.y - previousCenter < center! - cursor.y) {
+      if (cursor.x - previousCenter < center! - cursor.x) {
         // The cursor is near to the previous component.
         return {
           componentId: previousComponent.id,
@@ -482,4 +430,26 @@ function nearestCanvasId(componentMap: ComponentMap, componentId: string): strin
   }
 
   return nearestCanvasId(componentMap, parentId);
+}
+
+function isCursorBeforeTheCenterOfComponent(
+  cursor: Position,
+  childAppendDirection: ChildAppendDirection,
+  center: number
+): boolean {
+  if (childAppendDirection === 'horizontal') {
+    return cursor.x <= center;
+  }
+  return cursor.y <= center;
+}
+
+function isCursorAfterTheCenterOfComponent(
+  cursor: Position,
+  childAppendDirection: ChildAppendDirection,
+  center: number
+): boolean {
+  if (childAppendDirection === 'horizontal') {
+    return cursor.x >= center;
+  }
+  return cursor.y >= center;
 }
