@@ -1,4 +1,4 @@
-import { DependencyList, Ref, useCallback, useLayoutEffect, useState } from 'react';
+import { DependencyList, useCallback, useLayoutEffect, useState } from 'react';
 import { useEditorStateInternal } from './schema';
 
 /**
@@ -11,12 +11,10 @@ export type Region = {
   height: number;
 };
 
-type RefSetter = (ref: Ref<HTMLElement>) => void;
-
 /**
  * Syncs the region that the component contains to the editor state.
  */
-export function useSyncRegion(componentId: string, deps?: DependencyList): [RefSetter, Region] {
+export function useSyncRegion(componentId: string, deps?: DependencyList) {
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
   const [ref, setRef] = useState<HTMLElement | null>(null);
 
@@ -52,5 +50,5 @@ export function useSyncRegion(componentId: string, deps?: DependencyList): [RefS
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [componentId, immerSet, ref, ...(deps ?? [])]);
 
-  return [setRef as RefSetter, { x: 0, y: 0, width: 0, height: 0 }];
+  return setRef;
 }
