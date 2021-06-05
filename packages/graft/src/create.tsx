@@ -6,7 +6,7 @@ import {
   ChildAppendDirection,
   ComponentProps,
   DraggingState,
-  useEditorStoreApiInternal,
+  useEditorStateInternal,
 } from './schema';
 
 /**
@@ -36,7 +36,7 @@ export function useCreateComponent({
   childAppendDirection,
   defaultProps,
 }: CreateComponentOptions): CreateComponentHandlers {
-  const { setState } = useEditorStoreApiInternal();
+  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   // Use the configuration provided in the component definition.
   const Component = useResolver(type);
@@ -50,27 +50,29 @@ export function useCreateComponent({
 
       // We are just registering the new component here and preparing for a
       // drag.
-      setState((state) => ({
-        ...state,
-        draggedOver: {
-          ...state.draggedOver,
-          isDragging: DraggingState.DraggingOutsideCanvas,
-          componentKind: 'new',
-          component: {
-            id,
-            type,
-            childAppendDirection,
-            // The default props provided in the hook have higher precedence.
-            props: { ...(elementDefaultProps ?? []), ...(defaultProps ?? {}) },
-            isCanvas: isCanvas,
-            // This null is temporary until it dropped at some location.
-            parentId: null,
-            childrenNodes: [],
+      immerSet((state) => {
+        state.draggedOver.isDragging = DraggingState.DraggingOutsideCanvas;
+        state.draggedOver.componentKind = 'new';
+        state.draggedOver.component = {
+          id,
+          type,
+          childAppendDirection,
+          // The default props provided in the hook have higher precedence.
+          props: { ...(elementDefaultProps ?? []), ...(defaultProps ?? {}) },
+          isCanvas: isCanvas,
+          // This null is temporary until it dropped at some location.
+          parentId: null,
+          region: {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0,
           },
-        },
-      }));
+          childrenNodes: [],
+        };
+      });
     },
-    [childAppendDirection, defaultProps, elementDefaultProps, isCanvas, setState, type]
+    [childAppendDirection, defaultProps, elementDefaultProps, immerSet, isCanvas, type]
   );
 
   return {
