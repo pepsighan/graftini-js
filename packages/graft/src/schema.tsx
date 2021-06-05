@@ -93,20 +93,6 @@ export type DraggedOver = {
    * The currently dragged component. This has value when isDragging is true.
    */
   component?: ComponentNode | null;
-  /**
-   * For an existing component that is dragged, this stores its previous location in the canvas.
-   * This is useful when the drag action is to be ignored.
-   */
-  previousLocation?: {
-    /**
-     * The previous parent of the component.
-     */
-    parentId: string;
-    /**
-     * The previous index of the component within the parent's children nodes.
-     */
-    index: number;
-  };
 };
 
 /**

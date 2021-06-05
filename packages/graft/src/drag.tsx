@@ -31,15 +31,8 @@ export function useOnDragStart(): EventHandler<DragEvent> {
       // away. We are just storing the data of the current component that is to be dragged.
       immerSet((state) => {
         const component = state.componentMap[componentId];
-        const parent = state.componentMap[component.parentId!];
-        const componentIndex = parent.childrenNodes.indexOf(componentId);
-
         state.draggedOver.componentKind = 'existing';
         state.draggedOver.component = component;
-        state.draggedOver.previousLocation = {
-          parentId: parent.id,
-          index: componentIndex,
-        };
       });
 
       // Setting the isDragging flag a little late, so that the UI gets time to
