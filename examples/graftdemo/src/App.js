@@ -23,7 +23,7 @@ export default function App() {
         }}
       >
         <Canvas />
-        <DropMarker />
+        <DropMarker color="#3344BB" />
       </div>
       <DragPreview />
     </Editor>
