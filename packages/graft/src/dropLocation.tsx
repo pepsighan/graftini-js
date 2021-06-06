@@ -180,7 +180,7 @@ function identifyMarkerDropRegion(state: EditorState): DropRegion | null {
   identifyMarkerDropRegionForSubtree(state, ROOT_NODE_ID, contenderDropRegions);
 
   // The last drop region has the lowest precedence, so select it.
-  return contenderDropRegions.length > 0 ? contenderDropRegions.pop()! : null;
+  return contenderDropRegions.pop() ?? null;
 }
 
 /**
