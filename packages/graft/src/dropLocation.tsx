@@ -177,7 +177,10 @@ function identifyMarkerDropRegion(state: EditorState): DropRegion | null {
   const contenderDropRegions: DropRegion[] = [];
 
   // Go down the tree and collect as many marker drop regions as possible.
-  identifyMarkerDropRegionForSubtree(state, ROOT_NODE_ID, contenderDropRegions);
+  const root = state.componentMap[ROOT_NODE_ID];
+  root.childrenNodes.forEach((componentId) => {
+    identifyMarkerDropRegionForSubtree(state, componentId, contenderDropRegions);
+  });
 
   // The last drop region has the lowest precedence, so select it.
   return contenderDropRegions.pop() ?? null;
@@ -194,13 +197,8 @@ function identifyMarkerDropRegionForSubtree(
 ) {
   const component = state.componentMap[componentId];
   const region = state.regionMap[componentId];
-  const canvasId = nearestCanvasId(state.componentMap, componentId);
+  const canvasId = nearestCanvasId(state.componentMap, componentId)!;
   const cursor = state.draggedOver.cursorPosition!;
-
-  if (!canvasId) {
-    // There are no drop marker regions for the root canvas.
-    return;
-  }
 
   const childAppendDirection = state.componentMap[canvasId!].childAppendDirection!;
 
@@ -208,6 +206,7 @@ function identifyMarkerDropRegionForSubtree(
   // the only drop region that is selected.
 
   const startRegion = resolveDropMarkerRegion(region, MarkerPosition.Start, childAppendDirection);
+
   if (isCursorWithinRegion(startRegion, cursor)) {
     contenderDropRegions.push({
       componentId,
