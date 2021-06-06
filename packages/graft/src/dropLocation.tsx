@@ -75,6 +75,7 @@ function isCursorWithinRegion(region: Region, cursor: Position): boolean {
 
 /**
  * Resolves the region for a drop marker for a component that is defined by [region].
+ * The marker is a thin strip just outside the region on either side of it.
  */
 function resolveDropMarkerRegion(
   region: Region,
@@ -91,7 +92,7 @@ function resolveDropMarkerRegion(
     }
 
     const x = region.x;
-    const y = region.y + region.height - dropMarkerWidth;
+    const y = region.y + region.height;
     const width = region.width;
     const height = dropMarkerWidth;
     return { x, y, width, height };
@@ -105,7 +106,7 @@ function resolveDropMarkerRegion(
     return { x, y, width, height };
   }
 
-  const x = region.x + region.width - dropMarkerWidth;
+  const x = region.x + region.width;
   const y = region.y;
   const width = dropMarkerWidth;
   const height = region.height;
