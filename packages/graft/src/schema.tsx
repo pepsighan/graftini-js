@@ -181,13 +181,6 @@ function createEditorState(componentMap?: ComponentMap) {
     },
   };
 
-  const regionMap: ComponentRegionMap = {};
-
-  // Initialize the default region for key component in the map.
-  Object.keys(map).forEach((key) => {
-    regionMap[key] = { x: 0, y: 0, width: 0, height: 0 };
-  });
-
   if (map[ROOT_NODE_ID]?.id !== ROOT_NODE_ID) {
     throw new Error(
       'A component map needs to have a ROOT node. A ROOT node is the starting point of the' +
@@ -204,7 +197,7 @@ function createEditorState(componentMap?: ComponentMap) {
 
   return create<EditorState>((set: any) => ({
     componentMap: map,
-    regionMap,
+    regionMap: {},
     draggedOver: {
       isDragging: false,
     },

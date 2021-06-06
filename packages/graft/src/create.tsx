@@ -57,12 +57,6 @@ export function useCreateComponent({
           isCanvas: isCanvas,
           // This null is temporary until it dropped at some location.
           parentId: null,
-          region: {
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 0,
-          },
           childrenNodes: [],
         };
       });
