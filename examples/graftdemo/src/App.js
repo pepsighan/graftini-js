@@ -91,7 +91,13 @@ const Container = forwardRef(({ children, ...rest }, ref) => {
           : "auto"
       }
       padding={{ top: 8, left: 8, right: 8, bottom: 8 }}
+      position="relative"
     >
+      <div
+        style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none" }}
+      >
+        {id}
+      </div>
       {children}
     </Box>
   );
