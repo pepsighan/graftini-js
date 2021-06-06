@@ -122,9 +122,9 @@ export function useOnDragEnd() {
         const index = state.componentMap[canvasId!].childrenNodes.indexOf(dropComponentId);
 
         if (dropKind === DropKind.AppendAsSibling) {
-          state.componentMap[canvasId!].childrenNodes.splice(index, 0, componentToDrop.id);
-        } else {
           state.componentMap[canvasId!].childrenNodes.splice(index + 1, 0, componentToDrop.id);
+        } else {
+          state.componentMap[canvasId!].childrenNodes.splice(index, 0, componentToDrop.id);
         }
 
         state.componentMap[canvasId!].childrenNodes = [
