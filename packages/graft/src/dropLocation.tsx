@@ -87,14 +87,30 @@ function resolveDropMarkerRegion(
   childAppendDirection: ChildAppendDirection
 ): Region {
   if (childAppendDirection === 'vertical') {
+    if (whichMarker === MarkerPosition.Start) {
+      const x = region.x;
+      const y = region.y - dropMarkerWidth;
+      const width = region.width;
+      const height = dropMarkerWidth;
+      return { x, y, width, height };
+    }
+
     const x = region.x;
-    const y = region.y - dropMarkerWidth;
+    const y = region.y + region.height - dropMarkerWidth;
     const width = region.width;
     const height = dropMarkerWidth;
     return { x, y, width, height };
   }
 
-  const x = region.x - dropMarkerWidth;
+  if (whichMarker === MarkerPosition.Start) {
+    const x = region.x - dropMarkerWidth;
+    const y = region.y;
+    const width = dropMarkerWidth;
+    const height = region.height;
+    return { x, y, width, height };
+  }
+
+  const x = region.x + region.width - dropMarkerWidth;
   const y = region.y;
   const width = dropMarkerWidth;
   const height = region.height;
