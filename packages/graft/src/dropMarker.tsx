@@ -23,7 +23,6 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
     <>
       {dropMarkerRegion && isOnCanvas && (
         <motion.div
-          layout
           style={{
             position: 'fixed',
             top: 0,
