@@ -69,8 +69,7 @@ function ComponentWrapper({
   componentProps,
   children,
 }: DragOverNotifierProps) {
-  // Sync the region of the component whenever components update.
-  const ref = useSyncRegion(useComponentId(), [componentProps]);
+  const ref = useSyncRegion(useComponentId());
 
   const onDragStart = useOnDragStart();
   const onDrag = useOnDrag();

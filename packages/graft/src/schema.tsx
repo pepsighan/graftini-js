@@ -46,11 +46,6 @@ export type ComponentNode = {
    */
   childAppendDirection?: ChildAppendDirection;
   /**
-   * The region on the screen that this component occupies. This is automatically updated based on
-   * where it renders.
-   */
-  region: Region;
-  /**
    * Whether the component node is no longer present in the tree. This is a remnant that is stored
    * temporarily so that the canvas does not error (because the component may yet not have been
    * destroyed). Call `cleanupComponentMap` function to remove the deleted nodes manually before using
@@ -122,6 +117,19 @@ export type Position = {
 };
 
 /**
+ * Stores the positions of all the components. This is stored separately from the component because
+ * this data always changes and it is dependent on the ComponentNode object itself.
+ */
+/** @internal */
+type ComponentRegionMap = {
+  /**
+   * The region on the screen that this component occupies. This is automatically updated based on
+   * where it renders.
+   */
+  [componentId: string]: Region;
+};
+
+/**
  * The state of the editor which holds the representation of the drawn component in
  * the canvas.
  */
@@ -131,6 +139,10 @@ export type EditorState = {
    * The representation of the view that is rendered on the canvas.
    */
   componentMap: ComponentMap;
+  /**
+   * The region that each component occupied.
+   */
+  regionMap: ComponentRegionMap;
   /**
    * Whenever a component is dragged the following properties is set to signify the location of the
    * cursor relative to the other components in the canvas.
@@ -156,15 +168,8 @@ export const ROOT_NODE_ID = 'ROOT';
 /** @internal */
 export const ROOT_NODE_COMPONENT = 'Root__Graft__Component';
 
-/**
- * The initial component map state for the editor.
- */
-export type InitialComponentMap = {
-  [id: string]: Omit<ComponentNode, 'region'>;
-};
-
-function createEditorState(componentMap?: InitialComponentMap) {
-  const map = (componentMap ?? {
+function createEditorState(componentMap?: ComponentMap) {
+  const map = componentMap ?? {
     [ROOT_NODE_ID]: {
       id: ROOT_NODE_ID,
       type: ROOT_NODE_COMPONENT,
@@ -174,11 +179,13 @@ function createEditorState(componentMap?: InitialComponentMap) {
       parentId: null,
       childrenNodes: [],
     },
-  }) as ComponentMap;
+  };
+
+  const regionMap: ComponentRegionMap = {};
 
   // Initialize the default region for key component in the map.
   Object.keys(map).forEach((key) => {
-    map[key].region = { x: 0, y: 0, width: 0, height: 0 };
+    regionMap[key] = { x: 0, y: 0, width: 0, height: 0 };
   });
 
   if (map[ROOT_NODE_ID]?.id !== ROOT_NODE_ID) {
@@ -197,6 +204,7 @@ function createEditorState(componentMap?: InitialComponentMap) {
 
   return create<EditorState>((set: any) => ({
     componentMap: map,
+    regionMap,
     draggedOver: {
       isDragging: false,
     },
@@ -265,20 +273,6 @@ export function cleanupComponentMap(componentMap: ComponentMap): CleanedComponen
   });
 
   return componentMap as CleanedComponentMap;
-}
-
-/**
- * Removes all the deleted components nodes from the map.
- */
-/** @internal */
-export function cleanupDeletedComponents(componentMap: ComponentMap): ComponentMap {
-  Object.keys(componentMap).forEach((key) => {
-    if (componentMap[key].isDeleted) {
-      delete componentMap[key];
-    }
-  });
-
-  return componentMap;
 }
 
 /**
