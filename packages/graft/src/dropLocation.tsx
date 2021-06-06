@@ -194,13 +194,14 @@ function identifyMarkerDropRegionForSubtree(
   const component = state.componentMap[componentId];
   const region = state.regionMap[componentId];
   const canvasId = nearestCanvasId(state.componentMap, componentId);
-  const childAppendDirection = state.componentMap[canvasId!].childAppendDirection!;
   const cursor = state.draggedOver.cursorPosition!;
 
   if (!canvasId) {
     // There are no drop marker regions for the root canvas.
     return;
   }
+
+  const childAppendDirection = state.componentMap[canvasId!].childAppendDirection!;
 
   // If the cursor is in drop marker regions, then it could be the contender to be
   // the only drop region that is selected.
