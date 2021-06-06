@@ -2,12 +2,7 @@ import { nanoid } from 'nanoid';
 import { DragEvent, DragEventHandler, useCallback } from 'react';
 import { hideDefaultDragPreview, useOnDrag, useOnDragEnd } from './drag';
 import { useResolver } from './resolver';
-import {
-  ChildAppendDirection,
-  ComponentProps,
-  DraggingState,
-  useEditorStoreApiInternal,
-} from './schema';
+import { ChildAppendDirection, ComponentProps, useEditorStateInternal } from './schema';
 
 /**
  * Options to configure the kind of components to create during drag operation.
@@ -36,7 +31,7 @@ export function useCreateComponent({
   childAppendDirection,
   defaultProps,
 }: CreateComponentOptions): CreateComponentHandlers {
-  const { setState } = useEditorStoreApiInternal();
+  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   // Use the configuration provided in the component definition.
   const Component = useResolver(type);
@@ -50,27 +45,23 @@ export function useCreateComponent({
 
       // We are just registering the new component here and preparing for a
       // drag.
-      setState((state) => ({
-        ...state,
-        draggedOver: {
-          ...state.draggedOver,
-          isDragging: DraggingState.DraggingOutsideCanvas,
-          componentKind: 'new',
-          component: {
-            id,
-            type,
-            childAppendDirection,
-            // The default props provided in the hook have higher precedence.
-            props: { ...(elementDefaultProps ?? []), ...(defaultProps ?? {}) },
-            isCanvas: isCanvas,
-            // This null is temporary until it dropped at some location.
-            parentId: null,
-            childrenNodes: [],
-          },
-        },
-      }));
+      immerSet((state) => {
+        state.draggedOver.isDragging = true;
+        state.draggedOver.componentKind = 'new';
+        state.draggedOver.component = {
+          id,
+          type,
+          childAppendDirection,
+          // The default props provided in the hook have higher precedence.
+          props: { ...(elementDefaultProps ?? []), ...(defaultProps ?? {}) },
+          isCanvas: isCanvas,
+          // This null is temporary until it dropped at some location.
+          parentId: null,
+          childrenNodes: [],
+        };
+      });
     },
-    [childAppendDirection, defaultProps, elementDefaultProps, isCanvas, setState, type]
+    [childAppendDirection, defaultProps, elementDefaultProps, immerSet, isCanvas, type]
   );
 
   return {

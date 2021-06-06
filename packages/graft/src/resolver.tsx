@@ -1,9 +1,10 @@
 import {
-  ComponentType,
   createContext,
   DragEventHandler,
   ElementType,
+  ForwardRefExoticComponent,
   ReactNode,
+  RefAttributes,
   useContext,
 } from 'react';
 
@@ -31,7 +32,9 @@ export type GraftComponentProps = {
 /**
  * A component that defines additional behaviour in the context of Graft.
  */
-export type GraftComponent<T> = ComponentType<GraftComponentProps & T> & {
+export type GraftComponent<T> = ForwardRefExoticComponent<
+  GraftComponentProps & RefAttributes<T>
+> & {
   graftOptions?: GraftComponentOptions<T>;
 };
 

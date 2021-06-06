@@ -9,35 +9,23 @@ import {
   useCreateComponent,
   useEditorState,
 } from "graft";
-import { useCallback } from "react";
-import IFrame from "./IFrame";
+import { forwardRef, useCallback } from "react";
 
 export default function App() {
   return (
     <Editor resolvers={{ Container, Text }}>
       <Menu />
-      <IFrame
+      <div
         style={{
-          height: "80vh",
           width: "100%",
-          marginTop: 32,
-          backgroundColor: "white",
+          height: "100vh",
+          userSelect: "none",
         }}
       >
-        {() => (
-          <div
-            style={{
-              width: "100%",
-              height: "100vh",
-              userSelect: "none",
-            }}
-          >
-            <Canvas />
-            <DropMarker />
-          </div>
-        )}
-      </IFrame>
-      <DragPreview correction={{ y: 32 + 83 }} />
+        <Canvas />
+        <DropMarker color="#3344BB" />
+      </div>
+      <DragPreview />
     </Editor>
   );
 }
@@ -74,7 +62,7 @@ function Menu() {
   );
 }
 
-function Container({ children, ...rest }) {
+const Container = forwardRef(({ children, ...rest }, ref) => {
   const id = useComponentId();
   const noChildren = useEditorState(
     useCallback((state) => state[id].childrenNodes.length === 0, [id])
@@ -84,6 +72,7 @@ function Container({ children, ...rest }) {
 
   return (
     <Box
+      ref={ref}
       {...rest}
       border={{
         left: border,
@@ -102,11 +91,17 @@ function Container({ children, ...rest }) {
           : "auto"
       }
       padding={{ top: 8, left: 8, right: 8, bottom: 8 }}
+      position="relative"
     >
+      <div
+        style={{ position: "absolute", top: 0, left: 0, pointerEvents: "none" }}
+      >
+        {id}
+      </div>
       {children}
     </Box>
   );
-}
+});
 
 Container.graftOptions = {
   preview: () => (
@@ -118,11 +113,14 @@ Container.graftOptions = {
   ),
 };
 
-function Text({ ...rest }) {
+const Text = forwardRef(({ ...rest }, ref) => {
   const id = useComponentId();
-
-  return <Txt {...rest}>Click {id}</Txt>;
-}
+  return (
+    <Txt ref={ref} {...rest}>
+      Click {id}
+    </Txt>
+  );
+});
 
 Text.graftOptions = {
   preview: () => (

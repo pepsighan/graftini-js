@@ -2,6 +2,8 @@ import { produce } from 'immer';
 import React, { ReactNode, useState } from 'react';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import createContext from 'zustand/context';
+import { DropRegion } from './dropLocation';
+import { Region } from './useRegion';
 
 export type ComponentProps = {
   [key: string]: any;
@@ -74,7 +76,7 @@ export type DraggedOver = {
   /**
    * Whether a component is being dragged.
    */
-  isDragging: DraggingState;
+  isDragging: boolean;
   /**
    * The position of the cursor when dragging.
    */
@@ -88,58 +90,10 @@ export type DraggedOver = {
    */
   component?: ComponentNode | null;
   /**
-   * The properties of the components that are hovered over when dragging.
+   * The region where the component is going to be dropped if the drag action ends.
    */
-  hoveredOver?: {
-    /**
-     * The id of the canvas where the component is being dragged over. This is the nearest canvas to the
-     * dragged cursor.
-     */
-    canvasId: string;
-    /**
-     * The sibling over which the component is being dragged over. The dragged component is to be placed
-     * after this sibling. If it a sibling is not hovered over then the component is appended as a child
-     * of the canvas.
-     */
-    siblingId?: string | null;
-    /**
-     * The dimensions of the canvas or a sibling that is hovered over while dragging a component.
-     */
-    dimensions: Dimensions;
-    /**
-     * The dimensions of the last child for the cases where a canvas is being hovered over.
-     */
-    lastChildDimensions?: Dimensions | null;
-    /**
-     * Whether the component is a canvas that is being hovered over.
-     */
-    isCanvas: boolean;
-  } | null;
-  /**
-   * For an existing component that is dragged, this stores its previous location in the canvas.
-   * This is useful when the drag action is to be ignored.
-   */
-  previousLocation?: {
-    /**
-     * The previous parent of the component.
-     */
-    parentId: string;
-    /**
-     * The previous index of the component within the parent's children nodes.
-     */
-    index: number;
-  };
+  dropRegion?: DropRegion | null;
 };
-
-/**
- * The different states of drag.
- */
-export enum DraggingState {
-  DraggingInCanvas = 'draggingInCanvas',
-  DraggingOutsideCanvas = 'draggingOutsideCanvas',
-  DraggingOutsideBrowser = 'draggingOutsideBrowser',
-  NotDragging = 'notDragging',
-}
 
 /**
  * The dimensions of the component.
@@ -163,6 +117,19 @@ export type Position = {
 };
 
 /**
+ * Stores the positions of all the components. This is stored separately from the component because
+ * this data always changes and it is dependent on the ComponentNode object itself.
+ */
+/** @internal */
+type ComponentRegionMap = {
+  /**
+   * The region on the screen that this component occupies. This is automatically updated based on
+   * where it renders.
+   */
+  [componentId: string]: Region;
+};
+
+/**
  * The state of the editor which holds the representation of the drawn component in
  * the canvas.
  */
@@ -172,6 +139,10 @@ export type EditorState = {
    * The representation of the view that is rendered on the canvas.
    */
   componentMap: ComponentMap;
+  /**
+   * The region that each component occupied.
+   */
+  regionMap: ComponentRegionMap;
   /**
    * Whenever a component is dragged the following properties is set to signify the location of the
    * cursor relative to the other components in the canvas.
@@ -224,12 +195,13 @@ function createEditorState(componentMap?: ComponentMap) {
     );
   }
 
-  return create<EditorState>((set) => ({
+  return create<EditorState>((set: any) => ({
     componentMap: map,
+    regionMap: {},
     draggedOver: {
-      isDragging: DraggingState.NotDragging,
+      isDragging: false,
     },
-    immerSet: (fn) => set(produce(fn)),
+    immerSet: (fn: any) => set(produce(fn)),
   }));
 }
 
@@ -273,16 +245,27 @@ export function EditorStateProvider({ elementMap, children }: EditorStateProvide
 }
 
 /**
- * Removes all the deleted component nodes from the map.
+ * A clean version of the component map that can be stored for later usage.
  */
-export function cleanupComponentMap(componentMap: ComponentMap): ComponentMap {
+export type CleanedComponentMap = {
+  [id: string]: Omit<ComponentNode, 'isDeleted' | 'region'>;
+};
+
+/**
+ * Removes all the deleted component nodes from the map and also remove unwanted properties
+ * from each components.
+ */
+export function cleanupComponentMap(componentMap: ComponentMap): CleanedComponentMap {
   Object.keys(componentMap).forEach((key) => {
-    if (componentMap[key].isDeleted) {
+    const component = componentMap[key];
+    delete (component as any).region;
+
+    if (component.isDeleted) {
       delete componentMap[key];
     }
   });
 
-  return componentMap;
+  return componentMap as CleanedComponentMap;
 }
 
 /**

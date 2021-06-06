@@ -148,6 +148,9 @@ export function useEditor(): UseEditor {
         // We do this because the canvas may be dependent still
         // on this component until it is destroyed in the next render-cycle.
         state.componentMap[component.id].isDeleted = true;
+
+        // Delete the entry from region map.
+        delete state.regionMap[component.id];
       });
     },
     [immerSet]

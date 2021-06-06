@@ -1,6 +1,7 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
-import { DraggingState, useEditorStateInternal } from './schema';
+import { DropKind, nearestCanvasId } from './dropLocation';
+import { useEditorStateInternal } from './schema';
 
 /**
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
@@ -31,29 +32,8 @@ export function useOnDragStart(): EventHandler<DragEvent> {
       // away. We are just storing the data of the current component that is to be dragged.
       immerSet((state) => {
         const component = state.componentMap[componentId];
-        const parent = state.componentMap[component.parentId!];
-        const componentIndex = parent.childrenNodes.indexOf(componentId);
-
         state.draggedOver.componentKind = 'existing';
         state.draggedOver.component = component;
-        state.draggedOver.previousLocation = {
-          parentId: parent.id,
-          index: componentIndex,
-        };
-      });
-
-      // Setting the isDragging flag a little late, so that the UI gets time to
-      // snap the component to the cursor. If isDragging is set above, then it
-      // does not snap in the given scenario:
-      // When there is a canvas component and a non-canvas component & the non-canvas
-      // container is dragged. This happens because the drop location expands immediately
-      // causing the non-canvas component to be flung away (may be re-rendered or something).
-      // Setting isDragging a little late gives time for it to snap and the drop location
-      // is rendered afterwards.
-      setTimeout(() => {
-        immerSet((state) => {
-          state.draggedOver.isDragging = DraggingState.DraggingInCanvas;
-        });
       });
     },
     [componentId, immerSet]
@@ -81,6 +61,16 @@ export function useOnDrag() {
 }
 
 /**
+ * Fixes the issue with regards to cursor position during a drag operation.
+ */
+export function useOnDragOver() {
+  return useCallback((event: DragEvent) => {
+    // This lets the onDrag to not reset the co-ordinates to (0,0) when dropping.
+    event.preventDefault();
+  }, []);
+}
+
+/**
  * Add the component to the map once it has been dropped onto the canvas. If the mouse
  * is outside any canvas, ignore it.
  */
@@ -90,53 +80,60 @@ export function useOnDragEnd() {
 
   return useCallback(() => {
     immerSet((state) => {
-      const hoveredOver = state.draggedOver.hoveredOver;
-
-      if (!hoveredOver) {
-        // Since there is no canvas to drop the component on:
-        //  - for new components: ignore them.
-        //  - for existing components: reset to their original location.
-        state.draggedOver = { isDragging: DraggingState.NotDragging };
+      const dropRegion = state.draggedOver.dropRegion;
+      if (!dropRegion) {
+        state.draggedOver = {
+          isDragging: false,
+        };
         return;
       }
 
-      const { canvasId, siblingId } = hoveredOver;
+      const { componentId: dropComponentId, dropKind } = dropRegion;
+      const componentToDrop = state.draggedOver.component!;
 
-      // The following is adding the component in a new location.
-
-      const canvasElement = state.componentMap[canvasId];
-      const indexOfSibling = siblingId ? canvasElement.childrenNodes.indexOf(siblingId) : null;
-
-      if (state.draggedOver.componentKind === 'existing' && state.draggedOver.previousLocation) {
-        // Remove the component from its older location if this component was moved.
-        state.componentMap[state.draggedOver.previousLocation!.parentId].childrenNodes.splice(
-          state.draggedOver.previousLocation!.index,
-          1
+      if (state.draggedOver.componentKind === 'new') {
+        // Register this new component in the map.
+        state.componentMap[componentToDrop.id] = componentToDrop;
+      } else {
+        // Remove the component from the older position.
+        const index = state.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
+          componentToDrop.id
         );
-      }
+        state.componentMap[componentToDrop.parentId!].childrenNodes.splice(index);
 
-      let childrenNodes = canvasElement.childrenNodes;
-      if (typeof indexOfSibling === 'number') {
-        // Add the node after the sibling.
-        childrenNodes = [
-          ...childrenNodes.slice(0, indexOfSibling + 1),
-          state.draggedOver.component!.id,
-          ...childrenNodes.slice(indexOfSibling + 1),
+        state.componentMap[componentToDrop.parentId!].childrenNodes = [
+          ...state.componentMap[componentToDrop.parentId!].childrenNodes,
         ];
-      } else if (childrenNodes.length === 0) {
-        // If there is no sibling provided, then it means that there are no existing children.
-        // As such the created node will be the only child.
-        childrenNodes = [state.draggedOver.component!.id];
       }
 
-      state.componentMap[state.draggedOver.component!.id] = {
-        ...state.draggedOver.component!,
-        parentId: canvasId,
-      };
-      state.componentMap[canvasId].childrenNodes = childrenNodes;
-      state.draggedOver = {
-        isDragging: DraggingState.NotDragging,
-      };
+      if (dropKind === DropKind.AddAsChild) {
+        // Add the dragged component as a child of the component and it becomes the parent.
+        const parentId = dropComponentId;
+        state.componentMap[parentId].childrenNodes.push(componentToDrop.id);
+
+        state.componentMap[parentId].childrenNodes = [
+          ...state.componentMap[parentId].childrenNodes,
+        ];
+        state.componentMap[componentToDrop.id].parentId = parentId;
+      } else {
+        // Add the dragged component to the canvas before or after the componentId as it is
+        // the sibling.
+        const canvasId = nearestCanvasId(state.componentMap, dropComponentId);
+        const index = state.componentMap[canvasId!].childrenNodes.indexOf(dropComponentId);
+
+        if (dropKind === DropKind.AppendAsSibling) {
+          state.componentMap[canvasId!].childrenNodes.splice(index + 1, 0, componentToDrop.id);
+        } else {
+          state.componentMap[canvasId!].childrenNodes.splice(index, 0, componentToDrop.id);
+        }
+
+        state.componentMap[canvasId!].childrenNodes = [
+          ...state.componentMap[canvasId!].childrenNodes,
+        ];
+        state.componentMap[componentToDrop.id].parentId = canvasId;
+      }
+
+      state.draggedOver = { isDragging: false };
     });
   }, [immerSet]);
 }
