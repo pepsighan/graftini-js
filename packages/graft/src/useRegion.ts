@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
-import { useEditorStateInternal } from './schema';
+import { useEditorStateInternal, useEditorStoreApiInternal } from './schema';
 
 /**
  * A region on the canvas with the position and its dimension.
@@ -17,6 +17,7 @@ export type Region = {
 export function useSyncRegion(componentId: string) {
   const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
   const [ref, setRef] = useState<HTMLElement | null>(null);
+  const { subscribe } = useEditorStoreApiInternal();
 
   useLayoutEffect(() => {
     if (!ref) {
@@ -42,10 +43,18 @@ export function useSyncRegion(componentId: string) {
 
     window.addEventListener('resize', measureRegion);
     window.addEventListener('scroll', measureRegion);
+    // Also measure the region if there is change anywhere in the component tree.
+    const unsubscribeStore = subscribe(
+      () => {
+        measureRegion();
+      },
+      (state) => state.componentMap
+    );
 
     return () => {
       window.removeEventListener('resize', measureRegion);
       window.removeEventListener('scroll', measureRegion);
+      unsubscribeStore();
     };
 
     // The region may need to be updated based on some external factors.
