@@ -1,6 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
 import { Root__Graft__Component } from './canvas';
+import Logger from './logger';
 import { ResolverMap, ResolverProvider } from './resolver';
 import {
   ChildAppendDirection,
@@ -50,6 +51,7 @@ export function Editor({ initialState, resolvers, children }: EditorProps) {
 
   return (
     <EditorStateProvider elementMap={initialState}>
+      <Logger />
       <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
         {children}
       </ResolverProvider>

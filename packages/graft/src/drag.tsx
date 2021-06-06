@@ -88,45 +88,49 @@ export function useOnDragEnd() {
         return;
       }
 
-      const { componentId, dropKind } = dropRegion;
-      const component = state.draggedOver.component!;
+      const { componentId: dropComponentId, dropKind } = dropRegion;
+      const componentToDrop = state.draggedOver.component!;
 
       if (state.draggedOver.componentKind === 'new') {
         // Register this new component in the map.
-        state.componentMap[component.id] = component;
+        state.componentMap[componentToDrop.id] = componentToDrop;
       } else {
         // Remove the component from the older position.
-        const index = state.componentMap[component.parentId!].childrenNodes.indexOf(component.id);
-        state.componentMap[component.parentId!].childrenNodes.splice(index);
+        const index = state.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
+          componentToDrop.id
+        );
+        state.componentMap[componentToDrop.parentId!].childrenNodes.splice(index);
 
-        state.componentMap[component.parentId!].childrenNodes = [
-          ...state.componentMap[component.parentId!].childrenNodes,
+        state.componentMap[componentToDrop.parentId!].childrenNodes = [
+          ...state.componentMap[componentToDrop.parentId!].childrenNodes,
         ];
       }
 
       if (dropKind === DropKind.AddAsChild) {
         // Add the dragged component as a child of the component and it becomes the parent.
-        const parentId = componentId;
-        state.componentMap[parentId].childrenNodes.push(state.draggedOver.component!.id);
+        const parentId = dropComponentId;
+        state.componentMap[parentId].childrenNodes.push(componentToDrop.id);
 
         state.componentMap[parentId].childrenNodes = [
           ...state.componentMap[parentId].childrenNodes,
         ];
+        state.componentMap[componentToDrop.id].parentId = parentId;
       } else {
         // Add the dragged component to the canvas before or after the componentId as it is
         // the sibling.
-        const canvasId = nearestCanvasId(state.componentMap, componentId);
-        const index = state.componentMap[canvasId!].childrenNodes.indexOf(componentId);
+        const canvasId = nearestCanvasId(state.componentMap, dropComponentId);
+        const index = state.componentMap[canvasId!].childrenNodes.indexOf(dropComponentId);
 
         if (dropKind === DropKind.AppendAsSibling) {
-          state.componentMap[canvasId!].childrenNodes.splice(index, 0, componentId);
+          state.componentMap[canvasId!].childrenNodes.splice(index, 0, dropComponentId);
         } else {
-          state.componentMap[canvasId!].childrenNodes.splice(index + 1, 0, componentId);
+          state.componentMap[canvasId!].childrenNodes.splice(index + 1, 0, dropComponentId);
         }
 
         state.componentMap[canvasId!].childrenNodes = [
           ...state.componentMap[canvasId!].childrenNodes,
         ];
+        state.componentMap[componentToDrop.id].parentId = canvasId;
       }
 
       state.draggedOver = { isDragging: false };
