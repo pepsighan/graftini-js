@@ -1,6 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useRootScrollStore } from './root';
 import { useEditorStateInternal, useEditorStoreApiInternal } from './schema';
+import { debounce } from 'lodash-es';
 
 /**
  * A region on the canvas with the position and its dimension.
@@ -25,20 +26,25 @@ export function useSyncRegion(componentId: string) {
       return;
     }
 
-    const measureRegion = () =>
-      window.requestAnimationFrame(() => {
-        const rect = ref.getBoundingClientRect();
+    const measureRegion = debounce(
+      () =>
+        window.requestAnimationFrame(() => {
+          const rect = ref.getBoundingClientRect();
 
-        immerSet((state) => {
-          // Doing away with typescript here for extract performance from immer.
-          state.regionMap[componentId] ??= {} as any;
-          const region = state.regionMap[componentId];
-          region.x = rect.x;
-          region.y = rect.y;
-          region.width = rect.width;
-          region.height = rect.height;
-        });
-      });
+          immerSet((state) => {
+            // Doing away with typescript here for extract performance from immer.
+            state.regionMap[componentId] ??= {} as any;
+            const region = state.regionMap[componentId];
+            region.x = rect.x;
+            region.y = rect.y;
+            region.width = rect.width;
+            region.height = rect.height;
+          });
+        }),
+      // Debounce for atleast 200ms. We do not need the region size immediately.
+      // This way we can reduce the number of updates to the store.
+      200
+    );
 
     measureRegion();
 
