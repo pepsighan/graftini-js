@@ -1,7 +1,7 @@
 import { motion, useMotionValue } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useResolver } from './resolver';
-import { DraggedOver, useEditorStoreApiInternal } from './schema';
+import { DraggedOver, useDraggedOverStoreApi } from './store/draggedOver';
 
 type DragPreviewProps = {
   /**
@@ -19,7 +19,7 @@ type DragPreviewProps = {
  * Shows a drag preview which is snapped to the cursor.
  */
 export function DragPreview({ correction }: DragPreviewProps) {
-  const { subscribe } = useEditorStoreApiInternal();
+  const { subscribe } = useDraggedOverStoreApi();
   const posX = useMotionValue(0);
   const posY = useMotionValue(0);
   const opacity = useMotionValue(0);

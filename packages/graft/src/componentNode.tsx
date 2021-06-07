@@ -2,12 +2,11 @@ import React, { ReactNode, useCallback } from 'react';
 import { CanvasContext, ComponentContext, useComponentId } from './context';
 import { useOnDrag, useOnDragEnd, useOnDragOver, useOnDragStart } from './drag';
 import { GraftComponent, useResolver } from './resolver';
-import { ComponentProps, useEditorStateInternal } from './schema';
+import { ComponentProps, EditorStore, useEditorStateInternal } from './store/editor';
 import { useSyncRegion } from './useRegion';
 
 type ComponentNodeProps = {
   componentId: string;
-  isRoot?: boolean;
 };
 
 /**
@@ -16,23 +15,11 @@ type ComponentNodeProps = {
  * users the ability to choose whatever forms of optimizations they want.
  */
 /** @internal */
-export function ComponentNode({ componentId, isRoot }: ComponentNodeProps) {
-  const component = useEditorStateInternal(
-    useCallback((state) => state.componentMap[componentId].type, [componentId])
+export function ComponentNode({ componentId }: ComponentNodeProps) {
+  const { type, props, isCanvas, childrenNodes } = useEditorStateInternal(
+    useCallback((state: EditorStore) => state.componentMap[componentId], [componentId])
   );
-  const Component = useResolver(component);
-
-  const componentProps = useEditorStateInternal(
-    useCallback((state) => state.componentMap[componentId].props, [componentId])
-  );
-
-  const isCanvas = useEditorStateInternal(
-    useCallback((state) => state.componentMap[componentId].isCanvas, [componentId])
-  );
-
-  const childrenNodes = useEditorStateInternal(
-    useCallback((state) => state.componentMap[componentId].childrenNodes, [componentId])
-  ) as string[];
+  const Component = useResolver(type);
 
   // If the component is also a canvas, then render children nodes for it if present.
   if (isCanvas) {
@@ -40,7 +27,7 @@ export function ComponentNode({ componentId, isRoot }: ComponentNodeProps) {
       <>
         <CanvasContext.Provider value={componentId}>
           <ComponentContext.Provider value={componentId}>
-            <ComponentWrapper component={Component} componentProps={componentProps}>
+            <ComponentWrapper component={Component} componentProps={props}>
               {childrenNodes.map((componentId) => (
                 <ComponentNode key={componentId} componentId={componentId} />
               ))}
@@ -53,7 +40,7 @@ export function ComponentNode({ componentId, isRoot }: ComponentNodeProps) {
 
   return (
     <ComponentContext.Provider value={componentId}>
-      <ComponentWrapper component={Component} componentProps={componentProps} />
+      <ComponentWrapper component={Component} componentProps={props} />
     </ComponentContext.Provider>
   );
 }

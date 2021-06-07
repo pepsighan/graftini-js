@@ -1,9 +1,7 @@
 import { produce } from 'immer';
 import React, { ReactNode, useState } from 'react';
-import create, { EqualityChecker, StateSelector } from 'zustand';
+import create from 'zustand';
 import createContext from 'zustand/context';
-import { DropRegion } from './dropLocation';
-import { Region } from './useRegion';
 
 export type ComponentProps = {
   [key: string]: any;
@@ -69,89 +67,19 @@ export type ComponentMap = {
 };
 
 /**
- * Values related to a dragging action.
- */
-/** @internal */
-export type DraggedOver = {
-  /**
-   * Whether a component is being dragged.
-   */
-  isDragging: boolean;
-  /**
-   * The position of the cursor when dragging.
-   */
-  cursorPosition?: Position | null;
-  /**
-   * What kind of component is being dragged new or existing.
-   */
-  componentKind?: 'new' | 'existing' | null;
-  /**
-   * The currently dragged component. This has value when isDragging is true.
-   */
-  component?: ComponentNode | null;
-  /**
-   * The region where the component is going to be dropped if the drag action ends.
-   */
-  dropRegion?: DropRegion | null;
-};
-
-/**
- * The dimensions of the component.
- */
-/** @internal */
-export type Dimensions = {
-  width: number;
-  height: number;
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
-};
-
-/**
- * The position on the screen.
- */
-export type Position = {
-  x: number;
-  y: number;
-};
-
-/**
- * Stores the positions of all the components. This is stored separately from the component because
- * this data always changes and it is dependent on the ComponentNode object itself.
- */
-/** @internal */
-type ComponentRegionMap = {
-  /**
-   * The region on the screen that this component occupies. This is automatically updated based on
-   * where it renders.
-   */
-  [componentId: string]: Region;
-};
-
-/**
  * The state of the editor which holds the representation of the drawn component in
  * the canvas.
  */
 /** @internal */
-export type EditorState = {
+export type EditorStore = {
   /**
    * The representation of the view that is rendered on the canvas.
    */
   componentMap: ComponentMap;
   /**
-   * The region that each component occupied.
-   */
-  regionMap: ComponentRegionMap;
-  /**
-   * Whenever a component is dragged the following properties is set to signify the location of the
-   * cursor relative to the other components in the canvas.
-   */
-  draggedOver: DraggedOver;
-  /**
    * A setter which uses immer.
    */
-  immerSet(fn: (state: EditorState) => void): void;
+  immerSet(fn: (state: EditorStore) => void): void;
 };
 
 /**
@@ -168,7 +96,7 @@ export const ROOT_NODE_ID = 'ROOT';
 /** @internal */
 export const ROOT_NODE_COMPONENT = 'Root__Graft__Component';
 
-function createEditorState(componentMap?: ComponentMap) {
+function createEditorStore(componentMap?: ComponentMap) {
   const map = componentMap ?? {
     [ROOT_NODE_ID]: {
       id: ROOT_NODE_ID,
@@ -195,33 +123,17 @@ function createEditorState(componentMap?: ComponentMap) {
     );
   }
 
-  return create<EditorState>((set: any) => ({
+  return create<EditorStore>((set) => ({
     componentMap: map,
-    regionMap: {},
-    draggedOver: {
-      isDragging: false,
-    },
-    immerSet: (fn: any) => set(produce(fn)),
+    immerSet: (fn) => set(produce(fn)),
   }));
 }
 
-const { Provider, useStore, useStoreApi } = createContext<EditorState>();
+const { Provider, useStore, useStoreApi } = createContext<EditorStore>();
 
-interface UseEditorStore {
-  (): EditorState;
-  <U>(selector: StateSelector<EditorState, U>, equalityFn?: EqualityChecker<U>): U;
-}
-
-/**
- * Hook to get the editor state. Pass a selector if you just want to get a subsection of
- * the state.
- */
 /** @internal */
-export const useEditorStateInternal = useStore as UseEditorStore;
+export const useEditorStateInternal = useStore;
 
-/**
- * Hook to get the APIs directly on the store.
- */
 /** @internal */
 export const useEditorStoreApiInternal = useStoreApi;
 
@@ -240,7 +152,7 @@ type EditorStateProviderProps = {
  */
 /** @internal */
 export function EditorStateProvider({ elementMap, children }: EditorStateProviderProps) {
-  const [store] = useState(() => createEditorState(elementMap));
+  const [store] = useState(() => createEditorStore(elementMap));
   return <Provider initialStore={store}>{children}</Provider>;
 }
 

@@ -1,7 +1,8 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { DropKind, nearestCanvasId } from './dropLocation';
-import { useEditorStateInternal } from './schema';
+import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
+import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from './store/editor';
 
 /**
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
@@ -20,7 +21,8 @@ export function hideDefaultDragPreview(event: DragEvent) {
  */
 /** @internal */
 export function useOnDragStart(): EventHandler<DragEvent> {
-  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
+  const { getState } = useEditorStoreApiInternal();
   const componentId = useComponentId();
 
   return useCallback(
@@ -30,13 +32,13 @@ export function useOnDragStart(): EventHandler<DragEvent> {
 
       // The component is not yet being dragged. It will only start dragging once it moves a few pixels
       // away. We are just storing the data of the current component that is to be dragged.
-      immerSet((state) => {
-        const component = state.componentMap[componentId];
+      immerSet((state: DraggedOverStore) => {
+        const component = getState().componentMap[componentId];
         state.draggedOver.componentKind = 'existing';
         state.draggedOver.component = component;
       });
     },
-    [componentId, immerSet]
+    [componentId, getState, immerSet]
   );
 }
 
@@ -45,11 +47,11 @@ export function useOnDragStart(): EventHandler<DragEvent> {
  */
 /** @internal */
 export function useOnDrag() {
-  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
 
   return useCallback(
     (event: DragEvent) => {
-      immerSet((state) => {
+      immerSet((state: DraggedOverStore) => {
         state.draggedOver.cursorPosition = {
           x: event.clientX,
           y: event.clientY,
@@ -76,64 +78,83 @@ export function useOnDragOver() {
  */
 /** @internal */
 export function useOnDragEnd() {
-  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const immerSetDraggedOver = useDraggedOverStore(useCallback((state) => state.immerSet, []));
+  const { getState: getDraggedOverState } = useDraggedOverStoreApi();
+  const immerSetEditor = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   return useCallback(() => {
-    immerSet((state) => {
-      const dropRegion = state.draggedOver.dropRegion;
+    const draggedOver = getDraggedOverState().draggedOver;
+
+    // Update the dragged over state separately. But have cached the last value
+    // on the variable above to be used when updating the editor itself.
+    immerSetDraggedOver((draggedState: DraggedOverStore) => {
+      const dropRegion = draggedState.draggedOver.dropRegion;
       if (!dropRegion) {
-        state.draggedOver = {
+        draggedState.draggedOver = {
           isDragging: false,
         };
         return;
       }
 
-      const { componentId: dropComponentId, dropKind } = dropRegion;
-      const componentToDrop = state.draggedOver.component!;
+      draggedState.draggedOver = { isDragging: false };
+    });
 
-      if (state.draggedOver.componentKind === 'new') {
+    immerSetEditor((editorState: EditorStore) => {
+      const dropRegion = draggedOver.dropRegion;
+      if (!dropRegion) {
+        return;
+      }
+
+      const { componentId: dropComponentId, dropKind } = dropRegion;
+      const componentToDrop = draggedOver.component!;
+
+      if (draggedOver.componentKind === 'new') {
         // Register this new component in the map.
-        state.componentMap[componentToDrop.id] = componentToDrop;
+        // Note need to spread otherwise throws error because the value is read-only and
+        // we need to modify it later down the line.
+        editorState.componentMap[componentToDrop.id] = { ...componentToDrop };
       } else {
         // Remove the component from the older position.
-        const index = state.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
+        const index = editorState.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
           componentToDrop.id
         );
-        state.componentMap[componentToDrop.parentId!].childrenNodes.splice(index);
+        editorState.componentMap[componentToDrop.parentId!].childrenNodes.splice(index);
 
-        state.componentMap[componentToDrop.parentId!].childrenNodes = [
-          ...state.componentMap[componentToDrop.parentId!].childrenNodes,
+        editorState.componentMap[componentToDrop.parentId!].childrenNodes = [
+          ...editorState.componentMap[componentToDrop.parentId!].childrenNodes,
         ];
       }
 
       if (dropKind === DropKind.AddAsChild) {
         // Add the dragged component as a child of the component and it becomes the parent.
         const parentId = dropComponentId;
-        state.componentMap[parentId].childrenNodes.push(componentToDrop.id);
+        editorState.componentMap[parentId].childrenNodes.push(componentToDrop.id);
 
-        state.componentMap[parentId].childrenNodes = [
-          ...state.componentMap[parentId].childrenNodes,
+        editorState.componentMap[parentId].childrenNodes = [
+          ...editorState.componentMap[parentId].childrenNodes,
         ];
-        state.componentMap[componentToDrop.id].parentId = parentId;
+        editorState.componentMap[componentToDrop.id].parentId = parentId;
       } else {
         // Add the dragged component to the canvas before or after the componentId as it is
         // the sibling.
-        const canvasId = nearestCanvasId(state.componentMap, dropComponentId);
-        const index = state.componentMap[canvasId!].childrenNodes.indexOf(dropComponentId);
+        const canvasId = nearestCanvasId(editorState.componentMap, dropComponentId);
+        const index = editorState.componentMap[canvasId!].childrenNodes.indexOf(dropComponentId);
 
         if (dropKind === DropKind.AppendAsSibling) {
-          state.componentMap[canvasId!].childrenNodes.splice(index + 1, 0, componentToDrop.id);
+          editorState.componentMap[canvasId!].childrenNodes.splice(
+            index + 1,
+            0,
+            componentToDrop.id
+          );
         } else {
-          state.componentMap[canvasId!].childrenNodes.splice(index, 0, componentToDrop.id);
+          editorState.componentMap[canvasId!].childrenNodes.splice(index, 0, componentToDrop.id);
         }
 
-        state.componentMap[canvasId!].childrenNodes = [
-          ...state.componentMap[canvasId!].childrenNodes,
+        editorState.componentMap[canvasId!].childrenNodes = [
+          ...editorState.componentMap[canvasId!].childrenNodes,
         ];
-        state.componentMap[componentToDrop.id].parentId = canvasId;
+        editorState.componentMap[componentToDrop.id].parentId = canvasId;
       }
-
-      state.draggedOver = { isDragging: false };
     });
-  }, [immerSet]);
+  }, [getDraggedOverState, immerSetDraggedOver, immerSetEditor]);
 }

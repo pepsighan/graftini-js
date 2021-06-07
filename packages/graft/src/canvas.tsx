@@ -1,7 +1,7 @@
 import React from 'react';
 import { ComponentNode } from './componentNode';
 import { useSyncDropRegion } from './dropLocation';
-import { ROOT_NODE_ID } from './schema';
+import { ROOT_NODE_ID } from './store/editor';
 
 /**
  * A canvas on which all the components are drawn. This is the root under which
@@ -13,5 +13,5 @@ export function Canvas() {
   // Sync the drop region whenever a cursor is dragged.
   useSyncDropRegion();
 
-  return <ComponentNode componentId={ROOT_NODE_ID} isRoot />;
+  return <ComponentNode componentId={ROOT_NODE_ID} />;
 }

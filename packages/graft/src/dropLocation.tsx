@@ -1,13 +1,18 @@
 import { useCallback, useEffect } from 'react';
 import {
+  DraggedOver,
+  DraggedOverStore,
+  Position,
+  useDraggedOverStore,
+  useDraggedOverStoreApi,
+} from './store/draggedOver';
+import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
+import {
   ChildAppendDirection,
   ComponentMap,
-  EditorState,
-  Position,
   ROOT_NODE_ID,
-  useEditorStateInternal,
   useEditorStoreApiInternal,
-} from './schema';
+} from './store/editor';
 import { Region } from './useRegion';
 
 /**
@@ -19,37 +24,47 @@ import { Region } from './useRegion';
  * Sync the drop region to the state when the cursor position changes.
  */
 export function useSyncDropRegion() {
-  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
-  const { subscribe } = useEditorStoreApiInternal();
+  const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
+  const { subscribe: subscribeDraggedOver } = useDraggedOverStoreApi();
+  const { getState: getEditorState } = useEditorStoreApiInternal();
+  const { getState: getComponentRegionState } = useComponentRegionStoreApi();
 
   useEffect(() => {
     // Only react to when the cursor position changes.
-    return subscribe(
+    return subscribeDraggedOver(
       () => {
-        immerSet((state) => {
+        immerSet((state: DraggedOverStore) => {
           // Only update the drop region if the cursor is being dragged.
           if (state.draggedOver.isDragging && state.draggedOver.cursorPosition) {
-            state.draggedOver.dropRegion = identifyDropRegion(state);
+            state.draggedOver.dropRegion = identifyDropRegion(
+              getEditorState().componentMap,
+              getComponentRegionState().regionMap,
+              state.draggedOver
+            );
           }
         });
       },
       (state) => state.draggedOver.cursorPosition
     );
-  }, [immerSet, subscribe]);
+  }, [getComponentRegionState, getEditorState, immerSet, subscribeDraggedOver]);
 }
 
 /**
  * Identify the drop region where a new/old component should be dragged into.
  */
-function identifyDropRegion(state: EditorState): DropRegion | null {
+function identifyDropRegion(
+  componentMap: ComponentMap,
+  regionMap: ComponentRegionMap,
+  draggedOver: DraggedOver
+): DropRegion | null {
   // Incrementally try to identify the drop regions for each case. If it finds one at any point
   // then it immediately returns. This mechanism hard-codes the precedence of the drop regions
   // as outlined in the document.
   return (
-    identifyMarkerDropRegion(state) ??
-    identifyNonCanvasDropRegion(state) ??
-    identifyEmptyCanvasDropRegion(state) ??
-    identifyNonEmptyCanvasDropRegion(state)
+    identifyMarkerDropRegion(componentMap, regionMap, draggedOver) ??
+    identifyNonCanvasDropRegion(componentMap, regionMap, draggedOver) ??
+    identifyEmptyCanvasDropRegion(componentMap, regionMap, draggedOver) ??
+    identifyNonEmptyCanvasDropRegion(componentMap, regionMap, draggedOver)
   );
 }
 
@@ -173,13 +188,23 @@ export type DropRegion = {
 /**
  * Identifies a drop region if the cursor is over any drop marker.
  */
-function identifyMarkerDropRegion(state: EditorState): DropRegion | null {
+function identifyMarkerDropRegion(
+  componentMap: ComponentMap,
+  regionMap: ComponentRegionMap,
+  draggedOver: DraggedOver
+): DropRegion | null {
   const contenderDropRegions: DropRegion[] = [];
 
   // Go down the tree and collect as many marker drop regions as possible.
-  const root = state.componentMap[ROOT_NODE_ID];
+  const root = componentMap[ROOT_NODE_ID];
   root.childrenNodes.forEach((componentId) => {
-    identifyMarkerDropRegionForSubtree(state, componentId, contenderDropRegions);
+    identifyMarkerDropRegionForSubtree(
+      componentMap,
+      regionMap,
+      draggedOver,
+      componentId,
+      contenderDropRegions
+    );
   });
 
   // The last drop region has the lowest precedence, so select it.
@@ -191,16 +216,18 @@ function identifyMarkerDropRegion(state: EditorState): DropRegion | null {
  * is in the drop regions, it appends to the list of contender drop regions.
  */
 function identifyMarkerDropRegionForSubtree(
-  state: EditorState,
+  componentMap: ComponentMap,
+  regionMap: ComponentRegionMap,
+  draggedOver: DraggedOver,
   componentId: string,
   contenderDropRegions: DropRegion[]
 ) {
-  const component = state.componentMap[componentId];
-  const region = state.regionMap[componentId];
-  const canvasId = nearestCanvasId(state.componentMap, componentId)!;
-  const cursor = state.draggedOver.cursorPosition!;
+  const component = componentMap[componentId];
+  const region = regionMap[componentId];
+  const canvasId = nearestCanvasId(componentMap, componentId)!;
+  const cursor = draggedOver.cursorPosition!;
 
-  const childAppendDirection = state.componentMap[canvasId!].childAppendDirection!;
+  const childAppendDirection = componentMap[canvasId!].childAppendDirection!;
 
   // If the cursor is in drop marker regions, then it could be the contender to be
   // the only drop region that is selected.
@@ -226,7 +253,13 @@ function identifyMarkerDropRegionForSubtree(
 
   if (component.isCanvas) {
     component.childrenNodes.forEach((componentId) => {
-      identifyMarkerDropRegionForSubtree(state, componentId, contenderDropRegions);
+      identifyMarkerDropRegionForSubtree(
+        componentMap,
+        regionMap,
+        draggedOver,
+        componentId,
+        contenderDropRegions
+      );
     });
   }
 }
@@ -234,14 +267,18 @@ function identifyMarkerDropRegionForSubtree(
 /**
  * Identifies a drop region if the cursor is over a non canvas component.
  */
-function identifyNonCanvasDropRegion(state: EditorState): DropRegion | null {
-  const cursor = state.draggedOver.cursorPosition!;
+function identifyNonCanvasDropRegion(
+  componentMap: ComponentMap,
+  regionMap: ComponentRegionMap,
+  draggedOver: DraggedOver
+): DropRegion | null {
+  const cursor = draggedOver.cursorPosition!;
 
   // We are checking for the non-canvas components without recursion because these
   // are leaf components.
-  for (let componentId of Object.keys(state.regionMap)) {
-    const component = state.componentMap[componentId];
-    const region = state.regionMap[componentId];
+  for (let componentId of Object.keys(regionMap)) {
+    const component = componentMap[componentId];
+    const region = regionMap[componentId];
 
     // Ignore the canvas components.
     if (component.isCanvas) {
@@ -250,8 +287,8 @@ function identifyNonCanvasDropRegion(state: EditorState): DropRegion | null {
 
     // Canvas Id is absolutely present, because a non-canvas component can only be present
     // in a canvas.
-    const canvasId = nearestCanvasId(state.componentMap, componentId)!;
-    const childAppendDirection = state.componentMap[canvasId].childAppendDirection!;
+    const canvasId = nearestCanvasId(componentMap, componentId)!;
+    const childAppendDirection = componentMap[canvasId].childAppendDirection!;
 
     // Try to check if the cursor is on the starting or ending half.
     const [startHalf, endHalf] = sliceRegionInHalf(region, childAppendDirection);
@@ -287,14 +324,18 @@ function identifyNonCanvasDropRegion(state: EditorState): DropRegion | null {
 /**
  * Idenitifies a drop region if the cursor is over a canvas component that is empty.
  */
-function identifyEmptyCanvasDropRegion(state: EditorState): DropRegion | null {
-  const cursor = state.draggedOver.cursorPosition!;
+function identifyEmptyCanvasDropRegion(
+  componentMap: ComponentMap,
+  regionMap: ComponentRegionMap,
+  draggedOver: DraggedOver
+): DropRegion | null {
+  const cursor = draggedOver.cursorPosition!;
 
   // We can check for empty canvases without recursion because the ones we are interested
   // in are leaf canvas components anyways.
-  for (let componentId of Object.keys(state.regionMap)) {
-    const component = state.componentMap[componentId];
-    const region = state.regionMap[componentId];
+  for (let componentId of Object.keys(regionMap)) {
+    const component = componentMap[componentId];
+    const region = regionMap[componentId];
 
     if (!component.isCanvas) {
       continue;
@@ -319,12 +360,22 @@ function identifyEmptyCanvasDropRegion(state: EditorState): DropRegion | null {
  * Identifies a drop region if the cursor is over a canvas component that is not empty and
  * it is also not over any of the children components.
  */
-function identifyNonEmptyCanvasDropRegion(state: EditorState): DropRegion | null {
-  const cursor = state.draggedOver.cursorPosition!;
+function identifyNonEmptyCanvasDropRegion(
+  componentMap: ComponentMap,
+  regionMap: ComponentRegionMap,
+  draggedOver: DraggedOver
+): DropRegion | null {
+  const cursor = draggedOver.cursorPosition!;
   const contenderCanvasComponents: string[] = [];
 
   // Try to fill all the canvas components that are not empty which are under the cursor.
-  identifyNonEmptyCanvasesForSubtree(ROOT_NODE_ID, state, contenderCanvasComponents);
+  identifyNonEmptyCanvasesForSubtree(
+    ROOT_NODE_ID,
+    componentMap,
+    regionMap,
+    draggedOver,
+    contenderCanvasComponents
+  );
 
   if (contenderCanvasComponents.length === 0) {
     // None found.
@@ -332,15 +383,12 @@ function identifyNonEmptyCanvasDropRegion(state: EditorState): DropRegion | null
   }
 
   const selectedCanvasId = contenderCanvasComponents.pop()!;
-  const canvas = state.componentMap[selectedCanvasId];
+  const canvas = componentMap[selectedCanvasId];
 
   for (let index = 0; index < canvas.childrenNodes.length + 1; index++) {
     const [component, region] =
       index !== canvas.childrenNodes.length
-        ? [
-            state.componentMap[canvas.childrenNodes[index]],
-            state.regionMap[canvas.childrenNodes[index]],
-          ]
+        ? [componentMap[canvas.childrenNodes[index]], regionMap[canvas.childrenNodes[index]]]
         : [null, null];
 
     const center = component ? resolveCenterOfGravity(region!, canvas.childAppendDirection!) : null;
@@ -364,8 +412,8 @@ function identifyNonEmptyCanvasDropRegion(state: EditorState): DropRegion | null
     }
 
     // This component is always present on 2nd loop onward.
-    const previousComponent = state.componentMap[canvas.childrenNodes[index - 1]];
-    const previousRegion = state.regionMap[canvas.childrenNodes[index - 1]];
+    const previousComponent = componentMap[canvas.childrenNodes[index - 1]];
+    const previousRegion = regionMap[canvas.childrenNodes[index - 1]];
     const previousCenter = resolveCenterOfGravity(previousRegion, canvas.childAppendDirection!);
 
     // For the last item, check if the cursor is after it. If it is after the last item,
@@ -419,12 +467,14 @@ function identifyNonEmptyCanvasDropRegion(state: EditorState): DropRegion | null
  */
 function identifyNonEmptyCanvasesForSubtree(
   componentId: string,
-  state: EditorState,
+  componentMap: ComponentMap,
+  regionMap: ComponentRegionMap,
+  draggedOver: DraggedOver,
   contenderCanvasComponents: string[]
 ) {
-  const component = state.componentMap[componentId];
-  const region = state.regionMap[componentId];
-  const cursor = state.draggedOver.cursorPosition!;
+  const component = componentMap[componentId];
+  const region = regionMap[componentId];
+  const cursor = draggedOver.cursorPosition!;
   if (!component.isCanvas) {
     return;
   }
@@ -438,7 +488,13 @@ function identifyNonEmptyCanvasesForSubtree(
 
   // Do the same for all its children.
   component.childrenNodes.forEach((nestedComponentId) => {
-    identifyNonEmptyCanvasesForSubtree(nestedComponentId, state, contenderCanvasComponents);
+    identifyNonEmptyCanvasesForSubtree(
+      nestedComponentId,
+      componentMap,
+      regionMap,
+      draggedOver,
+      contenderCanvasComponents
+    );
   });
 }
 

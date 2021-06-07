@@ -1,17 +1,24 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
-import Logger from './logger';
 import { ResolverMap, ResolverProvider } from './resolver';
 import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
+import { DraggedOverStoreProvider } from './store/draggedOver';
 import {
   ChildAppendDirection,
   ComponentMap,
   ComponentNode,
   ComponentProps,
   EditorStateProvider,
+  EditorStore,
   useEditorStateInternal,
   useEditorStoreApiInternal,
-} from './schema';
+} from './store/editor';
+import {
+  ComponentRegionStateProvider,
+  ComponentRegionStore,
+  useComponentRegionStore,
+} from './store/regionMap';
+import { RootScrollStoreProvider } from './store/rootScroll';
 
 /**
  * Props for the editor.
@@ -55,12 +62,17 @@ export function Editor({ initialState, resolvers, rootComponentOverride, childre
 
   return (
     <EditorStateProvider elementMap={initialState}>
-      <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
-        <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
-          <Logger />
-          {children}
-        </RootOverrideContext.Provider>
-      </ResolverProvider>
+      <ComponentRegionStateProvider>
+        <DraggedOverStoreProvider>
+          <RootScrollStoreProvider>
+            <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
+              <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
+                {children}
+              </RootOverrideContext.Provider>
+            </ResolverProvider>
+          </RootScrollStoreProvider>
+        </DraggedOverStoreProvider>
+      </ComponentRegionStateProvider>
     </EditorStateProvider>
   );
 }
@@ -102,8 +114,8 @@ type UseEditor = {
  */
 export function useEditor(): UseEditor {
   const { getState, subscribe } = useEditorStoreApiInternal();
-
-  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const immerSetEditor = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const immerSetRegion = useComponentRegionStore(useCallback((state) => state.immerSet, []));
 
   const getEditorState = useCallback(() => getState().componentMap, [getState]);
   const getComponentNode = useCallback(
@@ -121,7 +133,7 @@ export function useEditor(): UseEditor {
 
   const updateComponentProps = useCallback(
     (componentId: string, props: ComponentProps) => {
-      immerSet((state) => {
+      immerSetEditor((state: EditorStore) => {
         const component = state.componentMap[componentId];
 
         if (!component) {
@@ -136,12 +148,12 @@ export function useEditor(): UseEditor {
         state.componentMap[componentId].props = newProps;
       });
     },
-    [immerSet]
+    [immerSetEditor]
   );
 
   const deleteComponentNode = useCallback(
     (componentId: string) => {
-      immerSet((state) => {
+      immerSetEditor((state: EditorStore) => {
         const component = state.componentMap[componentId];
         if (!component) {
           return;
@@ -156,30 +168,32 @@ export function useEditor(): UseEditor {
         // We do this because the canvas may be dependent still
         // on this component until it is destroyed in the next render-cycle.
         state.componentMap[component.id].isDeleted = true;
+      });
 
-        // Delete the entry from region map.
-        delete state.regionMap[component.id];
+      // Also remove it from the region map.
+      immerSetRegion((state: ComponentRegionStore) => {
+        delete state.regionMap[componentId];
       });
     },
-    [immerSet]
+    [immerSetEditor, immerSetRegion]
   );
 
   const setIsCanvas = useCallback(
     (componentId: string, isCanvas: boolean) => {
-      immerSet((state) => {
+      immerSetEditor((state: EditorStore) => {
         state.componentMap[componentId].isCanvas = isCanvas;
       });
     },
-    [immerSet]
+    [immerSetEditor]
   );
 
   const setChildAppendDirection = useCallback(
     (componentId: string, childAppendDirection: ChildAppendDirection) => {
-      immerSet((state) => {
+      immerSetEditor((state: EditorStore) => {
         state.componentMap[componentId].childAppendDirection = childAppendDirection;
       });
     },
-    [immerSet]
+    [immerSetEditor]
   );
 
   return {
