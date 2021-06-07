@@ -11,7 +11,20 @@ export function DragPreview() {
   );
 
   return (
-    <div id="graft-drag-preview" style={{ display: 'inline-block' }}>
+    <div
+      id="graft-drag-preview"
+      style={{
+        display: 'inline-block',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        // Do not show the original item on the screen and only the preview is visible.
+        // Found no other way to hide it.
+        transform: 'translateX(-99999px)',
+        pointerEvents: 'none',
+        userSelect: 'none',
+      }}
+    >
       {component && <PreviewInner component={component} />}
     </div>
   );

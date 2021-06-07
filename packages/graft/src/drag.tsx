@@ -12,7 +12,6 @@ import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from '
 export function showCustomDragPreview(event: DragEvent) {
   // The drag preview is already rendered at a separate place with the given id.
   const preview = document.getElementById('graft-drag-preview')!;
-  document.body.appendChild(preview);
   event.dataTransfer.setDragImage(preview, 0, 0);
 }
 
