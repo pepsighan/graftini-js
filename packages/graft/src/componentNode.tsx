@@ -7,7 +7,6 @@ import { useSyncRegion } from './useRegion';
 
 type ComponentNodeProps = {
   componentId: string;
-  isRoot?: boolean;
 };
 
 /**
@@ -16,7 +15,7 @@ type ComponentNodeProps = {
  * users the ability to choose whatever forms of optimizations they want.
  */
 /** @internal */
-export function ComponentNode({ componentId, isRoot }: ComponentNodeProps) {
+export function ComponentNode({ componentId }: ComponentNodeProps) {
   const component = useEditorStateInternal(
     useCallback((state: EditorStore) => state.componentMap[componentId].type, [componentId])
   );

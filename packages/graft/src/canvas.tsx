@@ -13,5 +13,5 @@ export function Canvas() {
   // Sync the drop region whenever a cursor is dragged.
   useSyncDropRegion();
 
-  return <ComponentNode componentId={ROOT_NODE_ID} isRoot />;
+  return <ComponentNode componentId={ROOT_NODE_ID} />;
 }
