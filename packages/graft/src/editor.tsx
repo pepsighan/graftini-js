@@ -1,5 +1,6 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
+import Logger from './logger';
 import { ResolverMap, ResolverProvider } from './resolver';
 import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
 import {
@@ -56,6 +57,7 @@ export function Editor({ initialState, resolvers, rootComponentOverride, childre
     <EditorStateProvider elementMap={initialState}>
       <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
         <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
+          <Logger />
           {children}
         </RootOverrideContext.Provider>
       </ResolverProvider>

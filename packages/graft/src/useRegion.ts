@@ -1,4 +1,5 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
+import { useRootScrollStore } from './root';
 import { useEditorStateInternal, useEditorStoreApiInternal } from './schema';
 
 /**
@@ -42,6 +43,7 @@ export function useSyncRegion(componentId: string) {
     measureRegion();
 
     window.addEventListener('resize', measureRegion);
+
     // Also measure the region if there is change anywhere in the component tree.
     const unsubscribeStore = subscribe(
       () => {
@@ -50,9 +52,13 @@ export function useSyncRegion(componentId: string) {
       (state) => state.componentMap
     );
 
+    // Update the region when there is scroll on the root component.
+    const unsubscribeScroll = useRootScrollStore.subscribe(() => measureRegion());
+
     return () => {
       window.removeEventListener('resize', measureRegion);
       unsubscribeStore();
+      unsubscribeScroll();
     };
 
     // The region may need to be updated based on some external factors.
