@@ -1,38 +1,28 @@
 import { motion, useMotionValue } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { IFrameCorrectionContext } from './correction';
 import { useResolver } from './resolver';
 import { DraggedOver, useDraggedOverStoreApi } from './store/draggedOver';
-
-type DragPreviewProps = {
-  /**
-   * The correction is useful when the canvas is within an iframe. The correction will be
-   * added to the actual cursor position when dragging over an iframe. This is equal to
-   * the position of the iframe relative to the browser page.
-   */
-  correction?: {
-    x: number;
-    y: number;
-  };
-};
 
 /**
  * Shows a drag preview which is snapped to the cursor.
  */
-export function DragPreview({ correction }: DragPreviewProps) {
+export function DragPreview() {
   const { subscribe } = useDraggedOverStoreApi();
   const posX = useMotionValue(0);
   const posY = useMotionValue(0);
   const opacity = useMotionValue(0);
   const [component, setComponent] = useState<string | null>(null);
+  const correction = useContext(IFrameCorrectionContext);
 
   useEffect(() => {
     return subscribe(
       (draggedOver: DraggedOver) => {
         if (draggedOver?.cursorPosition) {
-          const isInCanvas = !!draggedOver.dropRegion;
-
-          posX.set(draggedOver.cursorPosition.x + (isInCanvas ? correction?.x ?? 0 : 0));
-          posY.set(draggedOver.cursorPosition.y + (isInCanvas ? correction?.y ?? 0 : 0));
+          // The preview is not pinned to the cursor if not corrected. This may happen if
+          // the canvas is in an iframe.
+          posX.set(draggedOver.cursorPosition.x + (correction?.x ?? 0));
+          posY.set(draggedOver.cursorPosition.y + (correction?.y ?? 0));
           setComponent(draggedOver.component!.type);
 
           // Do not show the item coming from the origin.
