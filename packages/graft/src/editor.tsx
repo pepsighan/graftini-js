@@ -14,7 +14,11 @@ import {
   useEditorStateInternal,
   useEditorStoreApiInternal,
 } from './store/editor';
-import { ComponentRegionStateProvider } from './store/regionMap';
+import {
+  ComponentRegionStateProvider,
+  ComponentRegionStore,
+  useComponentRegionStore,
+} from './store/regionMap';
 import { RootScrollStoreProvider } from './store/rootScroll';
 
 /**
@@ -112,8 +116,8 @@ type UseEditor = {
  */
 export function useEditor(): UseEditor {
   const { getState, subscribe } = useEditorStoreApiInternal();
-
-  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const immerSetEditor = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const immerSetRegion = useComponentRegionStore(useCallback((state) => state.immerSet, []));
 
   const getEditorState = useCallback(() => getState().componentMap, [getState]);
   const getComponentNode = useCallback(
@@ -131,7 +135,7 @@ export function useEditor(): UseEditor {
 
   const updateComponentProps = useCallback(
     (componentId: string, props: ComponentProps) => {
-      immerSet((state: EditorState) => {
+      immerSetEditor((state: EditorState) => {
         const component = state.componentMap[componentId];
 
         if (!component) {
@@ -146,12 +150,12 @@ export function useEditor(): UseEditor {
         state.componentMap[componentId].props = newProps;
       });
     },
-    [immerSet]
+    [immerSetEditor]
   );
 
   const deleteComponentNode = useCallback(
     (componentId: string) => {
-      immerSet((state: EditorState) => {
+      immerSetEditor((state: EditorState) => {
         const component = state.componentMap[componentId];
         if (!component) {
           return;
@@ -167,26 +171,31 @@ export function useEditor(): UseEditor {
         // on this component until it is destroyed in the next render-cycle.
         state.componentMap[component.id].isDeleted = true;
       });
+
+      // Also remove it from the region map.
+      immerSetRegion((state: ComponentRegionStore) => {
+        delete state.regionMap[componentId];
+      });
     },
-    [immerSet]
+    [immerSetEditor, immerSetRegion]
   );
 
   const setIsCanvas = useCallback(
     (componentId: string, isCanvas: boolean) => {
-      immerSet((state: EditorState) => {
+      immerSetEditor((state: EditorState) => {
         state.componentMap[componentId].isCanvas = isCanvas;
       });
     },
-    [immerSet]
+    [immerSetEditor]
   );
 
   const setChildAppendDirection = useCallback(
     (componentId: string, childAppendDirection: ChildAppendDirection) => {
-      immerSet((state: EditorState) => {
+      immerSetEditor((state: EditorState) => {
         state.componentMap[componentId].childAppendDirection = childAppendDirection;
       });
     },
-    [immerSet]
+    [immerSetEditor]
   );
 
   return {
