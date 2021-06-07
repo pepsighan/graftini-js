@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
 import { ResolverMap, ResolverProvider } from './resolver';
-import { RootComponent, RootOverride, Root__Graft__Component } from './root';
+import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
 import {
   ChildAppendDirection,
   ComponentMap,
@@ -55,9 +55,9 @@ export function Editor({ initialState, resolvers, rootComponentOverride, childre
   return (
     <EditorStateProvider elementMap={initialState}>
       <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
-        <RootOverride.Provider value={rootComponentOverride ?? null}>
+        <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
           {children}
-        </RootOverride.Provider>
+        </RootOverrideContext.Provider>
       </ResolverProvider>
     </EditorStateProvider>
   );

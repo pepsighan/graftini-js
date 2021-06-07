@@ -15,7 +15,7 @@ import { GraftComponentProps } from './resolver';
 /** @internal */
 export const Root__Graft__Component = forwardRef(
   ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
-    const RootOverrideComponent = useContext(RootOverride);
+    const RootOverrideComponent = useContext(RootOverrideContext);
 
     if (!RootOverrideComponent) {
       return (
@@ -38,7 +38,7 @@ export const Root__Graft__Component = forwardRef(
  * a subset of Graft component props.
  */
 /** @internal */
-export const RootOverride = createContext<RootComponent | null>(null);
+export const RootOverrideContext = createContext<RootComponent | null>(null);
 
 export type RootComponent = ForwardRefExoticComponent<
   RefAttributes<{}> & {
