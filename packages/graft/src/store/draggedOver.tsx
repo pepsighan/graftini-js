@@ -3,7 +3,7 @@ import React, { PropsWithChildren } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
 import { DropRegion } from '../dropLocation';
-import { ComponentNode } from './schema';
+import { ComponentNode } from './editor';
 
 /**
  * The position on the screen.

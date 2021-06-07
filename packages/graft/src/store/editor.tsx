@@ -1,6 +1,6 @@
 import { produce } from 'immer';
 import React, { ReactNode, useState } from 'react';
-import create, { EqualityChecker, StateSelector } from 'zustand';
+import create from 'zustand';
 import createContext from 'zustand/context';
 
 export type ComponentProps = {
@@ -144,21 +144,9 @@ function createEditorState(componentMap?: ComponentMap) {
 
 const { Provider, useStore, useStoreApi } = createContext<EditorState>();
 
-interface UseEditorStore {
-  (): EditorState;
-  <U>(selector: StateSelector<EditorState, U>, equalityFn?: EqualityChecker<U>): U;
-}
-
-/**
- * Hook to get the editor state. Pass a selector if you just want to get a subsection of
- * the state.
- */
 /** @internal */
-export const useEditorStateInternal = useStore as UseEditorStore;
+export const useEditorStateInternal = useStore;
 
-/**
- * Hook to get the APIs directly on the store.
- */
 /** @internal */
 export const useEditorStoreApiInternal = useStoreApi;
 

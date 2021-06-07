@@ -3,16 +3,17 @@ import { StateListener, StateSelector } from 'zustand';
 import Logger from './logger';
 import { ResolverMap, ResolverProvider } from './resolver';
 import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
-import { ComponentRegionStateProvider } from './store/regionMap';
 import {
   ChildAppendDirection,
   ComponentMap,
   ComponentNode,
   ComponentProps,
+  EditorState,
   EditorStateProvider,
   useEditorStateInternal,
   useEditorStoreApiInternal,
-} from './store/schema';
+} from './store/editor';
+import { ComponentRegionStateProvider } from './store/regionMap';
 
 /**
  * Props for the editor.
@@ -124,7 +125,7 @@ export function useEditor(): UseEditor {
 
   const updateComponentProps = useCallback(
     (componentId: string, props: ComponentProps) => {
-      immerSet((state) => {
+      immerSet((state: EditorState) => {
         const component = state.componentMap[componentId];
 
         if (!component) {
@@ -144,7 +145,7 @@ export function useEditor(): UseEditor {
 
   const deleteComponentNode = useCallback(
     (componentId: string) => {
-      immerSet((state) => {
+      immerSet((state: EditorState) => {
         const component = state.componentMap[componentId];
         if (!component) {
           return;
@@ -166,7 +167,7 @@ export function useEditor(): UseEditor {
 
   const setIsCanvas = useCallback(
     (componentId: string, isCanvas: boolean) => {
-      immerSet((state) => {
+      immerSet((state: EditorState) => {
         state.componentMap[componentId].isCanvas = isCanvas;
       });
     },
@@ -175,7 +176,7 @@ export function useEditor(): UseEditor {
 
   const setChildAppendDirection = useCallback(
     (componentId: string, childAppendDirection: ChildAppendDirection) => {
-      immerSet((state) => {
+      immerSet((state: EditorState) => {
         state.componentMap[componentId].childAppendDirection = childAppendDirection;
       });
     },

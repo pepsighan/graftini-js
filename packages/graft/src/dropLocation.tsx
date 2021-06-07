@@ -12,7 +12,7 @@ import {
   ComponentMap,
   ROOT_NODE_ID,
   useEditorStoreApiInternal,
-} from './store/schema';
+} from './store/editor';
 import { Region } from './useRegion';
 
 /**

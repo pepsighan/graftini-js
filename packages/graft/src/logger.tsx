@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useEditorStoreApiInternal } from './store/schema';
+import { useEditorStoreApiInternal } from './store/editor';
 
 /**
  * This component is only used during development. It logs any changes to the editor

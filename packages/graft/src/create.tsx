@@ -3,7 +3,7 @@ import { DragEvent, DragEventHandler, useCallback } from 'react';
 import { hideDefaultDragPreview, useOnDrag, useOnDragEnd } from './drag';
 import { useResolver } from './resolver';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
-import { ChildAppendDirection, ComponentProps } from './store/schema';
+import { ChildAppendDirection, ComponentProps } from './store/editor';
 
 /**
  * Options to configure the kind of components to create during drag operation.

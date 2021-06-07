@@ -12,4 +12,4 @@ export {
   ComponentNode,
   ComponentProps,
   ROOT_NODE_ID,
-} from './store/schema';
+} from './store/editor';

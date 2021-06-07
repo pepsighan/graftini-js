@@ -2,7 +2,7 @@ import { debounce } from 'lodash-es';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
 import { useRootScrollStore } from './store/rootScroll';
-import { useEditorStoreApiInternal } from './store/schema';
+import { useEditorStoreApiInternal } from './store/editor';
 
 /**
  * A region on the canvas with the position and its dimension.
