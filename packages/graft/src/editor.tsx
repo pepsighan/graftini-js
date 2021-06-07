@@ -3,6 +3,7 @@ import { StateListener, StateSelector } from 'zustand';
 import Logger from './logger';
 import { ResolverMap, ResolverProvider } from './resolver';
 import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
+import { DraggedOverStoreProvider } from './store/draggedOver';
 import {
   ChildAppendDirection,
   ComponentMap,
@@ -14,6 +15,7 @@ import {
   useEditorStoreApiInternal,
 } from './store/editor';
 import { ComponentRegionStateProvider } from './store/regionMap';
+import { RootScrollStoreProvider } from './store/rootScroll';
 
 /**
  * Props for the editor.
@@ -58,12 +60,16 @@ export function Editor({ initialState, resolvers, rootComponentOverride, childre
   return (
     <EditorStateProvider elementMap={initialState}>
       <ComponentRegionStateProvider>
-        <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
-          <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
-            <Logger />
-            {children}
-          </RootOverrideContext.Provider>
-        </ResolverProvider>
+        <DraggedOverStoreProvider>
+          <RootScrollStoreProvider>
+            <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
+              <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
+                <Logger />
+                {children}
+              </RootOverrideContext.Provider>
+            </ResolverProvider>
+          </RootScrollStoreProvider>
+        </DraggedOverStoreProvider>
       </ComponentRegionStateProvider>
     </EditorStateProvider>
   );

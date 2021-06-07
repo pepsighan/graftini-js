@@ -1,8 +1,8 @@
 import { debounce } from 'lodash-es';
 import { useCallback, useLayoutEffect, useState } from 'react';
-import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
-import { useRootScrollStore } from './store/rootScroll';
 import { useEditorStoreApiInternal } from './store/editor';
+import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
+import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
  * A region on the canvas with the position and its dimension.
@@ -20,7 +20,8 @@ export type Region = {
 export function useSyncRegion(componentId: string) {
   const immerSet = useComponentRegionStore(useCallback((state) => state.immerSet, []));
   const [ref, setRef] = useState<HTMLElement | null>(null);
-  const { subscribe } = useEditorStoreApiInternal();
+  const { subscribe: subscribeEditor } = useEditorStoreApiInternal();
+  const { subscribe: subscribeRootScroll } = useRootScrollStoreApi();
 
   useLayoutEffect(() => {
     if (!ref) {
@@ -52,7 +53,7 @@ export function useSyncRegion(componentId: string) {
     window.addEventListener('resize', measureRegion);
 
     // Also measure the region if there is change anywhere in the component tree.
-    const unsubscribeStore = subscribe(
+    const unsubscribeStore = subscribeEditor(
       () => {
         measureRegion();
       },
@@ -60,7 +61,7 @@ export function useSyncRegion(componentId: string) {
     );
 
     // Update the region when there is scroll on the root component.
-    const unsubscribeScroll = useRootScrollStore.subscribe(() => measureRegion());
+    const unsubscribeScroll = subscribeRootScroll(() => measureRegion());
 
     return () => {
       window.removeEventListener('resize', measureRegion);

@@ -11,7 +11,7 @@ import React, {
   useContext,
 } from 'react';
 import { GraftComponentProps } from './resolver';
-import { useRootScrollStore } from './store/rootScroll';
+import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
  * A canvas root component returns the children as-is.
@@ -19,12 +19,17 @@ import { useRootScrollStore } from './store/rootScroll';
 /** @internal */
 export const Root__Graft__Component = forwardRef(
   ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
-    const onScroll = useCallback((event: UIEvent) => {
-      useRootScrollStore.setState({
-        top: event.currentTarget.scrollTop,
-        left: event.currentTarget.scrollLeft,
-      });
-    }, []);
+    const { setState } = useRootScrollStoreApi();
+
+    const onScroll = useCallback(
+      (event: UIEvent) => {
+        setState({
+          top: event.currentTarget.scrollTop,
+          left: event.currentTarget.scrollLeft,
+        });
+      },
+      [setState]
+    );
 
     const RootOverrideComponent = useContext(RootOverrideContext);
     if (!RootOverrideComponent) {
