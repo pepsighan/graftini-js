@@ -16,25 +16,10 @@ type ComponentNodeProps = {
  */
 /** @internal */
 export function ComponentNode({ componentId }: ComponentNodeProps) {
-  const component = useEditorStateInternal(
-    useCallback((state: EditorStore) => state.componentMap[componentId].type, [componentId])
+  const { type, props, isCanvas, childrenNodes } = useEditorStateInternal(
+    useCallback((state: EditorStore) => state.componentMap[componentId], [componentId])
   );
-  const Component = useResolver(component);
-
-  const componentProps = useEditorStateInternal(
-    useCallback((state: EditorStore) => state.componentMap[componentId].props, [componentId])
-  );
-
-  const isCanvas = useEditorStateInternal(
-    useCallback((state: EditorStore) => state.componentMap[componentId].isCanvas, [componentId])
-  );
-
-  const childrenNodes = useEditorStateInternal(
-    useCallback(
-      (state: EditorStore) => state.componentMap[componentId].childrenNodes,
-      [componentId]
-    )
-  ) as string[];
+  const Component = useResolver(type);
 
   // If the component is also a canvas, then render children nodes for it if present.
   if (isCanvas) {
@@ -42,7 +27,7 @@ export function ComponentNode({ componentId }: ComponentNodeProps) {
       <>
         <CanvasContext.Provider value={componentId}>
           <ComponentContext.Provider value={componentId}>
-            <ComponentWrapper component={Component} componentProps={componentProps}>
+            <ComponentWrapper component={Component} componentProps={props}>
               {childrenNodes.map((componentId) => (
                 <ComponentNode key={componentId} componentId={componentId} />
               ))}
@@ -55,7 +40,7 @@ export function ComponentNode({ componentId }: ComponentNodeProps) {
 
   return (
     <ComponentContext.Provider value={componentId}>
-      <ComponentWrapper component={Component} componentProps={componentProps} />
+      <ComponentWrapper component={Component} componentProps={props} />
     </ComponentContext.Provider>
   );
 }
