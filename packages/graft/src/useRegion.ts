@@ -42,7 +42,6 @@ export function useSyncRegion(componentId: string) {
     measureRegion();
 
     window.addEventListener('resize', measureRegion);
-    window.addEventListener('scroll', measureRegion);
     // Also measure the region if there is change anywhere in the component tree.
     const unsubscribeStore = subscribe(
       () => {
@@ -53,7 +52,6 @@ export function useSyncRegion(componentId: string) {
 
     return () => {
       window.removeEventListener('resize', measureRegion);
-      window.removeEventListener('scroll', measureRegion);
       unsubscribeStore();
     };
 
