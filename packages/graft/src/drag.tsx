@@ -1,5 +1,6 @@
-import { DragEvent, EventHandler, useCallback } from 'react';
+import { DragEvent, EventHandler, useCallback, useContext } from 'react';
 import { useComponentId } from './context';
+import { IFrameCorrectionContext } from './correction';
 import { DropKind, nearestCanvasId } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from './store/editor';
@@ -8,12 +9,11 @@ import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from '
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
  */
 /** @internal */
-export function hideDefaultDragPreview(event: DragEvent) {
-  var crt = document.createElement('div');
-  crt.style.backgroundColor = 'red';
-  crt.style.display = 'none';
-  document.body.appendChild(crt);
-  event.dataTransfer.setDragImage(crt, 0, 0);
+export function showCustomDragPreview(event: DragEvent) {
+  // The drag preview is already rendered at a separate place with the given id.
+  const preview = document.getElementById('graft-drag-preview')!;
+  document.body.appendChild(preview);
+  event.dataTransfer.setDragImage(preview, 0, 0);
 }
 
 /**
@@ -28,7 +28,7 @@ export function useOnDragStart(): EventHandler<DragEvent> {
   return useCallback(
     (event: DragEvent) => {
       event.stopPropagation();
-      hideDefaultDragPreview(event);
+      showCustomDragPreview(event);
 
       // The component is not yet being dragged. It will only start dragging once it moves a few pixels
       // away. We are just storing the data of the current component that is to be dragged.
@@ -48,17 +48,20 @@ export function useOnDragStart(): EventHandler<DragEvent> {
 /** @internal */
 export function useOnDrag() {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
+  const correction = useContext(IFrameCorrectionContext);
 
   return useCallback(
     (event: DragEvent) => {
       immerSet((state: DraggedOverStore) => {
-        state.draggedOver.cursorPosition = {
-          x: event.clientX,
-          y: event.clientY,
+        const draggedOver = state.draggedOver;
+
+        draggedOver.cursorPosition = {
+          x: !draggedOver.isOnRoot && correction ? event.clientX - correction.x : event.clientX,
+          y: !draggedOver.isOnRoot && correction ? event.clientY - correction.y : event.clientY,
         };
       });
     },
-    [immerSet]
+    [correction, immerSet]
   );
 }
 
@@ -92,11 +95,12 @@ export function useOnDragEnd() {
       if (!dropRegion) {
         draggedState.draggedOver = {
           isDragging: false,
+          isOnRoot: false,
         };
         return;
       }
 
-      draggedState.draggedOver = { isDragging: false };
+      draggedState.draggedOver = { isDragging: false, isOnRoot: false };
     });
 
     immerSetEditor((editorState: EditorStore) => {

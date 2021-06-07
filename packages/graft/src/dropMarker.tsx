@@ -1,4 +1,3 @@
-import { motion } from 'framer-motion';
 import React, { useCallback } from 'react';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
 
@@ -22,13 +21,12 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
   return (
     <>
       {dropMarkerRegion && isOnCanvas && (
-        <motion.div
+        <div
           style={{
             position: 'fixed',
             top: 0,
             left: 0,
-            x: dropMarkerRegion.x,
-            y: dropMarkerRegion.y,
+            transform: `translate(${dropMarkerRegion.x}px, ${dropMarkerRegion.y}px)`,
             width: dropMarkerRegion.width,
             height: dropMarkerRegion.height,
             backgroundColor: color,

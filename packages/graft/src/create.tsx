@@ -1,6 +1,6 @@
 import { nanoid } from 'nanoid';
 import { DragEvent, DragEventHandler, useCallback } from 'react';
-import { hideDefaultDragPreview, useOnDrag, useOnDragEnd } from './drag';
+import { showCustomDragPreview, useOnDrag, useOnDragEnd } from './drag';
 import { useResolver } from './resolver';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
 import { ChildAppendDirection, ComponentProps } from './store/editor';
@@ -40,7 +40,7 @@ export function useCreateComponent({
 
   const onDragStart = useCallback(
     (event: DragEvent) => {
-      hideDefaultDragPreview(event);
+      showCustomDragPreview(event);
 
       const id = nanoid();
 
