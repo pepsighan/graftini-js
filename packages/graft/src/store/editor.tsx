@@ -67,19 +67,6 @@ export type ComponentMap = {
 };
 
 /**
- * The dimensions of the component.
- */
-/** @internal */
-export type Dimensions = {
-  width: number;
-  height: number;
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
-};
-
-/**
  * The state of the editor which holds the representation of the drawn component in
  * the canvas.
  */
