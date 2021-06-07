@@ -3,7 +3,6 @@ import React, { ReactNode, useState } from 'react';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import createContext from 'zustand/context';
 import { DropRegion } from '../dropLocation';
-import { Region } from '../useRegion';
 
 export type ComponentProps = {
   [key: string]: any;
@@ -117,19 +116,6 @@ export type Position = {
 };
 
 /**
- * Stores the positions of all the components. This is stored separately from the component because
- * this data always changes and it is dependent on the ComponentNode object itself.
- */
-/** @internal */
-type ComponentRegionMap = {
-  /**
-   * The region on the screen that this component occupies. This is automatically updated based on
-   * where it renders.
-   */
-  [componentId: string]: Region;
-};
-
-/**
  * The state of the editor which holds the representation of the drawn component in
  * the canvas.
  */
@@ -139,10 +125,6 @@ export type EditorState = {
    * The representation of the view that is rendered on the canvas.
    */
   componentMap: ComponentMap;
-  /**
-   * The region that each component occupied.
-   */
-  regionMap: ComponentRegionMap;
   /**
    * Whenever a component is dragged the following properties is set to signify the location of the
    * cursor relative to the other components in the canvas.
@@ -197,7 +179,6 @@ function createEditorState(componentMap?: ComponentMap) {
 
   return create<EditorState>((set: any) => ({
     componentMap: map,
-    regionMap: {},
     draggedOver: {
       isDragging: false,
     },

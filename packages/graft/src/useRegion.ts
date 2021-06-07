@@ -1,7 +1,8 @@
 import { debounce } from 'lodash-es';
 import { useCallback, useLayoutEffect, useState } from 'react';
-import { useEditorStateInternal, useEditorStoreApiInternal } from './store/schema';
+import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
 import { useRootScrollStore } from './store/rootScroll';
+import { useEditorStoreApiInternal } from './store/schema';
 
 /**
  * A region on the canvas with the position and its dimension.
@@ -17,7 +18,7 @@ export type Region = {
  * Syncs the region that the component contains to the editor state.
  */
 export function useSyncRegion(componentId: string) {
-  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const immerSet = useComponentRegionStore(useCallback((state) => state.immerSet, []));
   const [ref, setRef] = useState<HTMLElement | null>(null);
   const { subscribe } = useEditorStoreApiInternal();
 
@@ -31,7 +32,7 @@ export function useSyncRegion(componentId: string) {
         window.requestAnimationFrame(() => {
           const rect = ref.getBoundingClientRect();
 
-          immerSet((state) => {
+          immerSet((state: ComponentRegionStore) => {
             // Doing away with typescript here for extract performance from immer.
             state.regionMap[componentId] ??= {} as any;
             const region = state.regionMap[componentId];

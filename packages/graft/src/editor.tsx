@@ -3,6 +3,7 @@ import { StateListener, StateSelector } from 'zustand';
 import Logger from './logger';
 import { ResolverMap, ResolverProvider } from './resolver';
 import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
+import { ComponentRegionStateProvider } from './store/regionMap';
 import {
   ChildAppendDirection,
   ComponentMap,
@@ -55,12 +56,14 @@ export function Editor({ initialState, resolvers, rootComponentOverride, childre
 
   return (
     <EditorStateProvider elementMap={initialState}>
-      <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
-        <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
-          <Logger />
-          {children}
-        </RootOverrideContext.Provider>
-      </ResolverProvider>
+      <ComponentRegionStateProvider>
+        <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
+          <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
+            <Logger />
+            {children}
+          </RootOverrideContext.Provider>
+        </ResolverProvider>
+      </ComponentRegionStateProvider>
     </EditorStateProvider>
   );
 }
@@ -156,9 +159,6 @@ export function useEditor(): UseEditor {
         // We do this because the canvas may be dependent still
         // on this component until it is destroyed in the next render-cycle.
         state.componentMap[component.id].isDeleted = true;
-
-        // Delete the entry from region map.
-        delete state.regionMap[component.id];
       });
     },
     [immerSet]
