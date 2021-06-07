@@ -8,6 +8,6 @@ import { useEditorStoreApiInternal } from './store/editor';
 /** @internal */
 export default function Logger() {
   const { subscribe } = useEditorStoreApiInternal();
-  useEffect(() => subscribe((state) => console.log(state)));
+  useEffect(() => subscribe((state) => console.log(state.componentMap)));
   return <></>;
 }
