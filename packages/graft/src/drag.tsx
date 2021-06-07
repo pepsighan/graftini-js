@@ -1,7 +1,7 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { DropKind, nearestCanvasId } from './dropLocation';
-import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
+import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from './store/editor';
 
 /**
@@ -79,9 +79,14 @@ export function useOnDragOver() {
 /** @internal */
 export function useOnDragEnd() {
   const immerSetDraggedOver = useDraggedOverStore(useCallback((state) => state.immerSet, []));
+  const { getState: getDraggedOverState } = useDraggedOverStoreApi();
   const immerSetEditor = useEditorStateInternal(useCallback((state) => state.immerSet, []));
 
   return useCallback(() => {
+    const draggedOver = getDraggedOverState().draggedOver;
+
+    // Update the dragged over state separately. But have cached the last value
+    // on the variable above to be used when updating the editor itself.
     immerSetDraggedOver((draggedState: DraggedOverStore) => {
       const dropRegion = draggedState.draggedOver.dropRegion;
       if (!dropRegion) {
@@ -91,58 +96,63 @@ export function useOnDragEnd() {
         return;
       }
 
-      const { componentId: dropComponentId, dropKind } = dropRegion;
-      const componentToDrop = draggedState.draggedOver.component!;
-
-      immerSetEditor((editorState: EditorStore) => {
-        if (draggedState.draggedOver.componentKind === 'new') {
-          // Register this new component in the map.
-          editorState.componentMap[componentToDrop.id] = componentToDrop;
-        } else {
-          // Remove the component from the older position.
-          const index = editorState.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
-            componentToDrop.id
-          );
-          editorState.componentMap[componentToDrop.parentId!].childrenNodes.splice(index);
-
-          editorState.componentMap[componentToDrop.parentId!].childrenNodes = [
-            ...editorState.componentMap[componentToDrop.parentId!].childrenNodes,
-          ];
-        }
-
-        if (dropKind === DropKind.AddAsChild) {
-          // Add the dragged component as a child of the component and it becomes the parent.
-          const parentId = dropComponentId;
-          editorState.componentMap[parentId].childrenNodes.push(componentToDrop.id);
-
-          editorState.componentMap[parentId].childrenNodes = [
-            ...editorState.componentMap[parentId].childrenNodes,
-          ];
-          editorState.componentMap[componentToDrop.id].parentId = parentId;
-        } else {
-          // Add the dragged component to the canvas before or after the componentId as it is
-          // the sibling.
-          const canvasId = nearestCanvasId(editorState.componentMap, dropComponentId);
-          const index = editorState.componentMap[canvasId!].childrenNodes.indexOf(dropComponentId);
-
-          if (dropKind === DropKind.AppendAsSibling) {
-            editorState.componentMap[canvasId!].childrenNodes.splice(
-              index + 1,
-              0,
-              componentToDrop.id
-            );
-          } else {
-            editorState.componentMap[canvasId!].childrenNodes.splice(index, 0, componentToDrop.id);
-          }
-
-          editorState.componentMap[canvasId!].childrenNodes = [
-            ...editorState.componentMap[canvasId!].childrenNodes,
-          ];
-          editorState.componentMap[componentToDrop.id].parentId = canvasId;
-        }
-      });
-
       draggedState.draggedOver = { isDragging: false };
     });
-  }, [immerSetDraggedOver, immerSetEditor]);
+
+    immerSetEditor((editorState: EditorStore) => {
+      const dropRegion = draggedOver.dropRegion;
+      if (!dropRegion) {
+        return;
+      }
+
+      const { componentId: dropComponentId, dropKind } = dropRegion;
+      const componentToDrop = draggedOver.component!;
+
+      if (draggedOver.componentKind === 'new') {
+        // Register this new component in the map.
+        editorState.componentMap[componentToDrop.id] = componentToDrop;
+      } else {
+        // Remove the component from the older position.
+        const index = editorState.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
+          componentToDrop.id
+        );
+        editorState.componentMap[componentToDrop.parentId!].childrenNodes.splice(index);
+
+        editorState.componentMap[componentToDrop.parentId!].childrenNodes = [
+          ...editorState.componentMap[componentToDrop.parentId!].childrenNodes,
+        ];
+      }
+
+      if (dropKind === DropKind.AddAsChild) {
+        // Add the dragged component as a child of the component and it becomes the parent.
+        const parentId = dropComponentId;
+        editorState.componentMap[parentId].childrenNodes.push(componentToDrop.id);
+
+        editorState.componentMap[parentId].childrenNodes = [
+          ...editorState.componentMap[parentId].childrenNodes,
+        ];
+        editorState.componentMap[componentToDrop.id].parentId = parentId;
+      } else {
+        // Add the dragged component to the canvas before or after the componentId as it is
+        // the sibling.
+        const canvasId = nearestCanvasId(editorState.componentMap, dropComponentId);
+        const index = editorState.componentMap[canvasId!].childrenNodes.indexOf(dropComponentId);
+
+        if (dropKind === DropKind.AppendAsSibling) {
+          editorState.componentMap[canvasId!].childrenNodes.splice(
+            index + 1,
+            0,
+            componentToDrop.id
+          );
+        } else {
+          editorState.componentMap[canvasId!].childrenNodes.splice(index, 0, componentToDrop.id);
+        }
+
+        editorState.componentMap[canvasId!].childrenNodes = [
+          ...editorState.componentMap[canvasId!].childrenNodes,
+        ];
+        editorState.componentMap[componentToDrop.id].parentId = canvasId;
+      }
+    });
+  }, [getDraggedOverState, immerSetDraggedOver, immerSetEditor]);
 }
