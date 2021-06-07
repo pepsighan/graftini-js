@@ -5,6 +5,7 @@ export { DropMarker } from './dropMarker';
 export { Editor, EditorProps, useEditor, useEditorState } from './editor';
 export { DragPreview } from './preview';
 export { GraftComponent, GraftComponentOptions, GraftComponentProps } from './resolver';
+export { RootComponent } from './root';
 export {
   cleanupComponentMap,
   ComponentMap,
