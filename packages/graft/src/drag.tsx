@@ -49,12 +49,16 @@ export function useOnDragStart(): EventHandler<DragEvent> {
 export function useOnDrag() {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
 
+  const correction = 83;
+
   return useCallback(
     (event: DragEvent) => {
       immerSet((state: DraggedOverStore) => {
-        state.draggedOver.cursorPosition = {
+        const draggedOver = state.draggedOver;
+
+        draggedOver.cursorPosition = {
           x: event.clientX,
-          y: event.clientY,
+          y: !draggedOver.isOnRoot ? event.clientY - correction : event.clientY,
         };
       });
     },
@@ -92,11 +96,12 @@ export function useOnDragEnd() {
       if (!dropRegion) {
         draggedState.draggedOver = {
           isDragging: false,
+          isOnRoot: false,
         };
         return;
       }
 
-      draggedState.draggedOver = { isDragging: false };
+      draggedState.draggedOver = { isDragging: false, isOnRoot: false };
     });
 
     immerSetEditor((editorState: EditorStore) => {

@@ -42,11 +42,7 @@ export type DraggedOver = {
   /**
    * Whether the cursor is over the root component.
    */
-  isOnRoot?: boolean;
-  /**
-   * Whether the cursor is on a document and not out of the browser.
-   */
-  isOnDocument?: boolean;
+  isOnRoot: boolean;
 };
 
 /** @internal */
@@ -67,6 +63,7 @@ export const createDraggedOverStore = () =>
   create<DraggedOverStore>((set) => ({
     draggedOver: {
       isDragging: false,
+      isOnRoot: false,
     },
     immerSet: (fn) => set(produce(fn)),
   }));
