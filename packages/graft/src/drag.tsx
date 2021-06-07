@@ -1,5 +1,6 @@
-import { DragEvent, EventHandler, useCallback } from 'react';
+import { DragEvent, EventHandler, useCallback, useContext } from 'react';
 import { useComponentId } from './context';
+import { IFrameCorrectionContext } from './correction';
 import { DropKind, nearestCanvasId } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from './store/editor';
@@ -48,8 +49,7 @@ export function useOnDragStart(): EventHandler<DragEvent> {
 /** @internal */
 export function useOnDrag() {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
-
-  const correction = 83;
+  const correction = useContext(IFrameCorrectionContext);
 
   return useCallback(
     (event: DragEvent) => {
@@ -57,12 +57,12 @@ export function useOnDrag() {
         const draggedOver = state.draggedOver;
 
         draggedOver.cursorPosition = {
-          x: event.clientX,
-          y: !draggedOver.isOnRoot ? event.clientY - correction : event.clientY,
+          x: !draggedOver.isOnRoot && correction ? event.clientX - correction.x : event.clientX,
+          y: !draggedOver.isOnRoot && correction ? event.clientY - correction.y : event.clientY,
         };
       });
     },
-    [immerSet]
+    [correction, immerSet]
   );
 }
 

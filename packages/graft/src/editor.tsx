@@ -1,8 +1,9 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
+import { IFrameCorrectionContext } from './correction';
 import { ResolverMap, ResolverProvider } from './resolver';
 import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
-import { DraggedOverStoreProvider } from './store/draggedOver';
+import { DraggedOverStoreProvider, Position } from './store/draggedOver';
 import {
   ChildAppendDirection,
   ComponentMap,
@@ -39,6 +40,11 @@ export type EditorProps = {
    */
   resolvers: ResolverMap;
   /**
+   * The correction that needs to be accounted for when dragging within an iframe. The values of
+   * (x, y) co-ordinate is equal to the position from the top-left corner of the document.
+   */
+  iframeCorrection?: Position;
+  /**
    * The children of the editor. This can be anything that you can imagine. The only requirement
    * is that it must have a single Canvas component down the tree.
    */
@@ -52,7 +58,13 @@ export type EditorProps = {
 /**
  * An editor which stores the state of the elements drawn in the canvas.
  */
-export function Editor({ initialState, resolvers, rootComponentOverride, children }: EditorProps) {
+export function Editor({
+  initialState,
+  resolvers,
+  rootComponentOverride,
+  iframeCorrection,
+  children,
+}: EditorProps) {
   if (!resolvers) {
     throw new Error(
       '`resolvers` prop on Editor is required. We cannot render anything on canvas if ' +
@@ -67,7 +79,9 @@ export function Editor({ initialState, resolvers, rootComponentOverride, childre
           <RootScrollStoreProvider>
             <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
               <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
-                {children}
+                <IFrameCorrectionContext.Provider value={iframeCorrection ?? null}>
+                  {children}
+                </IFrameCorrectionContext.Provider>
               </RootOverrideContext.Provider>
             </ResolverProvider>
           </RootScrollStoreProvider>

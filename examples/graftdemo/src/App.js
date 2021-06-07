@@ -14,7 +14,7 @@ import IFrame from './IFrame';
 
 export default function App() {
   return (
-    <Editor resolvers={{ Container, Text }}>
+    <Editor resolvers={{ Container, Text }} iframeCorrection={{ x: 0, y: 83 }}>
       <Menu />
       <IFrame
         style={{
