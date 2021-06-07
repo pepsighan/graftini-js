@@ -2,8 +2,8 @@ import { produce } from 'immer';
 import React, { ReactNode, useState } from 'react';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import createContext from 'zustand/context';
-import { DropRegion } from './dropLocation';
-import { Region } from './useRegion';
+import { DropRegion } from '../dropLocation';
+import { Region } from '../useRegion';
 
 export type ComponentProps = {
   [key: string]: any;

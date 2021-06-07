@@ -1,7 +1,7 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
-import { useRootScrollStore } from './root';
-import { useEditorStateInternal, useEditorStoreApiInternal } from './schema';
 import { debounce } from 'lodash-es';
+import { useCallback, useLayoutEffect, useState } from 'react';
+import { useEditorStateInternal, useEditorStoreApiInternal } from './store/schema';
+import { useRootScrollStore } from './store/rootScroll';
 
 /**
  * A region on the canvas with the position and its dimension.

@@ -1,7 +1,7 @@
 import { motion, useMotionValue } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import { useResolver } from './resolver';
-import { DraggedOver, useEditorStoreApiInternal } from './schema';
+import { DraggedOver, useEditorStoreApiInternal } from './store/schema';
 
 type DragPreviewProps = {
   /**

@@ -2,7 +2,7 @@ import React, { ReactNode, useCallback } from 'react';
 import { CanvasContext, ComponentContext, useComponentId } from './context';
 import { useOnDrag, useOnDragEnd, useOnDragOver, useOnDragStart } from './drag';
 import { GraftComponent, useResolver } from './resolver';
-import { ComponentProps, useEditorStateInternal } from './schema';
+import { ComponentProps, useEditorStateInternal } from './store/schema';
 import { useSyncRegion } from './useRegion';
 
 type ComponentNodeProps = {

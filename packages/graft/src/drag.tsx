@@ -1,7 +1,7 @@
 import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { DropKind, nearestCanvasId } from './dropLocation';
-import { useEditorStateInternal } from './schema';
+import { useEditorStateInternal } from './store/schema';
 
 /**
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.

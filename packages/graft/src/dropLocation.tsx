@@ -7,7 +7,7 @@ import {
   ROOT_NODE_ID,
   useEditorStateInternal,
   useEditorStoreApiInternal,
-} from './schema';
+} from './store/schema';
 import { Region } from './useRegion';
 
 /**

@@ -10,8 +10,8 @@ import React, {
   useCallback,
   useContext,
 } from 'react';
-import create from 'zustand';
 import { GraftComponentProps } from './resolver';
+import { useRootScrollStore } from './store/rootScroll';
 
 /**
  * A canvas root component returns the children as-is.
@@ -57,18 +57,3 @@ export type RootComponent = ForwardRefExoticComponent<
     onScroll: UIEventHandler;
   }
 >;
-
-/** @internal */
-type RootScrollStore = {
-  top: number;
-  left: number;
-};
-
-/**
- * A hook that shares the root component's scroll position to the rest of the app.
- */
-/** @internal */
-export const useRootScrollStore = create<RootScrollStore>(() => ({
-  top: 0,
-  left: 0,
-}));

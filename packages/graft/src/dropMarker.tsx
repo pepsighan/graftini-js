@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { useCallback } from 'react';
-import { useEditorStateInternal } from './schema';
+import { useEditorStateInternal } from './store/schema';
 
 type DropMarkerProps = {
   color?: string;

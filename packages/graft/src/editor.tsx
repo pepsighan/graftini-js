@@ -11,7 +11,7 @@ import {
   EditorStateProvider,
   useEditorStateInternal,
   useEditorStoreApiInternal,
-} from './schema';
+} from './store/schema';
 
 /**
  * Props for the editor.
