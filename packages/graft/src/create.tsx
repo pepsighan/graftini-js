@@ -2,7 +2,8 @@ import { nanoid } from 'nanoid';
 import { DragEvent, DragEventHandler, useCallback } from 'react';
 import { hideDefaultDragPreview, useOnDrag, useOnDragEnd } from './drag';
 import { useResolver } from './resolver';
-import { ChildAppendDirection, ComponentProps, useEditorStateInternal } from './store/schema';
+import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
+import { ChildAppendDirection, ComponentProps } from './store/schema';
 
 /**
  * Options to configure the kind of components to create during drag operation.
@@ -31,7 +32,7 @@ export function useCreateComponent({
   childAppendDirection,
   defaultProps,
 }: CreateComponentOptions): CreateComponentHandlers {
-  const immerSet = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
 
   // Use the configuration provided in the component definition.
   const Component = useResolver(type);
@@ -45,7 +46,7 @@ export function useCreateComponent({
 
       // We are just registering the new component here and preparing for a
       // drag.
-      immerSet((state) => {
+      immerSet((state: DraggedOverStore) => {
         state.draggedOver.isDragging = true;
         state.draggedOver.componentKind = 'new';
         state.draggedOver.component = {

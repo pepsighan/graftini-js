@@ -2,7 +2,6 @@ import { produce } from 'immer';
 import React, { ReactNode, useState } from 'react';
 import create, { EqualityChecker, StateSelector } from 'zustand';
 import createContext from 'zustand/context';
-import { DropRegion } from '../dropLocation';
 
 export type ComponentProps = {
   [key: string]: any;
@@ -68,33 +67,6 @@ export type ComponentMap = {
 };
 
 /**
- * Values related to a dragging action.
- */
-/** @internal */
-export type DraggedOver = {
-  /**
-   * Whether a component is being dragged.
-   */
-  isDragging: boolean;
-  /**
-   * The position of the cursor when dragging.
-   */
-  cursorPosition?: Position | null;
-  /**
-   * What kind of component is being dragged new or existing.
-   */
-  componentKind?: 'new' | 'existing' | null;
-  /**
-   * The currently dragged component. This has value when isDragging is true.
-   */
-  component?: ComponentNode | null;
-  /**
-   * The region where the component is going to be dropped if the drag action ends.
-   */
-  dropRegion?: DropRegion | null;
-};
-
-/**
  * The dimensions of the component.
  */
 /** @internal */
@@ -108,14 +80,6 @@ export type Dimensions = {
 };
 
 /**
- * The position on the screen.
- */
-export type Position = {
-  x: number;
-  y: number;
-};
-
-/**
  * The state of the editor which holds the representation of the drawn component in
  * the canvas.
  */
@@ -125,11 +89,6 @@ export type EditorState = {
    * The representation of the view that is rendered on the canvas.
    */
   componentMap: ComponentMap;
-  /**
-   * Whenever a component is dragged the following properties is set to signify the location of the
-   * cursor relative to the other components in the canvas.
-   */
-  draggedOver: DraggedOver;
   /**
    * A setter which uses immer.
    */
@@ -179,9 +138,6 @@ function createEditorState(componentMap?: ComponentMap) {
 
   return create<EditorState>((set: any) => ({
     componentMap: map,
-    draggedOver: {
-      isDragging: false,
-    },
     immerSet: (fn: any) => set(produce(fn)),
   }));
 }

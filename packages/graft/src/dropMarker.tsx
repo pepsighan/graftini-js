@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import React, { useCallback } from 'react';
-import { useEditorStateInternal } from './store/schema';
+import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
 
 type DropMarkerProps = {
   color?: string;
@@ -11,12 +11,12 @@ type DropMarkerProps = {
  * It is shown whenever the pointer is in drag mode and the component preceding it is hovered.
  */
 export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
-  const isOnCanvas = useEditorStateInternal(
-    useCallback((state) => state.draggedOver.dropRegion?.componentId, [])
+  const isOnCanvas = useDraggedOverStore(
+    useCallback((state: DraggedOverStore) => state.draggedOver.dropRegion?.componentId, [])
   );
 
-  const dropMarkerRegion = useEditorStateInternal(
-    useCallback((state) => state.draggedOver.dropRegion?.dropMarkerRegion, [])
+  const dropMarkerRegion = useDraggedOverStore(
+    useCallback((state: DraggedOverStore) => state.draggedOver.dropRegion?.dropMarkerRegion, [])
   );
 
   return (
