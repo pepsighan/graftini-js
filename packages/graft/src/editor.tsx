@@ -1,7 +1,8 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
-import { Root__Graft__Component } from './canvas';
+import Logger from './logger';
 import { ResolverMap, ResolverProvider } from './resolver';
+import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
 import {
   ChildAppendDirection,
   ComponentMap,
@@ -35,12 +36,16 @@ export type EditorProps = {
    * is that it must have a single Canvas component down the tree.
    */
   children: ReactNode;
+  /**
+   * An optional override for how the root component should be rendered.
+   */
+  rootComponentOverride?: RootComponent;
 };
 
 /**
  * An editor which stores the state of the elements drawn in the canvas.
  */
-export function Editor({ initialState, resolvers, children }: EditorProps) {
+export function Editor({ initialState, resolvers, rootComponentOverride, children }: EditorProps) {
   if (!resolvers) {
     throw new Error(
       '`resolvers` prop on Editor is required. We cannot render anything on canvas if ' +
@@ -51,7 +56,10 @@ export function Editor({ initialState, resolvers, children }: EditorProps) {
   return (
     <EditorStateProvider elementMap={initialState}>
       <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
-        {children}
+        <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
+          <Logger />
+          {children}
+        </RootOverrideContext.Provider>
       </ResolverProvider>
     </EditorStateProvider>
   );

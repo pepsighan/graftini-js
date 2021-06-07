@@ -1,5 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
+import { useRootScrollStore } from './root';
 import { useEditorStateInternal, useEditorStoreApiInternal } from './schema';
+import { debounce } from 'lodash-es';
 
 /**
  * A region on the canvas with the position and its dimension.
@@ -24,25 +26,30 @@ export function useSyncRegion(componentId: string) {
       return;
     }
 
-    const measureRegion = () =>
-      window.requestAnimationFrame(() => {
-        const rect = ref.getBoundingClientRect();
+    const measureRegion = debounce(
+      () =>
+        window.requestAnimationFrame(() => {
+          const rect = ref.getBoundingClientRect();
 
-        immerSet((state) => {
-          // Doing away with typescript here for extract performance from immer.
-          state.regionMap[componentId] ??= {} as any;
-          const region = state.regionMap[componentId];
-          region.x = rect.x;
-          region.y = rect.y;
-          region.width = rect.width;
-          region.height = rect.height;
-        });
-      });
+          immerSet((state) => {
+            // Doing away with typescript here for extract performance from immer.
+            state.regionMap[componentId] ??= {} as any;
+            const region = state.regionMap[componentId];
+            region.x = rect.x;
+            region.y = rect.y;
+            region.width = rect.width;
+            region.height = rect.height;
+          });
+        }),
+      // Debounce for atleast 200ms. We do not need the region size immediately.
+      // This way we can reduce the number of updates to the store.
+      200
+    );
 
     measureRegion();
 
     window.addEventListener('resize', measureRegion);
-    window.addEventListener('scroll', measureRegion);
+
     // Also measure the region if there is change anywhere in the component tree.
     const unsubscribeStore = subscribe(
       () => {
@@ -51,10 +58,13 @@ export function useSyncRegion(componentId: string) {
       (state) => state.componentMap
     );
 
+    // Update the region when there is scroll on the root component.
+    const unsubscribeScroll = useRootScrollStore.subscribe(() => measureRegion());
+
     return () => {
       window.removeEventListener('resize', measureRegion);
-      window.removeEventListener('scroll', measureRegion);
       unsubscribeStore();
+      unsubscribeScroll();
     };
 
     // The region may need to be updated based on some external factors.

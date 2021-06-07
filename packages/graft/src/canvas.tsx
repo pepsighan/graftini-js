@@ -1,22 +1,7 @@
-import React, { ForwardedRef, forwardRef } from 'react';
+import React from 'react';
 import { ComponentNode } from './componentNode';
 import { useSyncDropRegion } from './dropLocation';
-import { GraftComponentProps } from './resolver';
 import { ROOT_NODE_ID } from './schema';
-
-/**
- * A canvas root component returns the children as-is.
- */
-/** @internal */
-export const Root__Graft__Component = forwardRef(
-  ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
-    return (
-      <div ref={ref} style={{ width: '100%', height: '100%' }} onDragOver={onDragOver}>
-        {children}
-      </div>
-    );
-  }
-);
 
 /**
  * A canvas on which all the components are drawn. This is the root under which
