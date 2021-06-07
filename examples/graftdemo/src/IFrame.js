@@ -1,10 +1,10 @@
-import createCache from "@emotion/cache";
-import { CacheProvider } from "@emotion/react";
-import weakMemoize from "@emotion/weak-memoize";
-import Frame, { FrameContextConsumer } from "react-frame-component";
-import { Reset } from "bricks";
+import createCache from '@emotion/cache';
+import { CacheProvider } from '@emotion/react';
+import weakMemoize from '@emotion/weak-memoize';
+import Frame, { FrameContextConsumer } from 'react-frame-component';
+import { Reset } from 'bricks';
 
-const cacheKey = "example";
+const cacheKey = 'example';
 
 export default function IFrame({ title, style, children }) {
   const initialContent = `
