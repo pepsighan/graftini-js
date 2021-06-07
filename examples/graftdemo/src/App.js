@@ -14,12 +14,12 @@ import IFrame from './IFrame';
 
 export default function App() {
   return (
-    <Editor resolvers={{ Container, Text }} iframeCorrection={{ x: 0, y: 83 }}>
+    <Editor resolvers={{ Container, Text }} iframeCorrection={{ x: 0, y: 70 }}>
       <Menu />
       <IFrame
         style={{
           width: '100%',
-          height: 'calc(100vh - 83px)',
+          height: 'calc(100vh - 74px)', // Why subtracting +4px than the actual menu height? Don't know.
         }}
       >
         {() => (
@@ -44,8 +44,9 @@ function Menu() {
     <div
       style={{
         display: 'flex',
-        padding: 16,
+        height: 70,
         justifyContent: 'center',
+        alignItems: 'center',
         backgroundColor: '#5894DD',
         position: 'sticky',
         top: 0,
