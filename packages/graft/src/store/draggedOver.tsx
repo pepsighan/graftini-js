@@ -39,6 +39,14 @@ export type DraggedOver = {
    * The region where the component is going to be dropped if the drag action ends.
    */
   dropRegion?: DropRegion | null;
+  /**
+   * Whether the cursor is over the root component.
+   */
+  isOnRoot?: boolean;
+  /**
+   * Whether the cursor is on a document and not out of the browser.
+   */
+  isOnDocument?: boolean;
 };
 
 /** @internal */

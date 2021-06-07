@@ -1,5 +1,6 @@
 import React, {
   createContext,
+  DragEvent,
   DragEventHandler,
   ForwardedRef,
   forwardRef,
@@ -11,6 +12,7 @@ import React, {
   useContext,
 } from 'react';
 import { GraftComponentProps } from './resolver';
+import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
 import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
@@ -20,6 +22,7 @@ import { useRootScrollStoreApi } from './store/rootScroll';
 export const Root__Graft__Component = forwardRef(
   ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
     const { setState } = useRootScrollStoreApi();
+    const [onDragEnter, onDragLeave] = useIdentifyIfCursorOnRoot();
 
     const onScroll = useCallback(
       (event: UIEvent) => {
@@ -37,6 +40,8 @@ export const Root__Graft__Component = forwardRef(
         <div
           ref={ref}
           style={{ width: '100%', height: '100%', overflow: 'auto' }}
+          onDragEnter={onDragEnter}
+          onDragLeave={onDragLeave}
           onDragOver={onDragOver}
           onScroll={onScroll}
         >
@@ -45,7 +50,15 @@ export const Root__Graft__Component = forwardRef(
       );
     }
 
-    return <RootOverrideComponent ref={ref} onDragOver={onDragOver} onScroll={onScroll} />;
+    return (
+      <RootOverrideComponent
+        ref={ref}
+        onDragEnter={onDragEnter}
+        onDragLeave={onDragLeave}
+        onDragOver={onDragOver}
+        onScroll={onScroll}
+      />
+    );
   }
 );
 
@@ -58,7 +71,39 @@ export const RootOverrideContext = createContext<RootComponent | null>(null);
 
 export type RootComponent = ForwardRefExoticComponent<
   RefAttributes<{}> & {
+    onDragEnter: DragEventHandler;
+    onDragLeave: DragEventHandler;
     onDragOver: DragEventHandler;
     onScroll: UIEventHandler;
   }
 >;
+
+/**
+ * Hook that identifies whether the cursor is over a root component.
+ */
+function useIdentifyIfCursorOnRoot(): [DragEventHandler, DragEventHandler] {
+  const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
+
+  const onDragEnter = useCallback(() => {
+    immerSet((state: DraggedOverStore) => {
+      state.draggedOver.isOnRoot = true;
+    });
+  }, [immerSet]);
+
+  const onDragLeave = useCallback(
+    (event: DragEvent) => {
+      // The weird thing about drag leave is that the event is tracked even when the
+      // cursor moves from the root to its own child (which normally is not actually
+      // leaving). So the following filters such events and only tracks the out
+      // going out from the root.
+      if (!event.currentTarget.contains(event.relatedTarget as any)) {
+        immerSet((state: DraggedOverStore) => {
+          state.draggedOver.isOnRoot = false;
+        });
+      }
+    },
+    [immerSet]
+  );
+
+  return [onDragEnter, onDragLeave];
+}
