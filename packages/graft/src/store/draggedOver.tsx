@@ -8,6 +8,7 @@ import { ComponentNode } from './editor';
 /**
  * The position on the screen.
  */
+/** @internal */
 export type Position = {
   x: number;
   y: number;

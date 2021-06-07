@@ -123,9 +123,9 @@ function createEditorStore(componentMap?: ComponentMap) {
     );
   }
 
-  return create<EditorStore>((set: any) => ({
+  return create<EditorStore>((set) => ({
     componentMap: map,
-    immerSet: (fn: any) => set(produce(fn)),
+    immerSet: (fn) => set(produce(fn)),
   }));
 }
 

@@ -110,7 +110,9 @@ export function useOnDragEnd() {
 
       if (draggedOver.componentKind === 'new') {
         // Register this new component in the map.
-        editorState.componentMap[componentToDrop.id] = componentToDrop;
+        // Note need to spread otherwise throws error because the value is read-only and
+        // we need to modify it later down the line.
+        editorState.componentMap[componentToDrop.id] = { ...componentToDrop };
       } else {
         // Remove the component from the older position.
         const index = editorState.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
