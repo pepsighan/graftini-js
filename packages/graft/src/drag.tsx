@@ -2,7 +2,7 @@ import { DragEvent, EventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { DropKind, nearestCanvasId } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
-import { EditorState, useEditorStateInternal, useEditorStoreApiInternal } from './store/editor';
+import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from './store/editor';
 
 /**
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
@@ -94,7 +94,7 @@ export function useOnDragEnd() {
       const { componentId: dropComponentId, dropKind } = dropRegion;
       const componentToDrop = draggedState.draggedOver.component!;
 
-      immerSetEditor((editorState: EditorState) => {
+      immerSetEditor((editorState: EditorStore) => {
         if (draggedState.draggedOver.componentKind === 'new') {
           // Register this new component in the map.
           editorState.componentMap[componentToDrop.id] = componentToDrop;

@@ -71,7 +71,7 @@ export type ComponentMap = {
  * the canvas.
  */
 /** @internal */
-export type EditorState = {
+export type EditorStore = {
   /**
    * The representation of the view that is rendered on the canvas.
    */
@@ -79,7 +79,7 @@ export type EditorState = {
   /**
    * A setter which uses immer.
    */
-  immerSet(fn: (state: EditorState) => void): void;
+  immerSet(fn: (state: EditorStore) => void): void;
 };
 
 /**
@@ -96,7 +96,7 @@ export const ROOT_NODE_ID = 'ROOT';
 /** @internal */
 export const ROOT_NODE_COMPONENT = 'Root__Graft__Component';
 
-function createEditorState(componentMap?: ComponentMap) {
+function createEditorStore(componentMap?: ComponentMap) {
   const map = componentMap ?? {
     [ROOT_NODE_ID]: {
       id: ROOT_NODE_ID,
@@ -123,13 +123,13 @@ function createEditorState(componentMap?: ComponentMap) {
     );
   }
 
-  return create<EditorState>((set: any) => ({
+  return create<EditorStore>((set: any) => ({
     componentMap: map,
     immerSet: (fn: any) => set(produce(fn)),
   }));
 }
 
-const { Provider, useStore, useStoreApi } = createContext<EditorState>();
+const { Provider, useStore, useStoreApi } = createContext<EditorStore>();
 
 /** @internal */
 export const useEditorStateInternal = useStore;
@@ -152,7 +152,7 @@ type EditorStateProviderProps = {
  */
 /** @internal */
 export function EditorStateProvider({ elementMap, children }: EditorStateProviderProps) {
-  const [store] = useState(() => createEditorState(elementMap));
+  const [store] = useState(() => createEditorStore(elementMap));
   return <Provider initialStore={store}>{children}</Provider>;
 }
 

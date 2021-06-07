@@ -2,7 +2,7 @@ import React, { ReactNode, useCallback } from 'react';
 import { CanvasContext, ComponentContext, useComponentId } from './context';
 import { useOnDrag, useOnDragEnd, useOnDragOver, useOnDragStart } from './drag';
 import { GraftComponent, useResolver } from './resolver';
-import { ComponentProps, useEditorStateInternal } from './store/editor';
+import { ComponentProps, EditorStore, useEditorStateInternal } from './store/editor';
 import { useSyncRegion } from './useRegion';
 
 type ComponentNodeProps = {
@@ -18,20 +18,23 @@ type ComponentNodeProps = {
 /** @internal */
 export function ComponentNode({ componentId, isRoot }: ComponentNodeProps) {
   const component = useEditorStateInternal(
-    useCallback((state) => state.componentMap[componentId].type, [componentId])
+    useCallback((state: EditorStore) => state.componentMap[componentId].type, [componentId])
   );
   const Component = useResolver(component);
 
   const componentProps = useEditorStateInternal(
-    useCallback((state) => state.componentMap[componentId].props, [componentId])
+    useCallback((state: EditorStore) => state.componentMap[componentId].props, [componentId])
   );
 
   const isCanvas = useEditorStateInternal(
-    useCallback((state) => state.componentMap[componentId].isCanvas, [componentId])
+    useCallback((state: EditorStore) => state.componentMap[componentId].isCanvas, [componentId])
   );
 
   const childrenNodes = useEditorStateInternal(
-    useCallback((state) => state.componentMap[componentId].childrenNodes, [componentId])
+    useCallback(
+      (state: EditorStore) => state.componentMap[componentId].childrenNodes,
+      [componentId]
+    )
   ) as string[];
 
   // If the component is also a canvas, then render children nodes for it if present.

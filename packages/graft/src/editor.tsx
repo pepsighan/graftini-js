@@ -9,7 +9,7 @@ import {
   ComponentMap,
   ComponentNode,
   ComponentProps,
-  EditorState,
+  EditorStore,
   EditorStateProvider,
   useEditorStateInternal,
   useEditorStoreApiInternal,
@@ -135,7 +135,7 @@ export function useEditor(): UseEditor {
 
   const updateComponentProps = useCallback(
     (componentId: string, props: ComponentProps) => {
-      immerSetEditor((state: EditorState) => {
+      immerSetEditor((state: EditorStore) => {
         const component = state.componentMap[componentId];
 
         if (!component) {
@@ -155,7 +155,7 @@ export function useEditor(): UseEditor {
 
   const deleteComponentNode = useCallback(
     (componentId: string) => {
-      immerSetEditor((state: EditorState) => {
+      immerSetEditor((state: EditorStore) => {
         const component = state.componentMap[componentId];
         if (!component) {
           return;
@@ -182,7 +182,7 @@ export function useEditor(): UseEditor {
 
   const setIsCanvas = useCallback(
     (componentId: string, isCanvas: boolean) => {
-      immerSetEditor((state: EditorState) => {
+      immerSetEditor((state: EditorStore) => {
         state.componentMap[componentId].isCanvas = isCanvas;
       });
     },
@@ -191,7 +191,7 @@ export function useEditor(): UseEditor {
 
   const setChildAppendDirection = useCallback(
     (componentId: string, childAppendDirection: ChildAppendDirection) => {
-      immerSetEditor((state: EditorState) => {
+      immerSetEditor((state: EditorStore) => {
         state.componentMap[componentId].childAppendDirection = childAppendDirection;
       });
     },
