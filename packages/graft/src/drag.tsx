@@ -9,12 +9,11 @@ import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from '
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
  */
 /** @internal */
-export function hideDefaultDragPreview(event: DragEvent) {
-  var crt = document.createElement('div');
-  crt.style.backgroundColor = 'red';
-  crt.style.display = 'none';
-  document.body.appendChild(crt);
-  event.dataTransfer.setDragImage(crt, 0, 0);
+export function showCustomDragPreview(event: DragEvent) {
+  // The drag preview is already rendered at a separate place with the given id.
+  const preview = document.getElementById('graft-drag-preview')!;
+  document.body.appendChild(preview);
+  event.dataTransfer.setDragImage(preview, 0, 0);
 }
 
 /**
@@ -29,7 +28,7 @@ export function useOnDragStart(): EventHandler<DragEvent> {
   return useCallback(
     (event: DragEvent) => {
       event.stopPropagation();
-      hideDefaultDragPreview(event);
+      showCustomDragPreview(event);
 
       // The component is not yet being dragged. It will only start dragging once it moves a few pixels
       // away. We are just storing the data of the current component that is to be dragged.
