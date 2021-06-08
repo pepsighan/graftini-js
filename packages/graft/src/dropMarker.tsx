@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { DropKind, dropMarkerWidth } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
 import { isComponentWithinSubTree, useEditorStoreApiInternal } from './store/editor';
 
@@ -11,8 +12,15 @@ type DropMarkerProps = {
  * It is shown whenever the pointer is in drag mode and the component preceding it is hovered.
  */
 export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
-  const isOnCanvas = useDraggedOverStore(
-    useCallback((state: DraggedOverStore) => state.draggedOver.dropRegion?.componentId, [])
+  const isOnRoot = useDraggedOverStore(
+    useCallback((state: DraggedOverStore) => !!state.draggedOver.isOnRoot, [])
+  );
+
+  const isDroppingAsChild = useDraggedOverStore(
+    useCallback(
+      (state: DraggedOverStore) => state.draggedOver.dropRegion?.dropKind === DropKind.AddAsChild,
+      []
+    )
   );
 
   const dropMarkerRegion = useDraggedOverStore(
@@ -38,18 +46,24 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
     )
   );
 
+  // In case when dropping a component as a child in a canvas show outline to the canvas.
+  // Elsewhere when dropping a component as a sibling, show a bar on the side that is going
+  // to be dropped in.
+
+  const showDropMarker = isOutsideSelf && isOnRoot && dropMarkerRegion;
   return (
     <>
-      {isOutsideSelf && isOnCanvas && dropMarkerRegion && (
+      {showDropMarker && (
         <div
           style={{
             position: 'fixed',
             top: 0,
             left: 0,
-            transform: `translate(${dropMarkerRegion.x}px, ${dropMarkerRegion.y}px)`,
-            width: dropMarkerRegion.width,
-            height: dropMarkerRegion.height,
-            backgroundColor: color,
+            transform: `translate(${dropMarkerRegion!.x}px, ${dropMarkerRegion!.y}px)`,
+            width: dropMarkerRegion!.width,
+            height: dropMarkerRegion!.height,
+            backgroundColor: isDroppingAsChild ? 'transparent' : color,
+            border: isDroppingAsChild ? `${dropMarkerWidth}px solid ${color}` : undefined,
             pointerEvents: 'none',
           }}
         />

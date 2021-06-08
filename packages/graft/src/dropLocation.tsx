@@ -6,13 +6,13 @@ import {
   useDraggedOverStore,
   useDraggedOverStoreApi,
 } from './store/draggedOver';
-import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
 import {
   ChildAppendDirection,
   ComponentMap,
   ROOT_NODE_ID,
   useEditorStoreApiInternal,
 } from './store/editor';
+import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
 import { Region } from './useRegion';
 
 /**
@@ -71,7 +71,8 @@ function identifyDropRegion(
 /**
  * The width of the drop marker.
  */
-const dropMarkerWidth = 4;
+/** @internal */
+export const dropMarkerWidth = 4;
 
 enum MarkerPosition {
   Start = 'front',
