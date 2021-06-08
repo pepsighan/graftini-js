@@ -4,12 +4,13 @@ import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
-import { cleanupComponentMap, Editor, useEditor } from 'graft';
+import { cleanupComponentMap, DragPreview, DropMarker, Editor, useEditor } from 'graft';
 import { debounce } from 'lodash-es';
 import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import { useUpdateProjectDesign } from 'store/projects';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
+import theme from 'utils/theme';
 
 export const ProjectIdContext = createContext();
 
@@ -55,6 +56,8 @@ function Editorial() {
         <Canvas />
         <RightSidebar />
       </Flex>
+      <DragPreview />
+      <DropMarker color={theme.colors.primary[500]} />
     </Editor>
   );
 }
