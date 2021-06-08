@@ -118,6 +118,11 @@ export function useOnDragEnd() {
         // we need to modify it later down the line.
         editorState.componentMap[componentToDrop.id] = { ...componentToDrop };
       } else {
+        if (dropComponentId === componentToDrop.id) {
+          // Its dropping itself onto itself. Do nothing.
+          return;
+        }
+
         // Remove the component from the older position.
         const index = editorState.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
           componentToDrop.id
