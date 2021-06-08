@@ -127,7 +127,7 @@ export function useOnDragEnd() {
         const index = editorState.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
           componentToDrop.id
         );
-        editorState.componentMap[componentToDrop.parentId!].childrenNodes.splice(index);
+        editorState.componentMap[componentToDrop.parentId!].childrenNodes.splice(index, 1);
 
         editorState.componentMap[componentToDrop.parentId!].childrenNodes = [
           ...editorState.componentMap[componentToDrop.parentId!].childrenNodes,
