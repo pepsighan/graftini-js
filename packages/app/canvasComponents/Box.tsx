@@ -1,3 +1,5 @@
+import { useMergeRefs } from '@chakra-ui/hooks';
+import { Box as CBox } from '@chakra-ui/react';
 import {
   AlignItems,
   Border,
@@ -15,7 +17,7 @@ import {
   Spacing,
 } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
-import { ReactNode, useCallback, useRef } from 'react';
+import { forwardRef, ReactNode, useCallback, useRef } from 'react';
 import { BoxDimension } from './BoxOptions';
 import { useBoxTransformedProps } from './BoxRender';
 import Outline, { useSelectComponent } from './Outline';
@@ -48,42 +50,44 @@ export type BoxComponentProps = {
   children?: ReactNode;
 };
 
-const Box: GraftComponent<BoxComponentProps> = ({
-  children,
-  draggable,
-  onDragStart,
-  onDragOver,
-  onDragLeave,
-  ...rest
-}) => {
-  const componentId = useComponentId();
+const Box: GraftComponent<BoxComponentProps> = forwardRef(
+  ({ children, draggable, onDragStart, onDragEnd, onDragOver, onDrag, ...rest }, forwardedRef) => {
+    const componentId = useComponentId();
 
-  const ref = useRef();
-  const selectComponent = useSelectComponent();
+    const ref = useRef();
+    const mergedRef = useMergeRefs(ref, forwardedRef);
 
-  return (
-    <>
-      <BoxComp
-        ref={ref}
-        {...useBoxTransformedProps(rest)}
-        draggable={draggable}
-        onDragStart={onDragStart}
-        onDragOver={onDragOver}
-        onDragLeave={onDragLeave}
-        onClick={useCallback(
-          (ev) => {
-            ev.stopPropagation();
-            return selectComponent(componentId);
-          },
-          [componentId, selectComponent]
-        )}
-      >
-        {children}
-      </BoxComp>
-      <Outline componentRef={ref} />
-    </>
-  );
-};
+    const selectComponent = useSelectComponent();
+
+    return (
+      <>
+        <BoxComp
+          ref={mergedRef}
+          {...useBoxTransformedProps(rest)}
+          draggable={draggable}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+          onDragOver={onDragOver}
+          onDrag={onDrag}
+          onClick={useCallback(
+            (ev) => {
+              ev.stopPropagation();
+              return selectComponent(componentId);
+            },
+            [componentId, selectComponent]
+          )}
+        >
+          {children}
+        </BoxComp>
+        <Outline componentRef={ref} />
+      </>
+    );
+  }
+);
+
+function Preview() {
+  return <CBox width={200} height={100} borderRadius="md" bg="primary.300" />;
+}
 
 Box.graftOptions = {
   // The default props defines all the props that the box can accept exhaustively.
@@ -128,8 +132,7 @@ Box.graftOptions = {
     flexWrap: 'nowrap',
     flexGap: 0,
   },
-  isCanvas: true,
-  display: 'block',
+  preview: Preview,
 };
 
 export default Box;

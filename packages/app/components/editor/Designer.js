@@ -4,9 +4,10 @@ import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
-import { cleanupComponentMap, Editor, useEditor } from 'graft';
+import { cleanupComponentMap, DragPreview, Editor, useEditor } from 'graft';
+import { useDimensions } from 'hooks/useDimensions';
 import { debounce } from 'lodash-es';
-import { createContext, useCallback, useContext, useEffect, useMemo } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import { useUpdateProjectDesign } from 'store/projects';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
@@ -44,17 +45,28 @@ function Editorial() {
     useCallback(() => true, [])
   );
 
+  const canvasRef = useRef();
+  const dimensions = useDimensions(canvasRef);
+
   return (
-    <Editor resolvers={components} initialState={editorState}>
+    <Editor
+      resolvers={components}
+      initialState={editorState}
+      iframeCorrection={{
+        x: dimensions?.left ?? 0,
+        y: dimensions?.top ?? 0,
+      }}
+    >
       <SyncEditorAndDesignerState />
       <EditorNavigation />
       {/* The height of the nav is substracted, so that any of the following does not cause window-wide scroll. 
           Any scroll they have should be within their boundaries.*/}
       <Flex height="calc(100vh - 54px)">
         <LeftSidebar />
-        <Canvas />
+        <Canvas ref={canvasRef} />
         <RightSidebar />
       </Flex>
+      <DragPreview />
     </Editor>
   );
 }

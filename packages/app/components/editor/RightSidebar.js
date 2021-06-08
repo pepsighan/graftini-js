@@ -14,7 +14,7 @@ export default function RightSidebar() {
       minWidth={rightSidebarWidth + 'px'}
       width={rightSidebarWidth + 'px'}
       height="100%"
-      overflowY="scroll"
+      overflowY="auto"
       bg="gray.100"
       py={4}
       px={3}
