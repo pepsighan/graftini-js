@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
+import { isComponentWithinSubTree, useEditorStoreApiInternal } from './store/editor';
 
 type DropMarkerProps = {
   color?: string;
@@ -18,9 +19,28 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
     useCallback((state: DraggedOverStore) => state.draggedOver.dropRegion?.dropMarkerRegion, [])
   );
 
+  const { getState } = useEditorStoreApiInternal();
+  const isOutsideSelf = useDraggedOverStore(
+    useCallback(
+      (state: DraggedOverStore) => {
+        if (!state.draggedOver.component || !state.draggedOver.dropRegion) {
+          return true;
+        }
+
+        // Do not show the marker if dropping over self.
+        return !isComponentWithinSubTree(
+          state.draggedOver.component.id,
+          state.draggedOver.dropRegion.componentId,
+          getState().componentMap
+        );
+      },
+      [getState]
+    )
+  );
+
   return (
     <>
-      {dropMarkerRegion && isOnCanvas && (
+      {isOutsideSelf && isOnCanvas && dropMarkerRegion && (
         <div
           style={{
             position: 'fixed',

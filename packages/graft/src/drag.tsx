@@ -33,6 +33,7 @@ export function useOnDragStart(): EventHandler<DragEvent> {
       // away. We are just storing the data of the current component that is to be dragged.
       immerSet((state: DraggedOverStore) => {
         const component = getState().componentMap[componentId];
+        state.draggedOver.isDragging = true;
         state.draggedOver.componentKind = 'existing';
         state.draggedOver.component = component;
       });
@@ -117,11 +118,16 @@ export function useOnDragEnd() {
         // we need to modify it later down the line.
         editorState.componentMap[componentToDrop.id] = { ...componentToDrop };
       } else {
+        if (dropComponentId === componentToDrop.id) {
+          // Its dropping itself onto itself. Do nothing.
+          return;
+        }
+
         // Remove the component from the older position.
         const index = editorState.componentMap[componentToDrop.parentId!].childrenNodes.indexOf(
           componentToDrop.id
         );
-        editorState.componentMap[componentToDrop.parentId!].childrenNodes.splice(index);
+        editorState.componentMap[componentToDrop.parentId!].childrenNodes.splice(index, 1);
 
         editorState.componentMap[componentToDrop.parentId!].childrenNodes = [
           ...editorState.componentMap[componentToDrop.parentId!].childrenNodes,
