@@ -179,7 +179,6 @@ export type DragProps = {
   onDrag?: DragEventHandler;
   onDragEnd?: DragEventHandler;
   onDragOver?: DragEventHandler;
-  onDragLeave?: DragEventHandler;
   draggable?: boolean;
 };
 
@@ -376,7 +375,6 @@ export function dragProps({
   onDrag,
   onDragEnd,
   onDragOver,
-  onDragLeave,
   draggable,
 }: DragProps): any {
   return {
@@ -384,7 +382,6 @@ export function dragProps({
     onDrag,
     onDragEnd,
     onDragOver,
-    onDragLeave,
     draggable,
   };
 }
