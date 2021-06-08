@@ -11,6 +11,7 @@ const config = {
     'immer',
     'lodash-es',
     'react-merge-refs',
+    'framer-motion',
   ],
   output: [
     { file: pkg.main, format: 'cjs' },

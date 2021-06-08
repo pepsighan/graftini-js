@@ -2,7 +2,7 @@ import { debounce } from 'lodash-es';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useEditorStoreApiInternal } from './store/editor';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
-import { useRootScrollStoreApi } from './store/rootScroll';
+import { RootScrollStore, useRootScrollStore, useRootScrollStoreApi } from './store/rootScroll';
 
 /**
  * A region on the canvas with the position and its dimension.
@@ -22,34 +22,44 @@ export function useSyncRegion(componentId: string) {
   const [ref, setRef] = useState<HTMLElement | null>(null);
   const { subscribe: subscribeEditor } = useEditorStoreApiInternal();
   const { subscribe: subscribeRootScroll } = useRootScrollStoreApi();
+  const isDragScrolling = useRootScrollStore(
+    useCallback((state: RootScrollStore) => state.isDragScrolling, [])
+  );
 
   useLayoutEffect(() => {
     if (!ref) {
       return;
     }
 
-    const measureRegion = debounce(
-      () =>
-        window.requestAnimationFrame(() => {
-          const rect = ref.getBoundingClientRect();
+    const measureRegionInner = () =>
+      window.requestAnimationFrame(() => {
+        const rect = ref.getBoundingClientRect();
 
-          immerSet((state: ComponentRegionStore) => {
-            // Doing away with typescript here for extract performance from immer.
-            state.regionMap[componentId] ??= {} as any;
-            const region = state.regionMap[componentId];
-            region.x = rect.x;
-            region.y = rect.y;
-            region.width = rect.width;
-            region.height = rect.height;
-          });
-        }),
+        immerSet((state: ComponentRegionStore) => {
+          // Doing away with typescript here for extract performance from immer.
+          state.regionMap[componentId] ??= {} as any;
+          const region = state.regionMap[componentId];
+          region.x = rect.x;
+          region.y = rect.y;
+          region.width = rect.width;
+          region.height = rect.height;
+        });
+      });
+
+    const debounceMeasureRegion = debounce(
+      measureRegionInner,
       // Debounce for atleast 200ms. We do not need the region size immediately.
       // This way we can reduce the number of updates to the store.
       200
     );
 
+    // During a drag calculate the region in realtime.
+    const measureRegion = () => (isDragScrolling ? measureRegionInner() : debounceMeasureRegion());
+
+    // Measure it for the first time.
     measureRegion();
 
+    // Measure on window resize.
     window.addEventListener('resize', measureRegion);
 
     // Also measure the region if there is change anywhere in the component tree.
@@ -68,10 +78,7 @@ export function useSyncRegion(componentId: string) {
       unsubscribeStore();
       unsubscribeScroll();
     };
-
-    // The region may need to be updated based on some external factors.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [componentId, immerSet, ref]);
+  }, [componentId, immerSet, isDragScrolling, ref, subscribeEditor, subscribeRootScroll]);
 
   return setRef;
 }
