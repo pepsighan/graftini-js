@@ -10,8 +10,11 @@ import React, {
   UIEventHandler,
   useCallback,
   useContext,
+  useState,
 } from 'react';
+import mergeRefs from 'react-merge-refs';
 import { GraftComponentProps } from './resolver';
+import { useScrollWhenDragging } from './scroll';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
 import { useRootScrollStoreApi } from './store/rootScroll';
 
@@ -23,6 +26,12 @@ export const Root__Graft__Component = forwardRef(
   ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
     const { setState } = useRootScrollStoreApi();
     const [onDragEnter, onDragLeave] = useIdentifyIfCursorOnRoot();
+
+    const [rootRef, setRootRef] = useState<HTMLElement | null>(null);
+    const mergedRef = mergeRefs([setRootRef, ref]);
+
+    // Scroll the canvas when the item being dragged in near the vertical edges.
+    useScrollWhenDragging(rootRef);
 
     const onScroll = useCallback(
       (event: UIEvent) => {
@@ -38,7 +47,7 @@ export const Root__Graft__Component = forwardRef(
     if (!RootOverrideComponent) {
       return (
         <div
-          ref={ref}
+          ref={mergedRef}
           style={{ width: '100%', height: '100%', overflow: 'auto' }}
           onDragEnter={onDragEnter}
           onDragLeave={onDragLeave}
@@ -52,7 +61,7 @@ export const Root__Graft__Component = forwardRef(
 
     return (
       <RootOverrideComponent
-        ref={ref}
+        ref={mergedRef}
         onDragEnter={onDragEnter}
         onDragLeave={onDragLeave}
         onDragOver={onDragOver}
