@@ -46,7 +46,7 @@ export function ComponentNode({ componentId }: ComponentNodeProps) {
 }
 
 type DragOverNotifierProps = {
-  component: GraftComponent<unknown>;
+  component: GraftComponent<{ ref: any }>; // Just a hack in typings.
   componentProps: ComponentProps;
   children?: ReactNode;
 };
@@ -65,7 +65,7 @@ function ComponentWrapper({
 
   return (
     <Component
-      {...{ ref }} // Could not have a proper type.
+      ref={ref}
       onDragStart={onDragStart}
       onDrag={onDrag}
       onDragEnd={onDragEnd}
