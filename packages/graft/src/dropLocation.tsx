@@ -138,10 +138,10 @@ function resolveCenterOfGravity(
   childAppendDirection: ChildAppendDirection
 ): number {
   if (childAppendDirection === 'horizontal') {
-    return (region.x + region.width) / 2;
+    return region.x + region.width / 2;
   }
 
-  return (region.y + region.height) / 2;
+  return region.y + region.height / 2;
 }
 
 /**
@@ -446,7 +446,11 @@ function identifyNonEmptyCanvasDropRegion(
         // The cursor is near to the previous component.
         return {
           componentId: previousComponent.id,
-          dropMarkerRegion: previousRegion,
+          dropMarkerRegion: resolveDropMarkerRegion(
+            previousRegion,
+            MarkerPosition.End,
+            canvas.childAppendDirection!
+          ),
           dropKind: DropKind.AppendAsSibling,
         };
       }
@@ -454,7 +458,11 @@ function identifyNonEmptyCanvasDropRegion(
       // The cursor is near to the current component.
       return {
         componentId: component!.id,
-        dropMarkerRegion: region!,
+        dropMarkerRegion: resolveDropMarkerRegion(
+          region!,
+          MarkerPosition.Start,
+          canvas.childAppendDirection!
+        ),
         dropKind: DropKind.PrependAsSibling,
       };
     }
