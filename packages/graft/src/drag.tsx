@@ -4,6 +4,7 @@ import { IFrameCorrectionContext } from './correction';
 import { DropKind, nearestCanvasId } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from './store/editor';
+import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
  * Hides the default drag preview. Solution adapted from https://stackoverflow.com/a/27990218/8550523.
@@ -23,6 +24,7 @@ export function useOnDragStart(): EventHandler<DragEvent> {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
   const { getState } = useEditorStoreApiInternal();
   const componentId = useComponentId();
+  const { setState } = useRootScrollStoreApi();
 
   return useCallback(
     (event: DragEvent) => {
@@ -37,8 +39,12 @@ export function useOnDragStart(): EventHandler<DragEvent> {
         state.draggedOver.componentKind = 'existing';
         state.draggedOver.component = component;
       });
+
+      // Do not enable the drag scroll immediately. This can cause unwanted scroll when dragging the
+      // from the edge.
+      setTimeout(() => setState({ isDragScrollEnabled: true }), 500);
     },
-    [componentId, getState, immerSet]
+    [componentId, getState, immerSet, setState]
   );
 }
 
@@ -84,8 +90,15 @@ export function useOnDragEnd() {
   const immerSetDraggedOver = useDraggedOverStore(useCallback((state) => state.immerSet, []));
   const { getState: getDraggedOverState } = useDraggedOverStoreApi();
   const immerSetEditor = useEditorStateInternal(useCallback((state) => state.immerSet, []));
+  const { setState: setRootScroll } = useRootScrollStoreApi();
 
   return useCallback(() => {
+    // No more drag scrolling.
+    setRootScroll({
+      isDragScrollEnabled: false,
+      isDragScrolling: false,
+    });
+
     const draggedOver = getDraggedOverState().draggedOver;
 
     // Update the dragged over state separately. But have cached the last value
@@ -165,5 +178,5 @@ export function useOnDragEnd() {
         editorState.componentMap[componentToDrop.id].parentId = canvasId;
       }
     });
-  }, [getDraggedOverState, immerSetDraggedOver, immerSetEditor]);
+  }, [getDraggedOverState, immerSetDraggedOver, immerSetEditor, setRootScroll]);
 }

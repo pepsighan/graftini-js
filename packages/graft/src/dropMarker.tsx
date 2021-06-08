@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
-import { DropKind, dropMarkerWidth } from './dropLocation';
-import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
+import { motion, useMotionValue } from 'framer-motion';
+import React, { useCallback, useEffect, useState } from 'react';
+import { DropKind, dropMarkerWidth, DropRegion } from './dropLocation';
+import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 import { isComponentWithinSubTree, useEditorStoreApiInternal } from './store/editor';
 
 type DropMarkerProps = {
@@ -12,20 +13,13 @@ type DropMarkerProps = {
  * It is shown whenever the pointer is in drag mode and the component preceding it is hovered.
  */
 export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
-  const isOnRoot = useDraggedOverStore(
-    useCallback((state: DraggedOverStore) => !!state.draggedOver.isOnRoot, [])
-  );
-
-  const isDroppingAsChild = useDraggedOverStore(
-    useCallback(
-      (state: DraggedOverStore) => state.draggedOver.dropRegion?.dropKind === DropKind.AddAsChild,
-      []
-    )
-  );
-
-  const dropMarkerRegion = useDraggedOverStore(
-    useCallback((state: DraggedOverStore) => state.draggedOver.dropRegion?.dropMarkerRegion, [])
-  );
+  const backgroundColor = useMotionValue(color);
+  const border = useMotionValue<string | null>(null);
+  const [isDraggingOnRoot, setIsDraggingOnRoot] = useState(false);
+  const posX = useMotionValue(0);
+  const posY = useMotionValue(0);
+  const width = useMotionValue(0);
+  const height = useMotionValue(0);
 
   const { getState } = useEditorStoreApiInternal();
   const isOutsideSelf = useDraggedOverStore(
@@ -46,24 +40,53 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
     )
   );
 
+  const { subscribe } = useDraggedOverStoreApi();
+  useEffect(() => {
+    return subscribe(
+      (dropRegion?: DropRegion | null) => {
+        if (dropRegion?.dropKind === DropKind.AddAsChild) {
+          backgroundColor.set('transparent');
+          border.set(`${dropMarkerWidth}px solid ${color}`);
+        } else {
+          backgroundColor.set(color);
+          border.set(null);
+        }
+
+        setIsDraggingOnRoot(!!dropRegion);
+
+        if (dropRegion?.dropMarkerRegion) {
+          posX.set(dropRegion.dropMarkerRegion.x);
+          posY.set(dropRegion.dropMarkerRegion.y);
+          width.set(dropRegion.dropMarkerRegion.width);
+          height.set(dropRegion.dropMarkerRegion.height);
+        } else {
+          posX.set(0);
+          posY.set(0);
+          width.set(0);
+          height.set(0);
+        }
+      },
+      (state) => state.draggedOver.dropRegion
+    );
+  }, [backgroundColor, border, color, height, posX, posY, subscribe, width]);
+
   // In case when dropping a component as a child in a canvas show outline to the canvas.
   // Elsewhere when dropping a component as a sibling, show a bar on the side that is going
   // to be dropped in.
-
-  const showDropMarker = isOutsideSelf && isOnRoot && dropMarkerRegion;
   return (
     <>
-      {showDropMarker && (
-        <div
+      {isDraggingOnRoot && isOutsideSelf && (
+        <motion.div
           style={{
             position: 'fixed',
             top: 0,
             left: 0,
-            transform: `translate(${dropMarkerRegion!.x}px, ${dropMarkerRegion!.y}px)`,
-            width: dropMarkerRegion!.width,
-            height: dropMarkerRegion!.height,
-            backgroundColor: isDroppingAsChild ? 'transparent' : color,
-            border: isDroppingAsChild ? `${dropMarkerWidth}px solid ${color}` : undefined,
+            x: posX,
+            y: posY,
+            width,
+            height,
+            backgroundColor,
+            border,
             pointerEvents: 'none',
           }}
         />
