@@ -69,7 +69,7 @@ export function useCreateComponent({
       setTimeout(
         () =>
           setRootScroll({
-            enableDragScroll: true,
+            isDragScrollEnabled: true,
           }),
         500
       );

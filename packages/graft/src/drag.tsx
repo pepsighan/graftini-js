@@ -42,7 +42,7 @@ export function useOnDragStart(): EventHandler<DragEvent> {
 
       // Do not enable the drag scroll immediately. This can cause unwanted scroll when dragging the
       // from the edge.
-      setTimeout(() => setState({ enableDragScroll: true }), 500);
+      setTimeout(() => setState({ isDragScrollEnabled: true }), 500);
     },
     [componentId, getState, immerSet, setState]
   );
@@ -95,7 +95,7 @@ export function useOnDragEnd() {
   return useCallback(() => {
     // No more drag scrolling.
     setRootScroll({
-      enableDragScroll: false,
+      isDragScrollEnabled: false,
       isDragScrolling: false,
     });
 

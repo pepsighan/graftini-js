@@ -3,7 +3,7 @@ import create from 'zustand';
 import createContext from 'zustand/context';
 
 /** @internal */
-type RootScrollStore = {
+export type RootScrollStore = {
   /**
    * The current position of the scroll of the root component.
    */
@@ -14,7 +14,7 @@ type RootScrollStore = {
   /**
    * Whether to enable drag scroll or not.
    */
-  enableDragScroll: boolean;
+  isDragScrollEnabled: boolean;
   /**
    * Whether the scroll
    */
@@ -23,18 +23,21 @@ type RootScrollStore = {
 
 /** @internal */
 const createRootScrollStore = () =>
-  create<RootScrollStore>(() => ({
+  create<RootScrollStore>((_) => ({
     position: { top: 0, left: 0 },
-    enableDragScroll: false,
+    isDragScrollEnabled: false,
     isDragScrolling: false,
   }));
 
-const { Provider, useStoreApi } = createContext<RootScrollStore>();
+const { Provider, useStore, useStoreApi } = createContext<RootScrollStore>();
 
 /** @internal */
 export function RootScrollStoreProvider({ children }: PropsWithChildren<{}>) {
   return <Provider initialStore={createRootScrollStore()}>{children}</Provider>;
 }
+
+/** @internal */
+export const useRootScrollStore = useStore;
 
 /** @internal */
 export const useRootScrollStoreApi = useStoreApi;
