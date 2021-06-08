@@ -1,5 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { useMergeRefs } from '@chakra-ui/hooks';
+import { Box } from '@chakra-ui/layout';
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { forwardRef, useCallback, useRef } from 'react';
@@ -43,6 +44,10 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
   }
 );
 
+function Preview() {
+  return <Box width="200px" height="32px" borderRadius="md" bg="primary.400" />;
+}
+
 Text.graftOptions = {
   // The default props defines all the props that the component can accept exhaustively.
   // This field is used by the update options logic.
@@ -57,6 +62,7 @@ Text.graftOptions = {
     fontWeight: 400, // normal weight.
     textAlign: 'left',
   },
+  preview: Preview,
 };
 
 export default Text;
