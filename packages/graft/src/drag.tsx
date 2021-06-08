@@ -33,6 +33,7 @@ export function useOnDragStart(): EventHandler<DragEvent> {
       // away. We are just storing the data of the current component that is to be dragged.
       immerSet((state: DraggedOverStore) => {
         const component = getState().componentMap[componentId];
+        state.draggedOver.isDragging = true;
         state.draggedOver.componentKind = 'existing';
         state.draggedOver.component = component;
       });
