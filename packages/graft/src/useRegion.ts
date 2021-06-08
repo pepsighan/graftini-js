@@ -2,7 +2,7 @@ import { debounce } from 'lodash-es';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useEditorStoreApiInternal } from './store/editor';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
-import { RootScrollStore, useRootScrollStore, useRootScrollStoreApi } from './store/rootScroll';
+import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
  * A region on the canvas with the position and its dimension.
@@ -22,9 +22,7 @@ export function useSyncRegion(componentId: string) {
   const [ref, setRef] = useState<HTMLElement | null>(null);
   const { subscribe: subscribeEditor } = useEditorStoreApiInternal();
   const { subscribe: subscribeRootScroll } = useRootScrollStoreApi();
-  const isDragScrolling = useRootScrollStore(
-    useCallback((state: RootScrollStore) => state.isDragScrolling, [])
-  );
+  const { getState: getRootScroll } = useRootScrollStoreApi();
 
   useLayoutEffect(() => {
     if (!ref) {
@@ -54,31 +52,33 @@ export function useSyncRegion(componentId: string) {
     );
 
     // During a drag calculate the region in realtime.
-    const measureRegion = () => (isDragScrolling ? measureRegionInner() : debounceMeasureRegion());
+    const measureRegion = (isDragScrolling: boolean) =>
+      isDragScrolling ? measureRegionInner() : debounceMeasureRegion();
 
     // Measure it for the first time.
-    measureRegion();
+    measureRegion(false);
 
+    const onResize = () => measureRegion(false);
     // Measure on window resize.
-    window.addEventListener('resize', measureRegion);
+    window.addEventListener('resize', onResize);
 
     // Also measure the region if there is change anywhere in the component tree.
     const unsubscribeStore = subscribeEditor(
       () => {
-        measureRegion();
+        measureRegion(getRootScroll().isDragScrolling);
       },
       (state) => state.componentMap
     );
 
     // Update the region when there is scroll on the root component.
-    const unsubscribeScroll = subscribeRootScroll(() => measureRegion());
+    const unsubscribeScroll = subscribeRootScroll((state) => measureRegion(state.isDragScrolling));
 
     return () => {
-      window.removeEventListener('resize', measureRegion);
+      window.removeEventListener('resize', onResize);
       unsubscribeStore();
       unsubscribeScroll();
     };
-  }, [componentId, immerSet, isDragScrolling, ref, subscribeEditor, subscribeRootScroll]);
+  }, [componentId, getRootScroll, immerSet, ref, subscribeEditor, subscribeRootScroll]);
 
   return setRef;
 }
