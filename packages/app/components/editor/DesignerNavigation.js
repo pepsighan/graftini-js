@@ -10,9 +10,13 @@ import { MdCode } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
-function DrawButton({ mr, label, icon, component }) {
+function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection }) {
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
-  const { onDragStart, draggable } = useCreateComponent({ type: component });
+  const { onDragStart, onDrag, onDragEnd, draggable } = useCreateComponent({
+    type: component,
+    isCanvas,
+    childAppendDirection,
+  });
 
   const modifiedDragStart = useCallback(
     (event) => {
@@ -43,6 +47,8 @@ function DrawButton({ mr, label, icon, component }) {
         mr={mr}
         width="70px"
         onDragStart={modifiedDragStart}
+        onDragEnd={onDragEnd}
+        onDrag={onDrag}
         draggable={draggable}
       >
         {icon}
@@ -99,7 +105,14 @@ export default function EditorNavigation() {
       </Box>
 
       <Flex>
-        <DrawButton mr={4} label="Box" component="Box" icon={<BoxIcon />} />
+        <DrawButton
+          mr={4}
+          label="Box"
+          component="Box"
+          icon={<BoxIcon />}
+          isCanvas
+          childAppendDirection="vertical"
+        />
         <DrawButton label="Text" component="Text" icon={<TextIcon />} />
       </Flex>
 
