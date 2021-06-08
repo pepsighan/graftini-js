@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
+import { useMergeRefs } from '@chakra-ui/hooks';
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
-import { useCallback, useRef } from 'react';
+import { forwardRef, useCallback, useRef } from 'react';
 import Outline, { useSelectComponent } from './Outline';
 
 export type TextComponentProps = {
@@ -13,31 +14,34 @@ export type TextComponentProps = {
   textAlign?: TextAlign;
 };
 
-const Text: GraftComponent<TextComponentProps> = ({ content, ...rest }) => {
-  const componentId = useComponentId();
-  const selectComponent = useSelectComponent();
+const Text: GraftComponent<TextComponentProps> = forwardRef(
+  ({ content, ...rest }, forwardedRef) => {
+    const componentId = useComponentId();
+    const selectComponent = useSelectComponent();
 
-  const ref = useRef();
+    const ref = useRef();
+    const mergedRef = useMergeRefs(ref, forwardedRef);
 
-  return (
-    <>
-      <Txt
-        ref={ref}
-        {...rest}
-        onClick={useCallback(
-          (ev) => {
-            ev.stopPropagation();
-            return selectComponent(componentId);
-          },
-          [componentId, selectComponent]
-        )}
-      >
-        {content}
-      </Txt>
-      <Outline componentRef={ref} />
-    </>
-  );
-};
+    return (
+      <>
+        <Txt
+          ref={mergedRef}
+          {...rest}
+          onClick={useCallback(
+            (ev) => {
+              ev.stopPropagation();
+              return selectComponent(componentId);
+            },
+            [componentId, selectComponent]
+          )}
+        >
+          {content}
+        </Txt>
+        <Outline componentRef={ref} />
+      </>
+    );
+  }
+);
 
 Text.graftOptions = {
   // The default props defines all the props that the component can accept exhaustively.

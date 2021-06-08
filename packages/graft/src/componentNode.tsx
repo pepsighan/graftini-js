@@ -65,7 +65,7 @@ function ComponentWrapper({
 
   return (
     <Component
-      ref={ref as any}
+      {...{ ref }} // Could not have a proper type.
       onDragStart={onDragStart}
       onDrag={onDrag}
       onDragEnd={onDragEnd}
