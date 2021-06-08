@@ -36,8 +36,10 @@ export const Root__Graft__Component = forwardRef(
     const onScroll = useCallback(
       (event: UIEvent) => {
         setState({
-          top: event.currentTarget.scrollTop,
-          left: event.currentTarget.scrollLeft,
+          position: {
+            top: event.currentTarget.scrollTop,
+            left: event.currentTarget.scrollLeft,
+          },
         });
       },
       [setState]

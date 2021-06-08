@@ -4,6 +4,7 @@ import { showCustomDragPreview, useOnDrag, useOnDragEnd } from './drag';
 import { useResolver } from './resolver';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
 import { ChildAppendDirection, ComponentProps } from './store/editor';
+import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
  * Options to configure the kind of components to create during drag operation.
@@ -33,6 +34,7 @@ export function useCreateComponent({
   defaultProps,
 }: CreateComponentOptions): CreateComponentHandlers {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
+  const { setState: setRootScroll } = useRootScrollStoreApi();
 
   // Use the configuration provided in the component definition.
   const Component = useResolver(type);
@@ -61,8 +63,26 @@ export function useCreateComponent({
           childrenNodes: [],
         };
       });
+
+      // Do not enable the drag scroll immediately. This can cause unwanted scroll when dragging the
+      // new component into the canvas.
+      setTimeout(
+        () =>
+          setRootScroll({
+            enableDragScroll: true,
+          }),
+        500
+      );
     },
-    [childAppendDirection, defaultProps, elementDefaultProps, immerSet, isCanvas, type]
+    [
+      childAppendDirection,
+      defaultProps,
+      elementDefaultProps,
+      immerSet,
+      isCanvas,
+      setRootScroll,
+      type,
+    ]
   );
 
   return {

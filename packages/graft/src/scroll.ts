@@ -2,6 +2,7 @@ import { useCallback, useEffect } from 'react';
 import { Position, useDraggedOverStoreApi } from './store/draggedOver';
 import { ROOT_NODE_ID } from './store/editor';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
+import { useRootScrollStoreApi } from './store/rootScroll';
 
 // This is the height of the region which triggers the scroll.
 const edgeHeight = 64;
@@ -14,6 +15,7 @@ export function useScrollWhenDragging(ref: HTMLElement | null) {
     useCallback((state: ComponentRegionStore) => state.regionMap[ROOT_NODE_ID], [])
   );
   const { subscribe } = useDraggedOverStoreApi();
+  const { getState: getRootScroll } = useRootScrollStoreApi();
 
   useEffect(() => {
     if (!ref || !rootRegion) {
@@ -23,6 +25,11 @@ export function useScrollWhenDragging(ref: HTMLElement | null) {
     return subscribe(
       (cursorPosition?: Position | null) => {
         if (!cursorPosition) {
+          return;
+        }
+
+        const { enableDragScroll } = getRootScroll();
+        if (!enableDragScroll) {
           return;
         }
 
@@ -46,5 +53,5 @@ export function useScrollWhenDragging(ref: HTMLElement | null) {
           ? state.draggedOver.cursorPosition
           : null
     );
-  }, [ref, rootRegion, subscribe]);
+  }, [getRootScroll, ref, rootRegion, subscribe]);
 }
