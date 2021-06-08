@@ -138,10 +138,10 @@ function resolveCenterOfGravity(
   childAppendDirection: ChildAppendDirection
 ): number {
   if (childAppendDirection === 'horizontal') {
-    return (region.x + region.width) / 2;
+    return region.x + region.width / 2;
   }
 
-  return (region.y + region.height) / 2;
+  return region.y + region.height / 2;
 }
 
 /**
