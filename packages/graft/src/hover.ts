@@ -23,22 +23,25 @@ export function useSyncHoverRegion(): MouseEventHandler {
   const { getState: getRegionState } = useComponentRegionStoreApi();
   const correctCursorPosition = useCorrectCursorPosition();
 
-  return useCallback((event) => {
-    const position = {
-      x: event.clientX,
-      y: event.clientY,
-    };
+  return useCallback(
+    (event) => {
+      const position = {
+        x: event.clientX,
+        y: event.clientY,
+      };
 
-    // Track where the cursor is hovering at.
-    immerSetHover((state) => {
-      const hoverRegion = identifyHoverRegion(
-        getEditorState().componentMap,
-        getRegionState().regionMap,
-        correctCursorPosition(position, state.isOnRoot)
-      );
-      state.hoverRegion = hoverRegion;
-    });
-  }, []);
+      // Track where the cursor is hovering at.
+      immerSetHover((state) => {
+        const hoverRegion = identifyHoverRegion(
+          getEditorState().componentMap,
+          getRegionState().regionMap,
+          correctCursorPosition(position, state.isOnRoot)
+        );
+        state.hoverRegion = hoverRegion;
+      });
+    },
+    [correctCursorPosition, getEditorState, getRegionState, immerSetHover]
+  );
 }
 
 /**
