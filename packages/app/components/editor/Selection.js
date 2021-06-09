@@ -22,25 +22,33 @@ function ActualSelection({ componentId }) {
   const width = useMotionValue(0);
   const height = useMotionValue(0);
 
+  const actionPosY = useMotionValue(0);
+
   useEffect(() => {
     const updateMotion = (state) => {
       if (state) {
+        // If it overflows from the top, then show it to the bottom of the component.
+        const y = state.y - 19 >= 0 ? state.y - 19 : state.y + state.height - 1;
+
         posX.set(state.x);
         posY.set(state.y);
         width.set(state.width);
         height.set(state.height);
+
+        actionPosY.set(y);
         return;
       }
       posX.set(0);
       posY.set(0);
       width.set(0);
       height.set(0);
+      actionPosY.set(0);
     };
 
     // Initialize with the first value.
     updateMotion(get());
     return subscribe(updateMotion);
-  }, [get, height, posX, posY, subscribe, width]);
+  }, [actionPosY, get, height, posX, posY, subscribe, width]);
 
   return (
     <>
@@ -53,7 +61,7 @@ function ActualSelection({ componentId }) {
           top: 0,
           left: 0,
           x: posX,
-          y: posY,
+          y: actionPosY,
           backgroundColor: theme.colors.primary[300],
           fontSize: 12,
           height: 20,
