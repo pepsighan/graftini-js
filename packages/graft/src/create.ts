@@ -1,8 +1,6 @@
 import { nanoid } from 'nanoid';
 import { MouseEvent, MouseEventHandler, useCallback, useContext } from 'react';
-import { useCorrectCursorPosition } from './correction';
 import { addComponentToDropRegion, DropRegion, identifyDropRegion } from './dropLocation';
-import { identifyHoverRegion } from './hover';
 import { ResolverContext } from './resolver';
 import {
   CreateComponentStore,
@@ -15,7 +13,6 @@ import {
   useEditorStateInternal,
   useEditorStoreApiInternal,
 } from './store/editor';
-import { HoverStore, useHoverStore } from './store/hover';
 import { useComponentRegionStoreApi } from './store/regionMap';
 
 /**
@@ -75,11 +72,9 @@ export function useDrawComponent(): UseDrawComponent {
   const immerSetEditor = useEditorStateInternal(
     useCallback((state: EditorStore) => state.immerSet, [])
   );
-  const immerSetHover = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
   const resolverMap = useContext(ResolverContext);
-  const correctCursorPosition = useCorrectCursorPosition();
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
@@ -109,16 +104,6 @@ export function useDrawComponent(): UseDrawComponent {
         y: event.clientY,
       };
 
-      // Track where the cursor is hovering at.
-      immerSetHover((state) => {
-        const hoverRegion = identifyHoverRegion(
-          getEditorState().componentMap,
-          getRegionState().regionMap,
-          correctCursorPosition(pos, state.isOnRoot)
-        );
-        state.hoverRegion = hoverRegion;
-      });
-
       // Calculate the end point of the sketch that is being drawn.
       immerSetCreateComponent((state) => {
         if (!state.draw) {
@@ -131,7 +116,7 @@ export function useDrawComponent(): UseDrawComponent {
         state.draw.end.y = pos.y < state.draw.start.y ? state.draw.start.y : pos.y;
       });
     },
-    [correctCursorPosition, getEditorState, getRegionState, immerSetCreateComponent, immerSetHover]
+    [immerSetCreateComponent]
   );
 
   const onMouseUp = useCallback(

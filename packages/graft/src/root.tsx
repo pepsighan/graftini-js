@@ -5,6 +5,7 @@ import React, {
   ForwardedRef,
   forwardRef,
   ForwardRefExoticComponent,
+  MouseEvent,
   MouseEventHandler,
   RefAttributes,
   UIEvent,
@@ -15,6 +16,7 @@ import React, {
 } from 'react';
 import mergeRefs from 'react-merge-refs';
 import { useDrawComponent } from './create';
+import { useSyncHoverRegion } from './hover';
 import { GraftComponentProps } from './resolver';
 import { useScrollWhenDragging } from './scroll';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
@@ -31,7 +33,8 @@ export const Root__Graft__Component = forwardRef(
     const [onDragEnter, onDragLeave] = useIdentifyIfCursorOnRootDuringDrag();
     const [onMouseEnter, onMouseLeave] = useIdentifyIfCursorOnRoot();
 
-    const { onMouseUp, onMouseMove, onMouseDown } = useDrawComponent();
+    const { onMouseUp, onMouseMove: onMouseMoveToDraw, onMouseDown } = useDrawComponent();
+    const onMouseMoveToHover = useSyncHoverRegion();
 
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null);
     const mergedRef = mergeRefs([setRootRef, ref]);
@@ -49,6 +52,14 @@ export const Root__Graft__Component = forwardRef(
         });
       },
       [setState]
+    );
+
+    const onMouseMove = useCallback(
+      (event: MouseEvent) => {
+        onMouseMoveToDraw(event);
+        onMouseMoveToHover(event);
+      },
+      [onMouseMoveToDraw, onMouseMoveToHover]
     );
 
     const RootOverrideComponent = useContext(RootOverrideContext);
