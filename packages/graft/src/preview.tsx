@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { useResolver } from './resolver';
+import { useResolveComponent } from './resolver';
 import { useDraggedOverStore } from './store/draggedOver';
 
 /**
@@ -31,7 +31,7 @@ export function DragPreview() {
 }
 
 function PreviewInner({ component }: { component: string }) {
-  const Component = useResolver(component);
+  const Component = useResolveComponent(component);
   const Preview = Component.graftOptions?.preview;
 
   return <>{Preview && <Preview />}</>;

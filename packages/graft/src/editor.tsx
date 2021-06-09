@@ -3,23 +3,18 @@ import { StateListener, StateSelector } from 'zustand';
 import { IFrameCorrectionContext } from './correction';
 import { ResolverMap, ResolverProvider } from './resolver';
 import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
-import { DraggedOverStoreProvider, Position } from './store/draggedOver';
+import Store from './store';
+import { Position } from './store/draggedOver';
 import {
   ChildAppendDirection,
   ComponentMap,
   ComponentNode,
   ComponentProps,
-  EditorStateProvider,
   EditorStore,
   useEditorStateInternal,
   useEditorStoreApiInternal,
 } from './store/editor';
-import {
-  ComponentRegionStateProvider,
-  ComponentRegionStore,
-  useComponentRegionStore,
-} from './store/regionMap';
-import { RootScrollStoreProvider } from './store/rootScroll';
+import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
 
 /**
  * Props for the editor.
@@ -73,21 +68,15 @@ export function Editor({
   }
 
   return (
-    <EditorStateProvider elementMap={initialState}>
-      <ComponentRegionStateProvider>
-        <DraggedOverStoreProvider>
-          <RootScrollStoreProvider>
-            <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
-              <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
-                <IFrameCorrectionContext.Provider value={iframeCorrection ?? null}>
-                  {children}
-                </IFrameCorrectionContext.Provider>
-              </RootOverrideContext.Provider>
-            </ResolverProvider>
-          </RootScrollStoreProvider>
-        </DraggedOverStoreProvider>
-      </ComponentRegionStateProvider>
-    </EditorStateProvider>
+    <Store initialState={initialState}>
+      <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
+        <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
+          <IFrameCorrectionContext.Provider value={iframeCorrection ?? null}>
+            {children}
+          </IFrameCorrectionContext.Provider>
+        </RootOverrideContext.Provider>
+      </ResolverProvider>
+    </Store>
   );
 }
 

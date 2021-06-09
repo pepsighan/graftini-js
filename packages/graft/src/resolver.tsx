@@ -12,7 +12,7 @@ import {
  * in the editor state.
  */
 export type ResolverMap = {
-  [component: string]: GraftComponent<unknown>;
+  [component: string]: GraftComponent<object>;
 };
 
 /**
@@ -20,25 +20,57 @@ export type ResolverMap = {
  * component to be made draggable within the canvas.
  */
 export type GraftComponentProps = {
+  /**
+   * This event handler triggers a drag operation.
+   */
   onDragStart: DragEventHandler;
+  /**
+   * This event is used to track the current cursor position when dragging.
+   */
   onDrag: DragEventHandler;
+  /**
+   * This event commits the new location of the component.
+   */
   onDragEnd: DragEventHandler;
+  /**
+   * This event is useful for the correct functioning of the drag.
+   */
   onDragOver: DragEventHandler;
-  draggable: true;
+  /**
+   * Whether the draggability of the component is enabled or not.
+   */
+  draggable: boolean;
+  /**
+   * The width of the component. This is mandated because it is passed when a new
+   * component is drawn on the canvas.
+   * The component implementation may choose to ignore it.
+   */
+  width?: number;
+  /**
+   * The height of the component. This is mandated because it is passed when a new
+   * component is drawn on the canvas.
+   * The component implementation may choose to ignore it.
+   */
+  height?: number;
+  /**
+   * The children of the component.
+   */
   children?: ReactNode;
 };
 
 /**
  * A component that defines additional behaviour in the context of Graft.
  */
-export type GraftComponent<T> = ForwardRefExoticComponent<GraftComponentProps & T> & {
+export type GraftComponent<T extends object> = ForwardRefExoticComponent<
+  GraftComponentProps & T
+> & {
   graftOptions?: GraftComponentOptions<T>;
 };
 
 /**
  * Configuration for the component.
  */
-export type GraftComponentOptions<T> = {
+export type GraftComponentOptions<T extends object> = {
   /**
    * The default properties of the component. This can also be provided during creation and
    * the values provided here will be overrided.
@@ -53,7 +85,8 @@ export type GraftComponentOptions<T> = {
 /**
  * The context to provide resolver map down the tree.
  */
-const ResolverContext = createContext<ResolverMap>({});
+/** @internal */
+export const ResolverContext = createContext<ResolverMap>({});
 
 /**
  * Provider to provide a map of resolvers within the editor.
@@ -62,10 +95,10 @@ const ResolverContext = createContext<ResolverMap>({});
 export const ResolverProvider = ResolverContext.Provider;
 
 /**
- * Hook to get the component resolver within the editor.
+ * Hook to get the component referred to by the component name within the editor.
  */
 /** @internal */
-export function useResolver(component: string): GraftComponent<any> {
+export function useResolveComponent(component: string): GraftComponent<any> {
   const map = useContext(ResolverContext);
 
   if (!map[component]) {
