@@ -66,8 +66,9 @@ export function useDrawComponent(): UseDrawComponent {
           return;
         }
 
-        state.draw.end.x = event.clientX;
-        state.draw.end.y = event.clientY;
+        // Do not let in draw in the inverse region.
+        state.draw.end.x = event.clientX < state.draw.start.x ? state.draw.start.x : event.clientX;
+        state.draw.end.y = event.clientY < state.draw.start.y ? state.draw.start.y : event.clientY;
       });
     },
     [immerSet]
