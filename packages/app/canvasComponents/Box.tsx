@@ -1,4 +1,3 @@
-import { useMergeRefs } from '@chakra-ui/hooks';
 import { Box as CBox } from '@chakra-ui/react';
 import {
   AlignItems,
@@ -17,10 +16,10 @@ import {
   Spacing,
 } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
-import { forwardRef, ReactNode, useCallback, useRef } from 'react';
+import { forwardRef, ReactNode, useCallback } from 'react';
+import { useSelectComponent } from '../components/editor/Selection';
 import { BoxDimension } from './BoxOptions';
 import { useBoxTransformedProps } from './BoxRender';
-import Selection, { useSelectComponent } from './Selection';
 import useUnselectOnDragStart from './useUnselectOnDragStart';
 
 export type BoxComponentProps = {
@@ -52,36 +51,29 @@ export type BoxComponentProps = {
 };
 
 const Box: GraftComponent<BoxComponentProps> = forwardRef(
-  ({ children, draggable, onDragStart, onDragEnd, onDragOver, onDrag, ...rest }, forwardedRef) => {
+  ({ children, draggable, onDragStart, onDragEnd, onDragOver, onDrag, ...rest }, ref) => {
     const componentId = useComponentId();
-
-    const ref = useRef();
-    const mergedRef = useMergeRefs(ref, forwardedRef);
-
     const selectComponent = useSelectComponent();
 
     return (
-      <>
-        <BoxComp
-          ref={mergedRef}
-          {...useBoxTransformedProps(rest)}
-          draggable={draggable}
-          onDragStart={useUnselectOnDragStart(onDragStart)}
-          onDragEnd={onDragEnd}
-          onDragOver={onDragOver}
-          onDrag={onDrag}
-          onClick={useCallback(
-            (ev) => {
-              ev.stopPropagation();
-              return selectComponent(componentId);
-            },
-            [componentId, selectComponent]
-          )}
-        >
-          {children}
-        </BoxComp>
-        <Selection componentRef={ref} />
-      </>
+      <BoxComp
+        ref={ref}
+        {...useBoxTransformedProps(rest)}
+        draggable={draggable}
+        onDragStart={useUnselectOnDragStart(onDragStart)}
+        onDragEnd={onDragEnd}
+        onDragOver={onDragOver}
+        onDrag={onDrag}
+        onClick={useCallback(
+          (ev) => {
+            ev.stopPropagation();
+            return selectComponent(componentId);
+          },
+          [componentId, selectComponent]
+        )}
+      >
+        {children}
+      </BoxComp>
     );
   }
 );

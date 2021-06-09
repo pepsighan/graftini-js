@@ -1,10 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { useMergeRefs } from '@chakra-ui/hooks';
 import { Box } from '@chakra-ui/layout';
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
-import { forwardRef, useCallback, useRef } from 'react';
-import Selection, { useSelectComponent } from './Selection';
+import { forwardRef, useCallback } from 'react';
+import { useSelectComponent } from '../components/editor/Selection';
 import useUnselectOnDragStart from './useUnselectOnDragStart';
 
 export type TextComponentProps = {
@@ -17,31 +16,25 @@ export type TextComponentProps = {
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(
-  ({ content, onDragStart, ...rest }, forwardedRef) => {
+  ({ content, onDragStart, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useSelectComponent();
 
-    const ref = useRef();
-    const mergedRef = useMergeRefs(ref, forwardedRef);
-
     return (
-      <>
-        <Txt
-          ref={mergedRef}
-          onDragStart={useUnselectOnDragStart(onDragStart)}
-          {...rest}
-          onClick={useCallback(
-            (ev) => {
-              ev.stopPropagation();
-              return selectComponent(componentId);
-            },
-            [componentId, selectComponent]
-          )}
-        >
-          {content}
-        </Txt>
-        <Selection componentRef={ref} />
-      </>
+      <Txt
+        ref={ref}
+        onDragStart={useUnselectOnDragStart(onDragStart)}
+        {...rest}
+        onClick={useCallback(
+          (ev) => {
+            ev.stopPropagation();
+            return selectComponent(componentId);
+          },
+          [componentId, selectComponent]
+        )}
+      >
+        {content}
+      </Txt>
     );
   }
 );
