@@ -65,7 +65,7 @@ export const ResolverProvider = ResolverContext.Provider;
  * Hook to get the component resolver within the editor.
  */
 /** @internal */
-export function useResolver(component: string): GraftComponent<any> {
+export function useResolveComponent(component: string): GraftComponent<any> {
   const map = useContext(ResolverContext);
 
   if (!map[component]) {
