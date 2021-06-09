@@ -1,5 +1,6 @@
 import { Flex } from '@chakra-ui/layout';
 import components from 'canvasComponents';
+import Root from 'canvasComponents/Root';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
@@ -56,6 +57,7 @@ function Editorial() {
         x: dimensions?.left ?? 0,
         y: dimensions?.top ?? 0,
       }}
+      rootComponentOverride={Root}
     >
       <SyncEditorAndDesignerState />
       <EditorNavigation />
