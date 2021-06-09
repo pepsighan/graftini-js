@@ -1,7 +1,7 @@
 import { DragEvent, EventHandler, useCallback, useContext } from 'react';
 import { useComponentId } from './context';
 import { IFrameCorrectionContext } from './correction';
-import { DropKind, nearestCanvasId } from './dropLocation';
+import { addComponentToDropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from './store/editor';
 import { useRootScrollStoreApi } from './store/rootScroll';
@@ -121,10 +121,9 @@ export function useOnDragEnd() {
         return;
       }
 
-      const { componentId: dropComponentId, dropKind } = dropRegion;
       const componentToDrop = draggedOver.component!;
 
-      if (dropComponentId === componentToDrop.id) {
+      if (dropRegion.componentId === componentToDrop.id) {
         // Its dropping itself onto itself. Do nothing.
         return;
       }
@@ -139,36 +138,7 @@ export function useOnDragEnd() {
         ...editorState.componentMap[componentToDrop.parentId!].childrenNodes,
       ];
 
-      if (dropKind === DropKind.AddAsChild) {
-        // Add the dragged component as a child of the component and it becomes the parent.
-        const parentId = dropComponentId;
-        editorState.componentMap[parentId].childrenNodes.push(componentToDrop.id);
-
-        editorState.componentMap[parentId].childrenNodes = [
-          ...editorState.componentMap[parentId].childrenNodes,
-        ];
-        editorState.componentMap[componentToDrop.id].parentId = parentId;
-      } else {
-        // Add the dragged component to the canvas before or after the componentId as it is
-        // the sibling.
-        const canvasId = nearestCanvasId(editorState.componentMap, dropComponentId);
-        const index = editorState.componentMap[canvasId!].childrenNodes.indexOf(dropComponentId);
-
-        if (dropKind === DropKind.AppendAsSibling) {
-          editorState.componentMap[canvasId!].childrenNodes.splice(
-            index + 1,
-            0,
-            componentToDrop.id
-          );
-        } else {
-          editorState.componentMap[canvasId!].childrenNodes.splice(index, 0, componentToDrop.id);
-        }
-
-        editorState.componentMap[canvasId!].childrenNodes = [
-          ...editorState.componentMap[canvasId!].childrenNodes,
-        ];
-        editorState.componentMap[componentToDrop.id].parentId = canvasId;
-      }
+      addComponentToDropRegion(componentToDrop.id, dropRegion, editorState.componentMap);
     });
   }, [getDraggedOverState, immerSetDraggedOver, immerSetEditor, setRootScroll]);
 }

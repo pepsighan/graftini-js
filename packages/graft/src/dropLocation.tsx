@@ -19,6 +19,29 @@ import { Region } from './useRegion';
  * https://www.notion.so/Drag-and-Drop-Location-Resolver-df4de60c835e409f849c9c8b959f2484
  */
 
+export enum DropKind {
+  PrependAsSibling = 'prependAsSibling',
+  AppendAsSibling = 'appendAsSibling',
+  AddAsChild = 'addAsChild',
+}
+
+export type DropRegion = {
+  componentId: string;
+  dropMarkerRegion: Region;
+  dropKind: DropKind;
+};
+
+/**
+ * The width of the drop marker.
+ */
+/** @internal */
+export const dropMarkerWidth = 4;
+
+enum MarkerPosition {
+  Start = 'front',
+  End = 'end',
+}
+
 /**
  * Sync the drop region to the state when the cursor position changes.
  */
@@ -68,14 +91,37 @@ export function identifyDropRegion(
 }
 
 /**
- * The width of the drop marker.
+ * Adds the component to the component map based on the drop region.
  */
-/** @internal */
-export const dropMarkerWidth = 4;
+export function addComponentToDropRegion(
+  componentId: string,
+  dropRegion: DropRegion,
+  componentMap: ComponentMap
+) {
+  const { dropKind, componentId: dropReferenceComponentId } = dropRegion;
 
-enum MarkerPosition {
-  Start = 'front',
-  End = 'end',
+  if (dropKind === DropKind.AddAsChild) {
+    // Add the dragged component as a child of the component and it becomes the parent.
+    const parentId = dropReferenceComponentId;
+    componentMap[parentId].childrenNodes.push(componentId);
+
+    componentMap[parentId].childrenNodes = [...componentMap[parentId].childrenNodes];
+    componentMap[componentId].parentId = parentId;
+  } else {
+    // Add the dragged component to the canvas before or after the componentId as it is
+    // the sibling.
+    const canvasId = nearestCanvasId(componentMap, dropReferenceComponentId);
+    const index = componentMap[canvasId!].childrenNodes.indexOf(dropReferenceComponentId);
+
+    if (dropKind === DropKind.AppendAsSibling) {
+      componentMap[canvasId!].childrenNodes.splice(index + 1, 0, componentId);
+    } else {
+      componentMap[canvasId!].childrenNodes.splice(index, 0, componentId);
+    }
+
+    componentMap[canvasId!].childrenNodes = [...componentMap[canvasId!].childrenNodes];
+    componentMap[componentId].parentId = canvasId;
+  }
 }
 
 /**
@@ -172,18 +218,6 @@ function sliceRegionInHalf(
     },
   ];
 }
-
-export enum DropKind {
-  PrependAsSibling = 'prependAsSibling',
-  AppendAsSibling = 'appendAsSibling',
-  AddAsChild = 'addAsChild',
-}
-
-export type DropRegion = {
-  componentId: string;
-  dropMarkerRegion: Region;
-  dropKind: DropKind;
-};
 
 /**
  * Identifies a drop region if the cursor is over any drop marker.
