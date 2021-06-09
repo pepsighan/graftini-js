@@ -1,11 +1,9 @@
-/** @jsxImportSource @emotion/react */
-import { mdiDelete } from '@mdi/js';
-import Icon from '@mdi/react';
 import { motion, useMotionValue } from 'framer-motion';
-import { useComponentRegion, useEditor, useEditorState } from 'graft';
+import { useComponentRegion } from 'graft';
 import { useCallback, useEffect } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
+import ActionBar from './ActionBar';
 
 export default function Selection() {
   const componentId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
@@ -13,8 +11,6 @@ export default function Selection() {
 }
 
 function ActualSelection({ componentId }) {
-  const name = useEditorState(useCallback((state) => state[componentId].props.name, [componentId]));
-  const onDelete = useOnDelete({ componentId });
   const { get, subscribe } = useComponentRegion(componentId);
 
   const posX = useMotionValue(0);
@@ -38,6 +34,7 @@ function ActualSelection({ componentId }) {
         actionPosY.set(y);
         return;
       }
+
       posX.set(0);
       posY.set(0);
       width.set(0);
@@ -69,13 +66,7 @@ function ActualSelection({ componentId }) {
           paddingRight: 8,
         }}
       >
-        <span css={{ color: theme.colors.white }}>{name || 'Untitled'}</span>
-        <button
-          css={{ marginLeft: 4, cursor: 'pointer', color: theme.colors.white }}
-          onClick={onDelete}
-        >
-          <Icon path={mdiDelete} css={{ height: 14 }} />
-        </button>
+        <ActionBar componentId={componentId} />
       </motion.div>
       <motion.div
         style={{
@@ -96,18 +87,4 @@ function ActualSelection({ componentId }) {
 
 export function useSelectComponent() {
   return useDesignerState(useCallback((state) => state.selectComponent, []));
-}
-
-function useOnDelete({ componentId }) {
-  const { deleteComponentNode } = useEditor();
-  const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
-
-  return useCallback(
-    (ev) => {
-      ev.stopPropagation();
-      unselectComponent();
-      deleteComponentNode(componentId);
-    },
-    [componentId, deleteComponentNode, unselectComponent]
-  );
 }
