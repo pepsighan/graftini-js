@@ -8,10 +8,9 @@ import {
   Editor,
   useComponentId,
   useCreateComponent,
-  useEditorState,
   useForgetCreateComponent,
 } from 'graft';
-import { forwardRef, useCallback } from 'react';
+import { forwardRef } from 'react';
 import IFrame from './IFrame';
 
 export default function App() {
@@ -78,12 +77,8 @@ function Menu() {
   );
 }
 
-const Container = forwardRef(({ children, ...rest }, ref) => {
+const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
   const id = useComponentId();
-  const noChildren = useEditorState(
-    useCallback((state) => state[id].childrenNodes.length === 0, [id])
-  );
-
   const border = { color: { r: 0, g: 0, b: 0 }, style: 'solid', width: 1 };
 
   return (
@@ -97,15 +92,8 @@ const Container = forwardRef(({ children, ...rest }, ref) => {
         bottom: border,
       }}
       color={{ r: 100, g: 100, b: 230, a: 0.3 }}
-      width={{ size: 100, unit: '%' }}
-      height={
-        noChildren
-          ? {
-              size: 180,
-              unit: 'px',
-            }
-          : 'auto'
-      }
+      width={{ size: width, unit: 'px' }}
+      height={{ size: height, unit: 'px' }}
       padding={{ top: 16, left: 16, right: 16, bottom: 16 }}
       justifyContent="space-evenly"
       position="relative"
@@ -126,7 +114,7 @@ Container.graftOptions = {
   ),
 };
 
-const Text = forwardRef(({ ...rest }, ref) => {
+const Text = forwardRef(({ width, height, ...rest }, ref) => {
   const id = useComponentId();
   return (
     <Txt ref={ref} {...rest}>
