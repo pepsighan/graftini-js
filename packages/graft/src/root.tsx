@@ -155,6 +155,7 @@ function useIdentifyIfCursorOnRoot(): [MouseEventHandler, MouseEventHandler] {
   const onMouseLeave = useCallback(() => {
     immerSet((state) => {
       state.isOnRoot = false;
+      state.hoverRegion = null;
     });
   }, [immerSet]);
 
