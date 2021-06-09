@@ -1,5 +1,6 @@
 import { nanoid } from 'nanoid';
 import { MouseEvent, MouseEventHandler, useCallback, useContext } from 'react';
+import { useCorrectCursorPosition } from './correction';
 import { addComponentToDropRegion, DropRegion, identifyDropRegion } from './dropLocation';
 import { identifyHoverRegion } from './hover';
 import { ResolverContext } from './resolver';
@@ -78,6 +79,7 @@ export function useDrawComponent(): UseDrawComponent {
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
   const resolverMap = useContext(ResolverContext);
+  const correctCursorPosition = useCorrectCursorPosition();
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
@@ -108,16 +110,14 @@ export function useDrawComponent(): UseDrawComponent {
       };
 
       // Track where the cursor is hovering at.
-      const hoverRegion = identifyHoverRegion(
-        getEditorState().componentMap,
-        getRegionState().regionMap,
-        pos
-      );
-      if (hoverRegion) {
-        immerSetHover((state) => {
-          state.hoverRegion = hoverRegion;
-        });
-      }
+      immerSetHover((state) => {
+        const hoverRegion = identifyHoverRegion(
+          getEditorState().componentMap,
+          getRegionState().regionMap,
+          correctCursorPosition(pos, state.isOnRoot)
+        );
+        state.hoverRegion = hoverRegion;
+      });
 
       // Calculate the end point of the sketch that is being drawn.
       immerSetCreateComponent((state) => {
@@ -131,7 +131,7 @@ export function useDrawComponent(): UseDrawComponent {
         state.draw.end.y = pos.y < state.draw.start.y ? state.draw.start.y : pos.y;
       });
     },
-    [getEditorState, getRegionState, immerSetCreateComponent, immerSetHover]
+    [correctCursorPosition, getEditorState, getRegionState, immerSetCreateComponent, immerSetHover]
   );
 
   const onMouseUp = useCallback(

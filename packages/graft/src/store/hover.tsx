@@ -3,6 +3,7 @@ import React, { PropsWithChildren } from 'react';
 import create, { StateListener } from 'zustand';
 import createContext from 'zustand/context';
 import { HoverRegion } from '../hover';
+import { log } from './logger';
 
 /**
  * Stores the current position of the cursor when hovering.
@@ -14,6 +15,10 @@ export type HoverStore = {
    */
   hoverRegion?: HoverRegion | null;
   /**
+   * Whether the cursor is hovering over the root.
+   */
+  isOnRoot: boolean;
+  /**
    * A setter which uses immer.
    */
   immerSet(fn: (state: HoverStore) => void): void;
@@ -21,9 +26,12 @@ export type HoverStore = {
 
 /** @internal */
 export const createHoverStore = () =>
-  create<HoverStore>((set) => ({
-    immerSet: (fn) => set(produce(fn)),
-  }));
+  create<HoverStore>(
+    log((set) => ({
+      isOnRoot: false,
+      immerSet: (fn) => set(produce(fn)),
+    }))
+  );
 
 const { Provider, useStore, useStoreApi } = createContext<HoverStore>();
 

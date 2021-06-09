@@ -18,6 +18,7 @@ import { useDrawComponent } from './create';
 import { GraftComponentProps } from './resolver';
 import { useScrollWhenDragging } from './scroll';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
+import { HoverStore, useHoverStore } from './store/hover';
 import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
@@ -27,7 +28,8 @@ import { useRootScrollStoreApi } from './store/rootScroll';
 export const Root__Graft__Component = forwardRef(
   ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
     const { setState } = useRootScrollStoreApi();
-    const [onDragEnter, onDragLeave] = useIdentifyIfCursorOnRoot();
+    const [onDragEnter, onDragLeave] = useIdentifyIfCursorOnRootDuringDrag();
+    const [onMouseEnter, onMouseLeave] = useIdentifyIfCursorOnRoot();
 
     const { onMouseUp, onMouseMove, onMouseDown } = useDrawComponent();
 
@@ -62,6 +64,8 @@ export const Root__Graft__Component = forwardRef(
           onMouseUp={onMouseUp}
           onMouseMove={onMouseMove}
           onMouseDown={onMouseDown}
+          onMouseEnter={onMouseEnter}
+          onMouseLeave={onMouseLeave}
         >
           {children}
         </div>
@@ -78,6 +82,8 @@ export const Root__Graft__Component = forwardRef(
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
         onMouseDown={onMouseDown}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
       />
     );
   }
@@ -96,16 +102,18 @@ export type RootComponent = ForwardRefExoticComponent<
     onDragLeave: DragEventHandler;
     onDragOver: DragEventHandler;
     onScroll: UIEventHandler;
+    onMouseUp: MouseEventHandler;
     onMouseDown: MouseEventHandler;
     onMouseMove: MouseEventHandler;
-    onMouseUp: MouseEventHandler;
+    onMouseEnter: MouseEventHandler;
+    onMouseLeave: MouseEventHandler;
   }
 >;
 
 /**
- * Hook that identifies whether the cursor is over a root component.
+ * Hook that identifies whether the cursor is over the root component during a drag operation.
  */
-function useIdentifyIfCursorOnRoot(): [DragEventHandler, DragEventHandler] {
+function useIdentifyIfCursorOnRootDuringDrag(): [DragEventHandler, DragEventHandler] {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
 
   const onDragEnter = useCallback(() => {
@@ -130,4 +138,25 @@ function useIdentifyIfCursorOnRoot(): [DragEventHandler, DragEventHandler] {
   );
 
   return [onDragEnter, onDragLeave];
+}
+
+/**
+ * Identifies if the cursor is over the root component during non-drag operation.
+ */
+function useIdentifyIfCursorOnRoot(): [MouseEventHandler, MouseEventHandler] {
+  const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
+
+  const onMouseEnter = useCallback(() => {
+    immerSet((state) => {
+      state.isOnRoot = true;
+    });
+  }, [immerSet]);
+
+  const onMouseLeave = useCallback(() => {
+    immerSet((state) => {
+      state.isOnRoot = false;
+    });
+  }, [immerSet]);
+
+  return [onMouseEnter, onMouseLeave];
 }
