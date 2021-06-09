@@ -44,7 +44,7 @@ export type CreateComponentStore = {
   draw?: {
     start: Position;
     end: Position;
-  };
+  } | null;
   /**
    * A setter which uses immer.
    */

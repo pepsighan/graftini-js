@@ -61,8 +61,13 @@ export function useDrawComponent(): UseDrawComponent {
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
       immerSet((state) => {
-        state.draw!.end.x = event.clientX;
-        state.draw!.end.y = event.clientY;
+        if (!state.draw) {
+          // Do not track if not drawing.
+          return;
+        }
+
+        state.draw.end.x = event.clientX;
+        state.draw.end.y = event.clientY;
       });
     },
     [immerSet]
@@ -70,7 +75,10 @@ export function useDrawComponent(): UseDrawComponent {
 
   const onMouseUp = useCallback(() => {
     // Insert the new component.
-  }, []);
+    immerSet((state) => {
+      state.draw = null;
+    });
+  }, [immerSet]);
 
   return {
     onMouseDown,
