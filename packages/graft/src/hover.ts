@@ -80,6 +80,12 @@ function identifyHoveredComponentForSubtree(
   const component = componentMap[componentId];
   const region = regionMap[componentId];
 
+  if (!region) {
+    // The region may not be available if its a newly rendered component.
+    // It will be available in the next cycle.
+    return null;
+  }
+
   const isInRegion = isCursorWithinRegion(region, cursor);
   if (!isInRegion) {
     return null;
