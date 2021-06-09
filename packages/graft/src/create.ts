@@ -108,57 +108,65 @@ export function useDrawComponent(): UseDrawComponent {
     [immerSetCreateComponent]
   );
 
-  const onMouseUp = useCallback(() => {
-    let dropRegion: DropRegion | null = null;
-    let newComponent: ComponentNode | null = null;
+  const onMouseUp = useCallback(
+    (event: MouseEvent) => {
+      let dropRegion: DropRegion | null = null;
+      let newComponent: ComponentNode | null = null;
 
-    // Insert the new component.
-    immerSetCreateComponent((state) => {
-      if (!state.newComponent || !state.draw) {
-        return;
-      }
+      // Insert the new component.
+      immerSetCreateComponent((state) => {
+        if (!state.newComponent || !state.draw) {
+          return;
+        }
 
-      const Component = resolverMap[state.newComponent.type];
-      if (!Component) {
-        throw new Error(
-          `\`${state.newComponent.type}\` is not registered in the Editor resolvers prop.`
+        const Component = resolverMap[state.newComponent.type];
+        if (!Component) {
+          throw new Error(
+            `\`${state.newComponent.type}\` is not registered in the Editor resolvers prop.`
+          );
+        }
+
+        // Use the final values for the cursor.
+        // Do not let in draw in the inverse region.
+        state.draw.end.x = event.clientX < state.draw.start.x ? state.draw.start.x : event.clientX;
+        state.draw.end.y = event.clientY < state.draw.start.y ? state.draw.start.y : event.clientY;
+
+        dropRegion = identifyDropRegion(
+          getEditorState().componentMap,
+          getRegionState().regionMap,
+          state.draw!.start
         );
-      }
 
-      dropRegion = identifyDropRegion(
-        getEditorState().componentMap,
-        getRegionState().regionMap,
-        state.draw!.start
-      );
+        newComponent = {
+          id: nanoid(),
+          type: state.newComponent.type,
+          isCanvas: state.newComponent.isCanvas,
+          props: {
+            ...(Component.graftOptions?.defaultProps ?? {}),
+            ...(state.newComponent.defaultProps ?? {}),
+            // This are reserved props that the component may use.
+            width: state.draw.end.x - state.draw.start.x,
+            height: state.draw.end.y - state.draw.start.x,
+          },
+          childAppendDirection: state.newComponent.childAppendDirection || 'vertical',
+          childrenNodes: [],
+        };
 
-      newComponent = {
-        id: nanoid(),
-        type: state.newComponent.type,
-        isCanvas: state.newComponent.isCanvas,
-        props: {
-          ...(Component.graftOptions?.defaultProps ?? {}),
-          ...(state.newComponent.defaultProps ?? {}),
-          // This are reserved props that the component may use.
-          width: state.draw.end.x - state.draw.start.x,
-          height: state.draw.end.y - state.draw.start.x,
-        },
-        childAppendDirection: state.newComponent.childAppendDirection || 'vertical',
-        childrenNodes: [],
-      };
+        state.draw = null;
+        state.newComponent = null;
+      });
 
-      state.draw = null;
-      state.newComponent = null;
-    });
+      immerSetEditor((state) => {
+        if (!dropRegion) {
+          return;
+        }
 
-    immerSetEditor((state) => {
-      if (!dropRegion) {
-        return;
-      }
-
-      state.componentMap[newComponent!.id] = newComponent!;
-      addComponentToDropRegion(newComponent!.id, dropRegion, state.componentMap);
-    });
-  }, [getEditorState, getRegionState, immerSetCreateComponent, immerSetEditor, resolverMap]);
+        state.componentMap[newComponent!.id] = newComponent!;
+        addComponentToDropRegion(newComponent!.id, dropRegion, state.componentMap);
+      });
+    },
+    [getEditorState, getRegionState, immerSetCreateComponent, immerSetEditor, resolverMap]
+  );
 
   return {
     onMouseDown,
