@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
-import { MouseEvent, MouseEventHandler, useCallback } from 'react';
+import { MouseEvent, MouseEventHandler, useCallback, useContext } from 'react';
 import { addComponentToDropRegion, DropRegion, identifyDropRegion } from './dropLocation';
+import { ResolverContext } from './resolver';
 import {
   CreateComponentStore,
   NewComponent,
@@ -68,6 +69,7 @@ export function useDrawComponent(): UseDrawComponent {
   );
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
+  const resolverMap = useContext(ResolverContext);
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
@@ -116,6 +118,13 @@ export function useDrawComponent(): UseDrawComponent {
         return;
       }
 
+      const Component = resolverMap[state.newComponent.type];
+      if (!Component) {
+        throw new Error(
+          `\`${state.newComponent.type}\` is not registered in the Editor resolvers prop.`
+        );
+      }
+
       dropRegion = identifyDropRegion(
         getEditorState().componentMap,
         getRegionState().regionMap,
@@ -126,7 +135,13 @@ export function useDrawComponent(): UseDrawComponent {
         id: nanoid(),
         type: state.newComponent.type,
         isCanvas: state.newComponent.isCanvas,
-        props: {},
+        props: {
+          ...(Component.graftOptions?.defaultProps ?? {}),
+          ...(state.newComponent.defaultProps ?? {}),
+          // This are reserved props that the component may use.
+          width: state.draw.end.x - state.draw.start.x,
+          height: state.draw.end.y - state.draw.start.x,
+        },
         childAppendDirection: state.newComponent.childAppendDirection || 'vertical',
         childrenNodes: [],
       };
@@ -143,7 +158,7 @@ export function useDrawComponent(): UseDrawComponent {
       state.componentMap[newComponent!.id] = newComponent!;
       addComponentToDropRegion(newComponent!.id, dropRegion, state.componentMap);
     });
-  }, [getEditorState, getRegionState, immerSetCreateComponent, immerSetEditor]);
+  }, [getEditorState, getRegionState, immerSetCreateComponent, immerSetEditor, resolverMap]);
 
   return {
     onMouseDown,

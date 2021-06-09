@@ -12,7 +12,7 @@ import {
  * in the editor state.
  */
 export type ResolverMap = {
-  [component: string]: GraftComponent<unknown>;
+  [component: string]: GraftComponent<object>;
 };
 
 /**
@@ -31,14 +31,16 @@ export type GraftComponentProps = {
 /**
  * A component that defines additional behaviour in the context of Graft.
  */
-export type GraftComponent<T> = ForwardRefExoticComponent<GraftComponentProps & T> & {
+export type GraftComponent<T extends object> = ForwardRefExoticComponent<
+  GraftComponentProps & T
+> & {
   graftOptions?: GraftComponentOptions<T>;
 };
 
 /**
  * Configuration for the component.
  */
-export type GraftComponentOptions<T> = {
+export type GraftComponentOptions<T extends object> = {
   /**
    * The default properties of the component. This can also be provided during creation and
    * the values provided here will be overrided.
@@ -53,7 +55,8 @@ export type GraftComponentOptions<T> = {
 /**
  * The context to provide resolver map down the tree.
  */
-const ResolverContext = createContext<ResolverMap>({});
+/** @internal */
+export const ResolverContext = createContext<ResolverMap>({});
 
 /**
  * Provider to provide a map of resolvers within the editor.
@@ -62,7 +65,7 @@ const ResolverContext = createContext<ResolverMap>({});
 export const ResolverProvider = ResolverContext.Provider;
 
 /**
- * Hook to get the component resolver within the editor.
+ * Hook to get the component referred to by the component name within the editor.
  */
 /** @internal */
 export function useResolveComponent(component: string): GraftComponent<any> {
