@@ -7,6 +7,7 @@ import React, {
   ForwardRefExoticComponent,
   MouseEvent,
   MouseEventHandler,
+  ReactNode,
   RefAttributes,
   UIEvent,
   UIEventHandler,
@@ -95,7 +96,9 @@ export const Root__Graft__Component = forwardRef(
         onMouseDown={onMouseDown}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
-      />
+      >
+        {children}
+      </RootOverrideComponent>
     );
   }
 );
@@ -118,6 +121,7 @@ export type RootComponent = ForwardRefExoticComponent<
     onMouseMove: MouseEventHandler;
     onMouseEnter: MouseEventHandler;
     onMouseLeave: MouseEventHandler;
+    children: ReactNode;
   }
 >;
 
