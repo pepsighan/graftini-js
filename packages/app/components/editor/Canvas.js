@@ -1,5 +1,5 @@
 import IFrame from 'components/IFrame';
-import { Canvas as Canvs, DropMarker } from 'graft';
+import { Canvas as Canvs, DrawMarker, DropMarker } from 'graft';
 import { forwardRef } from 'react';
 import theme from 'utils/theme';
 
@@ -29,6 +29,7 @@ const Canvas = forwardRef((_, ref) => {
           >
             <Canvs />
             <DropMarker color={theme.colors.primary[500]} />
+            <DrawMarker color={theme.colors.primary[500]} />
           </div>
         )}
       </IFrame>
