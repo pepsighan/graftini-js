@@ -4,7 +4,7 @@ import { DropKind, dropMarkerWidth, DropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 import { isComponentWithinSubTree, useEditorStoreApiInternal } from './store/editor';
 
-type DropMarkerProps = {
+export type DropMarkerProps = {
   color?: string;
 };
 
