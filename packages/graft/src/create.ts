@@ -15,6 +15,11 @@ import {
 } from './store/editor';
 import { useComponentRegionStoreApi } from './store/regionMap';
 
+/**
+ * Read the paper around why we are using a draw method to create components.
+ * https://www.notion.so/Drawing-new-components-onto-a-canvas-a90d18a74f014aea8c2c76b42d90aedb
+ */
+
 type CreateComponent = () => void;
 
 /**
