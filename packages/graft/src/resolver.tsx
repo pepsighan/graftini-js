@@ -20,11 +20,41 @@ export type ResolverMap = {
  * component to be made draggable within the canvas.
  */
 export type GraftComponentProps = {
+  /**
+   * This event handler triggers a drag operation.
+   */
   onDragStart: DragEventHandler;
+  /**
+   * This event is used to track the current cursor position when dragging.
+   */
   onDrag: DragEventHandler;
+  /**
+   * This event commits the new location of the component.
+   */
   onDragEnd: DragEventHandler;
+  /**
+   * This event is useful for the correct functioning of the drag.
+   */
   onDragOver: DragEventHandler;
+  /**
+   * Whether the draggability of the component is enabled or not.
+   */
   draggable: boolean;
+  /**
+   * The width of the component. This is mandated because it is passed when a new
+   * component is drawn on the canvas.
+   * The component implementation may choose to ignore it.
+   */
+  width?: number;
+  /**
+   * The height of the component. This is mandated because it is passed when a new
+   * component is drawn on the canvas.
+   * The component implementation may choose to ignore it.
+   */
+  height?: number;
+  /**
+   * The children of the component.
+   */
   children?: ReactNode;
 };
 
