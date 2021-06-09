@@ -146,7 +146,7 @@ export function useDrawComponent(): UseDrawComponent {
             ...(state.newComponent.defaultProps ?? {}),
             // This are reserved props that the component may use.
             width: state.draw.end.x - state.draw.start.x,
-            height: state.draw.end.y - state.draw.start.x,
+            height: state.draw.end.y - state.draw.start.y,
           },
           childAppendDirection: state.newComponent.childAppendDirection || 'vertical',
           childrenNodes: [],
