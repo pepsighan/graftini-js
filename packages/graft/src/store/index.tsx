@@ -1,4 +1,5 @@
 import React, { ReactChild } from 'react';
+import { CreateComponentStoreProvider } from './createComponent';
 import { DraggedOverStoreProvider } from './draggedOver';
 import { ComponentMap, EditorStateProvider } from './editor';
 import { ComponentRegionStateProvider } from './regionMap';
@@ -14,7 +15,9 @@ export default function Store({ initialState, children }: StoreProps) {
     <EditorStateProvider elementMap={initialState}>
       <ComponentRegionStateProvider>
         <DraggedOverStoreProvider>
-          <RootScrollStoreProvider>{children}</RootScrollStoreProvider>
+          <CreateComponentStoreProvider>
+            <RootScrollStoreProvider>{children}</RootScrollStoreProvider>
+          </CreateComponentStoreProvider>
         </DraggedOverStoreProvider>
       </ComponentRegionStateProvider>
     </EditorStateProvider>
