@@ -8,7 +8,7 @@ import { ChildAppendDirection, ComponentProps } from './editor';
 /**
  * The kind of component that is to be created.
  */
-type NewComponent = {
+export type NewComponent = {
   /**
    * The kind of component to create. This type should be registered with the Editor.
    */
@@ -31,7 +31,8 @@ type NewComponent = {
 /**
  * When creating a new component this store tracks the whole process.
  */
-type CreateComponentStore = {
+/** @internal */
+export type CreateComponentStore = {
   /**
    * A new component that is to be created when drawn.
    */
