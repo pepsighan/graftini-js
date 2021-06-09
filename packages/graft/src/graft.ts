@@ -15,4 +15,4 @@ export {
   ComponentProps,
   ROOT_NODE_ID,
 } from './store/editor';
-export { useHoverStore, UseHoverSubscriber } from './store/hover';
+export { UseHoverSubscriber, useHoverSubscriber } from './store/hover';
