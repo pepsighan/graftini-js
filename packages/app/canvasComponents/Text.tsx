@@ -4,7 +4,7 @@ import { Box } from '@chakra-ui/layout';
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { forwardRef, useCallback, useRef } from 'react';
-import Outline, { useSelectComponent } from './Outline';
+import Selection, { useSelectComponent } from './Selection';
 import useUnselectOnDragStart from './useUnselectOnDragStart';
 
 export type TextComponentProps = {
@@ -40,7 +40,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
         >
           {content}
         </Txt>
-        <Outline componentRef={ref} />
+        <Selection componentRef={ref} />
       </>
     );
   }

@@ -20,7 +20,7 @@ import { GraftComponent, useComponentId } from 'graft';
 import { forwardRef, ReactNode, useCallback, useRef } from 'react';
 import { BoxDimension } from './BoxOptions';
 import { useBoxTransformedProps } from './BoxRender';
-import Outline, { useSelectComponent } from './Outline';
+import Selection, { useSelectComponent } from './Selection';
 import useUnselectOnDragStart from './useUnselectOnDragStart';
 
 export type BoxComponentProps = {
@@ -80,7 +80,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
         >
           {children}
         </BoxComp>
-        <Outline componentRef={ref} />
+        <Selection componentRef={ref} />
       </>
     );
   }

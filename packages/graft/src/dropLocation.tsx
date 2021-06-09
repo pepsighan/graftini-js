@@ -127,7 +127,8 @@ export function addComponentToDropRegion(
 /**
  * Checks if the cursor is within the region.
  */
-function isCursorWithinRegion(region: Region, cursor: Position): boolean {
+/** @internal */
+export function isCursorWithinRegion(region: Region, cursor: Position): boolean {
   const isWithinXAxis = cursor.x >= region.x && cursor.x <= region.x + region.width;
   const isWithinYAxis = cursor.y >= region.y && cursor.y <= region.y + region.height;
 
