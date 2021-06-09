@@ -1,9 +1,12 @@
 import { MouseEvent, MouseEventHandler, useCallback } from 'react';
+import { identifyDropRegion } from './dropLocation';
 import {
   CreateComponentStore,
   NewComponent,
   useCreateComponentStore,
 } from './store/createComponent';
+import { useEditorStoreApiInternal } from './store/editor';
+import { useComponentRegionStoreApi } from './store/regionMap';
 
 type CreateComponent = () => void;
 
@@ -54,6 +57,8 @@ export function useDrawComponent(): UseDrawComponent {
   const immerSet = useCreateComponentStore(
     useCallback((state: CreateComponentStore) => state.immerSet, [])
   );
+  const { getState: getEditorState } = useEditorStoreApiInternal();
+  const { getState: getRegionState } = useComponentRegionStoreApi();
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
@@ -95,10 +100,22 @@ export function useDrawComponent(): UseDrawComponent {
   const onMouseUp = useCallback(() => {
     // Insert the new component.
     immerSet((state) => {
+      if (!state.newComponent || !state.draw) {
+        return;
+      }
+
+      const dropRegion = identifyDropRegion(
+        getEditorState().componentMap,
+        getRegionState().regionMap,
+        state.draw!.start
+      );
+
+      console.log(dropRegion);
+
       state.draw = null;
       state.newComponent = null;
     });
-  }, [immerSet]);
+  }, [getEditorState, getRegionState, immerSet]);
 
   return {
     onMouseDown,

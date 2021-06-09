@@ -51,7 +51,7 @@ export function useSyncDropRegion() {
 /**
  * Identify the drop region where a new/old component should be dragged into.
  */
-function identifyDropRegion(
+export function identifyDropRegion(
   componentMap: ComponentMap,
   regionMap: ComponentRegionMap,
   cursor: Position
