@@ -21,6 +21,7 @@ import { forwardRef, ReactNode, useCallback, useRef } from 'react';
 import { BoxDimension } from './BoxOptions';
 import { useBoxTransformedProps } from './BoxRender';
 import Outline, { useSelectComponent } from './Outline';
+import useUnselectOnDragStart from './useUnselectOnDragStart';
 
 export type BoxComponentProps = {
   name?: string;
@@ -65,7 +66,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
           ref={mergedRef}
           {...useBoxTransformedProps(rest)}
           draggable={draggable}
-          onDragStart={onDragStart}
+          onDragStart={useUnselectOnDragStart(onDragStart)}
           onDragEnd={onDragEnd}
           onDragOver={onDragOver}
           onDrag={onDrag}

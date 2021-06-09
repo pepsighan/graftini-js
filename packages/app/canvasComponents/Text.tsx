@@ -5,6 +5,7 @@ import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { forwardRef, useCallback, useRef } from 'react';
 import Outline, { useSelectComponent } from './Outline';
+import useUnselectOnDragStart from './useUnselectOnDragStart';
 
 export type TextComponentProps = {
   color?: RGBA;
@@ -16,7 +17,7 @@ export type TextComponentProps = {
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(
-  ({ content, ...rest }, forwardedRef) => {
+  ({ content, onDragStart, ...rest }, forwardedRef) => {
     const componentId = useComponentId();
     const selectComponent = useSelectComponent();
 
@@ -27,6 +28,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
       <>
         <Txt
           ref={mergedRef}
+          onDragStart={useUnselectOnDragStart(onDragStart)}
           {...rest}
           onClick={useCallback(
             (ev) => {
