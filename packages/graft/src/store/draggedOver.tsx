@@ -27,10 +27,6 @@ export type DraggedOver = {
    */
   cursorPosition?: Position | null;
   /**
-   * What kind of component is being dragged new or existing.
-   */
-  componentKind?: 'new' | 'existing' | null;
-  /**
    * The currently dragged component. This has value when isDragging is true.
    */
   component?: ComponentNode | null;
