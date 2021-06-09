@@ -63,6 +63,7 @@ function Menu() {
           type: 'Container',
           childAppendDirection: 'horizontal',
           isCanvas: true,
+          transformSize: (width, height) => ({ width, height }),
         })}
         style={{ padding: 16, marginLeft: 16 }}
       >
@@ -116,7 +117,7 @@ Container.graftOptions = {
   ),
 };
 
-const Text = forwardRef(({ width, height, ...rest }, ref) => {
+const Text = forwardRef(({ ...rest }, ref) => {
   const id = useComponentId();
   return (
     <Txt ref={ref} {...rest}>

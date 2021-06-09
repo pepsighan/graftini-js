@@ -3,6 +3,7 @@ import { mdiTableColumn, mdiTableRow } from '@mdi/js';
 import { DimensionMaxLimit, DimensionMinLimit, DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
 import Icon from 'components/Icon';
+import { useEditor } from 'graft';
 import { useCallback } from 'react';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
 import { BoxComponentProps, boxTags, default as CanvasBox } from './Box';
@@ -52,6 +53,7 @@ function parseDimension(dim: RawDimension): BoxDimension | DimensionMinLimit | D
 
 export default function BoxOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<BoxComponentProps, BoxOptionsFields>;
+  const { setChildAppendDirection } = useEditor();
 
   return (
     <CF
@@ -93,31 +95,40 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         }),
         []
       )}
-      onTransformValues={useCallback((values: BoxOptionsFields) => {
-        values.width = parseDimension(values.widthRaw) as BoxDimension;
-        values.height = parseDimension(values.heightRaw) as BoxDimension;
-        values.minWidth = parseDimension(values.minWidthRaw) as DimensionMinLimit;
-        values.maxWidth = parseDimension(values.maxWidthRaw) as DimensionMaxLimit;
-        values.minHeight = parseDimension(values.minHeightRaw) as DimensionMinLimit;
-        values.maxHeight = parseDimension(values.maxHeightRaw) as DimensionMaxLimit;
+      onTransformValues={useCallback(
+        (values: BoxOptionsFields) => {
+          values.width = parseDimension(values.widthRaw) as BoxDimension;
+          values.height = parseDimension(values.heightRaw) as BoxDimension;
+          values.minWidth = parseDimension(values.minWidthRaw) as DimensionMinLimit;
+          values.maxWidth = parseDimension(values.maxWidthRaw) as DimensionMaxLimit;
+          values.minHeight = parseDimension(values.minHeightRaw) as DimensionMinLimit;
+          values.maxHeight = parseDimension(values.maxHeightRaw) as DimensionMaxLimit;
 
-        values.padding.top = parseInteger(values.padding?.top) || 0;
-        values.padding.right = parseInteger(values.padding?.right) || 0;
-        values.padding.bottom = parseInteger(values.padding?.bottom) || 0;
-        values.padding.left = parseInteger(values.padding?.left) || 0;
+          values.padding.top = parseInteger(values.padding?.top) || 0;
+          values.padding.right = parseInteger(values.padding?.right) || 0;
+          values.padding.bottom = parseInteger(values.padding?.bottom) || 0;
+          values.padding.left = parseInteger(values.padding?.left) || 0;
 
-        values.margin.top = parseInteger(values.margin?.top) || 0;
-        values.margin.right = parseInteger(values.margin?.right) || 0;
-        values.margin.bottom = parseInteger(values.margin?.bottom) || 0;
-        values.margin.left = parseInteger(values.margin?.left) || 0;
+          values.margin.top = parseInteger(values.margin?.top) || 0;
+          values.margin.right = parseInteger(values.margin?.right) || 0;
+          values.margin.bottom = parseInteger(values.margin?.bottom) || 0;
+          values.margin.left = parseInteger(values.margin?.left) || 0;
 
-        values.opacity = parsePositiveFloat(values.opacity);
-        values.opacity = values.opacity > 1 ? 1 : values.opacity;
+          values.opacity = parsePositiveFloat(values.opacity);
+          values.opacity = values.opacity > 1 ? 1 : values.opacity;
 
-        values.flexShrink = parsePositiveInteger(values.flexShrink);
-        values.flexGrow = parsePositiveInteger(values.flexGrow);
-        values.flexGap = parsePositiveInteger(values.flexGap);
-      }, [])}
+          values.flexShrink = parsePositiveInteger(values.flexShrink);
+          values.flexGrow = parsePositiveInteger(values.flexGrow);
+          values.flexGap = parsePositiveInteger(values.flexGap);
+
+          // Sync the append direction based on the flex direction.
+          setChildAppendDirection(
+            componentId,
+            values.flexDirection === 'column' ? 'vertical' : 'horizontal'
+          );
+        },
+        [componentId, setChildAppendDirection]
+      )}
     >
       {/* Making a 6 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>

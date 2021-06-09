@@ -142,6 +142,10 @@ export function useDrawComponent(): UseDrawComponent {
           state.draw!.start
         );
 
+        const width = state.draw.end.x - state.draw.start.x;
+        const height = state.draw.end.y - state.draw.start.y;
+        const transformedSize = state.newComponent.transformSize?.(width, height) ?? {};
+
         newComponent = {
           id: nanoid(),
           type: state.newComponent.type,
@@ -149,9 +153,7 @@ export function useDrawComponent(): UseDrawComponent {
           props: {
             ...(Component.graftOptions?.defaultProps ?? {}),
             ...(state.newComponent.defaultProps ?? {}),
-            // This are reserved props that the component may use.
-            width: state.draw.end.x - state.draw.start.x,
-            height: state.draw.end.y - state.draw.start.y,
+            ...transformedSize,
           },
           childAppendDirection: state.newComponent.childAppendDirection || 'vertical',
           childrenNodes: [],

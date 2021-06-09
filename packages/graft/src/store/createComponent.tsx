@@ -26,6 +26,12 @@ export type NewComponent = {
    * defined by the Graft Options of the component.
    */
   defaultProps?: ComponentProps;
+  /**
+   * This function transforms the size of the sketch into the props which are then
+   * passed to the newly created component.
+   * The sizes will be ignored if this function is not specified.
+   */
+  transformSize?(width: number, height: number): ComponentProps;
 };
 
 /**
