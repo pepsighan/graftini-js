@@ -36,7 +36,7 @@ export type CreateComponentStore = {
   /**
    * A new component that is to be created when drawn.
    */
-  newComponent?: NewComponent;
+  newComponent?: NewComponent | null;
   /**
    * Tracks where the cursor draws a rectangular frame in. The start
    * and end positions of the cursor.
