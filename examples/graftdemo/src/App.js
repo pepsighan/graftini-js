@@ -9,6 +9,7 @@ import {
   useComponentId,
   useCreateComponent,
   useEditorState,
+  useForgetCreateComponent,
 } from 'graft';
 import { forwardRef, useCallback } from 'react';
 import IFrame from './IFrame';
@@ -54,17 +55,23 @@ function Menu() {
         top: 0,
       }}
     >
+      <button onClick={useForgetCreateComponent()} style={{ padding: 16 }}>
+        Unselect
+      </button>
       <button
-        {...useCreateComponent({
+        onClick={useCreateComponent({
           type: 'Container',
           childAppendDirection: 'horizontal',
           isCanvas: true,
         })}
-        style={{ padding: 16 }}
+        style={{ padding: 16, marginLeft: 16 }}
       >
         Container
       </button>
-      <button {...useCreateComponent({ type: 'Text' })} style={{ padding: 16, marginLeft: 16 }}>
+      <button
+        onClick={useCreateComponent({ type: 'Text' })}
+        style={{ padding: 16, marginLeft: 16 }}
+      >
         Text
       </button>
     </div>
