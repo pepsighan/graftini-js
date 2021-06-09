@@ -1,5 +1,5 @@
 import { motion, useMotionValue } from 'framer-motion';
-import { useHoverSubscriber } from 'graft';
+import { ROOT_NODE_ID, useHoverSubscriber } from 'graft';
 import { useEffect, useState } from 'react';
 import theme from 'utils/theme';
 
@@ -14,13 +14,13 @@ export default function HoverOutline() {
 
   useEffect(() => {
     subscribe((state) => {
-      setIsVisible(!!state);
-
-      if (state) {
+      // Do not show the outline when on root.
+      if (state && state.componentId !== ROOT_NODE_ID) {
         posX.set(state.region.x);
         posY.set(state.region.y);
         width.set(state.region.width);
         height.set(state.region.height);
+        setIsVisible(true);
         return;
       }
 
@@ -28,6 +28,7 @@ export default function HoverOutline() {
       posY.set(0);
       width.set(0);
       height.set(0);
+      setIsVisible(false);
     });
   });
 
