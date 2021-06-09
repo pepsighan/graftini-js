@@ -2,7 +2,7 @@ import produce from 'immer';
 import React, { PropsWithChildren } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
-import { Position } from './draggedOver';
+import { HoverRegion } from '../dropLocation';
 
 /**
  * Stores the current position of the cursor when hovering.
@@ -10,9 +10,9 @@ import { Position } from './draggedOver';
 /** @internal */
 export type HoverStore = {
   /**
-   * The current position of the cursor when hovering over the canvas.
+   * The current component that is being hovered over.
    */
-  hover?: Position | null;
+  hoverRegion?: HoverRegion | null;
   /**
    * A setter which uses immer.
    */

@@ -31,6 +31,11 @@ export type DropRegion = {
   dropKind: DropKind;
 };
 
+export type HoverRegion = {
+  componentId: string;
+  region: Region;
+};
+
 /**
  * The width of the drop marker.
  */
@@ -88,6 +93,29 @@ export function identifyDropRegion(
     identifyEmptyCanvasDropRegion(componentMap, regionMap, cursor) ??
     identifyNonEmptyCanvasDropRegion(componentMap, regionMap, cursor)
   );
+}
+
+/**
+ * Identify the region where the cursor is currently hovering.
+ */
+export function identifyHoverRegion(
+  componentMap: ComponentMap,
+  regionMap: ComponentRegionMap,
+  cursor: Position
+): HoverRegion | null {
+  const dropRegion =
+    identifyNonCanvasDropRegion(componentMap, regionMap, cursor) ??
+    identifyEmptyCanvasDropRegion(componentMap, regionMap, cursor) ??
+    identifyNonEmptyCanvasDropRegion(componentMap, regionMap, cursor);
+
+  if (!dropRegion) {
+    return null;
+  }
+
+  return {
+    componentId: dropRegion.componentId,
+    region: regionMap[dropRegion.componentId],
+  };
 }
 
 /**

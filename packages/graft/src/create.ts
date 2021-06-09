@@ -1,6 +1,11 @@
 import { nanoid } from 'nanoid';
 import { MouseEvent, MouseEventHandler, useCallback, useContext } from 'react';
-import { addComponentToDropRegion, DropRegion, identifyDropRegion } from './dropLocation';
+import {
+  addComponentToDropRegion,
+  DropRegion,
+  identifyDropRegion,
+  identifyHoverRegion,
+} from './dropLocation';
 import { ResolverContext } from './resolver';
 import {
   CreateComponentStore,
@@ -13,6 +18,7 @@ import {
   useEditorStateInternal,
   useEditorStoreApiInternal,
 } from './store/editor';
+import { HoverStore, useHoverStore } from './store/hover';
 import { useComponentRegionStoreApi } from './store/regionMap';
 
 /**
@@ -72,6 +78,7 @@ export function useDrawComponent(): UseDrawComponent {
   const immerSetEditor = useEditorStateInternal(
     useCallback((state: EditorStore) => state.immerSet, [])
   );
+  const immerSetHover = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
   const resolverMap = useContext(ResolverContext);
@@ -99,6 +106,24 @@ export function useDrawComponent(): UseDrawComponent {
 
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
+      const pos = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+
+      // Track where the cursor is hovering at.
+      const hoverRegion = identifyHoverRegion(
+        getEditorState().componentMap,
+        getRegionState().regionMap,
+        pos
+      );
+      if (hoverRegion) {
+        immerSetHover((state) => {
+          state.hoverRegion = hoverRegion;
+        });
+      }
+
+      // Calculate the end point of the sketch that is being drawn.
       immerSetCreateComponent((state) => {
         if (!state.draw) {
           // Do not track if not drawing.
@@ -106,11 +131,11 @@ export function useDrawComponent(): UseDrawComponent {
         }
 
         // Do not let in draw in the inverse region.
-        state.draw.end.x = event.clientX < state.draw.start.x ? state.draw.start.x : event.clientX;
-        state.draw.end.y = event.clientY < state.draw.start.y ? state.draw.start.y : event.clientY;
+        state.draw.end.x = pos.x < state.draw.start.x ? state.draw.start.x : pos.x;
+        state.draw.end.y = pos.y < state.draw.start.y ? state.draw.start.y : pos.y;
       });
     },
-    [immerSetCreateComponent]
+    [getEditorState, getRegionState, immerSetCreateComponent, immerSetHover]
   );
 
   const onMouseUp = useCallback(
