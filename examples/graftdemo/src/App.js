@@ -98,6 +98,7 @@ const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
       padding={{ top: 16, left: 16, right: 16, bottom: 16 }}
       justifyContent="space-evenly"
       position="relative"
+      overflow={{ x: 'hidden', y: 'hidden' }}
     >
       <div style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}>{id}</div>
       {children}
