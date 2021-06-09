@@ -1,6 +1,6 @@
 import produce from 'immer';
 import React, { PropsWithChildren } from 'react';
-import create from 'zustand';
+import create, { StateListener } from 'zustand';
 import createContext from 'zustand/context';
 import { HoverRegion } from '../dropLocation';
 
@@ -37,3 +37,16 @@ export const useHoverStore = useStore;
 
 /** @internal */
 export const useHoverStoreApi = useStoreApi;
+
+export type UseHoverSubscriber = (
+  listener: StateListener<HoverRegion | null | undefined>
+) => () => void;
+
+/**
+ * Hook that returns a subscriber that can be imperatively subscribed to listen to hover states.
+ */
+export function useHoverSubscriber(): UseHoverSubscriber {
+  const { subscribe } = useHoverStoreApi();
+  return (listener) =>
+    subscribe((state, previousState) => listener(state.hoverRegion, previousState.hoverRegion));
+}
