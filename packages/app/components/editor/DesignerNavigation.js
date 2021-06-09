@@ -12,20 +12,18 @@ import theme from 'utils/theme';
 
 function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection }) {
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
-  const { onDragStart, onDrag, onDragEnd, draggable } = useCreateComponent({
+  const onCreate = useCreateComponent({
     type: component,
     isCanvas,
     childAppendDirection,
   });
 
-  const modifiedDragStart = useCallback(
+  const onClick = useCallback(
     (event) => {
-      onDragStart(event);
-
-      // Wait a bit until unselecting the component.
-      setTimeout(() => unselectComponent());
+      onCreate(event);
+      unselectComponent();
     },
-    [onDragStart, unselectComponent]
+    [onCreate, unselectComponent]
   );
 
   return (
@@ -46,10 +44,7 @@ function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection
         px={3}
         mr={mr}
         width="70px"
-        onDragStart={modifiedDragStart}
-        onDragEnd={onDragEnd}
-        onDrag={onDrag}
-        draggable={draggable}
+        onClick={onClick}
       >
         {icon}
         <Text fontSize="sm" fontWeight="normal" mt={1.5}>
