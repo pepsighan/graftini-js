@@ -8,6 +8,7 @@ import {
   useComponentId,
   useCreateComponent,
   useEditorState,
+  DrawMarker,
 } from 'graft';
 import { forwardRef, useCallback } from 'react';
 import IFrame from './IFrame';
@@ -31,6 +32,7 @@ export default function App() {
           >
             <Canvas />
             <DropMarker color="#3344BB" />
+            <DrawMarker color="#3344BB" />
           </div>
         )}
       </IFrame>
