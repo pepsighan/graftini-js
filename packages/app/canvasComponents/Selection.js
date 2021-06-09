@@ -1,25 +1,25 @@
 /** @jsxImportSource @emotion/react */
 import { Portal } from '@chakra-ui/portal';
-import { useComponentId, useEditor, useEditorState } from 'graft';
 import { mdiDelete } from '@mdi/js';
 import Icon from '@mdi/react';
+import { useComponentId, useEditor, useEditorState } from 'graft';
 import { useDimensions } from 'hooks/useDimensions';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
-export default function Outline({ componentRef }) {
+export default function Selection({ componentRef }) {
   const componentId = useComponentId();
   const isSelected = useDesignerState(
     useCallback((state) => state.selectedComponentId === componentId, [componentId])
   );
 
   return isSelected ? (
-    <ActualOutline componentId={componentId} componentRef={componentRef} />
+    <ActualSelection componentId={componentId} componentRef={componentRef} />
   ) : null;
 }
 
-function ActualOutline({ componentId, componentRef }) {
+function ActualSelection({ componentId, componentRef }) {
   const name = useEditorState(useCallback((state) => state[componentId].props.name, [componentId]));
 
   // Re-render the outline if the props changes. The props may cause the component to change its size.
