@@ -95,14 +95,10 @@ Box.graftOptions = {
   defaultProps: {
     name: null,
     tag: 'div',
-    width: {
-      size: 100,
-      unit: '%',
-    },
-    height: {
-      size: 200,
-      unit: 'px',
-    },
+    // The width and height will be given by the user when they draw it on the
+    // screen.
+    width: null,
+    height: null,
     minWidth: 'auto',
     maxWidth: 'none',
     minHeight: 'auto',

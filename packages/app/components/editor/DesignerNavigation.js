@@ -16,6 +16,17 @@ function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection
     type: component,
     isCanvas,
     childAppendDirection,
+    // Transform the drawn size to the one usable by the box.
+    transformSize: (width, height) => ({
+      width: {
+        size: width,
+        unit: 'px',
+      },
+      height: {
+        size: height,
+        unit: 'px',
+      },
+    }),
   });
 
   const onClick = useCallback(
