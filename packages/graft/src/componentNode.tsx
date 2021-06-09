@@ -2,6 +2,7 @@ import React, { ReactNode, useCallback } from 'react';
 import { CanvasContext, ComponentContext, useComponentId } from './context';
 import { useOnDrag, useOnDragEnd, useOnDragOver, useOnDragStart } from './drag';
 import { GraftComponent, useResolver } from './resolver';
+import { CreateComponentStore, useCreateComponentStore } from './store/createComponent';
 import { ComponentProps, EditorStore, useEditorStateInternal } from './store/editor';
 import { useSyncRegion } from './useRegion';
 
@@ -57,6 +58,9 @@ function ComponentWrapper({
   children,
 }: DragOverNotifierProps) {
   const ref = useSyncRegion(useComponentId());
+  const isCreatingNew = useCreateComponentStore(
+    useCallback((state: CreateComponentStore) => !!state.newComponent, [])
+  );
 
   const onDragStart = useOnDragStart();
   const onDrag = useOnDrag();
@@ -70,7 +74,7 @@ function ComponentWrapper({
       onDrag={onDrag}
       onDragEnd={onDragEnd}
       onDragOver={onDragOver}
-      draggable
+      draggable={!isCreatingNew}
       {...componentProps}
     >
       {children}
