@@ -1,11 +1,17 @@
+import { nanoid } from 'nanoid';
 import { MouseEvent, MouseEventHandler, useCallback } from 'react';
-import { identifyDropRegion } from './dropLocation';
+import { addComponentToDropRegion, DropRegion, identifyDropRegion } from './dropLocation';
 import {
   CreateComponentStore,
   NewComponent,
   useCreateComponentStore,
 } from './store/createComponent';
-import { useEditorStoreApiInternal } from './store/editor';
+import {
+  ComponentNode,
+  EditorStore,
+  useEditorStateInternal,
+  useEditorStoreApiInternal,
+} from './store/editor';
 import { useComponentRegionStoreApi } from './store/regionMap';
 
 type CreateComponent = () => void;
@@ -54,15 +60,18 @@ type UseDrawComponent = {
  */
 /** @internal */
 export function useDrawComponent(): UseDrawComponent {
-  const immerSet = useCreateComponentStore(
+  const immerSetCreateComponent = useCreateComponentStore(
     useCallback((state: CreateComponentStore) => state.immerSet, [])
+  );
+  const immerSetEditor = useEditorStateInternal(
+    useCallback((state: EditorStore) => state.immerSet, [])
   );
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
-      immerSet((state) => {
+      immerSetCreateComponent((state) => {
         if (!state.newComponent) {
           return;
         }
@@ -78,12 +87,12 @@ export function useDrawComponent(): UseDrawComponent {
         };
       });
     },
-    [immerSet]
+    [immerSetCreateComponent]
   );
 
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
-      immerSet((state) => {
+      immerSetCreateComponent((state) => {
         if (!state.draw) {
           // Do not track if not drawing.
           return;
@@ -94,28 +103,47 @@ export function useDrawComponent(): UseDrawComponent {
         state.draw.end.y = event.clientY < state.draw.start.y ? state.draw.start.y : event.clientY;
       });
     },
-    [immerSet]
+    [immerSetCreateComponent]
   );
 
   const onMouseUp = useCallback(() => {
+    let dropRegion: DropRegion | null = null;
+    let newComponent: ComponentNode | null = null;
+
     // Insert the new component.
-    immerSet((state) => {
+    immerSetCreateComponent((state) => {
       if (!state.newComponent || !state.draw) {
         return;
       }
 
-      const dropRegion = identifyDropRegion(
+      dropRegion = identifyDropRegion(
         getEditorState().componentMap,
         getRegionState().regionMap,
         state.draw!.start
       );
 
-      console.log(dropRegion);
+      newComponent = {
+        id: nanoid(),
+        type: state.newComponent.type,
+        isCanvas: state.newComponent.isCanvas,
+        props: {},
+        childAppendDirection: state.newComponent.childAppendDirection || 'vertical',
+        childrenNodes: [],
+      };
 
       state.draw = null;
       state.newComponent = null;
     });
-  }, [getEditorState, getRegionState, immerSet]);
+
+    immerSetEditor((state) => {
+      if (!dropRegion) {
+        return;
+      }
+
+      state.componentMap[newComponent!.id] = newComponent!;
+      addComponentToDropRegion(newComponent!.id, dropRegion, state.componentMap);
+    });
+  }, [getEditorState, getRegionState, immerSetCreateComponent, immerSetEditor]);
 
   return {
     onMouseDown,
