@@ -1,6 +1,6 @@
 import { motion, useMotionValue } from 'framer-motion';
 import { useComponentRegion } from 'graft';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 import ActionBar from './ActionBar';
@@ -20,6 +20,8 @@ function ActualSelection({ componentId }) {
 
   const actionPosY = useMotionValue(0);
 
+  const [isShown, setIsShown] = useState(false);
+
   useEffect(() => {
     const updateMotion = (state) => {
       if (state) {
@@ -32,6 +34,7 @@ function ActualSelection({ componentId }) {
         height.set(state.height);
 
         actionPosY.set(y);
+        setIsShown(true);
         return;
       }
 
@@ -40,6 +43,7 @@ function ActualSelection({ componentId }) {
       width.set(0);
       height.set(0);
       actionPosY.set(0);
+      setIsShown(false);
     };
 
     // Initialize with the first value.
@@ -47,7 +51,7 @@ function ActualSelection({ componentId }) {
     return subscribe(updateMotion);
   }, [actionPosY, get, height, posX, posY, subscribe, width]);
 
-  return (
+  return isShown ? (
     <>
       {/* This is the panel on which options of the components are show. */}
       <motion.div
@@ -82,7 +86,7 @@ function ActualSelection({ componentId }) {
         }}
       />
     </>
-  );
+  ) : null;
 }
 
 export function useSelectComponent() {
