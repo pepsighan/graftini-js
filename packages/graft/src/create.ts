@@ -44,6 +44,10 @@ export function useDrawComponent(): UseDrawComponent {
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
       immerSet((state) => {
+        if (!state.newComponent) {
+          return;
+        }
+
         const position = {
           x: event.clientX,
           y: event.clientY,
@@ -78,6 +82,7 @@ export function useDrawComponent(): UseDrawComponent {
     // Insert the new component.
     immerSet((state) => {
       state.draw = null;
+      state.newComponent = null;
     });
   }, [immerSet]);
 
