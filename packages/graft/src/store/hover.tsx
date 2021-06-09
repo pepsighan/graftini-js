@@ -2,7 +2,7 @@ import produce from 'immer';
 import React, { PropsWithChildren } from 'react';
 import create, { StateListener } from 'zustand';
 import createContext from 'zustand/context';
-import { HoverRegion } from '../dropLocation';
+import { HoverRegion } from '../hover';
 
 /**
  * Stores the current position of the cursor when hovering.

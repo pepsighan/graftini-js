@@ -1,11 +1,7 @@
 import { nanoid } from 'nanoid';
 import { MouseEvent, MouseEventHandler, useCallback, useContext } from 'react';
-import {
-  addComponentToDropRegion,
-  DropRegion,
-  identifyDropRegion,
-  identifyHoverRegion,
-} from './dropLocation';
+import { addComponentToDropRegion, DropRegion, identifyDropRegion } from './dropLocation';
+import { identifyHoverRegion } from './hover';
 import { ResolverContext } from './resolver';
 import {
   CreateComponentStore,

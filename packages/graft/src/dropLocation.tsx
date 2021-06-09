@@ -31,11 +31,6 @@ export type DropRegion = {
   dropKind: DropKind;
 };
 
-export type HoverRegion = {
-  componentId: string;
-  region: Region;
-};
-
 /**
  * The width of the drop marker.
  */
@@ -96,29 +91,6 @@ export function identifyDropRegion(
 }
 
 /**
- * Identify the region where the cursor is currently hovering.
- */
-export function identifyHoverRegion(
-  componentMap: ComponentMap,
-  regionMap: ComponentRegionMap,
-  cursor: Position
-): HoverRegion | null {
-  const dropRegion =
-    identifyNonCanvasDropRegion(componentMap, regionMap, cursor) ??
-    identifyEmptyCanvasDropRegion(componentMap, regionMap, cursor) ??
-    identifyNonEmptyCanvasDropRegion(componentMap, regionMap, cursor);
-
-  if (!dropRegion) {
-    return null;
-  }
-
-  return {
-    componentId: dropRegion.componentId,
-    region: regionMap[dropRegion.componentId],
-  };
-}
-
-/**
  * Adds the component to the component map based on the drop region.
  */
 export function addComponentToDropRegion(
@@ -155,7 +127,8 @@ export function addComponentToDropRegion(
 /**
  * Checks if the cursor is within the region.
  */
-function isCursorWithinRegion(region: Region, cursor: Position): boolean {
+/** @internal */
+export function isCursorWithinRegion(region: Region, cursor: Position): boolean {
   const isWithinXAxis = cursor.x >= region.x && cursor.x <= region.x + region.width;
   const isWithinYAxis = cursor.y >= region.y && cursor.y <= region.y + region.height;
 
