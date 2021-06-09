@@ -5,26 +5,39 @@ import {
   useCreateComponentStore,
 } from './store/createComponent';
 
-type UseCreateComponent = {
-  onClick: MouseEventHandler;
-};
+type CreateComponent = () => void;
 
 /**
- * Hook that returns an event handler to register a component that can be created
- * when drawn on the canvas.
+ * Hook that registers a new component that can be created when drawn on the
+ * canvas.
  */
-export function useCreateComponent(config: NewComponent): UseCreateComponent {
+export function useCreateComponent(config: NewComponent): CreateComponent {
   const immerSet = useCreateComponentStore(
     useCallback((state: CreateComponentStore) => state.immerSet, [])
   );
 
-  const onClick = useCallback(() => {
+  return useCallback(() => {
     immerSet((state) => {
       state.newComponent = config;
     });
   }, [config, immerSet]);
+}
 
-  return { onClick };
+type ForgetCreateComponent = () => void;
+
+/**
+ * Hook that allows you to forget the create component action.
+ */
+export function useForgetCreateComponent(): ForgetCreateComponent {
+  const immerSet = useCreateComponentStore(
+    useCallback((state: CreateComponentStore) => state.immerSet, [])
+  );
+
+  return useCallback(() => {
+    immerSet((state) => {
+      state.newComponent = null;
+    });
+  }, [immerSet]);
 }
 
 type UseDrawComponent = {
@@ -36,6 +49,7 @@ type UseDrawComponent = {
 /**
  * Hook that enables drawing a rectangle on a canvas.
  */
+/** @internal */
 export function useDrawComponent(): UseDrawComponent {
   const immerSet = useCreateComponentStore(
     useCallback((state: CreateComponentStore) => state.immerSet, [])

@@ -1,6 +1,6 @@
 export { Canvas } from './canvas';
 export { useCanvasId, useComponentId } from './context';
-export { useCreateComponent } from './create';
+export { useCreateComponent, useForgetCreateComponent } from './create';
 export { DrawMarker, DrawMarkerProps } from './drawMarker';
 export { DropMarker, DropMarkerProps } from './dropMarker';
 export { Editor, EditorProps, useEditor, useEditorState } from './editor';
