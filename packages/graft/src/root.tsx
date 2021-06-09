@@ -5,6 +5,7 @@ import React, {
   ForwardedRef,
   forwardRef,
   ForwardRefExoticComponent,
+  MouseEventHandler,
   RefAttributes,
   UIEvent,
   UIEventHandler,
@@ -13,6 +14,7 @@ import React, {
   useState,
 } from 'react';
 import mergeRefs from 'react-merge-refs';
+import { useDrawComponent } from './create';
 import { GraftComponentProps } from './resolver';
 import { useScrollWhenDragging } from './scroll';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
@@ -26,6 +28,8 @@ export const Root__Graft__Component = forwardRef(
   ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
     const { setState } = useRootScrollStoreApi();
     const [onDragEnter, onDragLeave] = useIdentifyIfCursorOnRoot();
+
+    const { onMouseUp, onMouseMove, onMouseDown } = useDrawComponent();
 
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null);
     const mergedRef = mergeRefs([setRootRef, ref]);
@@ -55,6 +59,9 @@ export const Root__Graft__Component = forwardRef(
           onDragLeave={onDragLeave}
           onDragOver={onDragOver}
           onScroll={onScroll}
+          onMouseUp={onMouseUp}
+          onMouseMove={onMouseMove}
+          onMouseDown={onMouseDown}
         >
           {children}
         </div>
@@ -68,6 +75,9 @@ export const Root__Graft__Component = forwardRef(
         onDragLeave={onDragLeave}
         onDragOver={onDragOver}
         onScroll={onScroll}
+        onMouseUp={onMouseUp}
+        onMouseMove={onMouseMove}
+        onMouseDown={onMouseDown}
       />
     );
   }
@@ -86,6 +96,9 @@ export type RootComponent = ForwardRefExoticComponent<
     onDragLeave: DragEventHandler;
     onDragOver: DragEventHandler;
     onScroll: UIEventHandler;
+    onMouseDown: MouseEventHandler;
+    onMouseMove: MouseEventHandler;
+    onMouseUp: MouseEventHandler;
   }
 >;
 

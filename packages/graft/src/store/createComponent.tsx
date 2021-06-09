@@ -2,7 +2,7 @@ import produce from 'immer';
 import React, { PropsWithChildren } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
-import { Region } from '../useRegion';
+import { Position } from './draggedOver';
 import { ChildAppendDirection, ComponentProps } from './editor';
 
 /**
@@ -38,9 +38,13 @@ export type CreateComponentStore = {
    */
   newComponent?: NewComponent;
   /**
-   * The region in which the new component is created.
+   * Tracks where the cursor draws a rectangular frame in. The start
+   * and end positions of the cursor.
    */
-  region?: Region;
+  draw?: {
+    start: Position;
+    end: Position;
+  };
   /**
    * A setter which uses immer.
    */
