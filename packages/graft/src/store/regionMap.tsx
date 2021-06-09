@@ -1,5 +1,5 @@
 import produce from 'immer';
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useCallback } from 'react';
 import create, { StateListener } from 'zustand';
 import createContext from 'zustand/context';
 import { Region } from '../useRegion';
@@ -55,9 +55,13 @@ export type UseComponentRegionSubscriber = (
  */
 export function useComponentRegionSubscriber(componentId: string): UseComponentRegionSubscriber {
   const { subscribe } = useComponentRegionStoreApi();
-  return (listener) =>
-    subscribe(
-      (region: Region | null, previousRegion: Region | null) => listener(region, previousRegion),
-      (state) => state.regionMap[componentId]
-    );
+
+  return useCallback(
+    (listener) =>
+      subscribe(
+        (region: Region | null, previousRegion: Region | null) => listener(region, previousRegion),
+        (state) => state.regionMap[componentId]
+      ),
+    [componentId, subscribe]
+  );
 }
