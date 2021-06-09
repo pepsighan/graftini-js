@@ -16,3 +16,4 @@ export {
   ROOT_NODE_ID,
 } from './store/editor';
 export { UseHoverSubscriber, useHoverSubscriber } from './store/hover';
+export { useComponentRegion, UseComponentRegion } from './store/regionMap';

@@ -1,6 +1,6 @@
 import produce from 'immer';
-import React, { PropsWithChildren } from 'react';
-import create from 'zustand';
+import React, { PropsWithChildren, useCallback } from 'react';
+import create, { StateListener } from 'zustand';
 import createContext from 'zustand/context';
 import { Region } from '../useRegion';
 
@@ -45,3 +45,28 @@ export const useComponentRegionStore = useStore;
 
 /** @internal */
 export const useComponentRegionStoreApi = useStoreApi;
+
+export type UseComponentRegion = {
+  get(componentId: string): Region | null;
+  subscribe(listener: StateListener<Region | null | undefined>): () => void;
+};
+
+/**
+ * Hook that returns a subscriber that can be imperatively subscribed to listen to a component's region.
+ */
+export function useComponentRegion(componentId: string): UseComponentRegion {
+  const { subscribe, getState } = useComponentRegionStoreApi();
+
+  const get = useCallback(() => getState().regionMap[componentId], [componentId, getState]);
+
+  const subscribeComponent = useCallback(
+    (listener) =>
+      subscribe(
+        (region: Region | null, previousRegion: Region | null) => listener(region, previousRegion),
+        (state) => state.regionMap[componentId]
+      ),
+    [componentId, subscribe]
+  );
+
+  return { get, subscribe: subscribeComponent };
+}
