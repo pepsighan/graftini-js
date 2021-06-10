@@ -20,7 +20,7 @@ export default function RootOptions() {
     >
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
-        <GridItem colSpan={8} mt={4} mb={1}>
+        <GridItem colSpan={8} mb={1}>
           <Text fontSize="sm" fontWeight="bold">
             Appearance
           </Text>
