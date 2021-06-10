@@ -1,14 +1,98 @@
 import { Box, Button, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
 import BackButton from 'components/BackButton';
 import { motion } from 'framer-motion';
-import { useCreateComponent } from 'graft';
-import { useRouter } from 'next/router';
+import { useCreateComponent, useCurrentCreateComponentType, useForgetCreateComponent } from 'graft';
 import { useCallback } from 'react';
 import { MdCode } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
+import MdIcon from 'components/Icon';
+import { mdiCursorDefault } from '@mdi/js';
+
+export default function EditorNavigation() {
+  const toggleQueryBuilderPane = useDesignerState(
+    useCallback((state) => state.toggleQueryBuilderPane, [])
+  );
+
+  return (
+    <Flex
+      height="54px"
+      px={4}
+      justifyContent="space-between"
+      alignItems="center"
+      position="sticky"
+      top={0}
+      backgroundColor="gray.100"
+      borderBottom="1px"
+      borderBottomColor="gray.400"
+    >
+      <Box>
+        <BackButton href="/dashboard/projects" />
+      </Box>
+
+      <Flex>
+        <CursorButton />
+        <DrawButton
+          mr={4}
+          label="Box"
+          component="Box"
+          icon={<BoxIcon />}
+          isCanvas
+          childAppendDirection="vertical"
+        />
+        <DrawButton label="Text" component="Text" icon={<TextIcon />} />
+      </Flex>
+
+      <Flex>
+        <IconButton icon={<Icon as={MdCode} fontSize="xl" />} onClick={toggleQueryBuilderPane} />
+        {/* <Link href={`/dashboard/project/${query.projectId}/preview`}>
+          <IconButton ml={4} icon={<Icon as={CgScreen} fontSize="xl" />} />
+        </Link> */}
+      </Flex>
+    </Flex>
+  );
+}
+
+function CursorButton() {
+  const selectedComponent = useCurrentCreateComponentType();
+  const forgetCreateComponent = useForgetCreateComponent();
+
+  return (
+    <motion.div
+      variants={{
+        active: {
+          color: theme.colors.primary[600],
+          '--icon-color': theme.colors.primary[500],
+        },
+        inactive: {
+          color: theme.colors.gray[800],
+          '--icon-color': theme.colors.gray[600],
+        },
+      }}
+      animate={!selectedComponent ? 'active' : 'inactive'}
+      whileHover="active"
+    >
+      <Button
+        size="lg"
+        variant="ghost"
+        flexDirection="column"
+        px={3}
+        mr={4}
+        width="70px"
+        onClick={forgetCreateComponent}
+      >
+        <MdIcon icon={mdiCursorDefault} fontSize="xl" color="var(--icon-color)" height={5} />
+        <Text fontSize="sm" fontWeight="normal" mt={1.5}>
+          Cursor
+        </Text>
+      </Button>
+    </motion.div>
+  );
+}
 
 function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection }) {
+  const selectedComponent = useCurrentCreateComponentType();
+
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
   const onCreate = useCreateComponent({
     type: component,
@@ -37,14 +121,18 @@ function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection
 
   return (
     <motion.div
-      style={{
-        color: theme.colors.gray[800],
-        '--icon-color': theme.colors.gray[600],
+      variants={{
+        active: {
+          color: theme.colors.primary[600],
+          '--icon-color': theme.colors.primary[500],
+        },
+        inactive: {
+          color: theme.colors.gray[800],
+          '--icon-color': theme.colors.gray[600],
+        },
       }}
-      whileHover={{
-        color: theme.colors.primary[700],
-        '--icon-color': theme.colors.primary[500],
-      }}
+      animate={selectedComponent === component ? 'active' : 'inactive'}
+      whileHover="active"
     >
       <Button
         size="lg"
@@ -82,50 +170,6 @@ function TextIcon() {
       pointerEvents="none"
     >
       A
-    </Flex>
-  );
-}
-
-export default function EditorNavigation() {
-  const { query } = useRouter();
-  const toggleQueryBuilderPane = useDesignerState(
-    useCallback((state) => state.toggleQueryBuilderPane, [])
-  );
-
-  return (
-    <Flex
-      height="54px"
-      px={4}
-      justifyContent="space-between"
-      alignItems="center"
-      position="sticky"
-      top={0}
-      backgroundColor="gray.100"
-      borderBottom="1px"
-      borderBottomColor="gray.400"
-    >
-      <Box>
-        <BackButton href="/dashboard/projects" />
-      </Box>
-
-      <Flex>
-        <DrawButton
-          mr={4}
-          label="Box"
-          component="Box"
-          icon={<BoxIcon />}
-          isCanvas
-          childAppendDirection="vertical"
-        />
-        <DrawButton label="Text" component="Text" icon={<TextIcon />} />
-      </Flex>
-
-      <Flex>
-        <IconButton icon={<Icon as={MdCode} fontSize="xl" />} onClick={toggleQueryBuilderPane} />
-        {/* <Link href={`/dashboard/project/${query.projectId}/preview`}>
-          <IconButton ml={4} icon={<Icon as={CgScreen} fontSize="xl" />} />
-        </Link> */}
-      </Flex>
     </Flex>
   );
 }
