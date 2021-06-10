@@ -1,4 +1,4 @@
-import React, { ReactChild } from 'react';
+import React, { ReactNode } from 'react';
 import { CreateComponentStoreProvider } from './createComponent';
 import { DraggedOverStoreProvider } from './draggedOver';
 import { ComponentMap, EditorStateProvider } from './editor';
@@ -8,7 +8,7 @@ import { RootScrollStoreProvider } from './rootScroll';
 
 export type StoreProps = {
   initialState?: ComponentMap;
-  children: ReactChild;
+  children: ReactNode;
 };
 
 export default function Store({ initialState, children }: StoreProps) {

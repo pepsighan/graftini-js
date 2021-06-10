@@ -1,7 +1,9 @@
 import { produce } from 'immer';
-import React, { ReactNode, useState } from 'react';
+import React, { ReactNode, useContext, useState } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
+import { GraftComponent } from '../resolver';
+import { RootOverrideContext } from '../root';
 
 export type ComponentProps = {
   [key: string]: any;
@@ -96,13 +98,15 @@ export const ROOT_NODE_ID = 'ROOT';
 /** @internal */
 export const ROOT_NODE_COMPONENT = 'Root__Graft__Component';
 
-function createEditorStore(componentMap?: ComponentMap) {
+function createEditorStore(componentMap?: ComponentMap, rootOverride?: GraftComponent<any> | null) {
   const map = componentMap ?? {
     [ROOT_NODE_ID]: {
       id: ROOT_NODE_ID,
       type: ROOT_NODE_COMPONENT,
       childAppendDirection: 'vertical',
-      props: {},
+      props: {
+        ...(rootOverride?.graftOptions?.defaultProps ?? {}),
+      },
       isCanvas: true,
       parentId: null,
       childrenNodes: [],
@@ -152,7 +156,8 @@ type EditorStateProviderProps = {
  */
 /** @internal */
 export function EditorStateProvider({ elementMap, children }: EditorStateProviderProps) {
-  const [store] = useState(() => createEditorStore(elementMap));
+  const RootComponent = useContext(RootOverrideContext);
+  const [store] = useState(() => createEditorStore(elementMap, RootComponent));
   return <Provider initialStore={store}>{children}</Provider>;
 }
 
