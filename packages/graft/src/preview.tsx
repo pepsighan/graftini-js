@@ -3,10 +3,14 @@ import React, { useEffect, useState } from 'react';
 import { useDraggedOverStoreApi } from './store/draggedOver';
 import { useComponentRegionStoreApi } from './store/regionMap';
 
+type DragPreviewProps = {
+  color: string;
+};
+
 /**
  * Shows a drag preview which is snapped to the cursor.
  */
-export function DragPreview() {
+export function DragPreview({ color = '#9090DD' }: DragPreviewProps) {
   const { subscribe } = useDraggedOverStoreApi();
   const { getState: getRegionState } = useComponentRegionStoreApi();
 
@@ -55,7 +59,7 @@ export function DragPreview() {
             y: 0,
             width,
             height,
-            border: '1px solid blue',
+            border: `1px solid ${color}`,
           }}
         />
       )}
