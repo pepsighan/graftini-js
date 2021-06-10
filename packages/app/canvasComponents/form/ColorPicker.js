@@ -1,8 +1,9 @@
 import { Box, Input, useDisclosure, useOutsideClick } from '@chakra-ui/react';
 import { rgbaToCss } from 'bricks';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
+import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import StickyBox from './StickyBox';
 
 export default function ColorPicker({ name }) {
@@ -61,6 +62,16 @@ function ColorPickerInner({ stickToRef, value, onChange, onClose }) {
   const ref = useRef();
   useOutsideClick({ ref, handler: onClose });
 
+  useEffect(() => {
+    // If it received a click event from the the canvas, close this picker.
+    // Normally outside click should have worked. Since, the root component
+    // is within an iframe, it is not able to identify whether there was
+    // a click outside.
+    return useCanvasClickTrigger.subscribe(() => {
+      onClose();
+    });
+  }, [onClose]);
+
   return (
     <StickyBox
       stickToRef={stickToRef}
@@ -86,7 +97,9 @@ function ColorPickerInner({ stickToRef, value, onChange, onClose }) {
           borderRadius: 'none',
           height: 2,
         },
-        '& .react-colorful__saturation-pointer, & .react-colorful__hue-pointer, & .react-colorful__alpha-pointer': {
+        ['& .react-colorful__saturation-pointer,' +
+        ' & .react-colorful__hue-pointer, ' +
+        ' & .react-colorful__alpha-pointer']: {
           height: 4,
           width: 4,
           cursor: 'pointer',

@@ -1,5 +1,6 @@
 import { Box, Text } from '@chakra-ui/react';
 import { componentOptions } from 'canvasComponents';
+import { ROOT_NODE_ID } from 'graft';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
@@ -9,13 +10,15 @@ export default function StyleOptions() {
   );
 
   const type = useDesignerState(
-    useCallback(
-      (state) =>
-        state.selectedComponentId
-          ? state.pages[state.currentOpenPage]?.[state.selectedComponentId]?.type ?? null
-          : null,
-      []
-    )
+    useCallback((state) => {
+      if (state.selectedComponentId === ROOT_NODE_ID) {
+        return 'Root';
+      }
+
+      return state.selectedComponentId
+        ? state.pages[state.currentOpenPage]?.[state.selectedComponentId]?.type ?? null
+        : null;
+    }, [])
   );
 
   if (!selectedComponentId) {

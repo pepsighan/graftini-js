@@ -1,4 +1,3 @@
-import { Box as CBox } from '@chakra-ui/react';
 import {
   AlignItems,
   Border,
@@ -19,6 +18,7 @@ import { GraftComponent, useComponentId } from 'graft';
 import { useBoxTransformedProps } from 'hooks/useBoxTransformedProps';
 import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, ReactNode, useCallback } from 'react';
+import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState } from 'store/designer';
 import { BoxTag } from 'utils/constants';
 import { BoxDimension } from './BoxOptions';
@@ -55,6 +55,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
   ({ children, draggable, onDragStart, onDragEnd, onDragOver, onDrag, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+    const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
 
     return (
       <BoxComp
@@ -68,9 +69,12 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();
+            // We need to trigger a click to be notified because we are stopping propagation.
+            // Stopping propagation is also needed for us to select the top most component.
+            triggerClick();
             return selectComponent(componentId);
           },
-          [componentId, selectComponent]
+          [componentId, selectComponent, triggerClick]
         )}
       >
         {children}
@@ -78,10 +82,6 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
     );
   }
 );
-
-function Preview() {
-  return <CBox width={200} height={100} borderRadius="md" bg="primary.300" />;
-}
 
 Box.graftOptions = {
   // The default props defines all the props that the box can accept exhaustively.
@@ -122,7 +122,6 @@ Box.graftOptions = {
     flexWrap: 'nowrap',
     flexGap: 0,
   },
-  preview: Preview,
 };
 
 export default Box;

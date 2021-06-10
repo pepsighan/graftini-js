@@ -81,7 +81,7 @@ function ActualSelection({ componentId }) {
           y: posY,
           width,
           height,
-          border: `2px solid ${theme.colors.primary[300]}`,
+          border: `1px solid ${theme.colors.primary[300]}`,
           pointerEvents: 'none',
         }}
       />

@@ -12,6 +12,7 @@ import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import { useUpdateProjectDesign } from 'store/projects';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
+import theme from 'utils/theme';
 
 export default function Designer({ projectId }) {
   const currentPageId = useDesignerState(useCallback((state) => state.currentOpenPage, []));
@@ -56,7 +57,7 @@ function Editorial() {
         <Canvas ref={canvasRef} />
         <RightSidebar />
       </Flex>
-      <DragPreview />
+      <DragPreview color={theme.colors.primary[500]} />
     </Editor>
   );
 }

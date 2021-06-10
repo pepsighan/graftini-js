@@ -18,7 +18,7 @@ import React, {
 import mergeRefs from 'react-merge-refs';
 import { useDrawComponent } from './create';
 import { useSyncHoverRegion } from './hover';
-import { GraftComponentProps } from './resolver';
+import { GraftComponentOptions, GraftComponentProps } from './resolver';
 import { useScrollWhenDragging } from './scroll';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
 import { HoverStore, useHoverStore } from './store/hover';
@@ -29,7 +29,19 @@ import { useRootScrollStoreApi } from './store/rootScroll';
  */
 /** @internal */
 export const Root__Graft__Component = forwardRef(
-  ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
+  (
+    {
+      onDragStart,
+      onDragEnd,
+      onDrag,
+      draggable,
+      // Only the following props are used. Rest are not applicable for the root.
+      onDragOver,
+      children,
+      ...rest
+    }: GraftComponentProps,
+    ref: ForwardedRef<any>
+  ) => {
     const { setState } = useRootScrollStoreApi();
     const [onDragEnter, onDragLeave] = useIdentifyIfCursorOnRootDuringDrag();
     const [onMouseEnter, onMouseLeave] = useIdentifyIfCursorOnRoot();
@@ -96,6 +108,7 @@ export const Root__Graft__Component = forwardRef(
         onMouseDown={onMouseDown}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        {...rest}
       >
         {children}
       </RootOverrideComponent>
@@ -108,9 +121,9 @@ export const Root__Graft__Component = forwardRef(
  * a subset of Graft component props and some additional props.
  */
 /** @internal */
-export const RootOverrideContext = createContext<RootComponent | null>(null);
+export const RootOverrideContext = createContext<RootComponent<any> | null>(null);
 
-export type RootComponent = ForwardRefExoticComponent<
+export type RootComponent<T extends object> = ForwardRefExoticComponent<
   RefAttributes<{}> & {
     onDragEnter: DragEventHandler;
     onDragLeave: DragEventHandler;
@@ -122,8 +135,10 @@ export type RootComponent = ForwardRefExoticComponent<
     onMouseEnter: MouseEventHandler;
     onMouseLeave: MouseEventHandler;
     children: ReactNode;
-  }
->;
+  } & T
+> & {
+  graftOptions?: GraftComponentOptions<T>;
+};
 
 /**
  * Hook that identifies whether the cursor is over the root component during a drag operation.
