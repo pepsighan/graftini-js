@@ -1,6 +1,6 @@
 import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import firebase from 'firebase/app';
+import { getCurrentFirebaseUser } from 'store/auth';
 import config from './config';
 
 /**
@@ -13,7 +13,7 @@ export function createAppApolloClient() {
 
   const authLink = setContext(async (_, { headers }) => {
     // Get the token from the currently logged in user if present.
-    const token = await firebase.auth().currentUser?.getIdToken();
+    const token = await (await getCurrentFirebaseUser()).getIdToken();
 
     // Send the authorization header.
     return {

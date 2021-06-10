@@ -87,3 +87,15 @@ export function useAuthUser() {
 
   return { user: data?.me as User | null, isLoggedIn, ...rest };
 }
+
+/**
+ * Gets the current firebase user if logged in or else returns null.
+ */
+export async function getCurrentFirebaseUser(): Promise<firebase.User | null> {
+  return new Promise((resolve, reject) => {
+    const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
+      unsubscribe();
+      resolve(user);
+    }, reject);
+  });
+}
