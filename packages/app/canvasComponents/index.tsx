@@ -1,6 +1,7 @@
 import Box from './Box';
 import BoxOptions from './BoxOptions';
 import BoxRender from './BoxRender';
+import RootOptions from './RootOptions';
 import Text from './Text';
 import TextOptions from './TextOptions';
 import TextRender from './TextRender';
@@ -19,6 +20,7 @@ export type OptionsProps = {
 export const componentOptions = {
   Box: BoxOptions,
   Text: TextOptions,
+  Root: RootOptions,
 };
 
 export const componentRender = {

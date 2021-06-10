@@ -1,9 +1,14 @@
 /** @jsxImportSource @emotion/react */
+import { RGBA } from 'bricks';
 import { RootComponent, useCurrentCreateComponentType } from 'graft';
 import { ForwardedRef, forwardRef, useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
-const Root: RootComponent = forwardRef((props, ref: ForwardedRef<unknown>) => {
+export type RootProps = {
+  color: RGBA;
+};
+
+const Root: RootComponent<RootProps> = forwardRef((props, ref: ForwardedRef<unknown>) => {
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
   const currentCreateType = useCurrentCreateComponentType();
 
@@ -21,5 +26,15 @@ const Root: RootComponent = forwardRef((props, ref: ForwardedRef<unknown>) => {
     />
   );
 });
+
+Root.graftOptions = {
+  defaultProps: {
+    color: {
+      r: 255,
+      g: 255,
+      b: 255,
+    },
+  },
+};
 
 export default Root;
