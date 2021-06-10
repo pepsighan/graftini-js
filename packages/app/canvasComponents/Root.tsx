@@ -1,10 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import { RootComponent } from 'graft';
+import { RootComponent, useCurrentCreateComponentType } from 'graft';
 import { ForwardedRef, forwardRef, useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
 const Root: RootComponent = forwardRef((props, ref: ForwardedRef<unknown>) => {
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
+  const currentCreateType = useCurrentCreateComponentType();
 
   return (
     <div
@@ -13,6 +14,7 @@ const Root: RootComponent = forwardRef((props, ref: ForwardedRef<unknown>) => {
         width: '100%',
         height: '100%',
         overflow: 'auto',
+        cursor: currentCreateType === 'Text' ? 'text' : 'auto',
       }}
       {...props}
       onClick={unselectComponent}
