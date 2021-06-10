@@ -1,4 +1,3 @@
-import { Box as CBox } from '@chakra-ui/react';
 import {
   AlignItems,
   Border,
@@ -79,10 +78,6 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
   }
 );
 
-function Preview() {
-  return <CBox width={200} height={100} borderRadius="md" bg="primary.300" />;
-}
-
 Box.graftOptions = {
   // The default props defines all the props that the box can accept exhaustively.
   // This field is used by the update options logic.
@@ -122,7 +117,6 @@ Box.graftOptions = {
     flexWrap: 'nowrap',
     flexGap: 0,
   },
-  preview: Preview,
 };
 
 export default Box;
