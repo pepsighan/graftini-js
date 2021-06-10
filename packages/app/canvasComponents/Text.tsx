@@ -2,6 +2,7 @@
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { forwardRef, useCallback } from 'react';
+import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState } from 'store/designer';
 import useUnselectOnDragStart from '../hooks/useUnselectOnDragStart';
 
@@ -18,6 +19,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
   ({ content, onDragStart, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+    const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
 
     return (
       <Txt
@@ -27,9 +29,12 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();
+            // We need to trigger a click to be notified because we are stopping propagation.
+            // Stopping propagation is also needed for us to select the top most component.
+            triggerClick();
             return selectComponent(componentId);
           },
-          [componentId, selectComponent]
+          [componentId, selectComponent, triggerClick]
         )}
       >
         {content}
