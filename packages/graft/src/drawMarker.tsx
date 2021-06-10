@@ -48,7 +48,7 @@ export function DrawMarker({ color = '#9090DD' }: DrawMarkerProps) {
             y: posY,
             width,
             height,
-            border: `2px solid ${color}`,
+            border: `1px solid ${color}`,
             pointerEvents: 'none',
           }}
         />
