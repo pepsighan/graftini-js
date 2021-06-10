@@ -29,7 +29,10 @@ import { useRootScrollStoreApi } from './store/rootScroll';
  */
 /** @internal */
 export const Root__Graft__Component = forwardRef(
-  ({ onDragOver, children }: GraftComponentProps, ref: ForwardedRef<any>) => {
+  (
+    { onDragOver, onDragStart, onDragEnd, onDrag, children, ...rest }: GraftComponentProps,
+    ref: ForwardedRef<any>
+  ) => {
     const { setState } = useRootScrollStoreApi();
     const [onDragEnter, onDragLeave] = useIdentifyIfCursorOnRootDuringDrag();
     const [onMouseEnter, onMouseLeave] = useIdentifyIfCursorOnRoot();
@@ -96,6 +99,7 @@ export const Root__Graft__Component = forwardRef(
         onMouseDown={onMouseDown}
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        {...rest}
       >
         {children}
       </RootOverrideComponent>
