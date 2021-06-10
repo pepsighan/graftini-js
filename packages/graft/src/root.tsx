@@ -126,7 +126,7 @@ export type RootComponent<T extends object> = ForwardRefExoticComponent<
     onMouseEnter: MouseEventHandler;
     onMouseLeave: MouseEventHandler;
     children: ReactNode;
-  }
+  } & T
 > & {
   graftOptions?: GraftComponentOptions<T>;
 };
