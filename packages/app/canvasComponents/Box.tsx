@@ -15,11 +15,11 @@ import {
   Shadow,
   Spacing,
 } from 'bricks';
-import { useSelectComponent } from 'components/editor/Selection';
 import { GraftComponent, useComponentId } from 'graft';
 import { useBoxTransformedProps } from 'hooks/useBoxTransformedProps';
 import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, ReactNode, useCallback } from 'react';
+import { useDesignerState } from 'store/designer';
 import { BoxTag } from 'utils/constants';
 import { BoxDimension } from './BoxOptions';
 
@@ -54,7 +54,7 @@ export type BoxComponentProps = {
 const Box: GraftComponent<BoxComponentProps> = forwardRef(
   ({ children, draggable, onDragStart, onDragEnd, onDragOver, onDrag, ...rest }, ref) => {
     const componentId = useComponentId();
-    const selectComponent = useSelectComponent();
+    const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
 
     return (
       <BoxComp
