@@ -10,13 +10,15 @@ import {
   ModalOverlay,
   Stack,
 } from '@chakra-ui/react';
+import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useCreatePage } from 'store/projects';
-import { useProjectId } from './editor/Designer';
 
 export default function NewPageDialog({ isOpen, onClose }) {
-  const projectId = useProjectId();
+  const {
+    project: { id: projectId },
+  } = useMyProjectFromRouter();
 
   const {
     register,

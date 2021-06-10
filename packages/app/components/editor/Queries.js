@@ -1,27 +1,26 @@
 import { Box, Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
+import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
 import { MdAdd, MdDelete } from 'react-icons/md';
-import { useDeleteQuery, useMyProjectQueries } from 'store/projects';
-import { useProjectId } from './Designer';
+import { useDeleteQuery } from 'store/projects';
 import QueryBuilderDialog from './graphqlQuery/QueryBuilderDialog';
 
 export default function Queries() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const projectId = useProjectId();
-  const { queries, loading } = useMyProjectQueries({ projectId });
-  const [deleteQuery] = useDeleteQuery({ projectId });
+  const { project } = useMyProjectFromRouter();
+  const [deleteQuery] = useDeleteQuery({ projectId: project.id });
 
   const onQueryDelete = useCallback(
     (id) => () => {
       deleteQuery({
         variables: {
-          projectId,
+          projectId: project.id,
           queryId: id,
         },
       });
     },
-    [deleteQuery, projectId]
+    [deleteQuery, project.id]
   );
 
   return (
@@ -37,7 +36,7 @@ export default function Queries() {
       </Flex>
 
       <Box mb={4}>
-        {queries.map((it) => (
+        {project.queries.map((it) => (
           <Flex key={it.id} justifyContent="space-between" alignItems="center" mb={2}>
             <Text>{it.variableName}</Text>
             <IconButton size="xs" colorScheme="red" onClick={onQueryDelete(it.id)}>
@@ -46,7 +45,7 @@ export default function Queries() {
           </Flex>
         ))}
 
-        {!loading && queries.length === 0 && (
+        {project.queries.length === 0 && (
           <Text mt={2} fontSize="sm" color="gray.600">
             There are no queries.
           </Text>

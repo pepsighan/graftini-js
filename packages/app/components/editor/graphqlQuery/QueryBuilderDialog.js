@@ -8,17 +8,19 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/modal';
+import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useCreateQuery } from 'store/projects';
 import { generateGraphQLAST } from 'utils/graphqlAst';
-import { useProjectId } from '../Designer';
 import QueryBuilder from './QueryBuilder';
 
 export default function QueryBuilderDialog({ isOpen, onClose }) {
   const form = useForm();
 
-  const projectId = useProjectId();
+  const {
+    project: { id: projectId },
+  } = useMyProjectFromRouter();
   const [createQuery] = useCreateQuery({ projectId });
 
   const onSubmit = useCallback(
