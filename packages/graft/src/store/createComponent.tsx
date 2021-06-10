@@ -1,5 +1,5 @@
 import produce from 'immer';
-import React, { PropsWithChildren } from 'react';
+import React, { PropsWithChildren, useCallback } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
 import { Position } from './draggedOver';
@@ -75,3 +75,12 @@ export const useCreateComponentStore = useStore;
 
 /** @internal */
 export const useCreateComponentStoreApi = useStoreApi;
+
+/**
+ * Hook that gets the currently selected create component's type.
+ */
+export function useCurrentCreateComponentType(): string | null {
+  return useCreateComponentStore(
+    useCallback((state: CreateComponentStore) => state.newComponent?.type ?? null, [])
+  );
+}

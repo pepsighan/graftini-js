@@ -1,14 +1,15 @@
 import { Box, Button, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
 import BackButton from 'components/BackButton';
 import { motion } from 'framer-motion';
-import { useCreateComponent } from 'graft';
-import { useRouter } from 'next/router';
+import { useCreateComponent, useCurrentCreateComponentType } from 'graft';
 import { useCallback } from 'react';
 import { MdCode } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
 function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection }) {
+  const selectedComponent = useCurrentCreateComponentType();
+
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
   const onCreate = useCreateComponent({
     type: component,
@@ -37,14 +38,18 @@ function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection
 
   return (
     <motion.div
-      style={{
-        color: theme.colors.gray[800],
-        '--icon-color': theme.colors.gray[600],
+      variants={{
+        active: {
+          color: theme.colors.primary[600],
+          '--icon-color': theme.colors.primary[500],
+        },
+        inactive: {
+          color: theme.colors.gray[800],
+          '--icon-color': theme.colors.gray[600],
+        },
       }}
-      whileHover={{
-        color: theme.colors.primary[700],
-        '--icon-color': theme.colors.primary[500],
-      }}
+      animate={selectedComponent === component ? 'active' : 'inactive'}
+      whileHover="active"
     >
       <Button
         size="lg"
@@ -87,7 +92,6 @@ function TextIcon() {
 }
 
 export default function EditorNavigation() {
-  const { query } = useRouter();
   const toggleQueryBuilderPane = useDesignerState(
     useCallback((state) => state.toggleQueryBuilderPane, [])
   );
