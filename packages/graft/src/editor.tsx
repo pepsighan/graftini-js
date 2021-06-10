@@ -47,7 +47,7 @@ export type EditorProps = {
   /**
    * An optional override for how the root component should be rendered.
    */
-  rootComponentOverride?: RootComponent;
+  rootComponentOverride?: RootComponent<any>;
 };
 
 /**

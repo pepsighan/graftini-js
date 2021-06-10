@@ -18,7 +18,7 @@ import React, {
 import mergeRefs from 'react-merge-refs';
 import { useDrawComponent } from './create';
 import { useSyncHoverRegion } from './hover';
-import { GraftComponentProps } from './resolver';
+import { GraftComponentOptions, GraftComponentProps } from './resolver';
 import { useScrollWhenDragging } from './scroll';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
 import { HoverStore, useHoverStore } from './store/hover';
@@ -112,9 +112,9 @@ export const Root__Graft__Component = forwardRef(
  * a subset of Graft component props and some additional props.
  */
 /** @internal */
-export const RootOverrideContext = createContext<RootComponent | null>(null);
+export const RootOverrideContext = createContext<RootComponent<any> | null>(null);
 
-export type RootComponent = ForwardRefExoticComponent<
+export type RootComponent<T extends object> = ForwardRefExoticComponent<
   RefAttributes<{}> & {
     onDragEnter: DragEventHandler;
     onDragLeave: DragEventHandler;
@@ -127,7 +127,9 @@ export type RootComponent = ForwardRefExoticComponent<
     onMouseLeave: MouseEventHandler;
     children: ReactNode;
   }
->;
+> & {
+  graftOptions?: GraftComponentOptions<T>;
+};
 
 /**
  * Hook that identifies whether the cursor is over the root component during a drag operation.
