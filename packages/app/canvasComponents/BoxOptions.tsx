@@ -131,7 +131,7 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         [componentId, setChildAppendDirection]
       )}
     >
-      {/* Making a 6 column grid system. */}
+      {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
         <PropertiesSection />
         <FlexSection />
