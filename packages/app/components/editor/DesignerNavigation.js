@@ -2,10 +2,8 @@ import { Box, Button, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
 import BackButton from 'components/BackButton';
 import { motion } from 'framer-motion';
 import { useCreateComponent } from 'graft';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { CgScreen } from 'react-icons/cg';
 import { MdCode } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
@@ -124,9 +122,9 @@ export default function EditorNavigation() {
 
       <Flex>
         <IconButton icon={<Icon as={MdCode} fontSize="xl" />} onClick={toggleQueryBuilderPane} />
-        <Link href={`/dashboard/project/${query.projectId}/preview`}>
+        {/* <Link href={`/dashboard/project/${query.projectId}/preview`}>
           <IconButton ml={4} icon={<Icon as={CgScreen} fontSize="xl" />} />
-        </Link>
+        </Link> */}
       </Flex>
     </Flex>
   );
