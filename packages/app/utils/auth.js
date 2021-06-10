@@ -1,13 +1,13 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
-import { useIsLoggedIn } from 'store/auth';
+import { useAuthUser } from 'store/auth';
 
 /**
  * HOC to protect the given page. Its not server rendereable right now.
  */
 export function protectedPage(Component) {
   return function ProtectedPage() {
-    const isLoggedIn = useIsLoggedIn();
+    const { isLoggedIn } = useAuthUser();
     const { push } = useRouter();
 
     useEffect(() => {
