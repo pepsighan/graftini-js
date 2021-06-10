@@ -1,8 +1,8 @@
 import { Box, BoxProps } from '@chakra-ui/layout';
-import { rightSidebarWidth } from 'components/editor/RightSidebar';
 import { useDimensions } from 'hooks/useDimensions';
 import { MutableRefObject } from 'react';
 import { useWindowSize } from 'react-use';
+import { rightSidebarWidth } from 'utils/constants';
 
 type StickBoxProps = {
   stickToRef: MutableRefObject<HTMLElement>;

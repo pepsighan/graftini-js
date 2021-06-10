@@ -1,10 +1,9 @@
 import { Box } from '@chakra-ui/react';
 import { useCallback } from 'react';
 import { RightSidebarOpenPane, useDesignerState } from 'store/designer';
-import Queries from './Queries';
+import { rightSidebarWidth } from 'utils/constants';
 import ComponentOptions from './ComponentOptions';
-
-export const rightSidebarWidth = 300;
+import Queries from './Queries';
 
 export default function RightSidebar() {
   const openPane = useDesignerState(useCallback((state) => state.rightSidebarOpenPane, []));

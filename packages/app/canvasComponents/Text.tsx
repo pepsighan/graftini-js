@@ -4,7 +4,7 @@ import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { forwardRef, useCallback } from 'react';
 import { useSelectComponent } from '../components/editor/Selection';
-import useUnselectOnDragStart from './useUnselectOnDragStart';
+import useUnselectOnDragStart from '../hooks/useUnselectOnDragStart';
 
 export type TextComponentProps = {
   color?: RGBA;
