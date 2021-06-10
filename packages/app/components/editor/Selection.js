@@ -88,7 +88,3 @@ function ActualSelection({ componentId }) {
     </>
   ) : null;
 }
-
-export function useSelectComponent() {
-  return useDesignerState(useCallback((state) => state.selectComponent, []));
-}

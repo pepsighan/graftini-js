@@ -1,15 +1,14 @@
 import { useDisclosure } from '@chakra-ui/hooks';
 import { Box, Button, Flex, IconButton, Stack, Tag, Text } from '@chakra-ui/react';
 import NewPageDialog from 'components/NewPageDialog';
+import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { MdAdd } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
-import { useMyProject } from 'store/projects';
 import { encode } from 'utils/url';
 import { useEffectOnce } from 'utils/useEffect';
-import { useProjectId } from './Designer';
 
 function PageItem({ id, name, route, slugProjectId }) {
   const isSelected = useDesignerState(useCallback((state) => state.currentOpenPage === id, [id]));
@@ -58,7 +57,7 @@ export default function Pages() {
   const slugProjectId = query.projectId;
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { project } = useMyProject({ projectId: useProjectId() });
+  const { project } = useMyProjectFromRouter();
 
   const defaultPageId = useDesignerState(
     useCallback((state) => state.currentOpenPage, []),

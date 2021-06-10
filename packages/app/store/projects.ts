@@ -75,7 +75,7 @@ export type Query = {
   gqlAst: string;
 };
 
-const QUERY_USE_MY_PROJECT = gql`
+const QUERY_MY_PROJECT = gql`
   query GetMyProjectPages($id: ID!) {
     myProject(id: $id) {
       id
@@ -99,7 +99,7 @@ const QUERY_USE_MY_PROJECT = gql`
  * Hook to get my project in full detail.
  */
 export function useMyProject({ projectId }) {
-  const { data, ...rest } = useQuery(QUERY_USE_MY_PROJECT, { variables: { id: projectId } });
+  const { data, ...rest } = useQuery(QUERY_MY_PROJECT, { variables: { id: projectId } });
   return { project: data?.myProject as MyProject | null, ...rest };
 }
 
@@ -121,7 +121,7 @@ export function useCreatePage({ projectId }) {
     {
       refetchQueries: [
         {
-          query: QUERY_USE_MY_PROJECT,
+          query: QUERY_MY_PROJECT,
           variables: { id: projectId },
         },
       ],
@@ -131,27 +131,6 @@ export function useCreatePage({ projectId }) {
       },
     }
   );
-}
-
-const QUERY_MY_PROJECT_QUERIES = gql`
-  query GetMyProjectQueries($projectId: ID!) {
-    myProject(id: $id) {
-      id
-      queries {
-        id
-        variableName
-        gqlAst
-      }
-    }
-  }
-`;
-
-/**
- * Hook to get the queries of the project.
- */
-export function useMyProjectQueries({ projectId }) {
-  const { data, ...rest } = useQuery(QUERY_MY_PROJECT_QUERIES, { variables: { id: projectId } });
-  return { queries: (data?.myProject?.queries ?? []) as Query[], ...rest };
 }
 
 /**
@@ -169,7 +148,7 @@ export function useCreateQuery({ projectId }) {
     {
       refetchQueries: [
         {
-          query: QUERY_MY_PROJECT_QUERIES,
+          query: QUERY_MY_PROJECT,
           variables: { projectId },
         },
       ],
@@ -192,7 +171,7 @@ export function useDeleteQuery({ projectId }) {
     {
       refetchQueries: [
         {
-          query: QUERY_MY_PROJECT_QUERIES,
+          query: QUERY_MY_PROJECT,
           variables: { projectId },
         },
       ],

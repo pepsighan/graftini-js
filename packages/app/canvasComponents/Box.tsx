@@ -16,11 +16,12 @@ import {
   Spacing,
 } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
+import { useBoxTransformedProps } from 'hooks/useBoxTransformedProps';
+import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, ReactNode, useCallback } from 'react';
-import { useSelectComponent } from '../components/editor/Selection';
+import { useDesignerState } from 'store/designer';
+import { BoxTag } from 'utils/constants';
 import { BoxDimension } from './BoxOptions';
-import { useBoxTransformedProps } from './BoxRender';
-import useUnselectOnDragStart from './useUnselectOnDragStart';
 
 export type BoxComponentProps = {
   name?: string;
@@ -53,7 +54,7 @@ export type BoxComponentProps = {
 const Box: GraftComponent<BoxComponentProps> = forwardRef(
   ({ children, draggable, onDragStart, onDragEnd, onDragOver, onDrag, ...rest }, ref) => {
     const componentId = useComponentId();
-    const selectComponent = useSelectComponent();
+    const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
 
     return (
       <BoxComp
@@ -125,28 +126,3 @@ Box.graftOptions = {
 };
 
 export default Box;
-
-export type BoxTag =
-  | 'div'
-  | 'span'
-  | 'main'
-  | 'button'
-  | 'section'
-  | 'input'
-  | 'select'
-  | 'checkbox'
-  | 'header'
-  | 'footer';
-
-export const boxTags: BoxTag[] = [
-  'div',
-  'span',
-  'button',
-  'input',
-  'select',
-  'checkbox',
-  'main',
-  'section',
-  'header',
-  'footer',
-];

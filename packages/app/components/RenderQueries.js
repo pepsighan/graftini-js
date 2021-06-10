@@ -5,7 +5,7 @@ import { useDesignerState } from 'store/designer';
 import { generateGraphQLAST } from 'utils/graphqlAst';
 import { useUserApolloClient } from 'utils/graphqlUser';
 
-export const QueryContext = createContext();
+const QueryContext = createContext();
 
 export default function RenderQueries({ children }) {
   const savedQueries = useDesignerState(useCallback((state) => state.savedQueries, []));

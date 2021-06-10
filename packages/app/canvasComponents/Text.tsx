@@ -3,8 +3,8 @@ import { Box } from '@chakra-ui/layout';
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import { forwardRef, useCallback } from 'react';
-import { useSelectComponent } from '../components/editor/Selection';
-import useUnselectOnDragStart from './useUnselectOnDragStart';
+import { useDesignerState } from 'store/designer';
+import useUnselectOnDragStart from '../hooks/useUnselectOnDragStart';
 
 export type TextComponentProps = {
   color?: RGBA;
@@ -18,7 +18,7 @@ export type TextComponentProps = {
 const Text: GraftComponent<TextComponentProps> = forwardRef(
   ({ content, onDragStart, ...rest }, ref) => {
     const componentId = useComponentId();
-    const selectComponent = useSelectComponent();
+    const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
 
     return (
       <Txt

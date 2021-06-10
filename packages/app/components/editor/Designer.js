@@ -8,20 +8,10 @@ import RightSidebar from 'components/editor/RightSidebar';
 import { cleanupComponentMap, DragPreview, Editor, useEditor } from 'graft';
 import { useDimensions } from 'hooks/useDimensions';
 import { debounce } from 'lodash-es';
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import { useUpdateProjectDesign } from 'store/projects';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
-
-export const ProjectIdContext = createContext();
-
-/**
- * Gets the project id that is currently opened in the editor. This is only
- * to be used within an editor.
- */
-export function useProjectId() {
-  return useContext(ProjectIdContext);
-}
 
 export default function Designer({ projectId }) {
   const currentPageId = useDesignerState(useCallback((state) => state.currentOpenPage, []));
@@ -31,11 +21,9 @@ export default function Designer({ projectId }) {
   useSyncDesignerStateToBackend({ projectId });
 
   return (
-    <ProjectIdContext.Provider value={projectId}>
-      <UserApolloProvider client={userApollo}>
-        <Editorial key={currentPageId} />
-      </UserApolloProvider>
-    </ProjectIdContext.Provider>
+    <UserApolloProvider client={userApollo}>
+      <Editorial key={currentPageId} />
+    </UserApolloProvider>
   );
 }
 
