@@ -1,7 +1,6 @@
 import {
   createContext,
   DragEventHandler,
-  ElementType,
   ForwardRefExoticComponent,
   ReactNode,
   useContext,
@@ -64,10 +63,6 @@ export type GraftComponentOptions<T extends object> = {
    * the values provided here will be overrided.
    */
   defaultProps?: T;
-  /**
-   *  A preview component that is shown while dragging this component.
-   */
-  preview?: ElementType;
 };
 
 /**

@@ -107,16 +107,6 @@ const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
   );
 });
 
-Container.graftOptions = {
-  preview: () => (
-    <Box
-      width={{ size: 100, unit: 'px' }}
-      height={{ size: 100, unit: 'px' }}
-      color={{ r: 100, g: 100, b: 200 }}
-    />
-  ),
-};
-
 const Text = forwardRef(({ ...rest }, ref) => {
   const id = useComponentId();
   return (
@@ -125,13 +115,3 @@ const Text = forwardRef(({ ...rest }, ref) => {
     </Txt>
   );
 });
-
-Text.graftOptions = {
-  preview: () => (
-    <Box
-      width={{ size: 100, unit: 'px' }}
-      height={{ size: 32, unit: 'px' }}
-      color={{ r: 100, g: 100, b: 200 }}
-    />
-  ),
-};
