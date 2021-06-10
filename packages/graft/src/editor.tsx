@@ -68,15 +68,13 @@ export function Editor({
   }
 
   return (
-    <Store initialState={initialState}>
-      <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
-        <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
-          <IFrameCorrectionContext.Provider value={iframeCorrection ?? null}>
-            {children}
-          </IFrameCorrectionContext.Provider>
-        </RootOverrideContext.Provider>
-      </ResolverProvider>
-    </Store>
+    <ResolverProvider value={{ ...resolvers, Root__Graft__Component }}>
+      <RootOverrideContext.Provider value={rootComponentOverride ?? null}>
+        <IFrameCorrectionContext.Provider value={iframeCorrection ?? null}>
+          <Store initialState={initialState}>{children}</Store>
+        </IFrameCorrectionContext.Provider>
+      </RootOverrideContext.Provider>
+    </ResolverProvider>
   );
 }
 
