@@ -30,7 +30,16 @@ import { useRootScrollStoreApi } from './store/rootScroll';
 /** @internal */
 export const Root__Graft__Component = forwardRef(
   (
-    { onDragOver, onDragStart, onDragEnd, onDrag, children, ...rest }: GraftComponentProps,
+    {
+      onDragStart,
+      onDragEnd,
+      onDrag,
+      draggable,
+      // Only the following props are used. Rest are not applicable for the root.
+      onDragOver,
+      children,
+      ...rest
+    }: GraftComponentProps,
     ref: ForwardedRef<any>
   ) => {
     const { setState } = useRootScrollStoreApi();
