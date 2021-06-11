@@ -17,7 +17,7 @@ export type HoverRegion = {
  */
 /** @internal */
 export function useSyncHoverRegion(): MouseEventHandler {
-  const immerSetHover = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
+  const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
 
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
@@ -31,17 +31,44 @@ export function useSyncHoverRegion(): MouseEventHandler {
       };
 
       // Track where the cursor is hovering at.
-      immerSetHover((state) => {
+      immerSet((state) => {
         const hoverRegion = identifyHoverRegion(
           getEditorState().componentMap,
           getRegionState().regionMap,
           correctCursorPosition(position, state.isOnRoot)
         );
         state.hoverRegion = hoverRegion;
+        state.cursorPosition = position;
       });
     },
-    [correctCursorPosition, getEditorState, getRegionState, immerSetHover]
+    [correctCursorPosition, getEditorState, getRegionState, immerSet]
   );
+}
+
+/**
+ * Update the hover region when the scroll updates. The cursor position may not
+ * have changed.
+ */
+export function useRefreshHoverRegion(): Function {
+  const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
+  const { getState: getEditorState } = useEditorStoreApiInternal();
+  const { getState: getRegionState } = useComponentRegionStoreApi();
+
+  return useCallback(() => {
+    // Track where the cursor is hovering at.
+    immerSet((state) => {
+      if (!state.cursorPosition) {
+        return;
+      }
+
+      const hoverRegion = identifyHoverRegion(
+        getEditorState().componentMap,
+        getRegionState().regionMap,
+        state.cursorPosition
+      );
+      state.hoverRegion = hoverRegion;
+    });
+  }, [getEditorState, getRegionState, immerSet]);
 }
 
 /**

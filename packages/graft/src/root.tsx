@@ -17,7 +17,7 @@ import React, {
 } from 'react';
 import mergeRefs from 'react-merge-refs';
 import { useDrawComponent } from './create';
-import { useSyncHoverRegion } from './hover';
+import { useRefreshHoverRegion, useSyncHoverRegion } from './hover';
 import { GraftComponentOptions, GraftComponentProps } from './resolver';
 import { useScrollWhenDragging } from './scroll';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
@@ -42,12 +42,13 @@ export const Root__Graft__Component = forwardRef(
     }: GraftComponentProps,
     ref: ForwardedRef<any>
   ) => {
-    const { setState } = useRootScrollStoreApi();
+    const { setState: setRootScroll } = useRootScrollStoreApi();
     const [onDragEnter, onDragLeave] = useIdentifyIfCursorOnRootDuringDrag();
     const [onMouseEnter, onMouseLeave] = useIdentifyIfCursorOnRoot();
 
     const { onMouseUp, onMouseMove: onMouseMoveToDraw, onMouseDown } = useDrawComponent();
     const onMouseMoveToHover = useSyncHoverRegion();
+    const onRefreshHover = useRefreshHoverRegion();
 
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null);
     const mergedRef = mergeRefs([setRootRef, ref]);
@@ -57,14 +58,15 @@ export const Root__Graft__Component = forwardRef(
 
     const onScroll = useCallback(
       (event: UIEvent) => {
-        setState({
+        onRefreshHover();
+        setRootScroll({
           position: {
             top: event.currentTarget.scrollTop,
             left: event.currentTarget.scrollLeft,
           },
         });
       },
-      [setState]
+      [onRefreshHover, setRootScroll]
     );
 
     const onMouseMove = useCallback(
