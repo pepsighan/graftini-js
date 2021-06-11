@@ -38,7 +38,6 @@ export function useScrollWhenDragging(ref: HTMLElement | null) {
           ref.scrollBy({
             top: -2,
           });
-          setRootScroll({ isDragScrolling: true });
           return;
         }
 
@@ -47,12 +46,8 @@ export function useScrollWhenDragging(ref: HTMLElement | null) {
           ref.scrollBy({
             top: 2,
           });
-          setRootScroll({ isDragScrolling: true });
           return;
         }
-
-        // No longer scrolling.
-        setRootScroll({ isDragScrolling: false });
       },
       (state) =>
         state.draggedOver.isDragging && state.draggedOver.isOnRoot

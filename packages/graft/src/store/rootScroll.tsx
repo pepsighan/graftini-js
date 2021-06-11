@@ -15,10 +15,6 @@ export type RootScrollStore = {
    * Whether to enable drag scroll or not.
    */
   isDragScrollEnabled: boolean;
-  /**
-   * Whether the scroll
-   */
-  isDragScrolling: boolean;
 };
 
 /** @internal */
@@ -26,7 +22,6 @@ const createRootScrollStore = () =>
   create<RootScrollStore>((_) => ({
     position: { top: 0, left: 0 },
     isDragScrollEnabled: false,
-    isDragScrolling: false,
   }));
 
 const { Provider, useStore, useStoreApi } = createContext<RootScrollStore>();
