@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react';
+import { RootComponent } from './componentTypes';
 
 /**
  * Context to pass the id of the canvas to its children.
@@ -26,3 +27,10 @@ export const ComponentContext = createContext<string | null>(null);
 export function useComponentId(): string {
   return useContext(ComponentContext) as string;
 }
+
+/**
+ * Context to override the default root component. The root component receives
+ * a subset of Graft component props and some additional props.
+ */
+/** @internal */
+export const RootOverrideContext = createContext<RootComponent<any> | null>(null);

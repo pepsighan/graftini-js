@@ -95,7 +95,6 @@ export function useOnDragEnd() {
     // No more drag scrolling.
     setRootScroll({
       isDragScrollEnabled: false,
-      isDragScrolling: false,
     });
 
     const draggedOver = getDraggedOverState().draggedOver;

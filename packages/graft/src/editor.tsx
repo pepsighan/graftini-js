@@ -1,8 +1,10 @@
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
+import { RootComponent } from './componentTypes';
+import { RootOverrideContext } from './context';
 import { IFrameCorrectionContext } from './correction';
 import { ResolverMap, ResolverProvider } from './resolver';
-import { RootComponent, RootOverrideContext, Root__Graft__Component } from './root';
+import { Root__Graft__Component } from './root';
 import Store from './store';
 import { Position } from './store/draggedOver';
 import {

@@ -1,4 +1,3 @@
-import { debounce } from 'lodash-es';
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { useEditorStoreApiInternal } from './store/editor';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
@@ -29,7 +28,7 @@ export function useSyncRegion(componentId: string) {
       return;
     }
 
-    const measureRegionInner = () =>
+    const measureRegion = () =>
       window.requestAnimationFrame(() => {
         const rect = ref.getBoundingClientRect();
 
@@ -44,34 +43,21 @@ export function useSyncRegion(componentId: string) {
         });
       });
 
-    const debounceMeasureRegion = debounce(
-      measureRegionInner,
-      // Debounce for atleast 200ms. We do not need the region size immediately.
-      // This way we can reduce the number of updates to the store.
-      200
-    );
-
-    // During a drag calculate the region in realtime.
-    const measureRegion = (isDragScrolling: boolean) =>
-      isDragScrolling ? measureRegionInner() : debounceMeasureRegion();
-
     // Measure it for the first time.
-    measureRegion(false);
+    measureRegion();
 
-    const onResize = () => measureRegion(false);
+    const onResize = () => measureRegion();
     // Measure on window resize.
     window.addEventListener('resize', onResize);
 
     // Also measure the region if there is change anywhere in the component tree.
     const unsubscribeStore = subscribeEditor(
-      () => {
-        measureRegion(getRootScroll().isDragScrolling);
-      },
+      () => measureRegion(),
       (state) => state.componentMap
     );
 
     // Update the region when there is scroll on the root component.
-    const unsubscribeScroll = subscribeRootScroll((state) => measureRegion(state.isDragScrolling));
+    const unsubscribeScroll = subscribeRootScroll((state) => measureRegion());
 
     return () => {
       window.removeEventListener('resize', onResize);

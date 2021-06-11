@@ -2,8 +2,8 @@ import { produce } from 'immer';
 import React, { ReactNode, useContext, useState } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
-import { GraftComponent } from '../resolver';
-import { RootOverrideContext } from '../root';
+import { GraftComponent } from '../componentTypes';
+import { RootOverrideContext } from '../context';
 
 export type ComponentProps = {
   [key: string]: any;

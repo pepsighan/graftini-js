@@ -9,7 +9,6 @@ const config = {
     'zustand/context',
     'nanoid',
     'immer',
-    'lodash-es',
     'react-merge-refs',
     'framer-motion',
   ],

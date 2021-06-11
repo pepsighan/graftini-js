@@ -16,7 +16,6 @@
   "dependencies": {
     "framer-motion": "^4.1.17",
     "immer": "^9.0.3",
-    "lodash-es": "^4.17.21",
     "nanoid": "^3.1.23",
     "react-merge-refs": "^1.1.0",
     "zustand": "^3.5.2"
