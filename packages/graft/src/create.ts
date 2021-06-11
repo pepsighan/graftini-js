@@ -78,6 +78,11 @@ export function useDrawComponent(): UseDrawComponent {
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
+      if (event.buttons !== 1) {
+        // If drawing does not start with the left mouse click, ignore it.
+        return;
+      }
+
       immerSetCreateComponent((state) => {
         if (!state.newComponent) {
           return;
@@ -99,11 +104,6 @@ export function useDrawComponent(): UseDrawComponent {
 
   const onMouseMove = useCallback(
     (event: MouseEvent) => {
-      const pos = {
-        x: event.clientX,
-        y: event.clientY,
-      };
-
       // Calculate the end point of the sketch that is being drawn.
       immerSetCreateComponent((state) => {
         if (!state.draw) {
@@ -112,8 +112,8 @@ export function useDrawComponent(): UseDrawComponent {
         }
 
         // Do not let in draw in the inverse region.
-        state.draw.end.x = pos.x < state.draw.start.x ? state.draw.start.x : pos.x;
-        state.draw.end.y = pos.y < state.draw.start.y ? state.draw.start.y : pos.y;
+        state.draw.end.x = event.clientX < state.draw.start.x ? state.draw.start.x : event.clientX;
+        state.draw.end.y = event.clientY < state.draw.start.y ? state.draw.start.y : event.clientY;
       });
     },
     [immerSetCreateComponent]
