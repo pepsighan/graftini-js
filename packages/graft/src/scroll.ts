@@ -15,7 +15,7 @@ export function useScrollWhenDragging(ref: HTMLElement | null) {
     useCallback((state: ComponentRegionStore) => state.regionMap[ROOT_NODE_ID], [])
   );
   const { subscribe } = useDraggedOverStoreApi();
-  const { getState: getRootScroll, setState: setRootScroll } = useRootScrollStoreApi();
+  const { getState: getRootScroll } = useRootScrollStoreApi();
 
   useEffect(() => {
     if (!ref || !rootRegion) {
@@ -54,5 +54,5 @@ export function useScrollWhenDragging(ref: HTMLElement | null) {
           ? state.draggedOver.cursorPosition
           : null
     );
-  }, [getRootScroll, ref, rootRegion, setRootScroll, subscribe]);
+  }, [getRootScroll, ref, rootRegion, subscribe]);
 }
