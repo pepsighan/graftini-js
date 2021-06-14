@@ -77,7 +77,7 @@ export default function Pages() {
   });
 
   return (
-    <Box>
+    <Box height="50%" px={3}>
       <Flex justifyContent="space-between" alignItems="center">
         <Text as="span" fontSize="sm" fontWeight="bold">
           Pages

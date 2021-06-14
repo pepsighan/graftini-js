@@ -9,7 +9,7 @@ export default function Layers() {
   );
 
   return (
-    <Box mt={8}>
+    <Box mt={8} px={3} height="50%" overflowY="auto">
       <Text as="span" fontSize="sm" fontWeight="bold">
         Layers
       </Text>
