@@ -1,15 +1,18 @@
-import { Box, Button, Flex, Icon, IconButton, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
+import { mdiCodeJson, mdiCursorDefault, mdiFullscreen } from '@mdi/js';
 import BackButton from 'components/BackButton';
+import MdIcon from 'components/Icon';
 import { motion } from 'framer-motion';
 import { useCreateComponent, useCurrentCreateComponentType, useForgetCreateComponent } from 'graft';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { MdCode } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
-import MdIcon from 'components/Icon';
-import { mdiCursorDefault } from '@mdi/js';
 
 export default function EditorNavigation() {
+  const { query } = useRouter();
+
   const toggleQueryBuilderPane = useDesignerState(
     useCallback((state) => state.toggleQueryBuilderPane, [])
   );
@@ -44,10 +47,13 @@ export default function EditorNavigation() {
       </Flex>
 
       <Flex>
-        <IconButton icon={<Icon as={MdCode} fontSize="xl" />} onClick={toggleQueryBuilderPane} />
-        {/* <Link href={`/dashboard/project/${query.projectId}/preview`}>
-          <IconButton ml={4} icon={<Icon as={CgScreen} fontSize="xl" />} />
-        </Link> */}
+        <IconButton
+          icon={<MdIcon icon={mdiCodeJson} fontSize="xl" />}
+          onClick={toggleQueryBuilderPane}
+        />
+        <Link href={`/dashboard/project/${query.projectId}/preview`}>
+          <IconButton ml={4} icon={<MdIcon icon={mdiFullscreen} fontSize="xl" />} />
+        </Link>
       </Flex>
     </Flex>
   );
