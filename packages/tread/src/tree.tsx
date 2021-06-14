@@ -34,7 +34,32 @@ export function Tree({ tree, renderItem, renderSubTree }: TreeProps) {
   );
 }
 
-function SubTreeWrapper({ tree, parentId, renderItem, renderSubTree: SubTree }: SubTreeProps) {
+type SubTreeProps = TreeProps & {
+  parentId: string;
+};
+
+function SubTree({ tree, parentId, renderItem, renderSubTree }: SubTreeProps) {
+  return (
+    <>
+      {tree[parentId].childrenNodes.map((itemId) => (
+        <SubTreeWrapper
+          key={itemId}
+          parentId={itemId}
+          tree={tree}
+          renderItem={renderItem}
+          renderSubTree={renderSubTree}
+        />
+      ))}
+    </>
+  );
+}
+
+function SubTreeWrapper({
+  tree,
+  parentId,
+  renderItem,
+  renderSubTree: RenderSubTree,
+}: SubTreeProps) {
   const isCollapsed = useTreeStore(
     useCallback((state: TreeStore) => !!state.isSubTreeCollapsed[parentId], [parentId])
   );
@@ -42,44 +67,15 @@ function SubTreeWrapper({ tree, parentId, renderItem, renderSubTree: SubTree }: 
   return (
     <ItemWrapper itemId={parentId} tree={tree} renderItem={renderItem}>
       {tree[parentId].childrenNodes.length > 0 && !isCollapsed && (
-        <SubTree>
-          <ActualSubTree
+        <RenderSubTree>
+          <SubTree
             tree={tree}
             parentId={parentId}
             renderItem={renderItem}
-            renderSubTree={SubTree}
+            renderSubTree={RenderSubTree}
           />
-        </SubTree>
+        </RenderSubTree>
       )}
     </ItemWrapper>
-  );
-}
-
-type SubTreeProps = TreeProps & {
-  parentId: string;
-};
-
-function ActualSubTree({ tree, parentId, renderItem, renderSubTree: SubTree }: SubTreeProps) {
-  const isCollapsed = useTreeStore(
-    useCallback((state: TreeStore) => !!state.isSubTreeCollapsed[parentId], [parentId])
-  );
-
-  return (
-    <>
-      {tree[parentId].childrenNodes.map((itemId) => (
-        <ItemWrapper key={itemId} itemId={itemId} tree={tree} renderItem={renderItem}>
-          {tree[itemId].childrenNodes.length > 0 && !isCollapsed && (
-            <SubTree>
-              <ActualSubTree
-                tree={tree}
-                parentId={itemId}
-                renderItem={renderItem}
-                renderSubTree={SubTree}
-              />
-            </SubTree>
-          )}
-        </ItemWrapper>
-      ))}
-    </>
   );
 }
