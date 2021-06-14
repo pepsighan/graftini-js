@@ -21,8 +21,8 @@ export function Tree({ tree, renderItem: Item, renderSubTree: SubTree }: TreePro
       {Object.keys(tree)
         .filter((itemId) => !tree[itemId].parentId)
         .map((itemId) => (
-          <>
-            <Item key={itemId} item={tree[itemId]} />
+          <React.Fragment key={itemId}>
+            <Item item={tree[itemId]} />
             {tree[itemId].childrenNodes.length > 0 && (
               <SubTree>
                 <ActualSubTree
@@ -33,7 +33,7 @@ export function Tree({ tree, renderItem: Item, renderSubTree: SubTree }: TreePro
                 />
               </SubTree>
             )}
-          </>
+          </React.Fragment>
         ))}
     </>
   );
@@ -47,8 +47,8 @@ function ActualSubTree({ tree, parentId, renderItem: Item, renderSubTree: SubTre
   return (
     <>
       {tree[parentId].childrenNodes.map((itemId) => (
-        <>
-          <Item key={itemId} item={tree[itemId]} />
+        <React.Fragment key={itemId}>
+          <Item item={tree[itemId]} />
           {tree[itemId].childrenNodes.length > 0 && (
             <SubTree>
               <ActualSubTree
@@ -59,7 +59,7 @@ function ActualSubTree({ tree, parentId, renderItem: Item, renderSubTree: SubTre
               />
             </SubTree>
           )}
-        </>
+        </React.Fragment>
       ))}
     </>
   );
