@@ -1,5 +1,5 @@
 import React from 'react';
-import { RenderItem, TreeMap } from './renderItem';
+import { ItemWrapper, RenderItem, TreeMap } from './renderItem';
 import { RenderSubTree } from './renderSubTree';
 
 /**
@@ -15,25 +15,24 @@ export type TreeProps = {
  * Renders a tree based on the tree map. The actual items that are rendered can by
  * configured however you see fit.
  */
-export function Tree({ tree, renderItem: Item, renderSubTree: SubTree }: TreeProps) {
+export function Tree({ tree, renderItem, renderSubTree: SubTree }: TreeProps) {
   return (
     <>
       {Object.keys(tree)
         .filter((itemId) => !tree[itemId].parentId)
         .map((itemId) => (
-          <React.Fragment key={itemId}>
-            <Item item={tree[itemId]} />
+          <ItemWrapper key={itemId} itemId={itemId} tree={tree} renderItem={renderItem}>
             {tree[itemId].childrenNodes.length > 0 && (
               <SubTree>
                 <ActualSubTree
                   tree={tree}
                   parentId={itemId}
-                  renderItem={Item}
+                  renderItem={renderItem}
                   renderSubTree={SubTree}
                 />
               </SubTree>
             )}
-          </React.Fragment>
+          </ItemWrapper>
         ))}
     </>
   );
@@ -43,23 +42,22 @@ type SubTreeProps = TreeProps & {
   parentId: string;
 };
 
-function ActualSubTree({ tree, parentId, renderItem: Item, renderSubTree: SubTree }: SubTreeProps) {
+function ActualSubTree({ tree, parentId, renderItem, renderSubTree: SubTree }: SubTreeProps) {
   return (
     <>
       {tree[parentId].childrenNodes.map((itemId) => (
-        <React.Fragment key={itemId}>
-          <Item item={tree[itemId]} />
+        <ItemWrapper key={itemId} itemId={itemId} tree={tree} renderItem={renderItem}>
           {tree[itemId].childrenNodes.length > 0 && (
             <SubTree>
               <ActualSubTree
                 tree={tree}
                 parentId={itemId}
-                renderItem={Item}
+                renderItem={renderItem}
                 renderSubTree={SubTree}
               />
             </SubTree>
           )}
-        </React.Fragment>
+        </ItemWrapper>
       ))}
     </>
   );
