@@ -1,6 +1,7 @@
 import {
   Avatar,
   Button,
+  ButtonGroup,
   Container,
   Flex,
   Heading,
@@ -8,6 +9,9 @@ import {
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
+import { mdiDelete } from '@mdi/js';
+import DeleteProjectConfirmation from 'components/DeleteProjectConfirmation';
+import Icon from 'components/Icon';
 import Navigation from 'components/Navigation';
 import NewProjectDialog from 'components/NewProjectDialog';
 import SEO from 'components/SEO';
@@ -58,18 +62,34 @@ export default protectedPage(function Projects() {
 
 function ProjectItem({ id, name }) {
   return (
-    <Link href={`/dashboard/project/${slugify({ id, name })}`} passHref>
-      <Button
-        as="a"
-        isFullWidth
-        justifyContent="flex-start"
+    <ButtonGroup isAttached>
+      <Link href={`/dashboard/project/${slugify({ id, name })}`} passHref>
+        <Button
+          as="a"
+          isFullWidth
+          justifyContent="space-between"
+          height="unset"
+          py={2}
+          fontWeight="normal"
+          borderTopRightRadius="none"
+          borderBottomRightRadius="none"
+        >
+          <Flex alignItems="center">
+            <Avatar name="P" size="sm" mr={3} />
+            {name}
+          </Flex>
+        </Button>
+      </Link>
+
+      <DeleteProjectConfirmation
+        projectId={id}
+        borderTopLeftRadius="none"
+        borderBottomLeftRadius="none"
         height="unset"
         py={2}
-        fontWeight="normal"
       >
-        <Avatar name="P" size="sm" mr={3} />
-        {name}
-      </Button>
-    </Link>
+        <Icon icon={mdiDelete} fontSize="2xl" />
+      </DeleteProjectConfirmation>
+    </ButtonGroup>
   );
 }
