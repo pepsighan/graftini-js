@@ -1,4 +1,6 @@
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Button, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
+import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
+import Icon from 'components/Icon';
 import { useDimensions } from 'hooks/useDimensions';
 import { useCallback, useRef } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -35,18 +37,26 @@ export default function Layers() {
   );
 }
 
-function LayerItem({ item }) {
+function LayerItem({ item, onToggle, isCollapsed }) {
   return (
-    <Button
-      fontSize="sm"
-      size="sm"
-      fontWeight="normal"
-      display="block"
-      isFullWidth
-      textAlign="left"
-    >
-      {!item.parentId ? 'Root' : item.props.name || 'Untitled'}
-    </Button>
+    <ButtonGroup display="flex" isAttached>
+      {item.isCanvas && item.childrenNodes.length > 0 && (
+        <IconButton size="sm" flex={0} minWidth="initial" onClick={onToggle}>
+          <Icon icon={isCollapsed ? mdiChevronDown : mdiChevronUp} />
+        </IconButton>
+      )}
+      <Button
+        flex={1}
+        fontSize="sm"
+        size="sm"
+        fontWeight="normal"
+        display="block"
+        isFullWidth
+        textAlign="left"
+      >
+        {!item.parentId ? 'Root' : item.props.name || 'Untitled'}
+      </Button>
+    </ButtonGroup>
   );
 }
 
