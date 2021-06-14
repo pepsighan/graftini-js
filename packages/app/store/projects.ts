@@ -208,6 +208,9 @@ export function useDeleteProject() {
         }
       }
     `,
-    { refetchQueries: [{ query: QUERY_MY_PROJECTS }] }
+    {
+      refetchQueries: [{ query: QUERY_MY_PROJECTS }],
+      awaitRefetchQueries: true,
+    }
   );
 }
