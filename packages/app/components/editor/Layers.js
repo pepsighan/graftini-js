@@ -30,7 +30,7 @@ export default function Layers() {
         right="-17px"
       >
         <Box px={3}>
-          <Tree tree={componentMap} renderItem={LayerItem} renderSubTree={SubTree} />
+          <Tree tree={componentMap ?? {}} renderItem={LayerItem} renderSubTree={SubTree} />
         </Box>
       </Box>
     </Box>
