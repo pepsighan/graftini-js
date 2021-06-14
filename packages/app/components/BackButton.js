@@ -1,12 +1,12 @@
 import { IconButton } from '@chakra-ui/button';
-import Icon from '@chakra-ui/icon';
+import { mdiArrowLeft } from '@mdi/js';
 import Link from 'next/link';
-import { MdArrowBack } from 'react-icons/md';
+import Icon from './Icon';
 
 export default function BackButton({ href }) {
   return (
     <Link href={href}>
-      <IconButton size="sm" variant="ghost" icon={<Icon as={MdArrowBack} fontSize="xl" />} />
+      <IconButton size="sm" variant="ghost" icon={<Icon icon={mdiArrowLeft} fontSize="xl" />} />
     </Link>
   );
 }

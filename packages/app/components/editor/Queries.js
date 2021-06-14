@@ -1,7 +1,8 @@
 import { Box, Flex, IconButton, Text, useDisclosure } from '@chakra-ui/react';
+import { mdiDelete, mdiPlus } from '@mdi/js';
+import Icon from 'components/Icon';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
-import { MdAdd, MdDelete } from 'react-icons/md';
 import { useDeleteQuery } from 'store/projects';
 import QueryBuilderDialog from './graphqlQuery/QueryBuilderDialog';
 
@@ -31,7 +32,7 @@ export default function Queries() {
         </Text>
 
         <IconButton size="sm" onClick={onOpen}>
-          <MdAdd />
+          <Icon icon={mdiPlus} />
         </IconButton>
       </Flex>
 
@@ -40,7 +41,7 @@ export default function Queries() {
           <Flex key={it.id} justifyContent="space-between" alignItems="center" mb={2}>
             <Text>{it.variableName}</Text>
             <IconButton size="xs" colorScheme="red" onClick={onQueryDelete(it.id)}>
-              <MdDelete />
+              <Icon icon={mdiDelete} />
             </IconButton>
           </Flex>
         ))}

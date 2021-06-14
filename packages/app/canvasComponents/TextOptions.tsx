@@ -1,14 +1,14 @@
-import Icon from '@chakra-ui/icon';
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
+import {
+  mdiFormatAlignCenter,
+  mdiFormatAlignJustify,
+  mdiFormatAlignLeft,
+  mdiFormatAlignRight,
+} from '@mdi/js';
 import { FontWeight } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
+import Icon from 'components/Icon';
 import { useCallback } from 'react';
-import {
-  MdFormatAlignCenter,
-  MdFormatAlignJustify,
-  MdFormatAlignLeft,
-  MdFormatAlignRight,
-} from 'react-icons/md';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -49,10 +49,10 @@ export default function TextOptions({ componentId }: OptionsProps) {
           <SegmentedInput
             name="textAlign"
             options={[
-              { value: 'left', label: <Icon as={MdFormatAlignLeft} fontSize="md" /> },
-              { value: 'center', label: <Icon as={MdFormatAlignCenter} fontSize="md" /> },
-              { value: 'right', label: <Icon as={MdFormatAlignRight} fontSize="md" /> },
-              { value: 'justify', label: <Icon as={MdFormatAlignJustify} fontSize="md" /> },
+              { value: 'left', label: <Icon icon={mdiFormatAlignLeft} fontSize="md" /> },
+              { value: 'center', label: <Icon icon={mdiFormatAlignCenter} fontSize="md" /> },
+              { value: 'right', label: <Icon icon={mdiFormatAlignRight} fontSize="md" /> },
+              { value: 'justify', label: <Icon icon={mdiFormatAlignJustify} fontSize="md" /> },
             ]}
           />
         </Labelled>
