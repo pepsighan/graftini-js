@@ -1,4 +1,6 @@
-import { Box, Button, Text } from '@chakra-ui/react';
+import { Box, Button, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
+import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
+import Icon from 'components/Icon';
 import { useDimensions } from 'hooks/useDimensions';
 import { useCallback, useRef } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -20,12 +22,12 @@ export default function Layers() {
 
       <Box
         height={`calc(100% - ${height}px)`}
-        overflowY="auto"
+        overflowY="scroll"
         position="absolute"
-        top={height + 16}
+        top={`${height + 16}px`}
         left={0}
         bottom={0}
-        right={-17}
+        right="-17px"
       >
         <Box px={3}>
           <Tree tree={componentMap} renderItem={LayerItem} renderSubTree={SubTree} />
@@ -35,18 +37,35 @@ export default function Layers() {
   );
 }
 
-function LayerItem({ item }) {
+function LayerItem({ item, onToggle, isCollapsed }) {
+  const isSelected = useDesignerState(
+    useCallback((state) => state.selectedComponentId === item.id, [item.id])
+  );
+  const isChevronVisible = item.isCanvas && item.childrenNodes.length > 0;
+
+  const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+  const onSelect = useCallback(() => selectComponent(item.id), [item.id, selectComponent]);
+
   return (
-    <Button
-      fontSize="sm"
-      size="sm"
-      fontWeight="normal"
-      display="block"
-      isFullWidth
-      textAlign="left"
-    >
-      {!item.parentId ? 'Root' : item.props.name || 'Untitled'}
-    </Button>
+    <ButtonGroup display="flex" isAttached colorScheme={isSelected ? 'primary' : 'gray'}>
+      {isChevronVisible && (
+        <IconButton size="sm" minWidth="initial" onClick={onToggle} pl={2}>
+          <Icon icon={isCollapsed ? mdiChevronDown : mdiChevronUp} />
+        </IconButton>
+      )}
+      <Button
+        fontSize="sm"
+        size="sm"
+        fontWeight="normal"
+        display="block"
+        isFullWidth
+        textAlign="left"
+        pl={isChevronVisible ? 1 : 3}
+        onClick={onSelect}
+      >
+        {!item.parentId ? 'Root' : item.props.name || 'Untitled'}
+      </Button>
+    </ButtonGroup>
   );
 }
 
