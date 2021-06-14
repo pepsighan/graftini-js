@@ -41,8 +41,10 @@ function LayerItem({ item, onToggle, isCollapsed }) {
   const isSelected = useDesignerState(
     useCallback((state) => state.selectedComponentId === item.id, [item.id])
   );
-
   const isChevronVisible = item.isCanvas && item.childrenNodes.length > 0;
+
+  const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+  const onSelect = useCallback(() => selectComponent(item.id), [item.id, selectComponent]);
 
   return (
     <ButtonGroup display="flex" isAttached colorScheme={isSelected ? 'primary' : 'gray'}>
@@ -59,6 +61,7 @@ function LayerItem({ item, onToggle, isCollapsed }) {
         isFullWidth
         textAlign="left"
         pl={isChevronVisible ? 1 : 3}
+        onClick={onSelect}
       >
         {!item.parentId ? 'Root' : item.props.name || 'Untitled'}
       </Button>
