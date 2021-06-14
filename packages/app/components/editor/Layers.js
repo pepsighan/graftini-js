@@ -38,8 +38,12 @@ export default function Layers() {
 }
 
 function LayerItem({ item, onToggle, isCollapsed }) {
+  const isSelected = useDesignerState(
+    useCallback((state) => state.selectedComponentId === item.id, [item.id])
+  );
+
   return (
-    <ButtonGroup display="flex" isAttached>
+    <ButtonGroup display="flex" isAttached colorScheme={isSelected ? 'primary' : 'gray'}>
       {item.isCanvas && item.childrenNodes.length > 0 && (
         <IconButton size="sm" flex={0} minWidth="initial" onClick={onToggle}>
           <Icon icon={isCollapsed ? mdiChevronDown : mdiChevronUp} />
