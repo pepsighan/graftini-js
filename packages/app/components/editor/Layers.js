@@ -22,7 +22,7 @@ export default function Layers() {
 
       <Box
         height={`calc(100% - ${height}px)`}
-        overflowY="auto"
+        overflowY="scroll"
         position="absolute"
         top={`${height + 16}px`}
         left={0}
@@ -42,21 +42,23 @@ function LayerItem({ item, onToggle, isCollapsed }) {
     useCallback((state) => state.selectedComponentId === item.id, [item.id])
   );
 
+  const isChevronVisible = item.isCanvas && item.childrenNodes.length > 0;
+
   return (
     <ButtonGroup display="flex" isAttached colorScheme={isSelected ? 'primary' : 'gray'}>
-      {item.isCanvas && item.childrenNodes.length > 0 && (
-        <IconButton size="sm" flex={0} minWidth="initial" onClick={onToggle}>
+      {isChevronVisible && (
+        <IconButton size="sm" minWidth="initial" onClick={onToggle} pl={2}>
           <Icon icon={isCollapsed ? mdiChevronDown : mdiChevronUp} />
         </IconButton>
       )}
       <Button
-        flex={1}
         fontSize="sm"
         size="sm"
         fontWeight="normal"
         display="block"
         isFullWidth
         textAlign="left"
+        pl={isChevronVisible ? 1 : 3}
       >
         {!item.parentId ? 'Root' : item.props.name || 'Untitled'}
       </Button>
