@@ -3,7 +3,7 @@ import create from 'zustand';
 import createContext from 'zustand/context';
 
 /** @internal */
-type TreeStore = {
+export type TreeStore = {
   /** Whether a sub-tree is collapsed or not.  */
   isSubTreeCollapsed: {
     [key: string]: boolean;
@@ -34,4 +34,4 @@ export function TreeStoreProvider({ children }: PropsWithChildren<{}>) {
 }
 
 /** @internal */
-export const useCreateComponentStore = useStore;
+export const useTreeStore = useStore;

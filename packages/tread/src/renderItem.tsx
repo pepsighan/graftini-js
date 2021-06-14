@@ -1,4 +1,5 @@
 import React, { ReactNode, useCallback } from 'react';
+import { TreeStore, useTreeStore } from './store';
 
 /**
  * A tree item that can be rendered anywhere within it.
@@ -42,16 +43,28 @@ export type ItemWrapperProps = {
 export function ItemWrapper({ itemId, tree, renderItem: Item, children }: ItemWrapperProps) {
   return (
     <>
-      <Item item={tree[itemId]} onCollapse={useOnCollapse()} onExpand={useOnExpand()} />
+      <Item item={tree[itemId]} onCollapse={useOnCollapse(itemId)} onExpand={useOnExpand(itemId)} />
       {children}
     </>
   );
 }
 
-function useOnCollapse() {
-  return useCallback(() => {}, []);
+function useOnCollapse(itemId: string) {
+  const collapseSubTree = useTreeStore(
+    useCallback((state: TreeStore) => state.collapseSubTree, [])
+  );
+
+  return useCallback(() => {
+    collapseSubTree(itemId, true);
+  }, [collapseSubTree, itemId]);
 }
 
-function useOnExpand() {
-  return useCallback(() => {}, []);
+function useOnExpand(itemId: string) {
+  const collapseSubTree = useTreeStore(
+    useCallback((state: TreeStore) => state.collapseSubTree, [])
+  );
+
+  return useCallback(() => {
+    collapseSubTree(itemId, false);
+  }, [collapseSubTree, itemId]);
 }
