@@ -13,13 +13,23 @@ export default function Layers() {
   const { height } = useDimensions(textRef);
 
   return (
-    <Box mt={8} px={3} height="50%">
-      <Text ref={textRef} as="span" fontSize="sm" fontWeight="bold">
+    <Box mt={8} height="50%" position="relative" overflow="hidden">
+      <Text ref={textRef} as="span" px={3} fontSize="sm" fontWeight="bold">
         Layers
       </Text>
 
-      <Box mt={2} height={`calc(100% - ${height}px)`} overflowY="auto">
-        <Tree tree={componentMap} renderItem={LayerItem} renderSubTree={SubTree} />
+      <Box
+        height={`calc(100% - ${height}px)`}
+        overflowY="auto"
+        position="absolute"
+        top={height + 16}
+        left={0}
+        bottom={0}
+        right={-17}
+      >
+        <Box px={3}>
+          <Tree tree={componentMap} renderItem={LayerItem} renderSubTree={SubTree} />
+        </Box>
       </Box>
     </Box>
   );
