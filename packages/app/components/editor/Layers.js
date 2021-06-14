@@ -22,10 +22,10 @@ export default function Layers() {
         height={`calc(100% - ${height}px)`}
         overflowY="auto"
         position="absolute"
-        top={height + 16}
+        top={`${height + 16}px`}
         left={0}
         bottom={0}
-        right={-17}
+        right="-17px"
       >
         <Box px={3}>
           <Tree tree={componentMap} renderItem={LayerItem} renderSubTree={SubTree} />
