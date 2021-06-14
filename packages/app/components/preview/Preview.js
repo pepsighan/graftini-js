@@ -1,3 +1,5 @@
+import { Global } from '@emotion/react';
+import { rgbaToCss } from 'bricks';
 import IFrame from 'components/IFrame';
 import { ROOT_NODE_ID } from 'graft';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
@@ -35,6 +37,16 @@ export default function Preview({ initialRoute }) {
     >
       {() => (
         <>
+          {rootNode.props.color && (
+            <Global
+              styles={`
+                body {
+                  background-color: ${rgbaToCss(rootNode.props.color)};
+                }
+              `}
+            />
+          )}
+
           {rootNode.childrenNodes.map((componentId) => (
             <ComponentRender
               key={componentId}
