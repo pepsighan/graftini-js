@@ -1,23 +1,22 @@
 import {
   Avatar,
   Button,
+  ButtonGroup,
   Container,
   Flex,
   Heading,
   Skeleton,
   Stack,
-  IconButton,
   useDisclosure,
-  ButtonGroup,
 } from '@chakra-ui/react';
 import { mdiDelete } from '@mdi/js';
+import DeleteProjectConfirmation from 'components/DeleteProjectConfirmation';
 import Icon from 'components/Icon';
 import Navigation from 'components/Navigation';
 import NewProjectDialog from 'components/NewProjectDialog';
 import SEO from 'components/SEO';
 import Link from 'next/link';
-import { useCallback } from 'react';
-import { useDeleteProject, useMyProjects } from 'store/projects';
+import { useMyProjects } from 'store/projects';
 import { protectedPage } from 'utils/auth';
 import { slugify } from 'utils/url';
 
@@ -62,8 +61,6 @@ export default protectedPage(function Projects() {
 });
 
 function ProjectItem({ id, name }) {
-  const [deleteProject, { loading }] = useDeleteProject();
-
   return (
     <ButtonGroup isAttached>
       <Link href={`/dashboard/project/${slugify({ id, name })}`} passHref>
@@ -76,7 +73,6 @@ function ProjectItem({ id, name }) {
           fontWeight="normal"
           borderTopRightRadius="none"
           borderBottomRightRadius="none"
-          isDisabled={loading}
         >
           <Flex alignItems="center">
             <Avatar name="P" size="sm" mr={3} />
@@ -85,18 +81,15 @@ function ProjectItem({ id, name }) {
         </Button>
       </Link>
 
-      <Button
+      <DeleteProjectConfirmation
+        projectId={id}
         borderTopLeftRadius="none"
         borderBottomLeftRadius="none"
         height="unset"
         py={2}
-        isLoading={loading}
-        onClick={useCallback(() => {
-          deleteProject({ variables: { projectId: id } });
-        }, [deleteProject, id])}
       >
         <Icon icon={mdiDelete} fontSize="2xl" />
-      </Button>
+      </DeleteProjectConfirmation>
     </ButtonGroup>
   );
 }
