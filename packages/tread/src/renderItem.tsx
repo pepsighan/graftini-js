@@ -24,6 +24,7 @@ export type TreeMap = {
 export type RenderItemProps = {
   item: TreeItem;
   onToggle: VoidFunction;
+  isCollapsed: boolean;
 };
 
 /**
@@ -40,9 +41,13 @@ export type ItemWrapperProps = {
 
 /** @internal */
 export function ItemWrapper({ itemId, tree, renderItem: Item, children }: ItemWrapperProps) {
+  const isCollapsed = useTreeStore(
+    useCallback((state: TreeStore) => !!state.isSubTreeCollapsed[itemId], [itemId])
+  );
+
   return (
     <>
-      <Item item={tree[itemId]} onToggle={useOnToggle(itemId)} />
+      <Item item={tree[itemId]} onToggle={useOnToggle(itemId)} isCollapsed={isCollapsed} />
       {children}
     </>
   );
