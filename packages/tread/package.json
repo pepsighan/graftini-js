@@ -42,5 +42,8 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "dependencies": {
+    "zustand": "^3.5.2"
+  }
 }
