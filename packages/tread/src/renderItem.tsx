@@ -23,8 +23,7 @@ export type TreeMap = {
  */
 export type RenderItemProps = {
   item: TreeItem;
-  onCollapse: VoidFunction;
-  onExpand: VoidFunction;
+  onToggle: VoidFunction;
 };
 
 /**
@@ -43,28 +42,16 @@ export type ItemWrapperProps = {
 export function ItemWrapper({ itemId, tree, renderItem: Item, children }: ItemWrapperProps) {
   return (
     <>
-      <Item item={tree[itemId]} onCollapse={useOnCollapse(itemId)} onExpand={useOnExpand(itemId)} />
+      <Item item={tree[itemId]} onToggle={useOnToggle(itemId)} />
       {children}
     </>
   );
 }
 
-function useOnCollapse(itemId: string) {
-  const collapseSubTree = useTreeStore(
-    useCallback((state: TreeStore) => state.collapseSubTree, [])
-  );
+function useOnToggle(itemId: string) {
+  const toggleCollapse = useTreeStore(useCallback((state: TreeStore) => state.toggleCollapse, []));
 
   return useCallback(() => {
-    collapseSubTree(itemId, true);
-  }, [collapseSubTree, itemId]);
-}
-
-function useOnExpand(itemId: string) {
-  const collapseSubTree = useTreeStore(
-    useCallback((state: TreeStore) => state.collapseSubTree, [])
-  );
-
-  return useCallback(() => {
-    collapseSubTree(itemId, false);
-  }, [collapseSubTree, itemId]);
+    toggleCollapse(itemId);
+  }, [itemId, toggleCollapse]);
 }

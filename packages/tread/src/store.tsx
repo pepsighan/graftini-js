@@ -8,19 +8,19 @@ export type TreeStore = {
   isSubTreeCollapsed: {
     [key: string]: boolean;
   };
-  collapseSubTree(id: string, isCollapsed: boolean): void;
+  toggleCollapse(id: string): void;
 };
 
 /** @internal */
 export const createTreeStore = () =>
   create<TreeStore>((set) => ({
     isSubTreeCollapsed: {},
-    collapseSubTree(id: string, isCollapsed: boolean) {
+    toggleCollapse(id: string) {
       set((state) => ({
         ...state,
         isSubTreeCollapsed: {
           ...state.isSubTreeCollapsed,
-          [id]: isCollapsed,
+          [id]: !state.isSubTreeCollapsed[id],
         },
       }));
     },
