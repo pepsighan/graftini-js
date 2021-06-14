@@ -28,7 +28,7 @@ export default function Preview({ initialRoute }) {
       style={{
         width: '100%',
         // The height of the nav is substracted, so that the preview does not cause window-wide scroll.
-        height: 'calc(100vh - 49px)',
+        height: 'calc(100vh - 40px)',
         border: '1px',
         borderColor: 'gray.300',
         // Any content that overflows vertically will have the scrollbar on this box itself.
