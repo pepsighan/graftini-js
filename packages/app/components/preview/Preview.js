@@ -1,7 +1,9 @@
-import { ROOT_NODE_ID } from 'graft';
+import { Global } from '@emotion/react';
+import { rgbaToCss } from 'bricks';
 import IFrame from 'components/IFrame';
-import NotFound from 'pages/404';
+import { ROOT_NODE_ID } from 'graft';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
+import NotFound from 'pages/404';
 import { useMemo } from 'react';
 import { parseComponentMap } from 'store/designer';
 import ComponentRender from './ComponentRender';
@@ -26,7 +28,7 @@ export default function Preview({ initialRoute }) {
       style={{
         width: '100%',
         // The height of the nav is substracted, so that the preview does not cause window-wide scroll.
-        height: 'calc(100vh - 49px)',
+        height: 'calc(100vh - 40px)',
         border: '1px',
         borderColor: 'gray.300',
         // Any content that overflows vertically will have the scrollbar on this box itself.
@@ -35,6 +37,16 @@ export default function Preview({ initialRoute }) {
     >
       {() => (
         <>
+          {rootNode.props.color && (
+            <Global
+              styles={`
+                body {
+                  background-color: ${rgbaToCss(rootNode.props.color)};
+                }
+              `}
+            />
+          )}
+
           {rootNode.childrenNodes.map((componentId) => (
             <ComponentRender
               key={componentId}

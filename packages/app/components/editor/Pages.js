@@ -1,11 +1,12 @@
 import { useDisclosure } from '@chakra-ui/hooks';
 import { Box, Button, Flex, IconButton, Stack, Tag, Text } from '@chakra-ui/react';
+import { mdiPlus } from '@mdi/js';
+import Icon from 'components/Icon';
 import NewPageDialog from 'components/NewPageDialog';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
-import { MdAdd } from 'react-icons/md';
 import { useDesignerState } from 'store/designer';
 import { encode } from 'utils/url';
 import { useEffectOnce } from 'utils/useEffect';
@@ -84,7 +85,7 @@ export default function Pages() {
         </Text>
 
         <IconButton onClick={onOpen} size="sm">
-          <MdAdd />
+          <Icon icon={mdiPlus} />
         </IconButton>
       </Flex>
 

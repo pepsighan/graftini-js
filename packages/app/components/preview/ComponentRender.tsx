@@ -1,5 +1,5 @@
+import { componentRender } from 'canvasComponents';
 import { ComponentMap } from 'graft';
-import components from 'canvasComponents';
 
 type ComponentRenderProps = {
   componentId: string;
@@ -8,12 +8,12 @@ type ComponentRenderProps = {
 
 export default function ComponentRender({ componentId, componentMap }: ComponentRenderProps) {
   const { type, props, isCanvas, childrenNodes } = componentMap[componentId];
-  const Component = components[type];
+  const Render = componentRender[type];
 
   const { children, ...rest } = props;
 
   return (
-    <Component.Render
+    <Render
       {...rest}
       children={
         isCanvas

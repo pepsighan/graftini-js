@@ -7,8 +7,8 @@ export default function PreviewNavigation({ projectName }) {
 
   return (
     <Flex
-      py={2}
       px={4}
+      height="40px"
       justifyContent="space-between"
       alignItems="center"
       position="sticky"
