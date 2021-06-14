@@ -3,7 +3,7 @@ import pkg from './package.json';
 
 const config = {
   input: 'src/tread.ts',
-  external: ['react'],
+  external: ['react', 'zustand', 'zustand/context'],
   output: [
     { file: pkg.main, format: 'cjs' },
     { file: pkg.module, format: 'es' },
