@@ -195,3 +195,19 @@ export function useUpdateProjectDesign() {
     }
   `);
 }
+
+/**
+ * Hook to delete a project.
+ */
+export function useDeleteProject() {
+  return useMutation(
+    gql`
+      mutation DeleteProject($projectId: ID!) {
+        deleteProject(projectId: $projectId) {
+          id
+        }
+      }
+    `,
+    { refetchQueries: [{ query: QUERY_MY_PROJECTS }] }
+  );
+}
