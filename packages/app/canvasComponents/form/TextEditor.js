@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createEditor } from 'slate';
 import { Slate, Editable, withReact } from 'slate-react';
 
-export default function TextEditor({ initialState }) {
+export default function TextEditor({ initialState, isSelected }) {
   // Only initialize the editor once.
   const [editor] = useState(() => withReact(createEditor()));
   // This stores the state of the editor.
@@ -10,7 +10,7 @@ export default function TextEditor({ initialState }) {
 
   return (
     <Slate editor={editor} value={value} onChange={setValue}>
-      <Editable />
+      <Editable readOnly={!isSelected} />
     </Slate>
   );
 }

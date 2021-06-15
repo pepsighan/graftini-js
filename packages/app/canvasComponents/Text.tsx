@@ -21,6 +21,9 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
   ({ text, onDragStart, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+    const isSelected = useDesignerState(
+      useCallback((state) => state.selectedComponentId === componentId, [componentId])
+    );
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
 
     const { text: textDefault, ...defaultRest } = Text.graftOptions.defaultProps;
@@ -48,7 +51,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
           [componentId, selectComponent, triggerClick]
         )}
       >
-        <TextEditor initialState={text ?? textDefault} />
+        <TextEditor initialState={text ?? textDefault} isSelected={isSelected} />
       </Txt>
     );
   }
