@@ -6,9 +6,10 @@ import { forwardRef, useCallback } from 'react';
 import { Descendant } from 'slate';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState } from 'store/designer';
-import TextEditor from './form/TextEditor';
+import TextEditor from './TextEditor';
 
 export type TextComponentProps = {
+  name?: string;
   text: Descendant[];
   color?: RGBA;
   fontSize?: FontSize;
@@ -51,7 +52,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
           [componentId, selectComponent, triggerClick]
         )}
       >
-        <TextEditor initialState={text ?? textDefault} isSelected={isSelected} />
+        <TextEditor value={text ?? textDefault} isSelected={isSelected} />
       </Txt>
     );
   }
@@ -61,6 +62,7 @@ Text.graftOptions = {
   // The default props defines all the props that the component can accept exhaustively.
   // This field is used by the update options logic.
   defaultProps: {
+    name: null,
     color: { r: 0, g: 0, b: 0, a: 1 },
     text: [{ type: 'paragraph', children: [{ text: 'Text' }] }] as any, // The type of the lib is wrong.
     fontSize: {
