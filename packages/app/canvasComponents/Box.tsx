@@ -60,7 +60,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
     // Merge the incoming props with the default props so that any new props introduced in
     // the future get supported easily for existing projects.
     const boxProps = {
-      ...Box.defaultProps,
+      ...Box.graftOptions.defaultProps,
       ...rest,
     };
 

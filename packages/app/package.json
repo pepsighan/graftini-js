@@ -35,6 +35,8 @@
     "react-frame-component": "^5.0.0",
     "react-hook-form": "7.8.3",
     "react-use": "^17.2.4",
+    "slate": "^0.63.0",
+    "slate-react": "^0.65.2",
     "tread": "^0.1.0",
     "zustand": "^3.5.2"
   },
