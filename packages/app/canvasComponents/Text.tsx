@@ -21,11 +21,18 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
 
+    // Merge the incoming props with the default props so that any new props introduced in
+    // the future get supported easily for existing projects.
+    const textProps = {
+      ...Text.defaultProps,
+      ...rest,
+    };
+
     return (
       <Txt
         ref={ref}
         onDragStart={useUnselectOnDragStart(onDragStart)}
-        {...rest}
+        {...textProps}
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();
