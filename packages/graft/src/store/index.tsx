@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { CreateComponentStoreProvider } from './createComponent';
 import { DraggedOverStoreProvider } from './draggedOver';
 import { ComponentMap, EditorStateProvider } from './editor';
+import { HistoryStoreProvider } from './history';
 import { HoverStoreProvider } from './hover';
 import { ComponentRegionStateProvider } from './regionMap';
 import { RootScrollStoreProvider } from './rootScroll';
@@ -18,7 +19,9 @@ export default function Store({ initialState, children }: StoreProps) {
         <DraggedOverStoreProvider>
           <CreateComponentStoreProvider>
             <HoverStoreProvider>
-              <RootScrollStoreProvider>{children}</RootScrollStoreProvider>
+              <HistoryStoreProvider>
+                <RootScrollStoreProvider>{children}</RootScrollStoreProvider>
+              </HistoryStoreProvider>
             </HoverStoreProvider>
           </CreateComponentStoreProvider>
         </DraggedOverStoreProvider>
