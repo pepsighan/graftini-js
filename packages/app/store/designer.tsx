@@ -23,6 +23,7 @@ type UseDesignerState = {
   toggleQueryBuilderPane(): void;
   setCurrentPage(pageId: string): void;
   updatePageDesign(pageId: string, componentMap: ComponentMap): void;
+  deletePage(pageId: string): void;
 };
 
 const createDesignerState = (pages: ProjectPage[]) =>
@@ -65,6 +66,15 @@ const createDesignerState = (pages: ProjectPage[]) =>
       updatePageDesign(pageId: string, componentMap: ComponentMap) {
         immerSet((state) => {
           state.pages[pageId] = componentMap;
+        });
+      },
+      deletePage(pageId: string) {
+        immerSet((state) => {
+          // Remove the page from the store and reset the current open page if
+          // it is selected.
+          delete state.pages[pageId];
+          state.currentOpenPage =
+            state.currentOpenPage === pageId ? pages[0].id : state.currentOpenPage;
         });
       },
     };

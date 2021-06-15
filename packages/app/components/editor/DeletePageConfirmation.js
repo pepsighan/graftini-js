@@ -7,17 +7,20 @@ import {
   Button,
 } from '@chakra-ui/react';
 import { useCallback, useRef } from 'react';
+import { useDesignerState } from 'store/designer';
 import { useDeletePage } from 'store/projects';
 
 export default function DeletePageConfirmation({ projectId, pageId, isOpen, onClose }) {
   const [deletePage, { loading }] = useDeletePage({ projectId });
+  const deletePageFromDesigner = useDesignerState(useCallback((state) => state.deletePage, []));
 
   const cancelRef = useRef();
 
   const onDelete = useCallback(async () => {
     await deletePage({ variables: { projectId, pageId } });
+    deletePageFromDesigner(pageId);
     onClose();
-  }, [deletePage, onClose, pageId, projectId]);
+  }, [deletePage, deletePageFromDesigner, onClose, pageId, projectId]);
 
   return (
     <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
