@@ -56,6 +56,7 @@ export default function Pages() {
             name={it.name}
             route={it.route}
             slugProjectId={slugProjectId}
+            projectId={project.id}
           />
         ))}
       </Box>
@@ -65,7 +66,7 @@ export default function Pages() {
   );
 }
 
-function PageItem({ id, name, route, slugProjectId }) {
+function PageItem({ id, name, route, slugProjectId, projectId }) {
   const isSelected = useDesignerState(useCallback((state) => state.currentOpenPage === id, [id]));
   const setCurrentPage = useDesignerState(useCallback((state) => state.setCurrentPage, []));
 
@@ -75,15 +76,20 @@ function PageItem({ id, name, route, slugProjectId }) {
 
   const [context, setContext] = useState(null);
 
-  const onOpenContextMenu = useCallback((event) => {
-    event.preventDefault();
-    event.stopPropagation();
+  const onOpenContextMenu = useCallback(
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
 
-    setContext({
-      x: event.clientX,
-      y: event.clientY,
-    });
-  }, []);
+      setContext({
+        x: event.clientX,
+        y: event.clientY,
+        projectId,
+        pageId: id,
+      });
+    },
+    [id, projectId]
+  );
   const onCloseContextMenu = useCallback(() => setContext(null), []);
 
   // TODO: Do not cause history to change. Since the pages are used to change
