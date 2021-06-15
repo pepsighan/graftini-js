@@ -57,10 +57,17 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
 
+    // Merge the incoming props with the default props so that any new props introduced in
+    // the future get supported easily for existing projects.
+    const boxProps = {
+      ...Box.defaultProps,
+      ...rest,
+    };
+
     return (
       <BoxComp
         ref={ref}
-        {...useBoxTransformedProps(rest)}
+        {...useBoxTransformedProps(boxProps)}
         draggable={draggable}
         onDragStart={useUnselectOnDragStart(onDragStart)}
         onDragEnd={onDragEnd}
