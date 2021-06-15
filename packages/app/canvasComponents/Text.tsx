@@ -5,6 +5,7 @@ import { forwardRef, useCallback } from 'react';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState } from 'store/designer';
 import useUnselectOnDragStart from '../hooks/useUnselectOnDragStart';
+import TextEditor from './form/TextEditor';
 
 export type TextComponentProps = {
   color?: RGBA;
@@ -44,7 +45,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
           [componentId, selectComponent, triggerClick]
         )}
       >
-        {content}
+        <TextEditor />
       </Txt>
     );
   }
