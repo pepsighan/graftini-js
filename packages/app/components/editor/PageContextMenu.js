@@ -2,7 +2,6 @@ import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback, useRef } from 'react';
 import { useClickAway } from 'react-use';
-import { useMyProject } from 'store/projects';
 import DeletePageConfirmation from './DeletePageConfirmation';
 
 export default function PageContextMenu({ context, onClose }) {

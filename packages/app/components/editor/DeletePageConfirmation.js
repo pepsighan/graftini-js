@@ -9,15 +9,8 @@ import {
 import { useCallback, useRef } from 'react';
 import { useDeletePage } from 'store/projects';
 
-export default function DeletePageConfirmation({
-  projectId,
-  pageId,
-  children,
-  isOpen,
-  onClose,
-  ...props
-}) {
-  const [deletePage, { loading }] = useDeletePage(projectId);
+export default function DeletePageConfirmation({ projectId, pageId, isOpen, onClose }) {
+  const [deletePage, { loading }] = useDeletePage({ projectId });
 
   const cancelRef = useRef();
 
