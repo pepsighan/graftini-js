@@ -16,16 +16,26 @@ function Block({ node }) {
     let text = node.text;
     if (node.bold) {
       text = (
-        <Text tag="strong" fontWeight={600}>
+        <Text tag="strong" displayInline fontWeight={600}>
           {text}
         </Text>
       );
     }
+    // TODO: Reset the text style to not have anything and provide italics and underline
+    // via the Text component.
     if (node.italic) {
-      text = <Text tag="em">{text}</Text>;
+      text = (
+        <Text tag="em" displayInline>
+          {text}
+        </Text>
+      );
     }
     if (node.underlined) {
-      text = <Text tag="u">{text}</Text>;
+      text = (
+        <Text tag="u" displayInline>
+          {text}
+        </Text>
+      );
     }
     return text;
   }
