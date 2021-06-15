@@ -1,6 +1,8 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react';
+import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback, useRef } from 'react';
 import { useClickAway } from 'react-use';
+import { useMyProject } from 'store/projects';
 import DeletePageConfirmation from './DeletePageConfirmation';
 
 export default function PageContextMenu({ context, onClose }) {
@@ -13,6 +15,9 @@ export default function PageContextMenu({ context, onClose }) {
     onDeleteClose();
     onClose();
   }, [onClose, onDeleteClose]);
+
+  const { project } = useMyProjectFromRouter();
+  const page = project.pages.find((it) => it.id === context.pageId);
 
   return (
     <>
@@ -40,18 +45,20 @@ export default function PageContextMenu({ context, onClose }) {
           >
             Edit
           </Button>
-          <Button
-            size="sm"
-            px={5}
-            isFullWidth
-            borderRadius="none"
-            justifyContent="flex-start"
-            fontWeight="normal"
-            bg="white"
-            onClick={onDeleteOpen}
-          >
-            Delete
-          </Button>
+          {page.route !== '/' && (
+            <Button
+              size="sm"
+              px={5}
+              isFullWidth
+              borderRadius="none"
+              justifyContent="flex-start"
+              fontWeight="normal"
+              bg="white"
+              onClick={onDeleteOpen}
+            >
+              Delete
+            </Button>
+          )}
         </Box>
       )}
 
