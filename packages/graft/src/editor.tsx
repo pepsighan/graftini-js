@@ -166,16 +166,19 @@ export function useEditor(): UseEditor {
         state.componentMap[component.parentId!].childrenNodes = state.componentMap[
           component.parentId!
         ].childrenNodes.filter((it) => it !== component.id);
-
-        // We just mark the component to be deleted.
-        // We do this because the canvas may be dependent still
-        // on this component until it is destroyed in the next render-cycle.
-        state.componentMap[component.id].isDeleted = true;
       });
 
       // Also remove it from the region map.
       immerSetRegion((state: ComponentRegionStore) => {
         delete state.regionMap[componentId];
+      });
+
+      // Do not immediately remove the component from the map, the editor will crash
+      // because it has not yet removed the component from the tree.
+      setTimeout(() => {
+        immerSetEditor((state: EditorStore) => {
+          delete state.componentMap[componentId];
+        });
       });
     },
     [immerSetEditor, immerSetRegion]

@@ -12,12 +12,6 @@ export { DropMarker, DropMarkerProps } from './dropMarker';
 export { Editor, EditorProps, useEditor, useEditorState } from './editor';
 export { DragPreview } from './preview';
 export { NewComponent, useCurrentCreateComponentType } from './store/createComponent';
-export {
-  cleanupComponentMap,
-  ComponentMap,
-  ComponentNode,
-  ComponentProps,
-  ROOT_NODE_ID,
-} from './store/editor';
+export { ComponentMap, ComponentNode, ComponentProps, ROOT_NODE_ID } from './store/editor';
 export { UseHoverSubscriber, useHoverSubscriber } from './store/hover';
 export { useComponentRegion, UseComponentRegion } from './store/regionMap';

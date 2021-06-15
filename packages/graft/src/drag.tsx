@@ -3,7 +3,12 @@ import { useComponentId } from './context';
 import { useCorrectCursorPosition } from './correction';
 import { addComponentToDropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
-import { EditorStore, useEditorStateInternal, useEditorStoreApiInternal } from './store/editor';
+import {
+  EditorStore,
+  isComponentWithinSubTree,
+  useEditorStateInternal,
+  useEditorStoreApiInternal,
+} from './store/editor';
 import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
@@ -122,7 +127,13 @@ export function useOnDragEnd() {
 
       const componentToDrop = draggedOver.component!;
 
-      if (dropRegion.componentId === componentToDrop.id) {
+      if (
+        isComponentWithinSubTree(
+          componentToDrop.id,
+          dropRegion.componentId,
+          editorState.componentMap
+        )
+      ) {
         // Its dropping itself onto itself. Do nothing.
         return;
       }

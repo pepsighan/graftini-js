@@ -45,13 +45,6 @@ export type ComponentNode = {
    * canvas. This is useful to show the drop marker accordingly.
    */
   childAppendDirection?: ChildAppendDirection;
-  /**
-   * Whether the component node is no longer present in the tree. This is a remnant that is stored
-   * temporarily so that the canvas does not error (because the component may yet not have been
-   * destroyed). Call `cleanupComponentMap` function to remove the deleted nodes manually before using
-   * the component for something else.
-   */
-  isDeleted?: boolean;
 };
 
 /**
@@ -159,30 +152,6 @@ export function EditorStateProvider({ elementMap, children }: EditorStateProvide
   const RootComponent = useContext(RootOverrideContext);
   const [store] = useState(() => createEditorStore(elementMap, RootComponent));
   return <Provider initialStore={store}>{children}</Provider>;
-}
-
-/**
- * A clean version of the component map that can be stored for later usage.
- */
-export type CleanedComponentMap = {
-  [id: string]: Omit<ComponentNode, 'isDeleted' | 'region'>;
-};
-
-/**
- * Removes all the deleted component nodes from the map and also remove unwanted properties
- * from each components.
- */
-export function cleanupComponentMap(componentMap: ComponentMap): CleanedComponentMap {
-  Object.keys(componentMap).forEach((key) => {
-    const component = componentMap[key];
-    delete (component as any).region;
-
-    if (component.isDeleted) {
-      delete componentMap[key];
-    }
-  });
-
-  return componentMap as CleanedComponentMap;
 }
 
 /**
