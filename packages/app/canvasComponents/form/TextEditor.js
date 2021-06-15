@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createEditor } from 'slate';
-import { Slate, Editable, withReact } from 'slate-react';
+import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 
 export default function TextEditor({ initialState, isSelected }) {
   // Only initialize the editor once.
@@ -8,9 +8,16 @@ export default function TextEditor({ initialState, isSelected }) {
   // This stores the state of the editor.
   const [value, setValue] = useState(initialState);
 
+  // Focus the editor once it is selected.
+  useEffect(() => {
+    if (isSelected) {
+      ReactEditor.focus(editor);
+    }
+  }, [editor, isSelected]);
+
   return (
     <Slate editor={editor} value={value} onChange={setValue}>
-      <Editable readOnly={!isSelected} />
+      <Editable readOnly={!isSelected} style={{ backgroundColor: isSelected ? 'white' : null }} />
     </Slate>
   );
 }
