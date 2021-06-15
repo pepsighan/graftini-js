@@ -6,7 +6,7 @@ import { forwardRef, useCallback } from 'react';
 import { Descendant } from 'slate';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState } from 'store/designer';
-import TextEditor from './TextEditor';
+import TextEditor from './textEditor/TextEditor';
 
 export type TextComponentProps = {
   name?: string;
