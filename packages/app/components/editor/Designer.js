@@ -5,7 +5,7 @@ import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
-import { cleanupComponentMap, DragPreview, Editor, useEditor } from 'graft';
+import { DragPreview, Editor, useEditor } from 'graft';
 import { useDimensions } from 'hooks/useDimensions';
 import { debounce } from 'lodash-es';
 import { useCallback, useEffect, useMemo, useRef } from 'react';
@@ -105,7 +105,7 @@ function useSyncDesignerStateToBackend({ projectId }) {
               componentMap: pages[pageId]
                 ? // Cleanup any deleted component nodes before saving them to
                   // backend.
-                  JSON.stringify(cleanupComponentMap({ ...pages[pageId] }))
+                  JSON.stringify({ ...pages[pageId] })
                 : null,
             })),
           },
