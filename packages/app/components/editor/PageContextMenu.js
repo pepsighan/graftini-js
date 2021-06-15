@@ -41,6 +41,7 @@ export default function PageContextMenu({ context, onClose }) {
             justifyContent="flex-start"
             fontWeight="normal"
             bg="white"
+            disabled
           >
             Edit
           </Button>
