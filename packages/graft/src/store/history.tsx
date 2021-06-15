@@ -4,6 +4,9 @@ import create from 'zustand';
 import createContext from 'zustand/context';
 import { ComponentMap } from './editor';
 
+// The stack size of the history.
+const stackSize = 30;
+
 /**
  * Stores the history of the editor.
  */
@@ -42,12 +45,14 @@ export const createHistoryStore = () =>
       addToStack(map) {
         immerSet((state) => {
           // Remove all the items from the index till the last and add the new item.
-          const newStack = state.stack.splice(
-            state.index + 1,
-            state.stack.length - state.index - 1,
-            map
-          );
-          state.stack = [...newStack];
+          state.stack.splice(state.index + 1, state.stack.length - state.index - 1, map);
+
+          // Remove the excess history from the stack.
+          if (state.stack.length > stackSize) {
+            state.stack.splice(0, state.stack.length - stackSize);
+          }
+
+          state.stack = [...state.stack];
         });
       },
       undo() {
