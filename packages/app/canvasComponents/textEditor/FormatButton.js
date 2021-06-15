@@ -17,6 +17,7 @@ export default function FormatButton({ format, icon }) {
         paddingTop: theme.space[2],
         paddingBottom: theme.space[2],
         cursor: 'pointer',
+        backgroundColor: isFormatActive(editor, format) ? theme.colors.gray[100] : null,
         '&:hover': {
           backgroundColor: theme.colors.gray[200],
         },
