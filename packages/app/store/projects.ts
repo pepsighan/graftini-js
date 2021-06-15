@@ -214,3 +214,22 @@ export function useDeleteProject() {
     }
   );
 }
+
+/**
+ * Hook to delete a page.
+ */
+export function useDeletePage({ projectId }) {
+  return useMutation(
+    gql`
+      mutation DeletePage($projectId: ID!, $pageId: ID!) {
+        deletePage(projectId: $projectId, pageId: $pageId) {
+          id
+        }
+      }
+    `,
+    {
+      refetchQueries: [{ query: QUERY_MY_PROJECT, variables: { id: projectId } }],
+      awaitRefetchQueries: true,
+    }
+  );
+}
