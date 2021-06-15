@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import Icon from 'components/Icon';
-import { Editor, Transforms } from 'slate';
+import { Editor, Transforms, Text } from 'slate';
 import { useSlate } from 'slate-react';
 import theme from 'utils/theme';
 
