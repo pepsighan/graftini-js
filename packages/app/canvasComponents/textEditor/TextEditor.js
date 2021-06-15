@@ -2,6 +2,8 @@ import { useComponentId, useEditor } from 'graft';
 import { useCallback, useEffect, useState } from 'react';
 import { createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
+import HoveringToolbar from './HoveringToolbar';
+import Leaf from './Leaf';
 
 export default function TextEditor({ value, isSelected }) {
   const componentId = useComponentId();
@@ -26,7 +28,12 @@ export default function TextEditor({ value, isSelected }) {
 
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
-      <Editable readOnly={!isSelected} style={{ backgroundColor: isSelected ? 'white' : null }} />
+      <HoveringToolbar />
+      <Editable
+        readOnly={!isSelected}
+        style={{ backgroundColor: isSelected ? 'white' : null }}
+        renderLeaf={Leaf}
+      />
     </Slate>
   );
 }
