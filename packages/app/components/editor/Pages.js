@@ -1,5 +1,5 @@
 import { useDisclosure } from '@chakra-ui/hooks';
-import { Box, Button, Flex, IconButton, Stack, Tag, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, IconButton, Tag, Text } from '@chakra-ui/react';
 import { mdiPlus } from '@mdi/js';
 import Icon from 'components/Icon';
 import NewPageDialog from 'components/NewPageDialog';
@@ -48,7 +48,7 @@ export default function Pages() {
         </IconButton>
       </Flex>
 
-      <Stack mt={1}>
+      <Box mt={1}>
         {project.pages.map((it) => (
           <PageItem
             key={it.id}
@@ -58,7 +58,7 @@ export default function Pages() {
             slugProjectId={slugProjectId}
           />
         ))}
-      </Stack>
+      </Box>
 
       <NewPageDialog key={isOpen} isOpen={isOpen} onClose={onClose} />
     </Box>
