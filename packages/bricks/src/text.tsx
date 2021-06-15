@@ -14,6 +14,7 @@ export type BaseTextProps = {
   fontWeight?: FontWeight;
   textAlign?: TextAlign;
   displayNone?: boolean;
+  displayInline?: boolean;
   children?: ReactNode;
 };
 
@@ -36,6 +37,7 @@ export type TextInteractionProps = {
 
 const Text = forwardRef((props: TextProps, ref) => {
   const Component = (props.tag ?? 'div') as ElementType;
+
   return (
     <Component
       ref={ref}
@@ -44,7 +46,7 @@ const Text = forwardRef((props: TextProps, ref) => {
       css={{
         // Append -gr in class names rather than -Text.
         label: 'gr',
-        display: props.displayNone ? 'none' : 'block',
+        display: props.displayNone ? 'none' : props.displayInline ? 'inline' : 'block',
         width: '100%',
         pointerEvents: props.pointerEvents,
         ...baseStyles(props),
