@@ -1,4 +1,11 @@
-import { Box, Input, useDisclosure, useOutsideClick } from '@chakra-ui/react';
+import {
+  Box,
+  Input,
+  useDisclosure,
+  useOutsideClick,
+  InputGroup,
+  InputLeftElement,
+} from '@chakra-ui/react';
 import { rgbaToCss } from 'bricks';
 import { useEffect, useRef } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
@@ -6,55 +13,72 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import StickyBox from './StickyBox';
 
-export default function ColorPicker({ name }) {
+export default function ColorPicker({ name, label }) {
   const { control } = useFormContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const ref = useRef();
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => {
-        return (
-          <>
-            <Box flex={1} position="relative">
-              <Input
-                ref={ref}
-                as="div"
-                size="sm"
-                bg="white"
-                display="flex"
-                alignItems="center"
-                userSelect="none"
-                cursor="pointer"
-                onClick={onOpen}
-              >
-                {/* Show a chessboard bg to signify if there is transparency in the color. */}
-                <Box
-                  width={5}
-                  height={5}
-                  borderRadius="sm"
-                  bg={field.value ? rgbaToCss(field.value) : null}
-                  mr={3}
-                />
-                {/* Only need to show the hex and no transparency as textual. */}
-                {field.value ? rgbaToCss({ ...field.value, a: null }) : ''}
-              </Input>
+    <InputGroup>
+      <InputLeftElement
+        pointerEvents="none"
+        fontSize="sm"
+        height="100%"
+        width={14}
+        color="gray.600"
+        justifyContent="flex-end"
+        pr={2}
+      >
+        {label}
+      </InputLeftElement>
 
-              {isOpen && (
-                <ColorPickerInner
-                  value={field.value}
-                  onChange={field.onChange}
-                  onClose={onClose}
-                  stickToRef={ref}
-                />
-              )}
-            </Box>
-          </>
-        );
-      }}
-    />
+      <Controller
+        name={name}
+        control={control}
+        render={({ field }) => {
+          return (
+            <>
+              <Box flex={1} position="relative">
+                <Input
+                  ref={ref}
+                  as="div"
+                  size="sm"
+                  bg="white"
+                  display="flex"
+                  alignItems="center"
+                  userSelect="none"
+                  cursor="pointer"
+                  onClick={onOpen}
+                  sx={{
+                    paddingInlineStart: 14,
+                  }}
+                >
+                  {/* Show a chessboard bg to signify if there is transparency in the color. */}
+                  <Box
+                    width={5}
+                    height={5}
+                    borderRadius="sm"
+                    bg={field.value ? rgbaToCss(field.value) : null}
+                    mr={3}
+                  />
+                  {/* Only need to show the hex and no transparency as textual. */}
+                  {field.value ? rgbaToCss({ ...field.value, a: null }) : ''}
+                </Input>
+
+                {isOpen && (
+                  <ColorPickerInner
+                    value={field.value}
+                    onChange={field.onChange}
+                    onClose={onClose}
+                    stickToRef={ref}
+                  />
+                )}
+              </Box>
+            </>
+          );
+        }}
+      />
+    </InputGroup>
   );
 }
 

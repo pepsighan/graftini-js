@@ -79,9 +79,9 @@ export default function TextOptions({ componentId }: OptionsProps) {
             <option value={900}>Extra Extra Bold</option>
           </SelectInput>
         </Labelled>
-        <Labelled label="Color">
-          <ColorPicker name="color" />
-        </Labelled>
+        <GridItem colSpan={8}>
+          <ColorPicker name="color" label="Color" />
+        </GridItem>
       </Grid>
     </CF>
   );

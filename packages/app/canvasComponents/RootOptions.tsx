@@ -25,9 +25,9 @@ export default function RootOptions() {
             Appearance
           </Text>
         </GridItem>
-        <Labelled label="Color">
-          <ColorPicker name="color" />
-        </Labelled>
+        <GridItem colSpan={8}>
+          <ColorPicker name="color" label="Color" />
+        </GridItem>
       </Grid>
     </CF>
   );

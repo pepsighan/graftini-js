@@ -21,7 +21,6 @@ import SelectInputWithLabel from './form/SelectInputWithLabel';
 import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
-import TextInput from './form/TextInput';
 import TextInputWithLabel from './form/TextInputWithLabel';
 
 export type BoxDimension = DimensionSize | 'full';
@@ -284,12 +283,12 @@ function AppearanceSection() {
       <Labelled label="Opacity">
         <OpacityInput name="opacity" />
       </Labelled>
-      <Labelled label="Fill">
-        <ColorPicker name="color" />
-      </Labelled>
-      <Labelled label="Border">
+      <GridItem colSpan={8}>
+        <ColorPicker name="color" label="Fill" />
+      </GridItem>
+      {/* <Labelled label="Border">
         <TextInput name="border" />
-      </Labelled>
+      </Labelled> */}
       <Labelled label="Radius">
         <RadiusInput name="borderRadius" />
       </Labelled>
