@@ -152,9 +152,9 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         <SectionDivider />
         <PropertiesSection />
         <SectionDivider />
-        <FlexSection />
-        <SectionDivider />
         <LayoutSection />
+        <SectionDivider />
+        <FlexSection />
         <SectionDivider />
         <AppearanceSection />
       </Grid>
