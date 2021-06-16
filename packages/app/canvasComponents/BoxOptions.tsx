@@ -246,16 +246,16 @@ function LayoutSection() {
         <SizeInput name="heightRaw" label="Height" isWidth={false} />
       </GridItem>
       <GridItem colSpan={4}>
-        <SizeLimitInput name="minWidthRaw" label="Min W" isWidth isMin />
+        <SizeLimitInput name="minWidthRaw" label="Min W" />
       </GridItem>
       <GridItem colSpan={4}>
-        <SizeLimitInput name="maxWidthRaw" label="Max W" isWidth={false} isMin={false} />
+        <SizeLimitInput name="maxWidthRaw" label="Max W" />
       </GridItem>
       <GridItem colSpan={4}>
-        <SizeLimitInput name="minHeightRaw" label="Min H" isWidth isMin />
+        <SizeLimitInput name="minHeightRaw" label="Min H" />
       </GridItem>
       <GridItem colSpan={4}>
-        <SizeLimitInput name="maxHeightRaw" label="Max W" isWidth={false} isMin={false} />
+        <SizeLimitInput name="maxHeightRaw" label="Max W" />
       </GridItem>
       <Labelled label="Padding">
         <SpacingField name="padding" />

@@ -1,10 +1,22 @@
-import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
-import { useFormContext } from 'react-hook-form';
+import {
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Portal,
+} from '@chakra-ui/react';
+import { ChevronDownIcon, CheckIcon } from '@modulz/radix-icons';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 const units = ['px', '%'];
 
-export default function SizeLimitInput({ name, isWidth, isMin, label }) {
-  const { register } = useFormContext();
+export default function SizeLimitInput({ name, label }) {
+  const { register, setValue, control } = useFormContext();
+  const unit = useWatch({ control, name: `${name}.unit` });
 
   return (
     <InputGroup>
@@ -30,6 +42,33 @@ export default function SizeLimitInput({ name, isWidth, isMin, label }) {
         placeholder="Auto"
         sx={{ paddingInlineStart: 16 }}
       />
+
+      <InputRightElement height="100%" width={8}>
+        <Menu placement="bottom-end">
+          {({ isOpen }) => (
+            <>
+              <MenuButton>
+                <ChevronDownIcon />
+              </MenuButton>
+              <Portal>
+                <MenuList
+                  bg="white"
+                  zIndex="dropdown"
+                  minW="auto"
+                  width="60px"
+                  display={!isOpen ? 'none' : null}
+                >
+                  {units.map((it) => (
+                    <MenuItem key={it} onClick={() => setValue(`${name}.unit`, it)} fontSize="sm">
+                      {it} {unit === it && <CheckIcon />}
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Portal>
+            </>
+          )}
+        </Menu>
+      </InputRightElement>
     </InputGroup>
   );
 }
