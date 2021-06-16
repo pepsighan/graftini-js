@@ -11,8 +11,9 @@ export default function TextInputWithLabel({ name, label }) {
         fontSize="sm"
         height="100%"
         width={14}
-        textAlign="left"
         color="gray.600"
+        justifyContent="flex-end"
+        pr={2}
       >
         {label}
       </InputLeftElement>

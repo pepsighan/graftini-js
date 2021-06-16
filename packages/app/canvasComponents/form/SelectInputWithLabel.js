@@ -11,7 +11,8 @@ export default function SelectInputWithLabel({ name, children, label }) {
         fontSize="sm"
         height="100%"
         width={14}
-        textAlign="left"
+        justifyContent="flex-end"
+        pr={2}
         color="gray.600"
       >
         {label}

@@ -11,7 +11,8 @@ export default function NumberInputWithLabel({ name, label }) {
         fontSize="sm"
         height="100%"
         width={14}
-        textAlign="left"
+        justifyContent="flex-end"
+        pr={1}
         color="gray.600"
       >
         {label}
