@@ -1,10 +1,4 @@
-import {
-  AlignBaselineIcon,
-  AlignBottomIcon,
-  AlignCenterHorizontallyIcon,
-  AlignTopIcon,
-  StretchVerticallyIcon,
-} from '@modulz/radix-icons';
+import { AlignBottomIcon, AlignCenterHorizontallyIcon, AlignTopIcon } from '@modulz/radix-icons';
 import SegmentedInput from './SegmentedInput';
 
 // TODO: Need better icons to signify the action.
@@ -29,16 +23,6 @@ export default function AlignItems() {
           value: 'flex-end',
           label: <AlignBottomIcon />,
           tooltip: 'Flex End',
-        },
-        {
-          value: 'stretch',
-          label: <StretchVerticallyIcon />,
-          tooltip: 'Stretch',
-        },
-        {
-          value: 'baseline',
-          label: <AlignBaselineIcon />,
-          tooltip: 'Baseline',
         },
       ]}
     />

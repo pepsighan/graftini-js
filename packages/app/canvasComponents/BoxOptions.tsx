@@ -1,4 +1,5 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
+import { Divider } from '@chakra-ui/react';
 import { LayoutIcon } from '@modulz/radix-icons';
 import { DimensionMaxLimit, DimensionMinLimit, DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
@@ -7,10 +8,9 @@ import { useCallback } from 'react';
 import { boxTags } from 'utils/constants';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
 import { BoxComponentProps, default as CanvasBox } from './Box';
-import AlignItems from './form/AlignItems';
+import AlignmentInput from './form/AlignmentInput';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
-import JustifyContent from './form/JustifyContent';
 import Labelled from './form/Labelled';
 import NumberInput from './form/NumberInput';
 import OpacityInput from './form/OpacityInput';
@@ -132,12 +132,25 @@ export default function BoxOptions({ componentId }: OptionsProps) {
     >
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
+        <AlignmentSection />
+        <SectionDivider />
         <PropertiesSection />
+        <SectionDivider />
         <FlexSection />
+        <SectionDivider />
         <LayoutSection />
+        <SectionDivider />
         <AppearanceSection />
       </Grid>
     </CF>
+  );
+}
+
+function AlignmentSection() {
+  return (
+    <GridItem colSpan={8}>
+      <AlignmentInput />
+    </GridItem>
   );
 }
 
@@ -163,7 +176,7 @@ function PropertiesSection() {
 function FlexSection() {
   return (
     <>
-      <GridItem colSpan={8} mt={4} mb={1}>
+      <GridItem colSpan={8} mb={1}>
         <Text fontSize="sm" fontWeight="bold">
           Flex
         </Text>
@@ -192,13 +205,6 @@ function FlexSection() {
           ]}
         />
       </Labelled>
-
-      <GridItem colSpan={8}>
-        <JustifyContent />
-        <Box mt={4}>
-          <AlignItems />
-        </Box>
-      </GridItem>
 
       <GridItem colSpan={4}>
         <Labelled label="Grow">
@@ -235,7 +241,7 @@ function FlexSection() {
 function LayoutSection() {
   return (
     <>
-      <GridItem colSpan={8} mt={4} mb={1}>
+      <GridItem colSpan={8} mb={1}>
         <Text fontSize="sm" fontWeight="bold">
           Layout
         </Text>
@@ -285,7 +291,7 @@ function LayoutSection() {
 function AppearanceSection() {
   return (
     <>
-      <GridItem colSpan={8} mt={4} mb={1}>
+      <GridItem colSpan={8} mb={1}>
         <Text fontSize="sm" fontWeight="bold">
           Appearance
         </Text>
@@ -303,5 +309,13 @@ function AppearanceSection() {
         <RadiusInput name="borderRadius" />
       </Labelled>
     </>
+  );
+}
+
+function SectionDivider() {
+  return (
+    <GridItem colSpan={8}>
+      <Divider borderColor="gray.400" />
+    </GridItem>
   );
 }
