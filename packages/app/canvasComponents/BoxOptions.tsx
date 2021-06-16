@@ -12,7 +12,7 @@ import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import DirectionInput from './form/DirectionInput';
 import Labelled from './form/Labelled';
-import NumberInput from './form/NumberInput';
+import NumberInputWithLabel from './form/NumberInputWithLabel';
 import OpacityInput from './form/OpacityInput';
 import { OverflowInputX, OverflowInputY } from './form/OverflowInput';
 import RadiusInput from './form/RadiusInput';
@@ -189,18 +189,18 @@ function FlexSection() {
       </GridItem>
 
       <GridItem colSpan={4}>
-        <Labelled label="Grow">
-          <NumberInput name="flexGrow" />
-        </Labelled>
+        <NumberInputWithLabel name="flexGrow" label="Grow" />
       </GridItem>
 
       <GridItem colSpan={4}>
-        <Labelled label="Shrink">
-          <NumberInput name="flexShrink" />
-        </Labelled>
+        <NumberInputWithLabel name="flexShrink" label="Shrink" />
       </GridItem>
 
-      <Labelled label="Wrap">
+      <GridItem colSpan={4}>
+        <NumberInputWithLabel name="flexGap" label="Gap" />
+      </GridItem>
+
+      <GridItem colSpan={8}>
         <SegmentedInput
           name="flexWrap"
           isFullWidth
@@ -209,12 +209,6 @@ function FlexSection() {
             { value: 'nowrap', label: 'No Wrap' },
           ]}
         />
-      </Labelled>
-
-      <GridItem colSpan={4}>
-        <Labelled label="Gap">
-          <NumberInput name="flexGap" />
-        </Labelled>
       </GridItem>
     </>
   );
