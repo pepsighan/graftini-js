@@ -29,27 +29,47 @@ export type BoxDimension = DimensionSize | 'full';
 type RawDimension = {
   size: string;
   unit: 'px' | '%';
-  toggle?: 'auto' | 'full' | 'none';
+  toggle?: 'auto' | 'full';
+};
+
+type RawDimensionLimit = {
+  size: string;
+  unit: 'px' | '%';
 };
 
 type BoxOptionsFields = BoxComponentProps & {
   widthRaw: RawDimension;
   heightRaw: RawDimension;
-  minWidthRaw: RawDimension;
-  maxWidthRaw: RawDimension;
-  minHeightRaw: RawDimension;
-  maxHeightRaw: RawDimension;
+  minWidthRaw: RawDimensionLimit;
+  maxWidthRaw: RawDimensionLimit;
+  minHeightRaw: RawDimensionLimit;
+  maxHeightRaw: RawDimensionLimit;
 };
 
-function parseDimension(dim: RawDimension): BoxDimension | DimensionMinLimit | DimensionMaxLimit {
+function parseDimension(dim: RawDimension): BoxDimension {
   if (dim.toggle) {
     return dim.toggle;
   }
 
   return {
-    size: parsePositiveInteger(dim.size),
+    size: parsePositiveInteger(dim.size) || 0,
     unit: dim.unit,
   };
+}
+
+function parseLimitDimension(
+  dim: RawDimensionLimit,
+  isMin: boolean
+): DimensionMinLimit | DimensionMaxLimit {
+  const size = parsePositiveInteger(dim.size);
+  if (typeof size === 'number') {
+    return {
+      size,
+      unit: dim.unit,
+    };
+  }
+
+  return isMin ? 'auto' : 'none';
 }
 
 export default function BoxOptions({ componentId }: OptionsProps) {
@@ -76,22 +96,18 @@ export default function BoxOptions({ componentId }: OptionsProps) {
           minWidthRaw: {
             size: (initialState.minWidth as any)?.size?.toString(),
             unit: (initialState.minWidth as any)?.unit ?? 'px',
-            toggle: typeof initialState.minWidth === 'string' ? initialState.minWidth : null,
           },
           maxWidthRaw: {
             size: (initialState.maxWidth as any)?.size?.toString(),
             unit: (initialState.maxWidth as any)?.unit ?? 'px',
-            toggle: typeof initialState.maxWidth === 'string' ? initialState.maxWidth : null,
           },
           minHeightRaw: {
             size: (initialState.minHeight as any)?.size?.toString(),
             unit: (initialState.minHeight as any)?.unit ?? 'px',
-            toggle: typeof initialState.minHeight === 'string' ? initialState.minHeight : null,
           },
           maxHeightRaw: {
             size: (initialState.maxHeight as any)?.size?.toString(),
             unit: (initialState.maxHeight as any)?.unit ?? 'px',
-            toggle: typeof initialState.maxHeight === 'string' ? initialState.maxHeight : null,
           },
         }),
         []
@@ -100,10 +116,10 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         (values: BoxOptionsFields) => {
           values.width = parseDimension(values.widthRaw) as BoxDimension;
           values.height = parseDimension(values.heightRaw) as BoxDimension;
-          values.minWidth = parseDimension(values.minWidthRaw) as DimensionMinLimit;
-          values.maxWidth = parseDimension(values.maxWidthRaw) as DimensionMaxLimit;
-          values.minHeight = parseDimension(values.minHeightRaw) as DimensionMinLimit;
-          values.maxHeight = parseDimension(values.maxHeightRaw) as DimensionMaxLimit;
+          values.minWidth = parseLimitDimension(values.minWidthRaw, true) as DimensionMinLimit;
+          values.maxWidth = parseLimitDimension(values.maxWidthRaw, false) as DimensionMaxLimit;
+          values.minHeight = parseLimitDimension(values.minHeightRaw, true) as DimensionMinLimit;
+          values.maxHeight = parseLimitDimension(values.maxHeightRaw, false) as DimensionMaxLimit;
 
           values.padding.top = parseInteger(values.padding?.top) || 0;
           values.padding.right = parseInteger(values.padding?.right) || 0;
@@ -230,24 +246,16 @@ function LayoutSection() {
         <SizeInput name="heightRaw" label="Height" isWidth={false} />
       </GridItem>
       <GridItem colSpan={4}>
-        <Labelled label="Min Width">
-          <SizeLimitInput name="minWidthRaw" isWidth isMin />
-        </Labelled>
+        <SizeLimitInput name="minWidthRaw" label="Min W" isWidth isMin />
       </GridItem>
       <GridItem colSpan={4}>
-        <Labelled label="Max Width">
-          <SizeLimitInput name="maxWidthRaw" isWidth={false} isMin={false} />
-        </Labelled>
+        <SizeLimitInput name="maxWidthRaw" label="Max W" isWidth={false} isMin={false} />
       </GridItem>
       <GridItem colSpan={4}>
-        <Labelled label="Min Height">
-          <SizeLimitInput name="minHeightRaw" isWidth isMin />
-        </Labelled>
+        <SizeLimitInput name="minHeightRaw" label="Min H" isWidth isMin />
       </GridItem>
       <GridItem colSpan={4}>
-        <Labelled label="Max Height">
-          <SizeLimitInput name="maxHeightRaw" isWidth={false} isMin={false} />
-        </Labelled>
+        <SizeLimitInput name="maxHeightRaw" label="Max W" isWidth={false} isMin={false} />
       </GridItem>
       <Labelled label="Padding">
         <SpacingField name="padding" />
