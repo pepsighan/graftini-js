@@ -17,7 +17,7 @@ import OpacityInput from './form/OpacityInput';
 import { OverflowInputX, OverflowInputY } from './form/OverflowInput';
 import RadiusInput from './form/RadiusInput';
 import SegmentedInput from './form/SegmentedInput';
-import SelectInput from './form/SelectInput';
+import SelectInputWithLabel from './form/SelectInputWithLabel';
 import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
@@ -167,15 +167,15 @@ function PropertiesSection() {
       <GridItem colSpan={8}>
         <TextInputWithLabel name="name" label="Name" />
       </GridItem>
-      <Labelled label="Tag">
-        <SelectInput name="tag">
+      <GridItem colSpan={8}>
+        <SelectInputWithLabel name="tag" label="Tag">
           {boxTags.map((tag) => (
             <option key={tag} value={tag}>
               {tag}
             </option>
           ))}
-        </SelectInput>
-      </Labelled>
+        </SelectInputWithLabel>
+      </GridItem>
     </>
   );
 }
