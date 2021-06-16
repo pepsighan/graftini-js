@@ -3,7 +3,6 @@ import { ROOT_NODE_ID } from 'graft';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
-import Labelled from './form/Labelled';
 import Root, { RootProps } from './Root';
 
 export default function RootOptions() {

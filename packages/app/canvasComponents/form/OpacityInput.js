@@ -1,48 +1,33 @@
-import { Input } from '@chakra-ui/input';
-import { Flex } from '@chakra-ui/layout';
-import { Slider, SliderFilledTrack, SliderThumb, SliderTrack } from '@chakra-ui/slider';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import { useFormContext } from 'react-hook-form';
 
 export default function OpacityInput({ name }) {
-  const { control } = useFormContext();
+  const { register } = useFormContext();
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <Flex>
-          <Slider
-            name={name}
-            min={0}
-            max={1}
-            step={0.01}
-            value={field.value}
-            onChange={field.onChange}
-            flex={3}
-          >
-            <SliderTrack>
-              <SliderFilledTrack />
-            </SliderTrack>
-            <SliderThumb />
-          </Slider>
-          <Input
-            as="span"
-            ml={3}
-            flex={1}
-            name={name}
-            type="number"
-            size="sm"
-            bg="white"
-            maxWidth={14}
-            display="flex"
-            alignItems="center"
-            justifyContent="flex-end"
-          >
-            {field.value}
-          </Input>
-        </Flex>
-      )}
-    />
+    <InputGroup>
+      <InputLeftElement
+        pointerEvents="none"
+        fontSize="sm"
+        height="100%"
+        width={16}
+        justifyContent="flex-end"
+        pr={1}
+        color="gray.600"
+      >
+        Opacity
+      </InputLeftElement>
+      <Input
+        {...register(name)}
+        type="number"
+        size="sm"
+        bg="white"
+        autoComplete="off"
+        textAlign="right"
+        sx={{
+          paddingInlineStart: 14,
+        }}
+      />
+    </InputGroup>
   );
 }
