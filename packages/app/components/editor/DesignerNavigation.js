@@ -1,5 +1,6 @@
 import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
-import { mdiCodeJson, mdiCursorDefault, mdiFullscreen } from '@mdi/js';
+import { mdiCodeJson, mdiFullscreen } from '@mdi/js';
+import { CursorArrowIcon } from '@modulz/radix-icons';
 import BackButton from 'components/BackButton';
 import MdIcon from 'components/Icon';
 import { motion } from 'framer-motion';
@@ -87,7 +88,7 @@ function CursorButton() {
         width="70px"
         onClick={forgetCreateComponent}
       >
-        <MdIcon icon={mdiCursorDefault} fontSize="xl" color="var(--icon-color)" height={5} />
+        <CursorArrowIcon color="var(--icon-color)" />
         <Text fontSize="sm" fontWeight="normal" mt={1.5}>
           Cursor
         </Text>
@@ -159,7 +160,9 @@ function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection
 }
 
 function BoxIcon() {
-  return <Box width={5} height={5} bg="var(--icon-color)" borderRadius="sm" />;
+  return (
+    <Box width={5} height={5} border="1px" borderColor="var(--icon-color)" borderRadius="sm" />
+  );
 }
 
 function TextIcon() {
@@ -169,9 +172,10 @@ function TextIcon() {
       alignItems="center"
       width={5}
       height={5}
-      bg="var(--icon-color)"
+      border="1px"
+      borderColor="var(--icon-color)"
       borderRadius="sm"
-      color="white"
+      color="var(--icon-color)"
       fontSize="sm"
       pointerEvents="none"
     >
