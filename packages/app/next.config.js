@@ -6,8 +6,5 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 module.exports = withBundleAnalyzer(
   withCustomTranspilation({
     productionBrowserSourceMaps: true,
-    future: {
-      webpack5: true,
-    },
   })
 );
