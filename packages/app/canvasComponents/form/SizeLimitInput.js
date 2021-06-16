@@ -59,7 +59,16 @@ export default function SizeLimitInput({ name, label }) {
                   display={!isOpen ? 'none' : null}
                 >
                   {units.map((it) => (
-                    <MenuItem key={it} onClick={() => setValue(`${name}.unit`, it)} fontSize="sm">
+                    <MenuItem
+                      key={it}
+                      onClick={() =>
+                        setValue(`${name}.unit`, it, {
+                          shouldDirty: true,
+                          shouldValidate: true,
+                        })
+                      }
+                      fontSize="sm"
+                    >
                       {it} {unit === it && <CheckIcon />}
                     </MenuItem>
                   ))}
