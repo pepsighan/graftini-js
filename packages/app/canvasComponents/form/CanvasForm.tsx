@@ -45,6 +45,18 @@ const CanvasForm: FunctionComponent = <T, S>({
 
       updateComponentProps(componentId, (props) => ({ ...props, ...filtered }));
 
+      // Set the transformed values back again to the form state. This will
+      // make sure that the transformed values are visible as well. For example: this lets
+      // us constrain the inputs to have numbers only if the transformation converted the text
+      // to number.
+      const reinitValues = onInitialize(filtered as any);
+      Object.keys(reinitValues).forEach((name) => {
+        form.setValue(name, reinitValues[name], {
+          shouldDirty: false,
+          shouldValidate: false,
+        });
+      });
+
       // We do not do show any errors here.
       return { values, errors: {} };
     },

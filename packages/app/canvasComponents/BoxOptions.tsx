@@ -118,9 +118,9 @@ export default function BoxOptions({ componentId }: OptionsProps) {
           values.opacity = parsePositiveFloat(values.opacity);
           values.opacity = values.opacity > 1 ? 1 : values.opacity;
 
-          values.flexShrink = parsePositiveInteger(values.flexShrink);
-          values.flexGrow = parsePositiveInteger(values.flexGrow);
-          values.flexGap = parsePositiveInteger(values.flexGap);
+          values.flexShrink = parsePositiveInteger(values.flexShrink) || 0;
+          values.flexGrow = parsePositiveInteger(values.flexGrow) || 0;
+          values.flexGap = parsePositiveInteger(values.flexGap) || 0;
 
           // Sync the append direction based on the flex direction.
           setChildAppendDirection(
