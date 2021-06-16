@@ -1,4 +1,17 @@
-import { Flex, IconButton, Input, InputGroup, InputLeftElement, Select } from '@chakra-ui/react';
+import {
+  Flex,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
+  InputRightElement,
+  Menu,
+  MenuButton,
+  MenuItem,
+  Box,
+  MenuList,
+  Portal,
+} from '@chakra-ui/react';
 import {
   mdiArrowCollapseHorizontal,
   mdiArrowCollapseVertical,
@@ -6,6 +19,7 @@ import {
   mdiArrowUpDown,
   mdiClose,
 } from '@mdi/js';
+import { CheckIcon, ChevronDownIcon } from '@modulz/radix-icons';
 import Icon from 'components/Icon';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -15,6 +29,7 @@ const units = ['px', '%'];
 
 export default function SizeInput({ name, isWidth, label }) {
   const { register, control, setValue } = useFormContext();
+  const unit = useWatch({ control, name: `${name}.unit` });
   const toggle = useWatch({ control, name: `${name}.toggle` });
 
   const unsetToggle = useCallback(
@@ -51,22 +66,45 @@ export default function SizeInput({ name, isWidth, label }) {
               borderBottomRightRadius="none"
               sx={{ paddingInlineStart: 16 }}
             />
-            <Select
-              {...register(`${name}.unit`)}
-              size="sm"
-              bg="white"
-              autoComplete="off"
-              flex={1}
-              borderLeft="none"
-              borderRadius="none"
-              sx={{ paddingInlineStart: 1 }}
-            >
-              {units.map((it) => (
-                <option key={it} value={it}>
-                  {it}
-                </option>
-              ))}
-            </Select>
+            <InputRightElement height="100%" width={12} fontSize="sm">
+              <Box mr={1} color="gray.600">
+                {unit}
+              </Box>
+
+              <Menu placement="bottom-end">
+                {({ isOpen }) => (
+                  <>
+                    <MenuButton>
+                      <ChevronDownIcon />
+                    </MenuButton>
+                    <Portal>
+                      <MenuList
+                        bg="white"
+                        zIndex="dropdown"
+                        minW="auto"
+                        width="60px"
+                        display={!isOpen ? 'none' : null}
+                      >
+                        {units.map((it) => (
+                          <MenuItem
+                            key={it}
+                            onClick={() =>
+                              setValue(`${name}.unit`, it, {
+                                shouldDirty: true,
+                                shouldValidate: true,
+                              })
+                            }
+                            fontSize="sm"
+                          >
+                            {it} {unit === it && <CheckIcon />}
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </Portal>
+                  </>
+                )}
+              </Menu>
+            </InputRightElement>
           </>
         )}
 
