@@ -1,7 +1,7 @@
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 
-export default function NumberInputWithLabel({ name, label }) {
+export default function TextInputWithLabel({ name, label }) {
   const { register } = useFormContext();
 
   return (
@@ -18,7 +18,6 @@ export default function NumberInputWithLabel({ name, label }) {
       </InputLeftElement>
       <Input
         {...register(name)}
-        type="number"
         size="sm"
         bg="white"
         autoComplete="off"

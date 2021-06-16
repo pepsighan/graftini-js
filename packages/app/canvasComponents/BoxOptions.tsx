@@ -22,6 +22,7 @@ import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
+import TextInputWithLabel from './form/TextInputWithLabel';
 
 export type BoxDimension = DimensionSize | 'full';
 
@@ -163,9 +164,9 @@ function AlignmentSection() {
 function PropertiesSection() {
   return (
     <>
-      <Labelled label="Name">
-        <TextInput name="name" />
-      </Labelled>
+      <GridItem colSpan={8}>
+        <TextInputWithLabel name="name" label="Name" />
+      </GridItem>
       <Labelled label="Tag">
         <SelectInput name="tag">
           {boxTags.map((tag) => (
