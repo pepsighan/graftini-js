@@ -223,12 +223,12 @@ function LayoutSection() {
           Layout
         </Text>
       </GridItem>
-      <Labelled label="Width">
-        <SizeInput name="widthRaw" isWidth />
-      </Labelled>
-      <Labelled label="Height">
-        <SizeInput name="heightRaw" isWidth={false} />
-      </Labelled>
+      <GridItem colSpan={8}>
+        <SizeInput name="widthRaw" label="Width" isWidth />
+      </GridItem>
+      <GridItem colSpan={8}>
+        <SizeInput name="heightRaw" label="Height" isWidth={false} />
+      </GridItem>
       <GridItem colSpan={4}>
         <Labelled label="Min Width">
           <SizeLimitInput name="minWidthRaw" isWidth isMin />
