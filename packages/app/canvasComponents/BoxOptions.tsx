@@ -1,6 +1,5 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
-import { LayoutIcon } from '@modulz/radix-icons';
 import { DimensionMaxLimit, DimensionMinLimit, DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
 import { useEditor } from 'graft';
@@ -11,6 +10,7 @@ import { BoxComponentProps, default as CanvasBox } from './Box';
 import AlignmentInput from './form/AlignmentInput';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
+import DirectionInput from './form/DirectionInput';
 import Labelled from './form/Labelled';
 import NumberInput from './form/NumberInput';
 import OpacityInput from './form/OpacityInput';
@@ -148,9 +148,15 @@ export default function BoxOptions({ componentId }: OptionsProps) {
 
 function AlignmentSection() {
   return (
-    <GridItem colSpan={8}>
-      <AlignmentInput />
-    </GridItem>
+    <>
+      <GridItem colSpan={8}>
+        <AlignmentInput />
+      </GridItem>
+
+      <GridItem colSpan={8}>
+        <DirectionInput />
+      </GridItem>
+    </>
   );
 }
 
@@ -181,30 +187,6 @@ function FlexSection() {
           Flex
         </Text>
       </GridItem>
-
-      <Labelled label="Direction">
-        <SegmentedInput
-          name="flexDirection"
-          isFullWidth
-          size="md"
-          options={[
-            {
-              value: 'column',
-              label: <LayoutIcon />,
-              tooltip: 'Column',
-            },
-            {
-              value: 'row',
-              label: (
-                <Box transform="rotateZ(90deg)">
-                  <LayoutIcon />
-                </Box>
-              ),
-              tooltip: 'Row',
-            },
-          ]}
-        />
-      </Labelled>
 
       <GridItem colSpan={4}>
         <Labelled label="Grow">
