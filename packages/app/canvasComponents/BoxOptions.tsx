@@ -1,8 +1,7 @@
 import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
-import { mdiTableColumn, mdiTableRow } from '@mdi/js';
+import { LayoutIcon } from '@modulz/radix-icons';
 import { DimensionMaxLimit, DimensionMinLimit, DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
-import Icon from 'components/Icon';
 import { useEditor } from 'graft';
 import { useCallback } from 'react';
 import { boxTags } from 'utils/constants';
@@ -178,10 +177,18 @@ function FlexSection() {
           options={[
             {
               value: 'column',
-              label: <Icon icon={mdiTableColumn} fontSize="xl" />,
+              label: <LayoutIcon />,
               tooltip: 'Column',
             },
-            { value: 'row', label: <Icon icon={mdiTableRow} fontSize="3xl" />, tooltip: 'Row' },
+            {
+              value: 'row',
+              label: (
+                <Box transform="rotateZ(90deg)">
+                  <LayoutIcon />
+                </Box>
+              ),
+              tooltip: 'Row',
+            },
           ]}
         />
       </Labelled>

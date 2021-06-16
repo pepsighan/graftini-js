@@ -1,11 +1,10 @@
 import {
-  mdiAlignHorizontalCenter,
-  mdiAlignHorizontalLeft,
-  mdiAlignHorizontalRight,
-  mdiArrowSplitVertical,
-  mdiSpaceInvaders,
-} from '@mdi/js';
-import Icon from 'components/Icon';
+  AlignCenterVerticallyIcon,
+  AlignLeftIcon,
+  AlignRightIcon,
+  SpaceBetweenHorizontallyIcon,
+  SpaceEvenlyHorizontallyIcon,
+} from '@modulz/radix-icons';
 import SegmentedInput from './SegmentedInput';
 
 // TODO: Need better icons to signify the action.
@@ -18,27 +17,27 @@ export default function JustifyContent() {
       options={[
         {
           value: 'flex-start',
-          label: <Icon icon={mdiAlignHorizontalLeft} fontSize="lg" />,
+          label: <AlignLeftIcon />,
           tooltip: 'Flex Start',
         },
         {
           value: 'center',
-          label: <Icon icon={mdiAlignHorizontalCenter} fontSize="lg" />,
+          label: <AlignCenterVerticallyIcon />,
           tooltip: 'Center',
         },
         {
           value: 'flex-end',
-          label: <Icon icon={mdiAlignHorizontalRight} fontSize="lg" />,
+          label: <AlignRightIcon />,
           tooltip: 'Flex End',
         },
         {
           value: 'space-between',
-          label: <Icon icon={mdiArrowSplitVertical} fontSize="lg" />,
+          label: <SpaceBetweenHorizontallyIcon />,
           tooltip: 'Space Between',
         },
         {
           value: 'space-evenly',
-          label: <Icon icon={mdiSpaceInvaders} fontSize="lg" />,
+          label: <SpaceEvenlyHorizontallyIcon />,
           tooltip: 'Space Evenly',
         },
       ]}

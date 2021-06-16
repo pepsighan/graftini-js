@@ -1,11 +1,10 @@
 import {
-  mdiAlignVerticalBottom,
-  mdiAlignVerticalCenter,
-  mdiAlignVerticalTop,
-  mdiFormatAlignBottom,
-  mdiStretchToPageOutline,
-} from '@mdi/js';
-import Icon from 'components/Icon';
+  AlignBaselineIcon,
+  AlignBottomIcon,
+  AlignCenterHorizontallyIcon,
+  AlignTopIcon,
+  StretchVerticallyIcon,
+} from '@modulz/radix-icons';
 import SegmentedInput from './SegmentedInput';
 
 // TODO: Need better icons to signify the action.
@@ -18,27 +17,27 @@ export default function AlignItems() {
       options={[
         {
           value: 'flex-start',
-          label: <Icon icon={mdiAlignVerticalTop} fontSize="lg" />,
+          label: <AlignTopIcon />,
           tooltip: 'Flex Start',
         },
         {
           value: 'center',
-          label: <Icon icon={mdiAlignVerticalCenter} fontSize="lg" />,
+          label: <AlignCenterHorizontallyIcon />,
           tooltip: 'Center',
         },
         {
           value: 'flex-end',
-          label: <Icon icon={mdiAlignVerticalBottom} fontSize="lg" />,
+          label: <AlignBottomIcon />,
           tooltip: 'Flex End',
         },
         {
           value: 'stretch',
-          label: <Icon icon={mdiStretchToPageOutline} fontSize="lg" />,
+          label: <StretchVerticallyIcon />,
           tooltip: 'Stretch',
         },
         {
           value: 'baseline',
-          label: <Icon icon={mdiFormatAlignBottom} fontSize="lg" />,
+          label: <AlignBaselineIcon />,
           tooltip: 'Baseline',
         },
       ]}
