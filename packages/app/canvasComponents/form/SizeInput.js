@@ -11,14 +11,14 @@ import {
 } from '@mdi/js';
 import Icon from 'components/Icon';
 import { useCallback } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import SegmentedInput from './SegmentedInput';
 
 const units = ['px', '%'];
 
 export default function SizeInput({ name, isWidth }) {
-  const { register, watch, setValue } = useFormContext();
-  const toggle = watch(`${name}.toggle`);
+  const { register, control, setValue } = useFormContext();
+  const toggle = useWatch({ control, name: `${name}.toggle` });
 
   const unsetToggle = useCallback(
     () => setValue(`${name}.toggle`, null, { shouldDirty: true, shouldValidate: true }),
