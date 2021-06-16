@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem, Text } from '@chakra-ui/layout';
+import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
 import { DimensionMaxLimit, DimensionMinLimit, DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
@@ -14,7 +14,7 @@ import DirectionInput from './form/DirectionInput';
 import Labelled from './form/Labelled';
 import NumberInputWithLabel from './form/NumberInputWithLabel';
 import OpacityInput from './form/OpacityInput';
-import { OverflowInputX, OverflowInputY } from './form/OverflowInput';
+import OverflowInput from './form/OverflowInput';
 import RadiusInput from './form/RadiusInput';
 import SegmentedInput from './form/SegmentedInput';
 import SelectInputWithLabel from './form/SelectInputWithLabel';
@@ -154,6 +154,8 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         <SectionDivider />
         <LayoutSection />
         <SectionDivider />
+        <OverflowSection />
+        <SectionDivider />
         <FlexSection />
         <SectionDivider />
         <AppearanceSection />
@@ -262,12 +264,21 @@ function LayoutSection() {
       <Labelled label="Margin">
         <SpacingField name="margin" />
       </Labelled>
-      <Labelled label="Overflow">
-        <OverflowInputX name="overflow.x" />
-        <Box mt={2}>
-          <OverflowInputY name="overflow.y" />
-        </Box>
-      </Labelled>
+    </>
+  );
+}
+
+function OverflowSection() {
+  return (
+    <>
+      <GridItem colSpan={8} mb={1}>
+        <Text fontSize="sm" fontWeight="bold">
+          Overflow
+        </Text>
+      </GridItem>
+      <GridItem colSpan={8}>
+        <OverflowInput name="overflow" />
+      </GridItem>
     </>
   );
 }
