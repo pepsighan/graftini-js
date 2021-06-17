@@ -23,12 +23,10 @@ import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
 import TextInputWithLabel from './form/TextInputWithLabel';
 
-export type BoxDimension = DimensionSize | 'full';
-
 type RawDimension = {
   size: string;
   unit: 'px' | '%';
-  toggle?: 'auto' | 'full';
+  toggle?: 'auto';
 };
 
 type RawDimensionLimit = {
@@ -45,7 +43,7 @@ type BoxOptionsFields = BoxComponentProps & {
   maxHeightRaw: RawDimensionLimit;
 };
 
-function parseDimension(dim: RawDimension): BoxDimension {
+function parseDimension(dim: RawDimension): DimensionSize {
   if (dim.toggle) {
     return dim.toggle;
   }
@@ -113,8 +111,8 @@ export default function BoxOptions({ componentId }: OptionsProps) {
       )}
       onTransformValues={useCallback(
         (values: BoxOptionsFields) => {
-          values.width = parseDimension(values.widthRaw) as BoxDimension;
-          values.height = parseDimension(values.heightRaw) as BoxDimension;
+          values.width = parseDimension(values.widthRaw);
+          values.height = parseDimension(values.heightRaw);
           values.minWidth = parseLimitDimension(values.minWidthRaw, true) as DimensionMinLimit;
           values.maxWidth = parseLimitDimension(values.maxWidthRaw, false) as DimensionMaxLimit;
           values.minHeight = parseLimitDimension(values.minHeightRaw, true) as DimensionMinLimit;

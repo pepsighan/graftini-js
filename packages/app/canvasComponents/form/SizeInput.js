@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   IconButton,
   Input,
@@ -8,17 +9,10 @@ import {
   Menu,
   MenuButton,
   MenuItem,
-  Box,
   MenuList,
   Portal,
 } from '@chakra-ui/react';
-import {
-  mdiArrowCollapseHorizontal,
-  mdiArrowCollapseVertical,
-  mdiArrowLeftRight,
-  mdiArrowUpDown,
-  mdiClose,
-} from '@mdi/js';
+import { mdiClose } from '@mdi/js';
 import { CheckIcon, ChevronDownIcon } from '@modulz/radix-icons';
 import Icon from 'components/Icon';
 import { useCallback } from 'react';
@@ -39,7 +33,7 @@ export default function SizeInput({ name, isWidth, label }) {
 
   return (
     <Flex>
-      <InputGroup>
+      <InputGroup mr={2}>
         <InputLeftElement
           pointerEvents="none"
           fontSize="sm"
@@ -61,9 +55,6 @@ export default function SizeInput({ name, isWidth, label }) {
               bg="white"
               autoComplete="off"
               flex={1}
-              borderRight="none"
-              borderTopRightRadius="none"
-              borderBottomRightRadius="none"
               sx={{ paddingInlineStart: 16 }}
               pb="1px" // Align the input text with the label.
             />
@@ -122,8 +113,6 @@ export default function SizeInput({ name, isWidth, label }) {
               justifyContent="space-between"
               paddingRight={0}
               userSelect="none"
-              borderTopRightRadius="none"
-              borderBottomRightRadius="none"
               sx={{ paddingInlineStart: 16 }}
             >
               {toggle === 'auto' ? 'Auto' : `Full ${isWidth ? 'Width' : 'Height'}`}
@@ -139,19 +128,8 @@ export default function SizeInput({ name, isWidth, label }) {
         name={`${name}.toggle`}
         options={[
           {
-            value: 'full',
-            label: <Icon icon={isWidth ? mdiArrowLeftRight : mdiArrowUpDown} fontSize="md" />,
-            borderTopLeftRadius: 'none',
-            borderBottomLeftRadius: 'none',
-          },
-          {
             value: 'auto',
-            label: (
-              <Icon
-                icon={isWidth ? mdiArrowCollapseHorizontal : mdiArrowCollapseVertical}
-                fontSize="lg"
-              />
-            ),
+            label: 'Auto',
           },
         ]}
       />
