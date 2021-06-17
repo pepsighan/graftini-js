@@ -157,6 +157,8 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         <FlexSection />
         <SectionDivider />
         <AppearanceSection />
+        <SectionDivider />
+        <BorderSection />
       </Grid>
     </CF>
   );
@@ -295,7 +297,18 @@ function AppearanceSection() {
       <GridItem colSpan={4}>
         <OpacityInput name="opacity" />
       </GridItem>
-      <GridItem colSpan={8} />
+    </>
+  );
+}
+
+function BorderSection() {
+  return (
+    <>
+      <GridItem colSpan={8} mb={1}>
+        <Text fontSize="sm" fontWeight="bold">
+          Border
+        </Text>
+      </GridItem>
       {/* <Labelled label="Border">
         <TextInput name="border" />
       </Labelled> */}
