@@ -9,119 +9,112 @@ import {
   SpaceBetweenHorizontallyIcon,
   SpaceEvenlyHorizontallyIcon,
 } from '@modulz/radix-icons';
+import { useCallback, useMemo } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 
 const alignTop = {
+  value: 'flex-start',
   label: <AlignTopIcon />,
   tooltip: 'Align Top',
 };
 
 const alignMiddle = {
+  value: 'center',
   label: <AlignCenterHorizontallyIcon />,
   tooltip: 'Align Middle',
 };
 
 const alignBottom = {
+  value: 'flex-end',
   label: <AlignBottomIcon />,
   tooltip: 'Align Bottom',
 };
 
 const alignLeft = {
+  value: 'flex-start',
   label: <AlignLeftIcon />,
   tooltip: 'Align Left',
 };
 
 const alignCenter = {
+  value: 'center',
   label: <AlignCenterVerticallyIcon />,
   tooltip: 'Align Center',
 };
 
 const alignRight = {
+  value: 'flex-end',
   label: <AlignRightIcon />,
   tooltip: 'Align Right',
 };
 
+const otherJustifyOptions = [
+  {
+    value: 'space-between',
+    label: <SpaceBetweenHorizontallyIcon />,
+    tooltip: 'Space Between',
+  },
+  {
+    value: 'space-evenly',
+    label: <SpaceEvenlyHorizontallyIcon />,
+    tooltip: 'Space Evenly',
+  },
+];
+
 export default function AlignmentInput() {
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
+  const justifyContent = useWatch({ control, name: 'justifyContent' });
+  const alignItems = useWatch({ control, name: 'alignItems' });
   const direction = useWatch({ control, name: 'flexDirection' });
 
-  const alignOptions = [
-    {
-      value: 'flex-start',
-      ...(direction === 'row' ? alignTop : alignLeft),
-    },
-    {
-      value: 'center',
-      ...(direction === 'row' ? alignMiddle : alignCenter),
-    },
-    {
-      value: 'flex-end',
-      ...(direction === 'row' ? alignBottom : alignRight),
-    },
-  ];
+  const alignOptions = useMemo(
+    () => [
+      direction === 'row' ? alignTop : alignLeft,
+      direction === 'row' ? alignMiddle : alignCenter,
+      direction === 'row' ? alignBottom : alignRight,
+    ],
+    [direction]
+  );
 
-  const justifyOptions = [
-    {
-      value: 'flex-start',
-      ...(direction === 'column' ? alignTop : alignLeft),
-    },
-    {
-      value: 'center',
-      ...(direction === 'column' ? alignMiddle : alignCenter),
-    },
-    {
-      value: 'flex-end',
-      ...(direction === 'column' ? alignBottom : alignRight),
-    },
-  ];
+  const justifyOptions = useMemo(
+    () => [
+      direction === 'column' ? alignTop : alignLeft,
+      direction === 'column' ? alignMiddle : alignCenter,
+      direction === 'column' ? alignBottom : alignRight,
+    ],
+    [direction]
+  );
 
-  const otherJustifyOptions = [
-    {
-      value: 'space-between',
-      label: <SpaceBetweenHorizontallyIcon />,
-      tooltip: 'Space Between',
+  const onJustifyUpdate = useCallback(
+    (value) => {
+      setValue('justifyContent', value, { shouldDirty: true, shouldValidate: true });
     },
-    {
-      value: 'space-evenly',
-      label: <SpaceEvenlyHorizontallyIcon />,
-      tooltip: 'Space Evenly',
-    },
-  ];
+    [setValue]
+  );
 
-  const alignItems = (
-    <Controller
-      name="alignItems"
-      control={control}
-      render={({ field }) => (
-        <SegmentedInput options={alignOptions} value={field.value} onChange={field.onChange} />
-      )}
-    />
+  const onAlignUpdate = useCallback(
+    (value) => {
+      setValue('alignItems', value, { shouldDirty: true, shouldValidate: true });
+    },
+    [setValue]
+  );
+
+  const alignItemsToggle = (
+    <SegmentedInput options={alignOptions} value={alignItems} onChange={onAlignUpdate} />
   );
 
   return (
     <ButtonGroup isAttached display="flex">
-      {direction === 'column' && alignItems}
+      {direction === 'column' && alignItemsToggle}
 
-      <Controller
-        name="justifyContent"
-        control={control}
-        render={({ field }) => (
-          <SegmentedInput options={justifyOptions} value={field.value} onChange={field.onChange} />
-        )}
-      />
+      <SegmentedInput options={justifyOptions} value={justifyContent} onChange={onJustifyUpdate} />
 
-      {direction === 'row' && alignItems}
+      {direction === 'row' && alignItemsToggle}
 
-      <Controller
-        name="justifyContent"
-        control={control}
-        render={({ field }) => (
-          <SegmentedInput
-            options={otherJustifyOptions}
-            value={field.value}
-            onChange={field.onChange}
-          />
-        )}
+      <SegmentedInput
+        options={otherJustifyOptions}
+        value={justifyContent}
+        onChange={onJustifyUpdate}
       />
     </ButtonGroup>
   );
