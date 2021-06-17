@@ -1,16 +1,15 @@
 import { useDisclosure } from '@chakra-ui/hooks';
-import { Box, Button, Flex, IconButton, Tag, Text } from '@chakra-ui/react';
+import { Box, Flex, IconButton, Text } from '@chakra-ui/react';
 import { mdiPlus } from '@mdi/js';
 import Icon from 'components/Icon';
 import NewPageDialog from 'components/NewPageDialog';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import { encode } from 'utils/url';
 import { useEffectOnce } from 'utils/useEffect';
-import PageContextMenu from './PageContextMenu';
+import PageItem from './PageItem';
 
 export default function Pages() {
   const { query, push } = useRouter();
@@ -37,7 +36,7 @@ export default function Pages() {
   });
 
   return (
-    <Box height="50%" px={3}>
+    <Box flex={1} px={3}>
       <Flex justifyContent="space-between" alignItems="center">
         <Text as="span" fontSize="sm" fontWeight="bold">
           Pages
@@ -63,70 +62,5 @@ export default function Pages() {
 
       <NewPageDialog key={isOpen} isOpen={isOpen} onClose={onClose} />
     </Box>
-  );
-}
-
-function PageItem({ id, name, route, slugProjectId, projectId }) {
-  const isSelected = useDesignerState(useCallback((state) => state.currentOpenPage === id, [id]));
-  const setCurrentPage = useDesignerState(useCallback((state) => state.setCurrentPage, []));
-
-  const onPageChange = useCallback(() => {
-    setCurrentPage(id);
-  }, [id, setCurrentPage]);
-
-  const [context, setContext] = useState(null);
-
-  const onOpenContextMenu = useCallback(
-    (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      setContext({
-        x: event.clientX,
-        y: event.clientY,
-        projectId,
-        pageId: id,
-      });
-    },
-    [id, projectId]
-  );
-  const onCloseContextMenu = useCallback(() => setContext(null), []);
-
-  // TODO: Do not cause history to change. Since the pages are used to change
-  // the views in the editor rather than change route for the app.
-  return (
-    <>
-      <Link
-        href={{
-          pathname: '/dashboard/project/[projectId]',
-          query: {
-            page: encode(id),
-            projectId: slugProjectId,
-          },
-        }}
-      >
-        <Button
-          isFullWidth
-          justifyContent="space-between"
-          alignItems="center"
-          fontSize="sm"
-          fontWeight="normal"
-          height="unset"
-          lineHeight="unset"
-          py={2}
-          isActive={isSelected}
-          onClick={onPageChange}
-          onContextMenu={onOpenContextMenu}
-        >
-          {name}
-
-          <Tag fontSize="xs" fontFamily="mono">
-            {route}
-          </Tag>
-        </Button>
-      </Link>
-
-      {context && <PageContextMenu context={context} onClose={onCloseContextMenu} />}
-    </>
   );
 }

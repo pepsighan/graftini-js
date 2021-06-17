@@ -1,17 +1,15 @@
-import { Box, Button, Flex, IconButton, Text } from '@chakra-ui/react';
-import { mdiCodeJson, mdiCursorDefault, mdiFullscreen } from '@mdi/js';
+import { Box, Button, Flex, IconButton, Text, Tooltip } from '@chakra-ui/react';
+import { CodeIcon, CursorArrowIcon, PlayIcon } from '@modulz/radix-icons';
 import BackButton from 'components/BackButton';
-import MdIcon from 'components/Icon';
 import { motion } from 'framer-motion';
 import { useCreateComponent, useCurrentCreateComponentType, useForgetCreateComponent } from 'graft';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
 export default function EditorNavigation() {
-  const { query } = useRouter();
+  const { query, push } = useRouter();
 
   const toggleQueryBuilderPane = useDesignerState(
     useCallback((state) => state.toggleQueryBuilderPane, [])
@@ -47,13 +45,19 @@ export default function EditorNavigation() {
       </Flex>
 
       <Flex>
-        <IconButton
-          icon={<MdIcon icon={mdiCodeJson} fontSize="xl" />}
-          onClick={toggleQueryBuilderPane}
-        />
-        <Link href={`/dashboard/project/${query.projectId}/preview`}>
-          <IconButton ml={4} icon={<MdIcon icon={mdiFullscreen} fontSize="xl" />} />
-        </Link>
+        <Tooltip label="Query Pane">
+          <IconButton icon={<CodeIcon width={20} height={20} />} onClick={toggleQueryBuilderPane} />
+        </Tooltip>
+        <Tooltip label="Preview">
+          <IconButton
+            ml={4}
+            icon={<PlayIcon width={20} height={20} />}
+            onClick={useCallback(
+              () => push(`/dashboard/project/${query.projectId}/preview`),
+              [push, query.projectId]
+            )}
+          />
+        </Tooltip>
       </Flex>
     </Flex>
   );
@@ -87,7 +91,7 @@ function CursorButton() {
         width="70px"
         onClick={forgetCreateComponent}
       >
-        <MdIcon icon={mdiCursorDefault} fontSize="xl" color="var(--icon-color)" height={5} />
+        <CursorArrowIcon color="var(--icon-color)" />
         <Text fontSize="sm" fontWeight="normal" mt={1.5}>
           Cursor
         </Text>
@@ -159,7 +163,9 @@ function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection
 }
 
 function BoxIcon() {
-  return <Box width={5} height={5} bg="var(--icon-color)" borderRadius="sm" />;
+  return (
+    <Box width={5} height={5} border="1px" borderColor="var(--icon-color)" borderRadius="sm" />
+  );
 }
 
 function TextIcon() {
@@ -169,9 +175,10 @@ function TextIcon() {
       alignItems="center"
       width={5}
       height={5}
-      bg="var(--icon-color)"
+      border="1px"
+      borderColor="var(--icon-color)"
       borderRadius="sm"
-      color="white"
+      color="var(--icon-color)"
       fontSize="sm"
       pointerEvents="none"
     >

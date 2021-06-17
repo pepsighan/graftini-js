@@ -1,7 +1,7 @@
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 
-export default function OpacityInput({ name }) {
+export default function TextInputWithLabel({ name, label }) {
   const { register } = useFormContext();
 
   return (
@@ -10,20 +10,18 @@ export default function OpacityInput({ name }) {
         pointerEvents="none"
         fontSize="sm"
         height="100%"
-        width={16}
-        justifyContent="flex-end"
-        pr={1}
+        width={14}
         color="gray.600"
+        justifyContent="flex-end"
+        pr={2}
       >
-        Opacity
+        {label}
       </InputLeftElement>
       <Input
         {...register(name)}
-        type="number"
         size="sm"
         bg="white"
         autoComplete="off"
-        textAlign="right"
         pb="1px" // Align the input text with the label.
         sx={{
           paddingInlineStart: 14,

@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/react';
+import { Divider, Flex, Box } from '@chakra-ui/react';
 import Layers from './Layers';
 import Pages from './Pages';
 
@@ -14,6 +14,9 @@ export default function LeftSidebar() {
       flexDirection="column"
     >
       <Pages />
+      <Box px={3} my={2}>
+        <Divider borderColor="gray.400" />
+      </Box>
       <Layers />
     </Flex>
   );

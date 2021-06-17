@@ -6,6 +6,7 @@ import {
   Cursor,
   DimensionMaxLimit,
   DimensionMinLimit,
+  DimensionSize,
   FlexDirection,
   FlexWrap,
   JustifyContent,
@@ -21,13 +22,12 @@ import { forwardRef, ReactNode, useCallback } from 'react';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState } from 'store/designer';
 import { BoxTag } from 'utils/constants';
-import { BoxDimension } from './BoxOptions';
 
 export type BoxComponentProps = {
   name?: string;
   tag: BoxTag;
-  width: BoxDimension;
-  height: BoxDimension;
+  width: DimensionSize;
+  height: DimensionSize;
   minWidth: DimensionMinLimit;
   maxWidth: DimensionMaxLimit;
   minHeight: DimensionMinLimit;

@@ -1,6 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { mdiDelete } from '@mdi/js';
-import Icon from 'components/Icon';
+import { TrashIcon } from '@modulz/radix-icons';
 import { useEditor, useEditorState } from 'graft';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -12,12 +11,12 @@ export default function ActionBar({ componentId }) {
 
   return (
     <>
-      <span css={{ color: theme.colors.white }}>{name || 'Untitled'}</span>
+      <span css={{ color: theme.colors.white, lineHeight: 'initial' }}>{name || 'Untitled'}</span>
       <button
-        css={{ marginLeft: 4, cursor: 'pointer', color: theme.colors.white }}
+        css={{ marginLeft: 6, cursor: 'pointer', color: theme.colors.white }}
         onClick={onDelete}
       >
-        <Icon path={mdiDelete} css={{ height: 14 }} />
+        <TrashIcon />
       </button>
     </>
   );
