@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup, Tooltip } from '@chakra-ui/react';
+import { Box, Button, ButtonGroup } from '@chakra-ui/react';
 import { LayoutIcon } from '@modulz/radix-icons';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -6,7 +6,7 @@ const options = [
   {
     value: 'column',
     icon: <LayoutIcon height={24} width={24} />,
-    tooltip: 'Column',
+    label: 'Column',
   },
   {
     value: 'row',
@@ -15,7 +15,7 @@ const options = [
         <LayoutIcon height={24} width={24} />
       </Box>
     ),
-    tooltip: 'Row',
+    label: 'Row',
   },
 ];
 
@@ -38,26 +38,24 @@ export default function DirectionInput() {
 function Options({ options, value, onChange }) {
   return (
     <>
-      {options.map(({ value: valueOpt, icon, tooltip, ...rest }) => {
+      {options.map(({ value: valueOpt, icon, label, ...rest }) => {
         return (
-          <Tooltip key={valueOpt} label={tooltip}>
-            <Button
-              key={valueOpt}
-              color={valueOpt === value ? 'primary.600' : 'gray.600'}
-              onClick={() => onChange(valueOpt)}
-              flexDirection="column"
-              justifyContent="center"
-              height="auto"
-              width={20}
-              py={2}
-              {...rest}
-            >
-              <Box>{icon}</Box>
-              <Box mt={1} fontSize="sm">
-                {tooltip}
-              </Box>
-            </Button>
-          </Tooltip>
+          <Button
+            key={valueOpt}
+            color={valueOpt === value ? 'primary.600' : 'gray.600'}
+            onClick={() => onChange(valueOpt)}
+            flexDirection="column"
+            justifyContent="center"
+            height="auto"
+            width={20}
+            py={2}
+            {...rest}
+          >
+            <Box>{icon}</Box>
+            <Box mt={1} fontSize="sm">
+              {label}
+            </Box>
+          </Button>
         );
       })}
     </>
