@@ -299,9 +299,9 @@ function AppearanceSection() {
       {/* <Labelled label="Border">
         <TextInput name="border" />
       </Labelled> */}
-      <Labelled label="Radius">
+      <GridItem colSpan={8}>
         <RadiusInput name="borderRadius" />
-      </Labelled>
+      </GridItem>
     </>
   );
 }
