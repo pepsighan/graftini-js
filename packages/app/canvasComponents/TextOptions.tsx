@@ -1,21 +1,15 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
-import {
-  mdiFormatAlignCenter,
-  mdiFormatAlignJustify,
-  mdiFormatAlignLeft,
-  mdiFormatAlignRight,
-} from '@mdi/js';
+import { Divider } from '@chakra-ui/react';
 import { FontWeight } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
-import Icon from 'components/Icon';
 import { useCallback } from 'react';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
 import Labelled from './form/Labelled';
-import SegmentedInput from './form/SegmentedInput';
 import SelectInputWithLabel from './form/SelectInputWithLabel';
+import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
 import Txt, { TextComponentProps } from './Text';
 
@@ -36,26 +30,24 @@ export default function TextOptions({ componentId }: OptionsProps) {
     >
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
+        <GridItem colSpan={8}>
+          <TextAlignInput name="textAlign" />
+        </GridItem>
+
+        <SectionDivider />
+
         <Labelled label="Name">
           <TextInput name="name" />
         </Labelled>
 
-        <GridItem colSpan={8} mt={4} mb={1}>
+        <SectionDivider />
+
+        <GridItem colSpan={8} mb={1}>
           <Text fontSize="sm" fontWeight="bold">
             Appearance
           </Text>
         </GridItem>
-        <Labelled label="Align">
-          <SegmentedInput
-            name="textAlign"
-            options={[
-              { value: 'left', label: <Icon icon={mdiFormatAlignLeft} fontSize="md" /> },
-              { value: 'center', label: <Icon icon={mdiFormatAlignCenter} fontSize="md" /> },
-              { value: 'right', label: <Icon icon={mdiFormatAlignRight} fontSize="md" /> },
-              { value: 'justify', label: <Icon icon={mdiFormatAlignJustify} fontSize="md" /> },
-            ]}
-          />
-        </Labelled>
+
         <GridItem colSpan={8}>
           <FontSize name="fontSize" />
         </GridItem>
@@ -84,5 +76,13 @@ export default function TextOptions({ componentId }: OptionsProps) {
         </GridItem>
       </Grid>
     </CF>
+  );
+}
+
+function SectionDivider() {
+  return (
+    <GridItem colSpan={8}>
+      <Divider borderColor="gray.400" />
+    </GridItem>
   );
 }
