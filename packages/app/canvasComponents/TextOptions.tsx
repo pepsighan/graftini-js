@@ -56,9 +56,9 @@ export default function TextOptions({ componentId }: OptionsProps) {
             ]}
           />
         </Labelled>
-        <Labelled label="Font Size">
+        <GridItem colSpan={8}>
           <FontSize name="fontSize" />
-        </Labelled>
+        </GridItem>
         <GridItem colSpan={8}>
           <SelectInputWithLabel name="fontFamily" label="Font" labelWidth="4.5rem">
             <option value="sans-serif">Sans Serif</option>
