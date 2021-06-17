@@ -37,7 +37,7 @@ export default function Pages() {
   });
 
   return (
-    <Box height="50%" px={3}>
+    <Box flex={1} px={3}>
       <Flex justifyContent="space-between" alignItems="center">
         <Text as="span" fontSize="sm" fontWeight="bold">
           Pages

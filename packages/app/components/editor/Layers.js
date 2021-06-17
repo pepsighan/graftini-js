@@ -15,7 +15,7 @@ export default function Layers() {
   const { height } = useDimensions(textRef);
 
   return (
-    <Box mt={8} height="50%" position="relative" overflow="hidden">
+    <Box flex={1} position="relative" overflow="hidden">
       <Text ref={textRef} as="span" px={3} fontSize="sm" fontWeight="bold">
         Layers
       </Text>
