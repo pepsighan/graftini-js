@@ -10,7 +10,7 @@ import {
   SpaceEvenlyHorizontallyIcon,
 } from '@modulz/radix-icons';
 import { useCallback, useMemo } from 'react';
-import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 
 const alignTop = {
   value: 'flex-start',
