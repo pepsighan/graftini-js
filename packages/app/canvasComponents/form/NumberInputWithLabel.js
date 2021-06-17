@@ -23,6 +23,7 @@ export default function NumberInputWithLabel({ name, label }) {
         size="sm"
         bg="white"
         autoComplete="off"
+        pb="1px" // Align the input text with the label.
         sx={{
           paddingInlineStart: 14,
         }}

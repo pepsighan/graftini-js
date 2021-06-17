@@ -65,6 +65,7 @@ export default function SizeInput({ name, isWidth, label }) {
               borderTopRightRadius="none"
               borderBottomRightRadius="none"
               sx={{ paddingInlineStart: 16 }}
+              pb="1px" // Align the input text with the label.
             />
             <InputRightElement height="100%" width={12} fontSize="sm">
               <Box mr={1} color="gray.600">

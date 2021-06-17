@@ -41,6 +41,7 @@ export default function SizeLimitInput({ name, label }) {
         flex={1}
         placeholder="Auto"
         sx={{ paddingInlineStart: 16 }}
+        pb="1px" // Align the input text with the label.
       />
 
       <InputRightElement height="100%" width={8}>
