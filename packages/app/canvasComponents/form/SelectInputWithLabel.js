@@ -1,7 +1,7 @@
 import { InputGroup, InputLeftElement, Select } from '@chakra-ui/react';
 import { useFormContext } from 'react-hook-form';
 
-export default function SelectInputWithLabel({ name, children, label }) {
+export default function SelectInputWithLabel({ name, children, label, labelWidth = '14' }) {
   const { register } = useFormContext();
 
   return (
@@ -10,7 +10,7 @@ export default function SelectInputWithLabel({ name, children, label }) {
         pointerEvents="none"
         fontSize="sm"
         height="100%"
-        width={14}
+        width={labelWidth}
         justifyContent="flex-end"
         pr={2}
         color="gray.600"
@@ -24,7 +24,7 @@ export default function SelectInputWithLabel({ name, children, label }) {
         autoComplete="off"
         pb="1px" // Align the input text with the label.
         sx={{
-          paddingInlineStart: 14,
+          paddingInlineStart: labelWidth,
         }}
       >
         {children}

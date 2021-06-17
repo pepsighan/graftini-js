@@ -15,7 +15,7 @@ import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
 import Labelled from './form/Labelled';
 import SegmentedInput from './form/SegmentedInput';
-import SelectInput from './form/SelectInput';
+import SelectInputWithLabel from './form/SelectInputWithLabel';
 import TextInput from './form/TextInput';
 import Txt, { TextComponentProps } from './Text';
 
@@ -59,15 +59,15 @@ export default function TextOptions({ componentId }: OptionsProps) {
         <Labelled label="Font Size">
           <FontSize name="fontSize" />
         </Labelled>
-        <Labelled label="Font">
-          <SelectInput name="fontFamily">
+        <GridItem colSpan={8}>
+          <SelectInputWithLabel name="fontFamily" label="Font" labelWidth="4.5rem">
             <option value="sans-serif">Sans Serif</option>
             <option value="serif">Serif</option>
             <option value="monospace">Monospace</option>
-          </SelectInput>
-        </Labelled>
-        <Labelled label="Weight">
-          <SelectInput name="fontWeight">
+          </SelectInputWithLabel>
+        </GridItem>
+        <GridItem colSpan={8}>
+          <SelectInputWithLabel name="fontWeight" label="Weight" labelWidth="4.5rem">
             <option value={100}>Extra Thin</option>
             <option value={200}>Thin</option>
             <option value={300}>Light</option>
@@ -77,10 +77,10 @@ export default function TextOptions({ componentId }: OptionsProps) {
             <option value={700}>Bold</option>
             <option value={800}>Extra Bold</option>
             <option value={900}>Extra Extra Bold</option>
-          </SelectInput>
-        </Labelled>
+          </SelectInputWithLabel>
+        </GridItem>
         <GridItem colSpan={8}>
-          <ColorPicker name="color" label="Color" />
+          <ColorPicker name="color" label="Color" labelWidth="4.5rem" />
         </GridItem>
       </Grid>
     </CF>
