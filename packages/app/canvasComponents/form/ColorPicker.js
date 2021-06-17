@@ -1,11 +1,12 @@
 import {
   Box,
   Input,
-  useDisclosure,
-  useOutsideClick,
   InputGroup,
   InputLeftElement,
+  useDisclosure,
+  useOutsideClick,
 } from '@chakra-ui/react';
+import { TransparencyGridIcon } from '@modulz/radix-icons';
 import { rgbaToCss } from 'bricks';
 import { useEffect, useRef } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
@@ -55,13 +56,7 @@ export default function ColorPicker({ name, label = null }) {
                   }}
                 >
                   {/* Show a chessboard bg to signify if there is transparency in the color. */}
-                  <Box
-                    width={5}
-                    height={5}
-                    borderRadius="sm"
-                    bg={field.value ? rgbaToCss(field.value) : null}
-                    mr={3}
-                  />
+                  <ColorBox value={field.value} />
                   {/* Only need to show the hex and no transparency as textual. */}
                   {field.value ? rgbaToCss({ ...field.value, a: null }) : ''}
                 </Input>
@@ -135,5 +130,34 @@ function ColorPickerInner({ stickToRef, value, onChange, onClose }) {
         <RgbaColorPicker color={value} onChange={onChange} />
       </div>
     </StickyBox>
+  );
+}
+
+/**
+ * Shows a preview of the color that is selected with a chessboard in the background if
+ * there is transparency.
+ */
+function ColorBox({ value }) {
+  return (
+    <Box
+      width={5}
+      height={5}
+      borderRadius="sm"
+      overflow="hidden"
+      mr={3}
+      position="relative"
+      border="1px"
+      borderColor="gray.400"
+    >
+      <TransparencyGridIcon width="100%" height="100%" />
+      <Box
+        width="100%"
+        height="100%"
+        bg={value ? rgbaToCss(value) : null}
+        position="absolute"
+        top={0}
+        left={0}
+      />
+    </Box>
   );
 }
