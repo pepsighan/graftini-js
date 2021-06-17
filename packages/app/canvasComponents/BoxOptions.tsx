@@ -1,6 +1,6 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
-import { DimensionMaxLimit, DimensionMinLimit, DimensionSize } from 'bricks';
+import { BorderRadius, DimensionMaxLimit, DimensionMinLimit, DimensionSize } from 'bricks';
 import { OptionsProps } from 'canvasComponents';
 import { useEditor } from 'graft';
 import { useCallback } from 'react';
@@ -35,6 +35,7 @@ type RawDimensionLimit = {
 };
 
 type BoxOptionsFields = BoxComponentProps & {
+  borderRadius: BorderRadius & { toggle: 'all' | 'each' };
   widthRaw: RawDimension;
   heightRaw: RawDimension;
   minWidthRaw: RawDimensionLimit;
@@ -67,6 +68,18 @@ function parseLimitDimension(
   }
 
   return isMin ? 'auto' : 'none';
+}
+
+function hasBorderRadiusAllOrEachToggle(borderRadius: BorderRadius): 'all' | 'each' {
+  if (
+    borderRadius.bottomLeft === borderRadius.bottomRight &&
+    borderRadius.bottomLeft === borderRadius.topLeft &&
+    borderRadius.topLeft === borderRadius.topRight
+  ) {
+    return 'all';
+  }
+
+  return 'each';
 }
 
 export default function BoxOptions({ componentId }: OptionsProps) {
@@ -105,6 +118,10 @@ export default function BoxOptions({ componentId }: OptionsProps) {
           maxHeightRaw: {
             size: (initialState.maxHeight as any)?.size?.toString(),
             unit: (initialState.maxHeight as any)?.unit ?? 'px',
+          },
+          borderRadius: {
+            ...initialState.borderRadius,
+            toggle: hasBorderRadiusAllOrEachToggle(initialState.borderRadius),
           },
         }),
         []
