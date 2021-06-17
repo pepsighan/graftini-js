@@ -59,7 +59,6 @@ export default function PageItem({ id, name, route, slugProjectId, projectId }) 
           isActive={isSelected}
           onClick={onPageChange}
           onContextMenu={onOpenContextMenu}
-          flexDirection="column"
         >
           {name}
         </Button>
