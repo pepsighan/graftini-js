@@ -291,13 +291,13 @@ function AppearanceSection() {
           Appearance
         </Text>
       </GridItem>
-      <GridItem colSpan={8}>
-        <ColorPicker name="color" label="Fill" />
+      <GridItem colSpan={4}>
+        <ColorPicker name="color" />
       </GridItem>
       <GridItem colSpan={4}>
         <OpacityInput name="opacity" />
       </GridItem>
-      <GridItem colSpan={4} />
+      <GridItem colSpan={8} />
       {/* <Labelled label="Border">
         <TextInput name="border" />
       </Labelled> */}

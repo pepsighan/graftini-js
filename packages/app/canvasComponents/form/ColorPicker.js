@@ -13,25 +13,26 @@ import { Controller, useFormContext } from 'react-hook-form';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import StickyBox from './StickyBox';
 
-export default function ColorPicker({ name, label }) {
+export default function ColorPicker({ name, label = null }) {
   const { control } = useFormContext();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const ref = useRef();
 
   return (
     <InputGroup>
-      <InputLeftElement
-        pointerEvents="none"
-        fontSize="sm"
-        height="100%"
-        width={14}
-        color="gray.600"
-        justifyContent="flex-end"
-        pr={2}
-      >
-        {label}
-      </InputLeftElement>
-
+      {label && (
+        <InputLeftElement
+          pointerEvents="none"
+          fontSize="sm"
+          height="100%"
+          width={14}
+          color="gray.600"
+          justifyContent="flex-end"
+          pr={2}
+        >
+          {label}
+        </InputLeftElement>
+      )}
       <Controller
         name={name}
         control={control}
@@ -50,7 +51,7 @@ export default function ColorPicker({ name, label }) {
                   cursor="pointer"
                   onClick={onOpen}
                   sx={{
-                    paddingInlineStart: 14,
+                    paddingInlineStart: label ? 14 : null,
                   }}
                 >
                   {/* Show a chessboard bg to signify if there is transparency in the color. */}
