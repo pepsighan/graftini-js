@@ -29,11 +29,7 @@ export default function TextEditor({ value, isSelected }) {
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
       <HoveringToolbar />
-      <Editable
-        readOnly={!isSelected}
-        style={{ backgroundColor: isSelected ? 'white' : null }}
-        renderLeaf={Leaf}
-      />
+      <Editable readOnly={!isSelected} renderLeaf={Leaf} />
     </Slate>
   );
 }
