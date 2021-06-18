@@ -2,10 +2,11 @@
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
-import { forwardRef, useCallback } from 'react';
+import { forwardRef, MouseEvent, useCallback, useState } from 'react';
+import { useEffectOnce } from 'react-use';
 import { Descendant } from 'slate';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
-import { useDesignerState } from 'store/designer';
+import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
 
 export type TextComponentProps = {
@@ -22,10 +23,38 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
   ({ text, onDragStart, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
-    const isSelected = useDesignerState(
-      useCallback((state) => state.selectedComponentId === componentId, [componentId])
-    );
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
+
+    const onClick = useCallback(
+      (ev: MouseEvent) => {
+        ev.stopPropagation();
+        // We need to trigger a click to be notified because we are stopping propagation.
+        // Stopping propagation is also needed for us to select the top most component.
+        triggerClick();
+        return selectComponent(componentId);
+      },
+      [componentId, selectComponent, triggerClick]
+    );
+
+    const { subscribe } = useDesignerStateApi();
+    const [isEditable, setIsEditable] = useState(false);
+
+    // Enable editing.
+    const onDoubleClick = useCallback(() => {
+      setIsEditable(true);
+    }, []);
+
+    // Reset the editable state once the component is no longer selected.
+    useEffectOnce(() => {
+      return subscribe(
+        (isSelected) => {
+          if (!isSelected) {
+            setIsEditable(false);
+          }
+        },
+        (state) => state.selectedComponentId === componentId
+      );
+    });
 
     const { text: textDefault, ...defaultRest } = Text.graftOptions.defaultProps;
 
@@ -41,18 +70,10 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
         ref={ref}
         onDragStart={useUnselectOnDragStart(onDragStart)}
         {...textProps}
-        onClick={useCallback(
-          (ev) => {
-            ev.stopPropagation();
-            // We need to trigger a click to be notified because we are stopping propagation.
-            // Stopping propagation is also needed for us to select the top most component.
-            triggerClick();
-            return selectComponent(componentId);
-          },
-          [componentId, selectComponent, triggerClick]
-        )}
+        onClick={onClick}
+        onDoubleClick={onDoubleClick}
       >
-        <TextEditor value={text ?? textDefault} isSelected={isSelected} />
+        <TextEditor value={text ?? textDefault} isEditable={isEditable} />
       </Txt>
     );
   }
