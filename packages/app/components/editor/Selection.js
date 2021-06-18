@@ -20,9 +20,10 @@ export default function Selection({ xCorrection, yCorrection }) {
 
 function ActualSelection({ componentId, xCorrection, yCorrection }) {
   const { get, subscribe } = useComponentRegion(componentId);
-  const isText = useDesignerState(
+
+  const isResizable = useDesignerState(
     useCallback(
-      (state) => state.pages[state.currentOpenPage][componentId].type === 'Text',
+      (state) => state.pages[state.currentOpenPage][componentId].type === 'Box',
       [componentId]
     )
   );
@@ -88,7 +89,7 @@ function ActualSelection({ componentId, xCorrection, yCorrection }) {
       </motion.div>
 
       <PlainOutline posX={posX} posY={posY} width={width} height={height} />
-      {!isText && <ResizeableFrame posX={posX} posY={posY} width={width} height={height} />}
+      {isResizable && <ResizeableFrame posX={posX} posY={posY} width={width} height={height} />}
     </>
   ) : null;
 }
