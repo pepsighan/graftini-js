@@ -5,6 +5,11 @@ import { ForwardedRef, forwardRef, useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 
+const cursor = {
+  Text: 'text',
+  Box: 'crosshair',
+};
+
 export type RootProps = {
   color: RGBA;
 };
@@ -27,7 +32,7 @@ const Root: RootComponent<RootProps> = forwardRef(
           width: '100%',
           height: '100%',
           overflow: 'auto',
-          cursor: currentCreateType === 'Text' ? 'text' : 'auto',
+          cursor: cursor[currentCreateType] ?? 'auto',
           backgroundColor: rgbaToCss(color),
         }}
         {...rest}
