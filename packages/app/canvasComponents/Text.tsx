@@ -5,7 +5,7 @@ import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, MouseEvent, useCallback } from 'react';
 import { Descendant } from 'slate';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
-import { useDesignerState } from 'store/designer';
+import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
 
 export type TextComponentProps = {
@@ -31,6 +31,8 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
         [componentId]
       )
     );
+
+    const isDraggingDisabled = useIsDraggingDisabled();
 
     const onClick = useCallback(
       (ev: MouseEvent) => {
@@ -60,7 +62,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
     return (
       <Txt
         ref={ref}
-        draggable={isEditable ? false : draggable} // Disable dragging when editing enabled.
+        draggable={isDraggingDisabled ? false : draggable}
         onDragStart={useUnselectOnDragStart(onDragStart)}
         {...textProps}
         onClick={onClick}

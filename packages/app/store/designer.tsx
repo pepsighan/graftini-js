@@ -1,6 +1,6 @@
 import { ComponentMap } from 'graft';
 import produce from 'immer';
-import { ReactNode, useState } from 'react';
+import { ReactNode, useCallback, useState } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
 import { ProjectPage } from './projects';
@@ -15,6 +15,7 @@ type UseDesignerState = {
   currentOpenPage?: string | null;
   selectedComponentId?: string | null;
   isTextEditingEnabled: boolean; // Only makes sense in case a text component is selected.
+  isBoxResizing: boolean;
   pages: {
     [id: string]: ComponentMap;
   };
@@ -37,6 +38,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
       currentOpenPage: pages.length > 0 ? pages[0].id : null,
       selectedComponentId: null,
       isTextEditingEnabled: false,
+      isBoxResizing: false,
       pages: pages.reduce((acc, cur) => {
         acc[cur.id] = parseComponentMap(cur.componentMap);
         return acc;
@@ -117,4 +119,14 @@ export const useDesignerStateApi = useStoreApi;
 export function parseComponentMap(stringified?: string): ComponentMap | null {
   const json = stringified ? JSON.parse(stringified) : null;
   return json;
+}
+
+/**
+ * Hook to check if dragging is disabled. It may be disabled if there is an ongoing
+ * text editing operation or a component is being resized.
+ */
+export function useIsDraggingDisabled(): boolean {
+  return useDesignerState(
+    useCallback((state) => state.isTextEditingEnabled || state.isBoxResizing, [])
+  );
 }
