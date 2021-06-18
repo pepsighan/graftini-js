@@ -14,12 +14,14 @@ type UseDesignerState = {
   rightSidebarOpenPane: RightSidebarOpenPane;
   currentOpenPage?: string | null;
   selectedComponentId?: string | null;
+  isTextEditingEnabled: boolean; // Only makes sense in case a text component is selected.
   pages: {
     [id: string]: ComponentMap;
   };
 
   selectComponent(componentId: string): void;
   unselectComponent(): void;
+  startEditingText(): void;
   toggleQueryBuilderPane(): void;
   setCurrentPage(pageId: string): void;
   updatePageDesign(pageId: string, componentMap: ComponentMap): void;
@@ -34,6 +36,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
       rightSidebarOpenPane: RightSidebarOpenPane.ComponentOptions,
       currentOpenPage: pages.length > 0 ? pages[0].id : null,
       selectedComponentId: null,
+      isTextEditingEnabled: false,
       pages: pages.reduce((acc, cur) => {
         acc[cur.id] = parseComponentMap(cur.componentMap);
         return acc;
@@ -41,12 +44,21 @@ const createDesignerState = (pages: ProjectPage[]) =>
 
       selectComponent(componentId: string) {
         immerSet((state) => {
+          // If any other component is selected, disable the editing mode (if it was enabled).
+          state.isTextEditingEnabled =
+            state.selectedComponentId === componentId ? state.isTextEditingEnabled : false;
           state.selectedComponentId = componentId;
         });
       },
       unselectComponent() {
         immerSet((state) => {
           state.selectedComponentId = null;
+          state.isTextEditingEnabled = false;
+        });
+      },
+      startEditingText() {
+        immerSet((state) => {
+          state.isTextEditingEnabled = true;
         });
       },
       toggleQueryBuilderPane() {

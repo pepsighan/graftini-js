@@ -303,12 +303,14 @@ function interactionStyles({ cursor, pointerEvents }: InteractionStyles): CSSObj
 }
 
 function interactionProps({ tag, href, onClick }: InteractionProps & BaseBoxProps): any {
-  const props: any = {};
+  const props: any = {
+    onClick,
+  };
+
   if (tag === 'a') {
     props.href = href;
   }
 
-  props.onClick = onClick;
   return props;
 }
 

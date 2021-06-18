@@ -5,7 +5,7 @@ import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
 import HoveringToolbar from './HoveringToolbar';
 import Leaf from './Leaf';
 
-export default function TextEditor({ value, isSelected }) {
+export default function TextEditor({ value, isEditable }) {
   const componentId = useComponentId();
   const { updateComponentProps } = useEditor();
 
@@ -14,10 +14,10 @@ export default function TextEditor({ value, isSelected }) {
 
   // Focus the editor once it is selected.
   useEffect(() => {
-    if (isSelected) {
+    if (isEditable) {
       ReactEditor.focus(editor);
     }
-  }, [editor, isSelected]);
+  }, [editor, isEditable]);
 
   const onChange = useCallback(
     (value) => {
@@ -29,7 +29,7 @@ export default function TextEditor({ value, isSelected }) {
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
       <HoveringToolbar />
-      <Editable readOnly={!isSelected} renderLeaf={Leaf} />
+      <Editable readOnly={!isEditable} renderLeaf={Leaf} />
     </Slate>
   );
 }
