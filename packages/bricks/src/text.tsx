@@ -33,6 +33,7 @@ export type TextInteractionStyles = {
 
 export type TextInteractionProps = {
   onClick?: MouseEventHandler;
+  onDoubleClick?: MouseEventHandler;
 };
 
 const Text = forwardRef((props: TextProps, ref) => {
@@ -41,8 +42,8 @@ const Text = forwardRef((props: TextProps, ref) => {
   return (
     <Component
       ref={ref}
+      {...interactionProps(props)}
       {...dragProps(props)}
-      onClick={props.onClick}
       css={{
         // Append -gr in class names rather than -Text.
         label: 'gr',
@@ -71,6 +72,13 @@ function baseStyles({
     fontWeight,
     fontFamily,
     textAlign,
+  };
+}
+
+function interactionProps({ onClick, onDoubleClick }: TextInteractionProps): any {
+  return {
+    onClick,
+    onDoubleClick,
   };
 }
 
