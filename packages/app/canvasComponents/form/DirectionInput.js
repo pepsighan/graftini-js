@@ -1,21 +1,17 @@
 import { Box, Button, ButtonGroup } from '@chakra-ui/react';
-import { LayoutIcon } from '@modulz/radix-icons';
+import { HeightIcon, WidthIcon } from '@modulz/radix-icons';
 import { Controller, useFormContext } from 'react-hook-form';
 
 const options = [
   {
     value: 'column',
-    icon: <LayoutIcon height={24} width={24} />,
-    label: 'Column',
+    icon: <HeightIcon height={24} width={24} />,
+    label: 'Vertical',
   },
   {
     value: 'row',
-    icon: (
-      <Box transform="rotateZ(90deg)">
-        <LayoutIcon height={24} width={24} />
-      </Box>
-    ),
-    label: 'Row',
+    icon: <WidthIcon height={24} width={24} />,
+    label: 'Horizontal',
   },
 ];
 
@@ -47,7 +43,7 @@ function Options({ options, value, onChange }) {
             flexDirection="column"
             justifyContent="center"
             height="auto"
-            width={20}
+            width={24}
             py={2}
             {...rest}
           >
