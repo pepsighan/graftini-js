@@ -90,8 +90,10 @@ export default extendTheme({
       baseStyle: {
         fontWeight: 'semibold',
         borderRadius: 'base',
+        _focus: {
+          boxShadow: 'none',
+        },
       },
     },
-    Text: {},
   },
 });
