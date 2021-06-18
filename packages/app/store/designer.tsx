@@ -44,8 +44,10 @@ const createDesignerState = (pages: ProjectPage[]) =>
 
       selectComponent(componentId: string) {
         immerSet((state) => {
+          // If any other component is selected, disable the editing mode (if it was enabled).
+          state.isTextEditingEnabled =
+            state.selectedComponentId === componentId ? state.isTextEditingEnabled : false;
           state.selectedComponentId = componentId;
-          state.isTextEditingEnabled = false;
         });
       },
       unselectComponent() {
