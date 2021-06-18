@@ -94,7 +94,7 @@ Box.graftOptions = {
   // The default props defines all the props that the box can accept exhaustively.
   // This field is used by the update options logic.
   defaultProps: {
-    name: null,
+    name: 'Box',
     tag: 'div',
     // The width and height will be given by the user when they draw it on the
     // screen.
