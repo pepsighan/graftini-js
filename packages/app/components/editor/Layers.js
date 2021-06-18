@@ -1,6 +1,5 @@
 import { Box, Button, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
-import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
-import Icon from 'components/Icon';
+import { ChevronDownIcon, ChevronUpIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
 import { useDimensions } from 'hooks/useDimensions';
 import { useCallback, useRef } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -49,21 +48,31 @@ function LayerItem({ item, onToggle, isCollapsed }) {
   return (
     <ButtonGroup display="flex" isAttached colorScheme={isSelected ? 'primary' : 'gray'}>
       {isChevronVisible && (
-        <IconButton size="sm" minWidth="initial" onClick={onToggle} pl={2}>
-          <Icon icon={isCollapsed ? mdiChevronDown : mdiChevronUp} />
+        <IconButton
+          size="sm"
+          minWidth="initial"
+          flexGrow={0}
+          flexShrink={0}
+          onClick={onToggle}
+          width={6}
+          sx={{ paddingInlineEnd: 0 }}
+        >
+          {isCollapsed ? <ChevronDownIcon /> : <ChevronUpIcon />}
         </IconButton>
       )}
       <Button
         fontSize="sm"
         size="sm"
+        flexGrow={0}
+        flexShrink={0}
         fontWeight="normal"
-        display="block"
         isFullWidth
-        textAlign="left"
-        pl={isChevronVisible ? 1 : 3}
+        justifyContent="flex-start"
         onClick={onSelect}
+        sx={{ paddingInlineStart: isChevronVisible ? 1 : 7 }}
       >
-        {!item.parentId ? 'Root' : item.props.name || 'Untitled'}
+        {item.type === 'Text' ? <TextIcon /> : <SquareIcon />}
+        <Text ml={2}>{!item.parentId ? 'Root' : item.props.name || 'Untitled'}</Text>
       </Button>
     </ButtonGroup>
   );
