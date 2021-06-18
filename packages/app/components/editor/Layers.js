@@ -48,20 +48,30 @@ function LayerItem({ item, onToggle, isCollapsed }) {
   return (
     <ButtonGroup display="flex" isAttached colorScheme={isSelected ? 'primary' : 'gray'}>
       {isChevronVisible && (
-        <IconButton size="sm" minWidth="initial" onClick={onToggle} pl={2}>
+        <IconButton
+          size="sm"
+          minWidth="initial"
+          flexGrow={0}
+          flexShrink={0}
+          onClick={onToggle}
+          width={6}
+          sx={{ paddingInlineEnd: 0 }}
+        >
           {isCollapsed ? <ChevronDownIcon /> : <ChevronUpIcon />}
         </IconButton>
       )}
       <Button
         fontSize="sm"
         size="sm"
+        flexGrow={0}
+        flexShrink={0}
         fontWeight="normal"
         isFullWidth
-        pl={isChevronVisible ? 1 : 3}
         justifyContent="flex-start"
         onClick={onSelect}
+        sx={{ paddingInlineStart: isChevronVisible ? 1 : 7 }}
       >
-        {item.type === 'Text' ? <TextIcon /> : <SquareIcon />}{' '}
+        {item.type === 'Text' ? <TextIcon /> : <SquareIcon />}
         <Text ml={2}>{!item.parentId ? 'Root' : item.props.name || 'Untitled'}</Text>
       </Button>
     </ButtonGroup>
