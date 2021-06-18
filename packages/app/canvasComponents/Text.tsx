@@ -19,11 +19,18 @@ export type TextComponentProps = {
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(
-  ({ text, onDragStart, ...rest }, ref) => {
+  ({ text, onDragStart, draggable, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
     const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
+
+    const isEditable = useDesignerState(
+      useCallback(
+        (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled,
+        [componentId]
+      )
+    );
 
     const onClick = useCallback(
       (ev: MouseEvent) => {
@@ -53,12 +60,13 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
     return (
       <Txt
         ref={ref}
+        draggable={isEditable ? false : draggable} // Disable dragging when editing enabled.
         onDragStart={useUnselectOnDragStart(onDragStart)}
         {...textProps}
         onClick={onClick}
         onDoubleClick={onDoubleClick}
       >
-        <TextEditor value={text ?? textDefault} />
+        <TextEditor value={text ?? textDefault} isEditable={isEditable} />
       </Txt>
     );
   }
