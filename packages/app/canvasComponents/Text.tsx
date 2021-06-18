@@ -2,11 +2,10 @@
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
 import { GraftComponent, useComponentId } from 'graft';
 import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
-import { forwardRef, MouseEvent, useCallback, useState } from 'react';
-import { useEffectOnce } from 'react-use';
+import { forwardRef, MouseEvent, useCallback } from 'react';
 import { Descendant } from 'slate';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
-import { useDesignerState, useDesignerStateApi } from 'store/designer';
+import { useDesignerState } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
 
 export type TextComponentProps = {
@@ -24,6 +23,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
+    const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
 
     const onClick = useCallback(
       (ev: MouseEvent) => {
@@ -36,25 +36,10 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
       [componentId, selectComponent, triggerClick]
     );
 
-    const { subscribe } = useDesignerStateApi();
-    const [isEditable, setIsEditable] = useState(false);
-
     // Enable editing.
     const onDoubleClick = useCallback(() => {
-      setIsEditable(true);
-    }, []);
-
-    // Reset the editable state once the component is no longer selected.
-    useEffectOnce(() => {
-      return subscribe(
-        (isSelected) => {
-          if (!isSelected) {
-            setIsEditable(false);
-          }
-        },
-        (state) => state.selectedComponentId === componentId
-      );
-    });
+      startEditingText();
+    }, [startEditingText]);
 
     const { text: textDefault, ...defaultRest } = Text.graftOptions.defaultProps;
 
@@ -73,7 +58,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
         onClick={onClick}
         onDoubleClick={onDoubleClick}
       >
-        <TextEditor value={text ?? textDefault} isEditable={isEditable} />
+        <TextEditor value={text ?? textDefault} />
       </Txt>
     );
   }

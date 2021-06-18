@@ -2,12 +2,19 @@ import { useComponentId, useEditor } from 'graft';
 import { useCallback, useEffect, useState } from 'react';
 import { createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
+import { useDesignerState } from 'store/designer';
 import HoveringToolbar from './HoveringToolbar';
 import Leaf from './Leaf';
 
-export default function TextEditor({ value, isEditable }) {
+export default function TextEditor({ value }) {
   const componentId = useComponentId();
   const { updateComponentProps } = useEditor();
+  const isEditable = useDesignerState(
+    useCallback(
+      (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled,
+      [componentId]
+    )
+  );
 
   // Only initialize the editor once.
   const [editor] = useState(() => withReact(createEditor()));
