@@ -62,7 +62,7 @@ Text.graftOptions = {
   // The default props defines all the props that the component can accept exhaustively.
   // This field is used by the update options logic.
   defaultProps: {
-    name: null,
+    name: 'Text',
     color: { r: 0, g: 0, b: 0, a: 1 },
     text: [{ type: 'paragraph', children: [{ text: 'Text' }] }] as any, // The type of the lib is wrong.
     fontSize: {
