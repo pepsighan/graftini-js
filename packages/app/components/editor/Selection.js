@@ -4,6 +4,8 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 import ActionBar from './ActionBar';
+import PlainOutline from './PlainOutline';
+import ResizeableFrame from './ResizableFrame';
 
 export default function Selection() {
   const componentId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
@@ -12,6 +14,12 @@ export default function Selection() {
 
 function ActualSelection({ componentId }) {
   const { get, subscribe } = useComponentRegion(componentId);
+  const isText = useDesignerState(
+    useCallback(
+      (state) => state.pages[state.currentOpenPage][componentId].type === 'Text',
+      [componentId]
+    )
+  );
 
   const posX = useMotionValue(0);
   const posY = useMotionValue(0);
@@ -72,19 +80,11 @@ function ActualSelection({ componentId }) {
       >
         <ActionBar componentId={componentId} />
       </motion.div>
-      <motion.div
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          x: posX,
-          y: posY,
-          width,
-          height,
-          border: `1px solid ${theme.colors.primary[300]}`,
-          pointerEvents: 'none',
-        }}
-      />
+      {isText ? (
+        <PlainOutline posX={posX} posY={posY} width={width} height={height} />
+      ) : (
+        <ResizeableFrame posX={posX} posY={posY} width={width} height={height} />
+      )}
     </>
   ) : null;
 }
