@@ -7,12 +7,18 @@ import ActionBar from './ActionBar';
 import PlainOutline from './PlainOutline';
 import ResizeableFrame from './ResizableFrame';
 
-export default function Selection() {
+export default function Selection({ xCorrection, yCorrection }) {
   const componentId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
-  return componentId ? <ActualSelection componentId={componentId} /> : null;
+  return componentId ? (
+    <ActualSelection
+      componentId={componentId}
+      xCorrection={xCorrection}
+      yCorrection={yCorrection}
+    />
+  ) : null;
 }
 
-function ActualSelection({ componentId }) {
+function ActualSelection({ componentId, xCorrection, yCorrection }) {
   const { get, subscribe } = useComponentRegion(componentId);
   const isText = useDesignerState(
     useCallback(
@@ -36,12 +42,12 @@ function ActualSelection({ componentId }) {
         // If it overflows from the top, then show it to the bottom of the component.
         const y = state.y - 19 >= 0 ? state.y - 19 : state.y + state.height - 1;
 
-        posX.set(state.x);
-        posY.set(state.y);
+        posX.set(state.x + xCorrection);
+        posY.set(state.y + yCorrection);
         width.set(state.width);
         height.set(state.height);
 
-        actionPosY.set(y);
+        actionPosY.set(y + yCorrection);
         setIsShown(true);
         return;
       }
@@ -57,7 +63,7 @@ function ActualSelection({ componentId }) {
     // Initialize with the first value.
     updateMotion(get());
     return subscribe(updateMotion);
-  }, [actionPosY, get, height, posX, posY, subscribe, width]);
+  }, [actionPosY, get, height, posX, posY, subscribe, width, xCorrection, yCorrection]);
 
   return isShown ? (
     <>

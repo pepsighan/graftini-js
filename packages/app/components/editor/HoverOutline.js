@@ -3,7 +3,7 @@ import { ROOT_NODE_ID, useHoverSubscriber } from 'graft';
 import { useEffect, useState } from 'react';
 import theme from 'utils/theme';
 
-export default function HoverOutline() {
+export default function HoverOutline({ xCorrection, yCorrection }) {
   const [isVisible, setIsVisible] = useState(false);
 
   const subscribe = useHoverSubscriber();
@@ -16,8 +16,8 @@ export default function HoverOutline() {
     subscribe((state) => {
       // Do not show the outline when on root.
       if (state && state.componentId !== ROOT_NODE_ID) {
-        posX.set(state.region.x);
-        posY.set(state.region.y);
+        posX.set(state.region.x + xCorrection);
+        posY.set(state.region.y + yCorrection);
         width.set(state.region.width);
         height.set(state.region.height);
         setIsVisible(true);
