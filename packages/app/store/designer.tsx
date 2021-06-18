@@ -23,6 +23,7 @@ type UseDesignerState = {
   selectComponent(componentId: string): void;
   unselectComponent(): void;
   startEditingText(): void;
+  setIsBoxResizing(resizing: boolean): void;
   toggleQueryBuilderPane(): void;
   setCurrentPage(pageId: string): void;
   updatePageDesign(pageId: string, componentMap: ComponentMap): void;
@@ -61,6 +62,11 @@ const createDesignerState = (pages: ProjectPage[]) =>
       startEditingText() {
         immerSet((state) => {
           state.isTextEditingEnabled = true;
+        });
+      },
+      setIsBoxResizing(resizing: boolean) {
+        immerSet((state) => {
+          state.isBoxResizing = resizing;
         });
       },
       toggleQueryBuilderPane() {

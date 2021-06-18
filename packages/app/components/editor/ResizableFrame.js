@@ -1,5 +1,6 @@
 import { motion, useTransform } from 'framer-motion';
 import { useCallback } from 'react';
+import { useDesignerState } from 'store/designer';
 
 const frameWidth = 4;
 
@@ -37,72 +38,45 @@ export default function ResizeableFrame({ posX, posY, width, height }) {
   return (
     <>
       {/* The top side. */}
-      <motion.div
-        drag="y"
-        dragMomentum={false}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          x: posStartX,
-          y: posY,
-          width: actualWidth,
-          height: frameWidth,
-          cursor: 'row-resize',
-          backgroundColor: 'black',
-        }}
-      />
-
+      <FrameSide drag="y" x={posStartX} y={posY} width={actualWidth} cursor="row-resize" />
       {/* The right side. */}
-      <motion.div
-        drag="x"
-        dragMomentum={false}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          x: posEndX,
-          y: posStartY,
-          width: frameWidth,
-          height: actualHeight,
-          cursor: 'col-resize',
-          backgroundColor: 'black',
-        }}
-      />
-
+      <FrameSide drag="x" x={posEndX} y={posStartY} height={actualHeight} cursor="col-resize" />
       {/* The bottom side. */}
-      <motion.div
-        drag="y"
-        dragMomentum={false}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          x: posStartX,
-          y: posEndY,
-          width: actualWidth,
-          height: frameWidth,
-          cursor: 'row-resize',
-          backgroundColor: 'black',
-        }}
-      />
-
+      <FrameSide drag="y" x={posStartX} y={posEndY} width={actualWidth} cursor="row-resize" />
       {/* The left side. */}
-      <motion.div
-        drag="x"
-        dragMomentum={false}
-        style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          x: posX,
-          y: posStartY,
-          width: frameWidth,
-          height: actualHeight,
-          cursor: 'col-resize',
-          backgroundColor: 'black',
-        }}
-      />
+      <FrameSide drag="x" x={posX} y={posStartY} height={actualHeight} cursor="col-resize" />
     </>
+  );
+}
+
+function FrameSide({ drag, x, y, width, height, cursor }) {
+  const setIsBoxResizing = useDesignerState(useCallback((state) => state.setIsBoxResizing, []));
+
+  const onDragStart = useCallback(() => {
+    setIsBoxResizing(true);
+  }, [setIsBoxResizing]);
+
+  const onDragEnd = useCallback(() => {
+    setIsBoxResizing(false);
+  }, [setIsBoxResizing]);
+
+  return (
+    <motion.div
+      drag={drag}
+      dragMomentum={false}
+      onDragStart={onDragStart}
+      onDragEnd={onDragEnd}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        x,
+        y,
+        width: width ?? frameWidth,
+        height: height ?? frameWidth,
+        cursor,
+        backgroundColor: 'black',
+      }}
+    />
   );
 }
