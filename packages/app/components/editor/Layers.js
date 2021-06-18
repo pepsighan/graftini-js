@@ -1,6 +1,5 @@
 import { Box, Button, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
-import { mdiChevronDown, mdiChevronUp } from '@mdi/js';
-import Icon from 'components/Icon';
+import { ChevronDownIcon, ChevronUpIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
 import { useDimensions } from 'hooks/useDimensions';
 import { useCallback, useRef } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -50,20 +49,20 @@ function LayerItem({ item, onToggle, isCollapsed }) {
     <ButtonGroup display="flex" isAttached colorScheme={isSelected ? 'primary' : 'gray'}>
       {isChevronVisible && (
         <IconButton size="sm" minWidth="initial" onClick={onToggle} pl={2}>
-          <Icon icon={isCollapsed ? mdiChevronDown : mdiChevronUp} />
+          {isCollapsed ? <ChevronDownIcon /> : <ChevronUpIcon />}
         </IconButton>
       )}
       <Button
         fontSize="sm"
         size="sm"
         fontWeight="normal"
-        display="block"
         isFullWidth
-        textAlign="left"
         pl={isChevronVisible ? 1 : 3}
+        justifyContent="flex-start"
         onClick={onSelect}
       >
-        {!item.parentId ? 'Root' : item.props.name || 'Untitled'}
+        {item.type === 'Text' ? <TextIcon /> : <SquareIcon />}{' '}
+        <Text ml={2}>{!item.parentId ? 'Root' : item.props.name || 'Untitled'}</Text>
       </Button>
     </ButtonGroup>
   );
