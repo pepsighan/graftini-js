@@ -1,10 +1,14 @@
 import { motion, useMotionValue } from 'framer-motion';
 import { ROOT_NODE_ID, useHoverSubscriber } from 'graft';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
 export default function HoverOutline({ xCorrection, yCorrection }) {
   const [isVisible, setIsVisible] = useState(false);
+
+  // Do not show the hover outline when a resize operation is ongoing.
+  const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
 
   const subscribe = useHoverSubscriber();
   const posX = useMotionValue(0);
@@ -34,7 +38,7 @@ export default function HoverOutline({ xCorrection, yCorrection }) {
 
   return (
     <>
-      {isVisible && (
+      {isVisible && !isBoxResizing && (
         <motion.div
           style={{
             position: 'fixed',
