@@ -1,5 +1,5 @@
 import { Box, Button, Flex, IconButton, Text, Tooltip } from '@chakra-ui/react';
-import { CodeIcon, CursorArrowIcon, PlayIcon } from '@modulz/radix-icons';
+import { CodeIcon, CursorArrowIcon, PlayIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
 import BackButton from 'components/BackButton';
 import { motion } from 'framer-motion';
 import { useCreateComponent, useCurrentCreateComponentType, useForgetCreateComponent } from 'graft';
@@ -37,11 +37,11 @@ export default function EditorNavigation() {
           mr={4}
           label="Box"
           component="Box"
-          icon={<BoxIcon />}
+          icon={<SquareIcon color="var(--icon-color)" />}
           isCanvas
           childAppendDirection="vertical"
         />
-        <DrawButton label="Text" component="Text" icon={<TextIcon />} />
+        <DrawButton label="Text" component="Text" icon={<TextIcon color="var(--icon-color)" />} />
       </Flex>
 
       <Flex>
@@ -159,30 +159,5 @@ function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection
         </Text>
       </Button>
     </motion.div>
-  );
-}
-
-function BoxIcon() {
-  return (
-    <Box width={5} height={5} border="1px" borderColor="var(--icon-color)" borderRadius="sm" />
-  );
-}
-
-function TextIcon() {
-  return (
-    <Flex
-      justifyContent="center"
-      alignItems="center"
-      width={5}
-      height={5}
-      border="1px"
-      borderColor="var(--icon-color)"
-      borderRadius="sm"
-      color="var(--icon-color)"
-      fontSize="sm"
-      pointerEvents="none"
-    >
-      A
-    </Flex>
   );
 }
