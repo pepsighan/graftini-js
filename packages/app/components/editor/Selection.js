@@ -80,11 +80,9 @@ function ActualSelection({ componentId }) {
       >
         <ActionBar componentId={componentId} />
       </motion.div>
-      {isText ? (
-        <PlainOutline posX={posX} posY={posY} width={width} height={height} />
-      ) : (
-        <ResizeableFrame posX={posX} posY={posY} width={width} height={height} />
-      )}
+
+      <PlainOutline posX={posX} posY={posY} width={width} height={height} />
+      {!isText && <ResizeableFrame posX={posX} posY={posY} width={width} height={height} />}
     </>
   ) : null;
 }
