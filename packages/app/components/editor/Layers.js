@@ -3,13 +3,10 @@ import { ChevronDownIcon, ChevronUpIcon, SquareIcon, TextIcon } from '@modulz/ra
 import { useDimensions } from 'hooks/useDimensions';
 import { useCallback, useRef } from 'react';
 import { useDesignerState } from 'store/designer';
+import { ROOT_NODE_ID } from 'graft';
 import { Tree } from 'tread';
 
 export default function Layers() {
-  const componentMap = useDesignerState(
-    useCallback((state) => state.pages[state.currentOpenPage], [])
-  );
-
   const textRef = useRef();
   const { height } = useDimensions(textRef);
 
@@ -29,7 +26,12 @@ export default function Layers() {
         right="-17px"
       >
         <Box px={3}>
-          <Tree tree={componentMap ?? {}} renderItem={LayerItem} renderSubTree={SubTree} />
+          <Tree
+            rootId={ROOT_NODE_ID}
+            renderItem={LayerItem}
+            renderSubTree={SubTree}
+            useTreeItem={useTreeItem}
+          />
         </Box>
       </Box>
     </Box>
@@ -80,4 +82,22 @@ function LayerItem({ item, onToggle, isCollapsed }) {
 
 function SubTree({ children }) {
   return <Box ml={4}>{children}</Box>;
+}
+
+function useTreeItem(itemId) {
+  return useDesignerState(
+    useCallback((state) => state.pages[state.currentOpenPage][itemId], [itemId]),
+    // Only the following checked fields are needed to render a layer. So any changes
+    // in other places won't cause a re-render.
+    useCallback(
+      (left, right) =>
+        left.id === right.id &&
+        left.childrenNodes === right.childrenNodes &&
+        left.isCanvas === right.isCanvas &&
+        left.type === right.type &&
+        left.parentId === right.parentId &&
+        left.props.name === right.props.name,
+      []
+    )
+  );
 }
