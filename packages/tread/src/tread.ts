@@ -1,2 +1,2 @@
 export { RenderItem, RenderItemProps, TreeItem, UseTreeItem } from './renderItem';
-export { Tree, TreeProps } from './tree';
+export { RenderSubTree, Tree, TreeProps } from './tree';
