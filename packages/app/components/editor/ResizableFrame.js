@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { motion, useTransform } from 'framer-motion';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDesignerState } from 'store/designer';
 
 export default function ResizeableFrame(props) {
@@ -58,26 +58,67 @@ function FrameSide({ drag, x, y, width, height, cursor }) {
 
 const frameWidth = 4;
 
-function useSidePositions({ posX, posY, width, height }) {
+function useSidePositions(props) {
+  const top = useTopSide(props);
+  const right = useRightSide(props);
+  const bottom = useBottomSide(props);
+  const left = useLeftSide(props);
+
+  return { top, right, bottom, left };
+}
+
+function useTopSide({ posX, posY, width }) {
   const topX = useTransform(posX, (x) => x + frameWidth);
   const topY = useTransform(posY, (y) => y);
   const topWidth = useTransform(width, (w) => w - frameWidth * 2);
-  const top = { x: topX, y: topY, width: topWidth, height: frameWidth };
 
+  useEffect(() => {
+    return topY.onChange((curY) => {
+      console.log({ diffY: posY.get() - curY });
+    });
+  }, [posY, topY]);
+
+  return { x: topX, y: topY, width: topWidth, height: frameWidth };
+}
+
+function useRightSide({ posX, posY, width, height }) {
   const rightX = useTransform([posX, width], ([x, w]) => x + w - frameWidth);
   const rightY = useTransform(posY, (y) => y + frameWidth);
   const rightHeight = useTransform(height, (h) => h - frameWidth * 2);
-  const right = { x: rightX, y: rightY, width: frameWidth, height: rightHeight };
 
+  useEffect(() => {
+    return rightX.onChange((curX) => {
+      console.log({ diffX: curX - posX.get() - width.get() });
+    });
+  }, [posX, posY, rightX, width]);
+
+  return { x: rightX, y: rightY, width: frameWidth, height: rightHeight };
+}
+
+function useBottomSide({ posX, posY, width, height }) {
   const bottomX = useTransform(posX, (x) => x + frameWidth);
   const bottomY = useTransform([posY, height], ([y, h]) => y + h - frameWidth);
   const bottomWidth = useTransform(width, (w) => w - frameWidth * 2);
-  const bottom = { x: bottomX, y: bottomY, width: bottomWidth, height: frameWidth };
 
+  useEffect(() => {
+    return bottomY.onChange((curY) => {
+      console.log({ diffY: curY - posY.get() - height.get() });
+    });
+  }, [bottomY, height, posX, posY, width]);
+
+  return { x: bottomX, y: bottomY, width: bottomWidth, height: frameWidth };
+}
+
+function useLeftSide({ posX, posY, height }) {
   const leftX = useTransform(posX, (x) => x);
   const leftY = useTransform(posY, (y) => y + frameWidth);
   const leftHeight = useTransform(height, (h) => h - frameWidth * 2);
-  const left = { x: leftX, y: leftY, width: frameWidth, height: leftHeight };
 
-  return { top, right, bottom, left };
+  useEffect(() => {
+    return leftX.onChange((curX) => {
+      console.log({ diffX: posX.get() - curX });
+    });
+  }, [height, leftX, posX, posY]);
+
+  return { x: leftX, y: leftY, width: frameWidth, height: leftHeight };
 }
