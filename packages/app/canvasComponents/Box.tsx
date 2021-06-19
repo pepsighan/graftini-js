@@ -20,7 +20,7 @@ import { useBoxTransformedProps } from 'hooks/useBoxTransformedProps';
 import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, ReactNode, useCallback } from 'react';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
-import { useDesignerState } from 'store/designer';
+import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import { BoxTag } from 'utils/constants';
 
 export type BoxComponentProps = {
@@ -57,9 +57,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
 
-    const isTextEditingSomewhere = useDesignerState(
-      useCallback((state) => state.isTextEditingEnabled, [])
-    );
+    const isDraggingDisabled = useIsDraggingDisabled();
 
     // Merge the incoming props with the default props so that any new props introduced in
     // the future get supported easily for existing projects.
@@ -72,7 +70,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
       <BoxComp
         ref={ref}
         {...useBoxTransformedProps(boxProps)}
-        draggable={isTextEditingSomewhere ? false : draggable} // Disable dragging when text is being edited.
+        draggable={isDraggingDisabled ? false : draggable}
         onDragStart={useUnselectOnDragStart(onDragStart)}
         onDragEnd={onDragEnd}
         onDragOver={onDragOver}

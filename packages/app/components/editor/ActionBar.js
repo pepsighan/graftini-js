@@ -11,7 +11,16 @@ export default function ActionBar({ componentId }) {
 
   return (
     <>
-      <span css={{ color: theme.colors.white, lineHeight: 'initial' }}>{name || 'Untitled'}</span>
+      <span
+        css={{
+          color: theme.colors.white,
+          lineHeight: 'initial',
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}
+      >
+        {name || 'Untitled'}
+      </span>
       <button
         css={{ marginLeft: 6, cursor: 'pointer', color: theme.colors.white }}
         onClick={onDelete}

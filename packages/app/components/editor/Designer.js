@@ -38,13 +38,16 @@ function Editorial() {
   const canvasRef = useRef();
   const dimensions = useDimensions(canvasRef);
 
+  const xCorrection = dimensions?.left ?? 0;
+  const yCorrection = dimensions?.top ?? 0;
+
   return (
     <Editor
       resolvers={components}
       initialState={editorState}
       iframeCorrection={{
-        x: dimensions?.left ?? 0,
-        y: dimensions?.top ?? 0,
+        x: xCorrection,
+        y: yCorrection,
       }}
       rootComponentOverride={Root}
     >

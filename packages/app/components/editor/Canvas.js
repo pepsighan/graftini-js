@@ -12,6 +12,8 @@ const Canvas = forwardRef((_, ref) => {
       style={{
         width: '100%',
         height: '100%',
+        position: 'relative',
+        overflow: 'hidden',
       }}
     >
       <IFrame
@@ -32,11 +34,12 @@ const Canvas = forwardRef((_, ref) => {
             <Canvs />
             <DropMarker color={theme.colors.primary[500]} />
             <DrawMarker color={theme.colors.primary[500]} />
-            <HoverOutline />
-            <Selection />
           </div>
         )}
       </IFrame>
+
+      <HoverOutline />
+      <Selection />
     </div>
   );
 });
