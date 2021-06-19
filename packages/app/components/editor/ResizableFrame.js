@@ -185,7 +185,7 @@ function useDimensionUpdate({ componentId }) {
     (width) => {
       updateComponentProps(componentId, (props) => ({
         ...props,
-        width: { size: width <= 0 ? 0 : width, unit: 'px' },
+        width: { size: Math.floor(width <= 0 ? 0 : width), unit: 'px' },
       }));
     },
     [componentId, updateComponentProps]
@@ -195,7 +195,7 @@ function useDimensionUpdate({ componentId }) {
     (height) => {
       updateComponentProps(componentId, (props) => ({
         ...props,
-        height: { size: height <= 0 ? 0 : height, unit: 'px' },
+        height: { size: Math.floor(height <= 0 ? 0 : height), unit: 'px' },
       }));
     },
     [componentId, updateComponentProps]
