@@ -22,6 +22,7 @@ import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
 import TextInputWithLabel from './form/TextInputWithLabel';
+import SyncResize, { transformToRawHeight, transformToRawWidth } from './SyncResize';
 
 type RawDimension = {
   size: string;
@@ -93,16 +94,8 @@ export default function BoxOptions({ componentId }: OptionsProps) {
       onInitialize={useCallback(
         (initialState) => ({
           ...initialState,
-          widthRaw: {
-            size: ((initialState.width as any)?.size ?? 100).toString(),
-            unit: (initialState.width as any)?.unit ?? '%',
-            toggle: typeof initialState.width === 'string' ? initialState.width : null,
-          },
-          heightRaw: {
-            size: ((initialState.height as any)?.size ?? 200).toString(),
-            unit: (initialState.height as any)?.unit ?? 'px',
-            toggle: typeof initialState.height === 'string' ? initialState.height : null,
-          },
+          widthRaw: transformToRawWidth(initialState.width),
+          heightRaw: transformToRawHeight(initialState.height),
           minWidthRaw: {
             size: (initialState.minWidth as any)?.size?.toString(),
             unit: (initialState.minWidth as any)?.unit ?? 'px',
@@ -161,6 +154,8 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         [componentId, setChildAppendDirection]
       )}
     >
+      <SyncResize componentId={componentId} />
+
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
         <AlignmentSection />
