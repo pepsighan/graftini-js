@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { useEditor } from 'graft';
+import { useComponentRegion, useEditor } from 'graft';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
@@ -330,27 +330,54 @@ function useBottomLeftCorner({ posX, posY, height }) {
   return { x, y, width: frameWidth * 2, height: frameWidth * 2 };
 }
 
+/**
+ * Updates the dimensions of the component by the provided values. If a Ctrl key is
+ * pressed during updation, then they are updated as % values rather than px values.
+ */
 function useDimensionUpdate({ componentId }) {
-  const { updateComponentProps } = useEditor();
+  const { updateComponentProps, getComponentNode } = useEditor();
+  // The parent won't change during a resize. So, imperative get can work.
+  const parentId = getComponentNode(componentId).parentId;
+  const { get: getDimensions } = useComponentRegion(parentId);
 
   const updateWidth = useCallback(
     (width, isCtrl) => {
+      let size = width <= 0 ? 0 : width;
+      if (isCtrl) {
+        // In percentage.
+        const dimensions = getDimensions();
+        size = Math.floor((size * 100) / dimensions.width);
+      } else {
+        // In actual pixels.
+        size = Math.floor(size);
+      }
+
       updateComponentProps(componentId, (props) => ({
         ...props,
-        width: { size: Math.floor(width <= 0 ? 0 : width), unit: isCtrl ? '%' : 'px' },
+        width: { size, unit: isCtrl ? '%' : 'px' },
       }));
     },
-    [componentId, updateComponentProps]
+    [componentId, getDimensions, updateComponentProps]
   );
 
   const updateHeight = useCallback(
     (height, isCtrl) => {
+      let size = height <= 0 ? 0 : height;
+      if (isCtrl) {
+        // In percentage.
+        const dimensions = getDimensions();
+        size = Math.floor((size * 100) / dimensions.height);
+      } else {
+        // In actual pixels.
+        size = Math.floor(size);
+      }
+
       updateComponentProps(componentId, (props) => ({
         ...props,
-        height: { size: Math.floor(height <= 0 ? 0 : height), unit: isCtrl ? '%' : 'px' },
+        height: { size, unit: isCtrl ? '%' : 'px' },
       }));
     },
-    [componentId, updateComponentProps]
+    [componentId, getDimensions, updateComponentProps]
   );
 
   return { updateWidth, updateHeight };

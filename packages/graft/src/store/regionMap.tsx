@@ -47,7 +47,7 @@ export const useComponentRegionStore = useStore;
 export const useComponentRegionStoreApi = useStoreApi;
 
 export type UseComponentRegion = {
-  get(componentId: string): Region | null;
+  get(): Region | null;
   subscribe(listener: StateListener<Region | null | undefined>): () => void;
 };
 
