@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
-export default function HoverOutline({ xCorrection, yCorrection }) {
+export default function HoverOutline() {
   const [isVisible, setIsVisible] = useState(false);
 
   // Do not show the hover outline when a resize operation is ongoing.
@@ -20,8 +20,8 @@ export default function HoverOutline({ xCorrection, yCorrection }) {
     subscribe((state) => {
       // Do not show the outline when on root.
       if (state && state.componentId !== ROOT_NODE_ID) {
-        posX.set(state.region.x + xCorrection);
-        posY.set(state.region.y + yCorrection);
+        posX.set(state.region.x);
+        posY.set(state.region.y);
         width.set(state.region.width);
         height.set(state.region.height);
         setIsVisible(true);
@@ -41,7 +41,7 @@ export default function HoverOutline({ xCorrection, yCorrection }) {
       {isVisible && !isBoxResizing && (
         <motion.div
           style={{
-            position: 'fixed',
+            position: 'absolute',
             top: 0,
             left: 0,
             x: posX,

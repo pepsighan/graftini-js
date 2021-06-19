@@ -168,7 +168,7 @@ function FrameSide({
         [original.height, original.width, type, updateHeight, updateWidth]
       )}
       style={{
-        position: 'fixed',
+        position: 'absolute',
         top: 0,
         left: 0,
         x,
@@ -224,7 +224,7 @@ function FrameCorner({
         [original.height, original.width, type, updateHeight, updateWidth]
       )}
       style={{
-        position: 'fixed',
+        position: 'absolute',
         top: 0,
         left: 0,
         x,
@@ -232,7 +232,7 @@ function FrameCorner({
         width,
         height,
         cursor,
-        border: `1px solid ${theme.colors.primary[300]}`,
+        border: `1px solid ${theme.colors.primary[400]}`,
         backgroundColor: 'white',
       }}
     />

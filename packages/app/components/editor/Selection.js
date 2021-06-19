@@ -7,18 +7,12 @@ import ActionBar from './ActionBar';
 import PlainOutline from './PlainOutline';
 import ResizeableFrame from './ResizableFrame';
 
-export default function Selection({ xCorrection, yCorrection }) {
+export default function Selection() {
   const componentId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
-  return componentId ? (
-    <ActualSelection
-      componentId={componentId}
-      xCorrection={xCorrection}
-      yCorrection={yCorrection}
-    />
-  ) : null;
+  return componentId ? <ActualSelection componentId={componentId} /> : null;
 }
 
-function ActualSelection({ componentId, xCorrection, yCorrection }) {
+function ActualSelection({ componentId }) {
   const { get, subscribe } = useComponentRegion(componentId);
 
   const isResizable = useDesignerState(
@@ -43,12 +37,12 @@ function ActualSelection({ componentId, xCorrection, yCorrection }) {
         // If it overflows from the top, then show it to the bottom of the component.
         const y = state.y - 19 >= 0 ? state.y - 19 : state.y + state.height - 1;
 
-        posX.set(state.x + xCorrection);
-        posY.set(state.y + yCorrection);
+        posX.set(state.x);
+        posY.set(state.y);
         width.set(state.width);
         height.set(state.height);
 
-        actionPosY.set(y + yCorrection);
+        actionPosY.set(y);
         setIsShown(true);
         return;
       }
@@ -64,7 +58,7 @@ function ActualSelection({ componentId, xCorrection, yCorrection }) {
     // Initialize with the first value.
     updateMotion(get());
     return subscribe(updateMotion);
-  }, [actionPosY, get, height, posX, posY, subscribe, width, xCorrection, yCorrection]);
+  }, [actionPosY, get, height, posX, posY, subscribe, width]);
 
   return isShown ? (
     <>
@@ -73,12 +67,12 @@ function ActualSelection({ componentId, xCorrection, yCorrection }) {
         style={{
           display: 'flex',
           alignItems: 'center',
-          position: 'fixed',
+          position: 'absolute',
           top: 0,
           left: 0,
           x: posX,
           y: actionPosY,
-          backgroundColor: theme.colors.primary[300],
+          backgroundColor: theme.colors.primary[400],
           fontSize: 12,
           height: 20,
           paddingLeft: 8,

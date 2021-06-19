@@ -13,8 +13,6 @@ import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import { useUpdateProjectDesign } from 'store/projects';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 import theme from 'utils/theme';
-import HoverOutline from './HoverOutline';
-import Selection from './Selection';
 
 export default function Designer({ projectId }) {
   const currentPageId = useDesignerState(useCallback((state) => state.currentOpenPage, []));
@@ -63,8 +61,6 @@ function Editorial() {
         <RightSidebar />
       </Flex>
       <DragPreview color={theme.colors.primary[500]} />
-      <HoverOutline xCorrection={xCorrection} yCorrection={yCorrection} />
-      <Selection xCorrection={xCorrection} yCorrection={yCorrection} />
     </Editor>
   );
 }
