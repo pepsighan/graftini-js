@@ -1,10 +1,11 @@
 import { Box } from '@chakra-ui/react';
-import { motion, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useEditor } from 'graft';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDesignerState } from 'store/designer';
 
 export default function ResizeableFrame({ componentId, ...rest }) {
+  const { isFrozen, ...restFrozen } = useFrozenProps(rest);
   const { top, left, right, bottom } = useSidePositions(rest);
 
   const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
@@ -13,16 +14,18 @@ export default function ResizeableFrame({ componentId, ...rest }) {
   const onStartResizing = useCallback(
     (event) => {
       event.preventDefault();
+      isFrozen.set(true);
       setIsBoxResizing(true);
     },
-    [setIsBoxResizing]
+    [isFrozen, setIsBoxResizing]
   );
   const onEndResizing = useCallback(
     (event) => {
       event.preventDefault();
+      isFrozen.set(false);
       setIsBoxResizing(false);
     },
-    [setIsBoxResizing]
+    [isFrozen, setIsBoxResizing]
   );
 
   return (
@@ -43,7 +46,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
       <FrameSide
         {...top}
         componentId={componentId}
-        original={rest}
+        original={restFrozen}
         cursor="row-resize"
         type="top"
         onPointerDown={onStartResizing}
@@ -53,7 +56,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
       <FrameSide
         {...right}
         componentId={componentId}
-        original={rest}
+        original={restFrozen}
         cursor="col-resize"
         type="right"
         onPointerDown={onStartResizing}
@@ -63,7 +66,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
       <FrameSide
         {...bottom}
         componentId={componentId}
-        original={rest}
+        original={restFrozen}
         cursor="row-resize"
         type="bottom"
         onPointerDown={onStartResizing}
@@ -73,7 +76,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
       <FrameSide
         {...left}
         componentId={componentId}
-        original={rest}
+        original={restFrozen}
         cursor="col-resize"
         type="left"
         onPointerDown={onStartResizing}
@@ -103,7 +106,6 @@ function FrameSide({
       onPointerUp={onPointerUp}
       onPan={useCallback(
         (_, pointInfo) => {
-          console.log(pointInfo);
           if (type === 'left') {
             const diffW = -pointInfo.offset.x;
             updateWidth(original.width.get() + diffW);
@@ -202,4 +204,57 @@ function useDimensionUpdate({ componentId }) {
   );
 
   return { updateWidth, updateHeight };
+}
+
+/**
+ * Only syncs with the upstream position values when they are not frozen.
+ */
+function useFrozenProps({ posX, posY, width, height }) {
+  const isFrozen = useMotionValue(false);
+
+  const fX = useMotionValue(posX.get());
+  const fY = useMotionValue(posY.get());
+  const fW = useMotionValue(width.get());
+  const fH = useMotionValue(height.get());
+
+  useEffect(() => {
+    const syncWhenNotFrozen = (original, frozen) => {
+      // Sync from the original only if it is not frozen.
+      const unsubscribeOriginal = original.onChange((v) => {
+        if (isFrozen.get()) {
+          return;
+        }
+
+        frozen.set(v);
+      });
+
+      // Also, sync the latest value when frozen is turned off.
+      const unsubscribeFrozen = isFrozen.onChange((v) => {
+        if (v) {
+          return;
+        }
+
+        frozen.set(original.get());
+      });
+
+      return () => {
+        unsubscribeOriginal();
+        unsubscribeFrozen();
+      };
+    };
+
+    const unsubscribeX = syncWhenNotFrozen(posX, fX);
+    const unsubscribeY = syncWhenNotFrozen(posY, fY);
+    const unsubscribeWidth = syncWhenNotFrozen(width, fW);
+    const unsubscribeHeight = syncWhenNotFrozen(height, fH);
+
+    return () => {
+      unsubscribeX();
+      unsubscribeY();
+      unsubscribeWidth();
+      unsubscribeHeight();
+    };
+  }, [fH, fW, fX, fY, height, isFrozen, posX, posY, width]);
+
+  return { posX: fX, posY: fY, width: fW, height: fH, isFrozen };
 }
