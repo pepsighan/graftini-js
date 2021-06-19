@@ -4,7 +4,7 @@ import { CanvasContext, ComponentContext, useComponentId } from './context';
 import { useOnDrag, useOnDragEnd, useOnDragOver, useOnDragStart } from './drag';
 import { useResolveComponent } from './resolver';
 import { CreateComponentStore, useCreateComponentStore } from './store/createComponent';
-import { ComponentProps, EditorStore, useEditorStateInternal } from './store/editor';
+import { ComponentNode as CN, EditorStore, useEditorStateInternal } from './store/editor';
 import { useSyncRegion } from './useRegion';
 
 type ComponentNodeProps = {
@@ -18,8 +18,16 @@ type ComponentNodeProps = {
  */
 /** @internal */
 export function ComponentNode({ componentId }: ComponentNodeProps) {
-  const { type, props, isCanvas, childrenNodes } = useEditorStateInternal(
-    useCallback((state: EditorStore) => state.componentMap[componentId], [componentId])
+  const { type, isCanvas, childrenNodes } = useEditorStateInternal(
+    useCallback((state: EditorStore) => state.componentMap[componentId], [componentId]),
+    // Only use the selected props when they change.
+    useCallback(
+      (left: CN, right: CN) =>
+        left.type === right.type &&
+        left.isCanvas === right.isCanvas &&
+        left.childrenNodes === right.childrenNodes,
+      []
+    )
   );
   const Component = useResolveComponent(type);
 
@@ -29,7 +37,7 @@ export function ComponentNode({ componentId }: ComponentNodeProps) {
       <>
         <CanvasContext.Provider value={componentId}>
           <ComponentContext.Provider value={componentId}>
-            <ComponentWrapper component={Component} componentProps={props}>
+            <ComponentWrapper component={Component}>
               {childrenNodes.map((componentId) => (
                 <ComponentNode key={componentId} componentId={componentId} />
               ))}
@@ -42,25 +50,24 @@ export function ComponentNode({ componentId }: ComponentNodeProps) {
 
   return (
     <ComponentContext.Provider value={componentId}>
-      <ComponentWrapper component={Component} componentProps={props} />
+      <ComponentWrapper component={Component} />
     </ComponentContext.Provider>
   );
 }
 
 type DragOverNotifierProps = {
   component: GraftComponent<{ ref: any }>; // Just a hack in typings.
-  componentProps: ComponentProps;
   children?: ReactNode;
 };
 
-function ComponentWrapper({
-  component: Component,
-  componentProps,
-  children,
-}: DragOverNotifierProps) {
-  const ref = useSyncRegion(useComponentId());
+function ComponentWrapper({ component: Component, children }: DragOverNotifierProps) {
+  const componentId = useComponentId();
+  const ref = useSyncRegion(componentId);
   const isCreatingNew = useCreateComponentStore(
     useCallback((state: CreateComponentStore) => !!state.newComponent, [])
+  );
+  const componentProps = useEditorStateInternal(
+    useCallback((state: EditorStore) => state.componentMap[componentId].props, [componentId])
   );
 
   const onDragStart = useOnDragStart();
