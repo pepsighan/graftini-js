@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useEditor } from 'graft';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
@@ -13,22 +13,21 @@ export default function ResizeableFrame({ componentId, ...rest }) {
   const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
   const setIsBoxResizing = useDesignerState(useCallback((state) => state.setIsBoxResizing, []));
 
-  const onStartResizing = useCallback(
-    (event) => {
-      event.preventDefault();
+  const [cursor, setCursor] = useState(null);
+
+  const onResizingStart = useCallback(
+    (cursor) => {
       isFrozen.set(true);
       setIsBoxResizing(true);
+      setCursor(cursor);
     },
     [isFrozen, setIsBoxResizing]
   );
-  const onEndResizing = useCallback(
-    (event) => {
-      event.preventDefault();
-      isFrozen.set(false);
-      setIsBoxResizing(false);
-    },
-    [isFrozen, setIsBoxResizing]
-  );
+  const onResizingEnd = useCallback(() => {
+    isFrozen.set(false);
+    setIsBoxResizing(false);
+    setCursor(null);
+  }, [isFrozen, setIsBoxResizing]);
 
   return (
     <>
@@ -40,7 +39,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
           left={0}
           width="100%"
           height="100%"
-          onPointerUp={onEndResizing}
+          onPointerUp={onResizingEnd}
+          cursor={cursor}
         />
       )}
 
@@ -51,8 +51,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         original={restFrozen}
         cursor="n-resize"
         type="top"
-        onPointerDown={onStartResizing}
-        onPointerUp={onEndResizing}
+        onResizingStart={onResizingStart}
+        onResizingEnd={onResizingEnd}
       />
       {/* The right side. */}
       <FrameSide
@@ -61,8 +61,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         original={restFrozen}
         cursor="e-resize"
         type="right"
-        onPointerDown={onStartResizing}
-        onPointerUp={onEndResizing}
+        onResizingStart={onResizingStart}
+        onResizingEnd={onResizingEnd}
       />
       {/* The bottom side. */}
       <FrameSide
@@ -71,8 +71,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         original={restFrozen}
         cursor="n-resize"
         type="bottom"
-        onPointerDown={onStartResizing}
-        onPointerUp={onEndResizing}
+        onResizingStart={onResizingStart}
+        onResizingEnd={onResizingEnd}
       />
       {/* The left side. */}
       <FrameSide
@@ -81,8 +81,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         original={restFrozen}
         cursor="e-resize"
         type="left"
-        onPointerDown={onStartResizing}
-        onPointerUp={onEndResizing}
+        onResizingStart={onResizingStart}
+        onResizingEnd={onResizingEnd}
       />
       {/* The top-left corner. */}
       <FrameCorner
@@ -91,8 +91,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         original={restFrozen}
         cursor="nwse-resize"
         type="top-left"
-        onPointerDown={onStartResizing}
-        onPointerUp={onEndResizing}
+        onResizingStart={onResizingStart}
+        onResizingEnd={onResizingEnd}
       />
       {/* The top-right corner. */}
       <FrameCorner
@@ -101,8 +101,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         original={restFrozen}
         cursor="nesw-resize"
         type="top-right"
-        onPointerDown={onStartResizing}
-        onPointerUp={onEndResizing}
+        onResizingStart={onResizingStart}
+        onResizingEnd={onResizingEnd}
       />
       {/* The bottom-right corner. */}
       <FrameCorner
@@ -111,8 +111,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         original={restFrozen}
         cursor="nwse-resize"
         type="bottom-right"
-        onPointerDown={onStartResizing}
-        onPointerUp={onEndResizing}
+        onResizingStart={onResizingStart}
+        onResizingEnd={onResizingEnd}
       />
       {/* The bottom-left corner. */}
       <FrameCorner
@@ -121,8 +121,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         original={restFrozen}
         cursor="nesw-resize"
         type="bottomLeft"
-        onPointerDown={onStartResizing}
-        onPointerUp={onEndResizing}
+        onResizingStart={onResizingStart}
+        onResizingEnd={onResizingEnd}
       />
     </>
   );
@@ -138,17 +138,25 @@ function FrameSide({
   height,
   cursor,
   type,
-  onPointerDown,
-  onPointerUp,
+  onResizingStart,
+  onResizingEnd,
   componentId,
   original,
 }) {
   const { updateWidth, updateHeight } = useDimensionUpdate({ componentId });
 
+  const onPointerDown = useCallback(
+    (event) => {
+      event.preventDefault();
+      onResizingStart(cursor);
+    },
+    [cursor, onResizingStart]
+  );
+
   return (
     <motion.div
       onPointerDown={onPointerDown}
-      onPointerUp={onPointerUp}
+      onPointerUp={onResizingEnd}
       onPan={useCallback(
         (_, pointInfo) => {
           if (type === 'left') {
@@ -191,17 +199,25 @@ function FrameCorner({
   height,
   cursor,
   type,
-  onPointerDown,
-  onPointerUp,
+  onResizingStart,
+  onResizingEnd,
   componentId,
   original,
 }) {
   const { updateWidth, updateHeight } = useDimensionUpdate({ componentId });
 
+  const onPointerDown = useCallback(
+    (event) => {
+      event.preventDefault();
+      onResizingStart(cursor);
+    },
+    [cursor, onResizingStart]
+  );
+
   return (
     <motion.div
       onPointerDown={onPointerDown}
-      onPointerUp={onPointerUp}
+      onPointerUp={onResizingEnd}
       onPan={useCallback(
         (_, pointInfo) => {
           if (type.includes('left')) {
