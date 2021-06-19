@@ -158,19 +158,19 @@ function FrameSide({
       onPointerDown={onPointerDown}
       onPointerUp={onResizingEnd}
       onPan={useCallback(
-        (_, pointInfo) => {
+        (event, pointInfo) => {
           if (type === 'left') {
             const diffW = -pointInfo.offset.x;
-            updateWidth(original.width.get() + diffW);
+            updateWidth(original.width.get() + diffW, event.ctrlKey);
           } else if (type === 'right') {
             const diffW = pointInfo.offset.x;
-            updateWidth(original.width.get() + diffW);
+            updateWidth(original.width.get() + diffW, event.ctrlKey);
           } else if (type === 'top') {
             const diffH = -pointInfo.offset.y;
-            updateHeight(original.height.get() + diffH);
+            updateHeight(original.height.get() + diffH, event.ctrlKey);
           } else if (type === 'bottom') {
             const diffH = pointInfo.offset.y;
-            updateHeight(original.height.get() + diffH);
+            updateHeight(original.height.get() + diffH, event.ctrlKey);
           }
         },
         [original.height, original.width, type, updateHeight, updateWidth]
@@ -219,22 +219,22 @@ function FrameCorner({
       onPointerDown={onPointerDown}
       onPointerUp={onResizingEnd}
       onPan={useCallback(
-        (_, pointInfo) => {
+        (event, pointInfo) => {
           if (type.includes('left')) {
             const diffW = -pointInfo.offset.x;
-            updateWidth(original.width.get() + diffW);
+            updateWidth(original.width.get() + diffW, event.ctrlKey);
           }
           if (type.includes('right')) {
             const diffW = pointInfo.offset.x;
-            updateWidth(original.width.get() + diffW);
+            updateWidth(original.width.get() + diffW, event.ctrlKey);
           }
           if (type.includes('top')) {
             const diffH = -pointInfo.offset.y;
-            updateHeight(original.height.get() + diffH);
+            updateHeight(original.height.get() + diffH, event.ctrlKey);
           }
           if (type.includes('bottom')) {
             const diffH = pointInfo.offset.y;
-            updateHeight(original.height.get() + diffH);
+            updateHeight(original.height.get() + diffH, event.ctrlKey);
           }
         },
         [original.height, original.width, type, updateHeight, updateWidth]
@@ -334,20 +334,20 @@ function useDimensionUpdate({ componentId }) {
   const { updateComponentProps } = useEditor();
 
   const updateWidth = useCallback(
-    (width) => {
+    (width, isCtrl) => {
       updateComponentProps(componentId, (props) => ({
         ...props,
-        width: { size: Math.floor(width <= 0 ? 0 : width), unit: 'px' },
+        width: { size: Math.floor(width <= 0 ? 0 : width), unit: isCtrl ? '%' : 'px' },
       }));
     },
     [componentId, updateComponentProps]
   );
 
   const updateHeight = useCallback(
-    (height) => {
+    (height, isCtrl) => {
       updateComponentProps(componentId, (props) => ({
         ...props,
-        height: { size: Math.floor(height <= 0 ? 0 : height), unit: 'px' },
+        height: { size: Math.floor(height <= 0 ? 0 : height), unit: isCtrl ? '%' : 'px' },
       }));
     },
     [componentId, updateComponentProps]
