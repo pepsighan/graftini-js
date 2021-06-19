@@ -1,47 +1,99 @@
 import { Box } from '@chakra-ui/react';
 import { motion, useTransform } from 'framer-motion';
 import { useEditor } from 'graft';
-import { useCallback, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
 export default function ResizeableFrame(props) {
-  const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
   const { top, left, right, bottom } = useSidePositions(props);
+
+  const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
+  const setIsBoxResizing = useDesignerState(useCallback((state) => state.setIsBoxResizing, []));
+
+  const onStartResizing = useCallback(
+    (event) => {
+      event.preventDefault();
+      setIsBoxResizing(true);
+    },
+    [setIsBoxResizing]
+  );
+  const onEndResizing = useCallback(
+    (event) => {
+      event.preventDefault();
+      setIsBoxResizing(false);
+    },
+    [setIsBoxResizing]
+  );
 
   return (
     <>
       {/* An overlay on top of the UI so that the drag events are not intercepted by others. */}
-      {isBoxResizing && <Box position="fixed" top={0} left={0} width="100%" height="100%" />}
+      {isBoxResizing && (
+        <Box
+          position="fixed"
+          top={0}
+          left={0}
+          width="100%"
+          height="100%"
+          onPointerUp={onEndResizing}
+        />
+      )}
 
       {/* The top side. */}
-      <FrameSide drag="y" {...top} cursor="row-resize" />
+      <FrameSide
+        {...top}
+        cursor="row-resize"
+        type="top"
+        onPointerDown={onStartResizing}
+        onPointerUp={onEndResizing}
+      />
       {/* The right side. */}
-      <FrameSide drag="x" {...right} cursor="col-resize" />
+      <FrameSide
+        {...right}
+        cursor="col-resize"
+        type="right"
+        onPointerDown={onStartResizing}
+        onPointerUp={onEndResizing}
+      />
       {/* The bottom side. */}
-      <FrameSide drag="y" {...bottom} cursor="row-resize" />
+      <FrameSide
+        {...bottom}
+        cursor="row-resize"
+        type="bottom"
+        onPointerDown={onStartResizing}
+        onPointerUp={onEndResizing}
+      />
       {/* The left side. */}
-      <FrameSide drag="x" {...left} cursor="col-resize" />
+      <FrameSide
+        {...left}
+        cursor="col-resize"
+        type="left"
+        onPointerDown={onStartResizing}
+        onPointerUp={onEndResizing}
+      />
     </>
   );
 }
 
-function FrameSide({ drag, x, y, width, height, cursor }) {
-  const setIsBoxResizing = useDesignerState(useCallback((state) => state.setIsBoxResizing, []));
-
-  const onStartResizing = useCallback(() => {
-    setIsBoxResizing(true);
-  }, [setIsBoxResizing]);
-
-  const onEndResizing = useCallback(() => {
-    setIsBoxResizing(false);
-  }, [setIsBoxResizing]);
-
+function FrameSide({ x, y, width, height, cursor, type, onPointerDown, onPointerUp }) {
   return (
     <motion.div
-      drag={drag}
-      dragMomentum={false}
-      onPointerDown={onStartResizing}
-      onPointerUp={onEndResizing}
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
+      onPan={(_, pointInfo) => {
+        let diff = 0;
+        if (type === 'left') {
+          diff = -pointInfo.offset.x;
+        } else if (type === 'right') {
+          diff = pointInfo.offset.x;
+        } else if (type === 'top') {
+          diff = -pointInfo.offset.y;
+        } else if (type === 'bottom') {
+          diff = pointInfo.offset.y;
+        }
+
+        console.log(diff);
+      }}
       style={{
         position: 'fixed',
         top: 0,
@@ -73,15 +125,6 @@ function useTopSide({ posX, posY, width, height, componentId }) {
   const topY = useTransform(posY, (y) => y);
   const topWidth = useTransform(width, (w) => w - frameWidth * 2);
 
-  // Update the height when top side resizes.
-  const { updateHeight } = useDimensionUpdate({ componentId });
-  useEffect(() => {
-    return topY.onChange((curY) => {
-      const diff = posY.get() - curY;
-      updateHeight(height.get() + diff);
-    });
-  }, [height, posY, topY, updateHeight]);
-
   return { x: topX, y: topY, width: topWidth, height: frameWidth };
 }
 
@@ -89,15 +132,6 @@ function useRightSide({ posX, posY, width, height, componentId }) {
   const rightX = useTransform([posX, width], ([x, w]) => x + w - frameWidth);
   const rightY = useTransform(posY, (y) => y + frameWidth);
   const rightHeight = useTransform(height, (h) => h - frameWidth * 2);
-
-  // Update the width when right side resizes.
-  const { updateWidth } = useDimensionUpdate({ componentId });
-  useEffect(() => {
-    return rightX.onChange((curX) => {
-      const diffX = curX - posX.get() - width.get() + frameWidth;
-      updateWidth(width.get() + diffX);
-    });
-  }, [height, posX, posY, rightX, updateWidth, width]);
 
   return { x: rightX, y: rightY, width: frameWidth, height: rightHeight };
 }
@@ -107,15 +141,6 @@ function useBottomSide({ posX, posY, width, height, componentId }) {
   const bottomY = useTransform([posY, height], ([y, h]) => y + h - frameWidth);
   const bottomWidth = useTransform(width, (w) => w - frameWidth * 2);
 
-  // Update the height when bottom side resizes.
-  const { updateHeight } = useDimensionUpdate({ componentId });
-  useEffect(() => {
-    return bottomY.onChange((curY) => {
-      const diffY = curY - posY.get() - height.get() + frameWidth;
-      updateHeight(height.get() + diffY);
-    });
-  }, [bottomY, height, posX, posY, updateHeight, width]);
-
   return { x: bottomX, y: bottomY, width: bottomWidth, height: frameWidth };
 }
 
@@ -123,15 +148,6 @@ function useLeftSide({ posX, posY, width, height, componentId }) {
   const leftX = useTransform(posX, (x) => x);
   const leftY = useTransform(posY, (y) => y + frameWidth);
   const leftHeight = useTransform(height, (h) => h - frameWidth * 2);
-
-  // Update the height when bottom side resizes.
-  const { updateWidth } = useDimensionUpdate({ componentId });
-  useEffect(() => {
-    return leftX.onChange((curX) => {
-      const diffX = posX.get() - curX;
-      updateWidth(width.get() + diffX);
-    });
-  }, [height, leftX, posX, posY, updateWidth, width]);
 
   return { x: leftX, y: leftY, width: frameWidth, height: leftHeight };
 }
