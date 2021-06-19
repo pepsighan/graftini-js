@@ -89,7 +89,15 @@ function ActualSelection({ componentId, xCorrection, yCorrection }) {
       </motion.div>
 
       <PlainOutline posX={posX} posY={posY} width={width} height={height} />
-      {isResizable && <ResizeableFrame posX={posX} posY={posY} width={width} height={height} />}
+      {isResizable && (
+        <ResizeableFrame
+          posX={posX}
+          posY={posY}
+          width={width}
+          height={height}
+          componentId={componentId}
+        />
+      )}
     </>
   ) : null;
 }

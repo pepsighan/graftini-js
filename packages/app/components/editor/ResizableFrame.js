@@ -1,5 +1,6 @@
 import { Box } from '@chakra-ui/react';
 import { motion, useTransform } from 'framer-motion';
+import { useEditor } from 'graft';
 import { useCallback, useEffect } from 'react';
 import { useDesignerState } from 'store/designer';
 
@@ -67,58 +68,96 @@ function useSidePositions(props) {
   return { top, right, bottom, left };
 }
 
-function useTopSide({ posX, posY, width }) {
+function useTopSide({ posX, posY, width, height, componentId }) {
   const topX = useTransform(posX, (x) => x + frameWidth);
   const topY = useTransform(posY, (y) => y);
   const topWidth = useTransform(width, (w) => w - frameWidth * 2);
 
+  // Update the height when top side resizes.
+  const { updateHeight } = useDimensionUpdate({ componentId });
   useEffect(() => {
     return topY.onChange((curY) => {
-      console.log({ diffY: posY.get() - curY });
+      const diff = posY.get() - curY;
+      updateHeight(height.get() + diff);
     });
-  }, [posY, topY]);
+  }, [height, posY, topY, updateHeight]);
 
   return { x: topX, y: topY, width: topWidth, height: frameWidth };
 }
 
-function useRightSide({ posX, posY, width, height }) {
+function useRightSide({ posX, posY, width, height, componentId }) {
   const rightX = useTransform([posX, width], ([x, w]) => x + w - frameWidth);
   const rightY = useTransform(posY, (y) => y + frameWidth);
   const rightHeight = useTransform(height, (h) => h - frameWidth * 2);
 
+  // Update the width when right side resizes.
+  const { updateWidth } = useDimensionUpdate({ componentId });
   useEffect(() => {
     return rightX.onChange((curX) => {
-      console.log({ diffX: curX - posX.get() - width.get() });
+      const diffX = curX - posX.get() - width.get() + frameWidth;
+      updateWidth(width.get() + diffX);
     });
-  }, [posX, posY, rightX, width]);
+  }, [height, posX, posY, rightX, updateWidth, width]);
 
   return { x: rightX, y: rightY, width: frameWidth, height: rightHeight };
 }
 
-function useBottomSide({ posX, posY, width, height }) {
+function useBottomSide({ posX, posY, width, height, componentId }) {
   const bottomX = useTransform(posX, (x) => x + frameWidth);
   const bottomY = useTransform([posY, height], ([y, h]) => y + h - frameWidth);
   const bottomWidth = useTransform(width, (w) => w - frameWidth * 2);
 
+  // Update the height when bottom side resizes.
+  const { updateHeight } = useDimensionUpdate({ componentId });
   useEffect(() => {
     return bottomY.onChange((curY) => {
-      console.log({ diffY: curY - posY.get() - height.get() });
+      const diffY = curY - posY.get() - height.get() + frameWidth;
+      updateHeight(height.get() + diffY);
     });
-  }, [bottomY, height, posX, posY, width]);
+  }, [bottomY, height, posX, posY, updateHeight, width]);
 
   return { x: bottomX, y: bottomY, width: bottomWidth, height: frameWidth };
 }
 
-function useLeftSide({ posX, posY, height }) {
+function useLeftSide({ posX, posY, width, height, componentId }) {
   const leftX = useTransform(posX, (x) => x);
   const leftY = useTransform(posY, (y) => y + frameWidth);
   const leftHeight = useTransform(height, (h) => h - frameWidth * 2);
 
+  // Update the height when bottom side resizes.
+  const { updateWidth } = useDimensionUpdate({ componentId });
   useEffect(() => {
     return leftX.onChange((curX) => {
-      console.log({ diffX: posX.get() - curX });
+      const diffX = posX.get() - curX;
+      updateWidth(width.get() + diffX);
     });
-  }, [height, leftX, posX, posY]);
+  }, [height, leftX, posX, posY, updateWidth, width]);
 
   return { x: leftX, y: leftY, width: frameWidth, height: leftHeight };
+}
+
+function useDimensionUpdate({ componentId }) {
+  const { updateComponentProps } = useEditor();
+
+  const updateWidth = useCallback(
+    (width) => {
+      updateComponentProps(componentId, (props) => ({
+        ...props,
+        width: { size: width <= 0 ? 0 : width, unit: 'px' },
+      }));
+    },
+    [componentId, updateComponentProps]
+  );
+
+  const updateHeight = useCallback(
+    (height) => {
+      updateComponentProps(componentId, (props) => ({
+        ...props,
+        height: { size: height <= 0 ? 0 : height, unit: 'px' },
+      }));
+    },
+    [componentId, updateComponentProps]
+  );
+
+  return { updateWidth, updateHeight };
 }
