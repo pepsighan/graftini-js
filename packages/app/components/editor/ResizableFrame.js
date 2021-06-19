@@ -3,10 +3,12 @@ import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useEditor } from 'graft';
 import { useCallback, useEffect } from 'react';
 import { useDesignerState } from 'store/designer';
+import theme from 'utils/theme';
 
 export default function ResizeableFrame({ componentId, ...rest }) {
   const { isFrozen, ...restFrozen } = useFrozenProps(rest);
-  const { top, left, right, bottom } = useSidePositions(rest);
+  const { top, left, right, bottom, topLeft, topRight, bottomLeft, bottomRight } =
+    useSidePositions(rest);
 
   const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
   const setIsBoxResizing = useDesignerState(useCallback((state) => state.setIsBoxResizing, []));
@@ -47,7 +49,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         {...top}
         componentId={componentId}
         original={restFrozen}
-        cursor="row-resize"
+        cursor="n-resize"
         type="top"
         onPointerDown={onStartResizing}
         onPointerUp={onEndResizing}
@@ -57,7 +59,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         {...right}
         componentId={componentId}
         original={restFrozen}
-        cursor="col-resize"
+        cursor="e-resize"
         type="right"
         onPointerDown={onStartResizing}
         onPointerUp={onEndResizing}
@@ -67,7 +69,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         {...bottom}
         componentId={componentId}
         original={restFrozen}
-        cursor="row-resize"
+        cursor="n-resize"
         type="bottom"
         onPointerDown={onStartResizing}
         onPointerUp={onEndResizing}
@@ -77,8 +79,48 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         {...left}
         componentId={componentId}
         original={restFrozen}
-        cursor="col-resize"
+        cursor="e-resize"
         type="left"
+        onPointerDown={onStartResizing}
+        onPointerUp={onEndResizing}
+      />
+      {/* The top-left corner. */}
+      <FrameCorner
+        {...topLeft}
+        componentId={componentId}
+        original={restFrozen}
+        cursor="nwse-resize"
+        type="top-left"
+        onPointerDown={onStartResizing}
+        onPointerUp={onEndResizing}
+      />
+      {/* The top-right corner. */}
+      <FrameCorner
+        {...topRight}
+        componentId={componentId}
+        original={restFrozen}
+        cursor="nesw-resize"
+        type="top-right"
+        onPointerDown={onStartResizing}
+        onPointerUp={onEndResizing}
+      />
+      {/* The bottom-right corner. */}
+      <FrameCorner
+        {...bottomRight}
+        componentId={componentId}
+        original={restFrozen}
+        cursor="nwse-resize"
+        type="bottom-right"
+        onPointerDown={onStartResizing}
+        onPointerUp={onEndResizing}
+      />
+      {/* The bottom-left corner. */}
+      <FrameCorner
+        {...bottomLeft}
+        componentId={componentId}
+        original={restFrozen}
+        cursor="nesw-resize"
+        type="bottomLeft"
         onPointerDown={onStartResizing}
         onPointerUp={onEndResizing}
       />
@@ -86,6 +128,9 @@ export default function ResizeableFrame({ componentId, ...rest }) {
   );
 }
 
+/**
+ * A side of the Box which can be dragged to resize.
+ */
 function FrameSide({
   x,
   y,
@@ -131,7 +176,63 @@ function FrameSide({
         width,
         height,
         cursor,
-        backgroundColor: 'black',
+      }}
+    />
+  );
+}
+
+/**
+ * A corner on the Box which can be used to resize any which way.
+ */
+function FrameCorner({
+  x,
+  y,
+  width,
+  height,
+  cursor,
+  type,
+  onPointerDown,
+  onPointerUp,
+  componentId,
+  original,
+}) {
+  const { updateWidth, updateHeight } = useDimensionUpdate({ componentId });
+
+  return (
+    <motion.div
+      onPointerDown={onPointerDown}
+      onPointerUp={onPointerUp}
+      onPan={useCallback(
+        (_, pointInfo) => {
+          if (type.includes('left')) {
+            const diffW = -pointInfo.offset.x;
+            updateWidth(original.width.get() + diffW);
+          }
+          if (type.includes('right')) {
+            const diffW = pointInfo.offset.x;
+            updateWidth(original.width.get() + diffW);
+          }
+          if (type.includes('top')) {
+            const diffH = -pointInfo.offset.y;
+            updateHeight(original.height.get() + diffH);
+          }
+          if (type.includes('bottom')) {
+            const diffH = pointInfo.offset.y;
+            updateHeight(original.height.get() + diffH);
+          }
+        },
+        [original.height, original.width, type, updateHeight, updateWidth]
+      )}
+      style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        x,
+        y,
+        width,
+        height,
+        cursor,
+        border: `1px solid ${theme.colors.primary[300]}`,
       }}
     />
   );
@@ -144,8 +245,12 @@ function useSidePositions(props) {
   const right = useRightSide(props);
   const bottom = useBottomSide(props);
   const left = useLeftSide(props);
+  const topLeft = useTopLeftCorner(props);
+  const topRight = useTopRightCorner(props);
+  const bottomLeft = useBottomLeftCorner(props);
+  const bottomRight = useBottomRightCorner(props);
 
-  return { top, right, bottom, left };
+  return { top, right, bottom, left, topLeft, topRight, bottomLeft, bottomRight };
 }
 
 function useTopSide({ posX, posY, width }) {
@@ -178,6 +283,30 @@ function useLeftSide({ posX, posY, height }) {
   const leftHeight = useTransform(height, (h) => h - frameWidth * 2);
 
   return { x: leftX, y: leftY, width: frameWidth, height: leftHeight };
+}
+
+function useTopLeftCorner({ posX, posY }) {
+  const x = useTransform(posX, (x) => x);
+  const y = useTransform(posY, (y) => y);
+  return { x, y, width: frameWidth * 2, height: frameWidth * 2 };
+}
+
+function useTopRightCorner({ posX, posY, width }) {
+  const x = useTransform([posX, width], ([x, w]) => x + w);
+  const y = useTransform(posY, (y) => y);
+  return { x, y, width: frameWidth * 2, height: frameWidth * 2 };
+}
+
+function useBottomRightCorner({ posX, posY, width, height }) {
+  const x = useTransform([posX, width], ([x, w]) => x + w);
+  const y = useTransform([posY, height], ([y, h]) => y + h);
+  return { x, y, width: frameWidth * 2, height: frameWidth * 2 };
+}
+
+function useBottomLeftCorner({ posX, posY, height }) {
+  const x = useTransform(posX, (x) => x);
+  const y = useTransform([posY, height], ([y, h]) => y + h);
+  return { x, y, width: frameWidth * 2, height: frameWidth * 2 };
 }
 
 function useDimensionUpdate({ componentId }) {
