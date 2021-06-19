@@ -3,40 +3,9 @@ import { motion, useTransform } from 'framer-motion';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
-const frameWidth = 4;
-
-export default function ResizeableFrame({ posX, posY, width, height }) {
-  const posStartX = useTransform(
-    posX,
-    useCallback((x) => x + frameWidth, [])
-  );
-
-  const posEndX = useTransform(
-    [posX, width],
-    useCallback(([x, w]) => x + w - frameWidth, [])
-  );
-
-  const posStartY = useTransform(
-    posY,
-    useCallback((y) => y + frameWidth, [])
-  );
-
-  const posEndY = useTransform(
-    [posY, height],
-    useCallback(([y, h]) => y + h - frameWidth, [])
-  );
-
-  const actualWidth = useTransform(
-    width,
-    useCallback((w) => w - frameWidth * 2, [])
-  );
-
-  const actualHeight = useTransform(
-    height,
-    useCallback((h) => h - frameWidth * 2, [])
-  );
-
+export default function ResizeableFrame(props) {
   const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
+  const { top, left, right, bottom } = useSidePositions(props);
 
   return (
     <>
@@ -44,13 +13,13 @@ export default function ResizeableFrame({ posX, posY, width, height }) {
       {isBoxResizing && <Box position="fixed" top={0} left={0} width="100%" height="100%" />}
 
       {/* The top side. */}
-      <FrameSide drag="y" x={posStartX} y={posY} width={actualWidth} cursor="row-resize" />
+      <FrameSide drag="y" {...top} cursor="row-resize" />
       {/* The right side. */}
-      <FrameSide drag="x" x={posEndX} y={posStartY} height={actualHeight} cursor="col-resize" />
+      <FrameSide drag="x" {...right} cursor="col-resize" />
       {/* The bottom side. */}
-      <FrameSide drag="y" x={posStartX} y={posEndY} width={actualWidth} cursor="row-resize" />
+      <FrameSide drag="y" {...bottom} cursor="row-resize" />
       {/* The left side. */}
-      <FrameSide drag="x" x={posX} y={posStartY} height={actualHeight} cursor="col-resize" />
+      <FrameSide drag="x" {...left} cursor="col-resize" />
     </>
   );
 }
@@ -78,11 +47,37 @@ function FrameSide({ drag, x, y, width, height, cursor }) {
         left: 0,
         x,
         y,
-        width: width ?? frameWidth,
-        height: height ?? frameWidth,
+        width,
+        height,
         cursor,
         backgroundColor: 'black',
       }}
     />
   );
+}
+
+const frameWidth = 4;
+
+function useSidePositions({ posX, posY, width, height }) {
+  const topX = useTransform(posX, (x) => x + frameWidth);
+  const topY = useTransform(posY, (y) => y);
+  const topWidth = useTransform(width, (w) => w - frameWidth * 2);
+  const top = { x: topX, y: topY, width: topWidth, height: frameWidth };
+
+  const rightX = useTransform([posX, width], ([x, w]) => x + w - frameWidth);
+  const rightY = useTransform(posY, (y) => y + frameWidth);
+  const rightHeight = useTransform(height, (h) => h - frameWidth * 2);
+  const right = { x: rightX, y: rightY, width: frameWidth, height: rightHeight };
+
+  const bottomX = useTransform(posX, (x) => x + frameWidth);
+  const bottomY = useTransform([posY, height], ([y, h]) => y + h - frameWidth);
+  const bottomWidth = useTransform(width, (w) => w - frameWidth * 2);
+  const bottom = { x: bottomX, y: bottomY, width: bottomWidth, height: frameWidth };
+
+  const leftX = useTransform(posX, (x) => x);
+  const leftY = useTransform(posY, (y) => y + frameWidth);
+  const leftHeight = useTransform(height, (h) => h - frameWidth * 2);
+  const left = { x: leftX, y: leftY, width: frameWidth, height: leftHeight };
+
+  return { top, right, bottom, left };
 }
