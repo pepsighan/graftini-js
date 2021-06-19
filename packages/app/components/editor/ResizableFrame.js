@@ -1,3 +1,4 @@
+import { Box } from '@chakra-ui/react';
 import { motion, useTransform } from 'framer-motion';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -35,8 +36,13 @@ export default function ResizeableFrame({ posX, posY, width, height }) {
     useCallback((h) => h - frameWidth * 2, [])
   );
 
+  const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
+
   return (
     <>
+      {/* An overlay on top of the UI so that the drag events are not intercepted by others. */}
+      {isBoxResizing && <Box position="fixed" top={0} left={0} width="100%" height="100%" />}
+
       {/* The top side. */}
       <FrameSide drag="y" x={posStartX} y={posY} width={actualWidth} cursor="row-resize" />
       {/* The right side. */}
@@ -52,11 +58,11 @@ export default function ResizeableFrame({ posX, posY, width, height }) {
 function FrameSide({ drag, x, y, width, height, cursor }) {
   const setIsBoxResizing = useDesignerState(useCallback((state) => state.setIsBoxResizing, []));
 
-  const onDragStart = useCallback(() => {
+  const onStartResizing = useCallback(() => {
     setIsBoxResizing(true);
   }, [setIsBoxResizing]);
 
-  const onDragEnd = useCallback(() => {
+  const onEndResizing = useCallback(() => {
     setIsBoxResizing(false);
   }, [setIsBoxResizing]);
 
@@ -64,8 +70,8 @@ function FrameSide({ drag, x, y, width, height, cursor }) {
     <motion.div
       drag={drag}
       dragMomentum={false}
-      onDragStart={onDragStart}
-      onDragEnd={onDragEnd}
+      onPointerDown={onStartResizing}
+      onPointerUp={onEndResizing}
       style={{
         position: 'fixed',
         top: 0,
