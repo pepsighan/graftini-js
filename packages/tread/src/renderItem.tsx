@@ -7,16 +7,13 @@ import { TreeStore, useTreeStore } from './store';
 export type TreeItem = {
   id: string;
   childrenNodes: string[];
-  parentId?: string;
   [key: string]: unknown;
 };
 
 /**
- * A flattened tree.
+ * Hook to get the tree item for the given id.
  */
-export type TreeMap = {
-  [id: string]: TreeItem;
-};
+export type UseTreeItem = (id: string) => TreeItem;
 
 /**
  * The props to the render item.
@@ -33,22 +30,21 @@ export type RenderItemProps = {
 export type RenderItem = (props: RenderItemProps) => JSX.Element;
 
 export type ItemWrapperProps = {
-  itemId: string;
-  tree: TreeMap;
+  item: TreeItem;
   children: ReactNode;
   renderItem: RenderItem;
 };
 
 /** @internal */
-export function ItemWrapper({ itemId, tree, renderItem: Item, children }: ItemWrapperProps) {
+export function ItemWrapper({ item, renderItem: Item, children }: ItemWrapperProps) {
   const isCollapsed = useTreeStore(
-    useCallback((state: TreeStore) => !!state.isSubTreeCollapsed[itemId], [itemId])
+    useCallback((state: TreeStore) => !!state.isSubTreeCollapsed[item.id], [item.id])
   );
 
   return (
     <>
-      <Item item={tree[itemId]} onToggle={useOnToggle(itemId)} isCollapsed={isCollapsed} />
-      {children}
+      <Item item={item} onToggle={useOnToggle(item.id)} isCollapsed={isCollapsed} />
+      {!isCollapsed && children}
     </>
   );
 }
