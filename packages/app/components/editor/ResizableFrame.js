@@ -233,6 +233,7 @@ function FrameCorner({
         height,
         cursor,
         border: `1px solid ${theme.colors.primary[300]}`,
+        backgroundColor: 'white',
       }}
     />
   );
@@ -286,26 +287,30 @@ function useLeftSide({ posX, posY, height }) {
 }
 
 function useTopLeftCorner({ posX, posY }) {
-  const x = useTransform(posX, (x) => x);
-  const y = useTransform(posY, (y) => y);
+  const x = useTransform(posX, (x) => x - frameWidth);
+  const y = useTransform(posY, (y) => y - frameWidth);
+
   return { x, y, width: frameWidth * 2, height: frameWidth * 2 };
 }
 
 function useTopRightCorner({ posX, posY, width }) {
-  const x = useTransform([posX, width], ([x, w]) => x + w);
-  const y = useTransform(posY, (y) => y);
+  const x = useTransform([posX, width], ([x, w]) => x + w - frameWidth);
+  const y = useTransform(posY, (y) => y - frameWidth);
+
   return { x, y, width: frameWidth * 2, height: frameWidth * 2 };
 }
 
 function useBottomRightCorner({ posX, posY, width, height }) {
-  const x = useTransform([posX, width], ([x, w]) => x + w);
-  const y = useTransform([posY, height], ([y, h]) => y + h);
+  const x = useTransform([posX, width], ([x, w]) => x + w - frameWidth);
+  const y = useTransform([posY, height], ([y, h]) => y + h - frameWidth);
+
   return { x, y, width: frameWidth * 2, height: frameWidth * 2 };
 }
 
 function useBottomLeftCorner({ posX, posY, height }) {
-  const x = useTransform(posX, (x) => x);
-  const y = useTransform([posY, height], ([y, h]) => y + h);
+  const x = useTransform(posX, (x) => x - frameWidth);
+  const y = useTransform([posY, height], ([y, h]) => y + h - frameWidth);
+
   return { x, y, width: frameWidth * 2, height: frameWidth * 2 };
 }
 
