@@ -86,6 +86,18 @@ function SubTree({ children }) {
 
 function useTreeItem(itemId) {
   return useDesignerState(
-    useCallback((state) => state.pages[state.currentOpenPage][itemId], [itemId])
+    useCallback((state) => state.pages[state.currentOpenPage][itemId], [itemId]),
+    // Only the following checked fields are needed to render a layer. So any changes
+    // in other places won't cause a re-render.
+    useCallback(
+      (left, right) =>
+        left.id === right.id &&
+        left.childrenNodes === right.childrenNodes &&
+        left.isCanvas === right.isCanvas &&
+        left.type === right.type &&
+        left.parentId === right.parentId &&
+        left.props.name === right.props.name,
+      []
+    )
   );
 }
