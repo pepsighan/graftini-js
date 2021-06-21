@@ -1,5 +1,5 @@
 {
-  "name": "graft",
+  "name": "@graftini/graft",
   "version": "0.1.0",
   "description": "The structure which forms Graftini.",
   "main": "dist/graft.cjs.js",
