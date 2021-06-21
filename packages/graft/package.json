@@ -8,6 +8,7 @@
   "repository": "https://github.com/graftini/graft.git",
   "author": "Graftini Team <team@graftini.com>",
   "license": "UNLICENSED",
+  "private": true,
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
@@ -44,8 +45,5 @@
   },
   "files": [
     "dist"
-  ],
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
-  }
+  ]
 }
