@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "prepublish": "rm -rf ./dist && yarn build"
+    "prepare": "rm -rf ./dist && yarn build"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^19.0.0",

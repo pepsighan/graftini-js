@@ -10,7 +10,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "prepublish": "rm -rf ./dist && yarn build"
+    "prepare": "rm -rf ./dist && yarn build"
   },
   "dependencies": {
     "@emotion/react": "^11.4.0"
