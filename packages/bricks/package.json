@@ -10,7 +10,8 @@
   "private": true,
   "scripts": {
     "build": "rollup -c",
-    "dev": "rollup -c -w"
+    "dev": "rollup -c -w",
+    "prepublish": "rm -rf ./dist && yarn build"
   },
   "dependencies": {
     "@emotion/react": "^11.4.0"
@@ -39,5 +40,8 @@
   },
   "files": [
     "dist"
-  ]
+  ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
 }
