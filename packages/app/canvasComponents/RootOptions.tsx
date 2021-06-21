@@ -1,5 +1,5 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
-import { ROOT_NODE_ID } from 'graft';
+import { ROOT_NODE_ID } from '@graftini/graft';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';

@@ -6,8 +6,8 @@ import {
   useDisclosure,
   useOutsideClick,
 } from '@chakra-ui/react';
+import { rgbaToCss } from '@graftini/bricks';
 import { TransparencyGridIcon } from '@modulz/radix-icons';
-import { rgbaToCss } from 'bricks';
 import { useEffect, useRef } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';

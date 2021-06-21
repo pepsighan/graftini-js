@@ -1,11 +1,11 @@
 import { Flex } from '@chakra-ui/layout';
+import { DragPreview, Editor, useEditor } from '@graftini/graft';
 import components from 'canvasComponents';
 import Root from 'canvasComponents/Root';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
-import { DragPreview, Editor, useEditor } from 'graft';
 import { useDimensions } from 'hooks/useDimensions';
 import { debounce } from 'lodash-es';
 import { useCallback, useEffect, useMemo, useRef } from 'react';

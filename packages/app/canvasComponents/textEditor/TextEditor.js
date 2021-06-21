@@ -1,4 +1,4 @@
-import { useComponentId, useEditor } from 'graft';
+import { useComponentId, useEditor } from '@graftini/graft';
 import { useCallback, useEffect, useState } from 'react';
 import { createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';

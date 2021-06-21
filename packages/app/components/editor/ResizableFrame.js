@@ -1,6 +1,6 @@
 import { Box } from '@chakra-ui/react';
+import { useComponentRegion, useEditor } from '@graftini/graft';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { useComponentRegion, useEditor } from 'graft';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';

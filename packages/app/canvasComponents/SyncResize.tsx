@@ -1,5 +1,5 @@
-import { DimensionSize } from 'bricks';
-import { useEditor } from 'graft';
+import { DimensionSize } from '@graftini/bricks';
+import { useEditor } from '@graftini/graft';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 

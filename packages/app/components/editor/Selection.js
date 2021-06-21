@@ -1,5 +1,5 @@
+import { useComponentRegion } from '@graftini/graft';
 import { motion, useMotionValue } from 'framer-motion';
-import { useComponentRegion } from 'graft';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';

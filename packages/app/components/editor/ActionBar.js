@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
+import { useEditor, useEditorState } from '@graftini/graft';
 import { TrashIcon } from '@modulz/radix-icons';
-import { useEditor, useEditorState } from 'graft';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';

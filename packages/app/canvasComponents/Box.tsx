@@ -14,8 +14,8 @@ import {
   RGBA,
   Shadow,
   Spacing,
-} from 'bricks';
-import { GraftComponent, useComponentId } from 'graft';
+} from '@graftini/bricks';
+import { GraftComponent, useComponentId } from '@graftini/graft';
 import { useBoxTransformedProps } from 'hooks/useBoxTransformedProps';
 import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, ReactNode, useCallback } from 'react';

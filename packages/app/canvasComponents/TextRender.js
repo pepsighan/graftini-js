@@ -1,4 +1,4 @@
-import { Text } from 'bricks';
+import { Text } from '@graftini/bricks';
 import { Text as Txt } from 'slate';
 
 export default function TextRender({ text, ...rest }) {

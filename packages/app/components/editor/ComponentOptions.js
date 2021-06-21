@@ -1,6 +1,6 @@
 import { Box, Text } from '@chakra-ui/react';
+import { ROOT_NODE_ID } from '@graftini/graft';
 import { componentOptions } from 'canvasComponents';
-import { ROOT_NODE_ID } from 'graft';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 

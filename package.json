@@ -5,9 +5,9 @@
     "bootstrap": "lerna bootstrap",
     "clean": "lerna clean",
     "app": "yarn workspace app",
-    "bricks": "yarn workspace bricks",
-    "graft": "yarn workspace graft",
-    "tread": "yarn workspace tread",
+    "bricks": "yarn workspace @graftini/bricks",
+    "graft": "yarn workspace @graftini/graft",
+    "tread": "yarn workspace @graftini/tread",
     "build-deps": "yarn bricks build && yarn graft build && yarn tread build",
     "build": "yarn build-deps && yarn app build"
   },

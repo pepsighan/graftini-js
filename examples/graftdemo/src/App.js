@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { Box, Text as Txt } from 'bricks';
+import { Box, Text as Txt } from '@graftini/bricks';
 import {
   Canvas,
   DragPreview,
@@ -9,7 +9,7 @@ import {
   useComponentId,
   useCreateComponent,
   useForgetCreateComponent,
-} from 'graft';
+} from '@graftini/graft';
 import { forwardRef } from 'react';
 import IFrame from './IFrame';
 
