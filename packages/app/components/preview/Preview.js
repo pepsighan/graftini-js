@@ -1,7 +1,7 @@
 import { Global } from '@emotion/react';
-import { rgbaToCss } from 'bricks';
+import { rgbaToCss } from '@graftini/bricks';
+import { ROOT_NODE_ID } from '@graftini/graft';
 import IFrame from 'components/IFrame';
-import { ROOT_NODE_ID } from 'graft';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import NotFound from 'pages/404';
 import { useMemo } from 'react';

@@ -1,6 +1,6 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
-import { FontWeight } from 'bricks';
+import { FontWeight } from '@graftini/bricks';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import { parseInteger, parsePositiveInteger } from 'utils/parser';

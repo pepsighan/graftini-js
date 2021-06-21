@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
-import { RGBA, rgbaToCss } from 'bricks';
-import { RootComponent, ROOT_NODE_ID, useCurrentCreateComponentType } from 'graft';
+import { RGBA, rgbaToCss } from '@graftini/bricks';
+import { RootComponent, ROOT_NODE_ID, useCurrentCreateComponentType } from '@graftini/graft';
 import { ForwardedRef, forwardRef, useCallback } from 'react';
-import { useDesignerState } from 'store/designer';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
+import { useDesignerState } from 'store/designer';
 
 const cursor = {
   Text: 'text',

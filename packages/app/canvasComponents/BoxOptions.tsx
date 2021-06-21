@@ -1,8 +1,13 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
-import { BorderRadius, DimensionMaxLimit, DimensionMinLimit, DimensionSize } from 'bricks';
+import {
+  BorderRadius,
+  DimensionMaxLimit,
+  DimensionMinLimit,
+  DimensionSize,
+} from '@graftini/bricks';
+import { useEditor } from '@graftini/graft';
 import { OptionsProps } from 'canvasComponents';
-import { useEditor } from 'graft';
 import { useCallback } from 'react';
 import { boxTags } from 'utils/constants';
 import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';

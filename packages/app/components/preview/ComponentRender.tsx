@@ -1,5 +1,5 @@
+import { ComponentMap } from '@graftini/graft';
 import { componentRender } from 'canvasComponents';
-import { ComponentMap } from 'graft';
 
 type ComponentRenderProps = {
   componentId: string;

@@ -1,4 +1,4 @@
-import { useEditor } from 'graft';
+import { useEditor } from '@graftini/graft';
 import produce from 'immer';
 import { FunctionComponent, ReactNode, useMemo } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';

@@ -1,4 +1,4 @@
-import { Box } from 'bricks';
+import { Box } from '@graftini/bricks';
 import { useBoxTransformedProps } from 'hooks/useBoxTransformedProps';
 import { BoxComponentProps } from './Box';
 

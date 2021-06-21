@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
-import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from 'bricks';
-import { GraftComponent, useComponentId } from 'graft';
+import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from '@graftini/bricks';
+import { GraftComponent, useComponentId } from '@graftini/graft';
 import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, MouseEvent, useCallback } from 'react';
 import { Descendant } from 'slate';
