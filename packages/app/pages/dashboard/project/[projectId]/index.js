@@ -1,6 +1,7 @@
 import Designer from 'components/editor/Designer';
 import SEO from 'components/SEO';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
+import { ProjectIdProvider } from 'hooks/useProjectId';
 import NotFound from 'pages/404';
 import { useCallback } from 'react';
 import { DesignerStateProvider, useDesignerState } from 'store/designer';
@@ -19,10 +20,12 @@ export default protectedPage(function Project() {
   }
 
   return (
-    <DesignerStateProvider key={project.id} initialPages={project.pages}>
-      <ProjectSEO />
-      <Designer projectId={project.id} />
-    </DesignerStateProvider>
+    <ProjectIdProvider value={project.id}>
+      <DesignerStateProvider key={project.id} initialPages={project.pages}>
+        <ProjectSEO />
+        <Designer projectId={project.id} />
+      </DesignerStateProvider>
+    </ProjectIdProvider>
   );
 });
 

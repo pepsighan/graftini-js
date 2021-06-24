@@ -10,11 +10,27 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { RocketIcon } from '@modulz/radix-icons';
-import { useRef } from 'react';
+import { useCallback, useRef } from 'react';
+import { useDeployNow } from 'store/projects';
+import { useToast } from '@chakra-ui/react';
+import { useProjectId } from 'hooks/useProjectId';
 
 export default function DeployButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef();
+
+  const toast = useToast();
+  const projectId = useProjectId();
+
+  const [deployNow] = useDeployNow();
+  const onDeploy = useCallback(async () => {
+    try {
+      await deployNow({ variables: { projectId } });
+      toast({ description: 'Started the deployment.' });
+    } catch (err) {
+      toast({ description: 'Deployment failed.', status: 'error' });
+    }
+  }, [deployNow, projectId, toast]);
 
   return (
     <>
@@ -31,7 +47,7 @@ export default function DeployButton() {
             <Button ref={cancelRef} onClick={onClose}>
               Cancel
             </Button>
-            <Button colorScheme="primary" ml={3}>
+            <Button colorScheme="primary" ml={3} onClick={onDeploy}>
               Deploy Now
             </Button>
           </AlertDialogFooter>
