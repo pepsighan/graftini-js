@@ -16,7 +16,6 @@ import {
   Spacing,
 } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
-import { useBoxTransformedProps } from 'hooks/useBoxTransformedProps';
 import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, ReactNode, useCallback } from 'react';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
@@ -69,7 +68,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
     return (
       <BoxComp
         ref={ref}
-        {...useBoxTransformedProps(boxProps)}
+        {...boxProps}
         draggable={isDraggingDisabled ? false : draggable}
         onDragStart={useUnselectOnDragStart(onDragStart)}
         onDragEnd={onDragEnd}
