@@ -26,11 +26,12 @@ export default function DeployButton() {
   const onDeploy = useCallback(async () => {
     try {
       await deployNow({ variables: { projectId } });
+      onClose();
       toast({ description: 'Started the deployment.' });
     } catch (err) {
       toast({ description: 'Deployment failed.', status: 'error' });
     }
-  }, [deployNow, projectId, toast]);
+  }, [deployNow, onClose, projectId, toast]);
 
   return (
     <>
