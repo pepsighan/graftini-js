@@ -9,6 +9,8 @@ import {
   ModalHeader,
   ModalOverlay,
 } from '@chakra-ui/react';
+import { defaultComponentMap } from '@graftini/graft';
+import Root from 'canvasComponents/Root';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -30,6 +32,9 @@ export default function NewProjectDialog({ isOpen, onClose }) {
         variables: {
           input: {
             name: state.name,
+            defaultPageComponentMap: JSON.stringify(
+              defaultComponentMap(Root.graftOptions.defaultProps)
+            ),
           },
         },
       });

@@ -91,20 +91,28 @@ export const ROOT_NODE_ID = 'ROOT';
 /** @internal */
 export const ROOT_NODE_COMPONENT = 'Root__Graft__Component';
 
-function createEditorStore(componentMap?: ComponentMap, rootOverride?: GraftComponent<any> | null) {
-  const map = componentMap ?? {
+/**
+ * The default component map when a new editor is initialized if a component map is not
+ * specified.
+ */
+export function defaultComponentMap(defaultProps?: any): ComponentMap {
+  return {
     [ROOT_NODE_ID]: {
       id: ROOT_NODE_ID,
       type: ROOT_NODE_COMPONENT,
       childAppendDirection: 'vertical',
       props: {
-        ...(rootOverride?.graftOptions?.defaultProps ?? {}),
+        ...(defaultProps ?? {}),
       },
       isCanvas: true,
       parentId: null,
       childrenNodes: [],
     },
   };
+}
+
+function createEditorStore(componentMap?: ComponentMap, rootOverride?: GraftComponent<any> | null) {
+  const map = componentMap ?? defaultComponentMap(rootOverride?.graftOptions?.defaultProps);
 
   if (map[ROOT_NODE_ID]?.id !== ROOT_NODE_ID) {
     throw new Error(
