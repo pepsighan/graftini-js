@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
+import DeployButton from './DeployButton';
 
 export default function EditorNavigation() {
   const { query, push } = useRouter();
@@ -62,6 +63,8 @@ export default function EditorNavigation() {
             )}
           />
         </Tooltip>
+
+        <DeployButton />
       </Flex>
     </Flex>
   );
