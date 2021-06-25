@@ -24,11 +24,11 @@ export default function DeployButton() {
 
   const { deployment, refetch } = useLiveDeploymentStatus({ projectId });
 
-  const [deployNow] = useDeployNow();
+  const [deployNow, { loading }] = useDeployNow();
   const onDeploy = useCallback(async () => {
     try {
-      await deployNow({ variables: { projectId } });
       onClose();
+      await deployNow({ variables: { projectId } });
       await refetch();
       toast({ description: 'Started the deployment.' });
     } catch (err) {
@@ -39,7 +39,7 @@ export default function DeployButton() {
   return (
     <>
       <Tooltip label="Deploy">
-        <DeployStatusButton status={deployment?.status} onOpen={onOpen} />
+        <DeployStatusButton status={deployment?.status} onOpen={onOpen} isDeploying={loading} />
       </Tooltip>
 
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
@@ -61,7 +61,7 @@ export default function DeployButton() {
   );
 }
 
-function DeployStatusButton({ status, onOpen }) {
+function DeployStatusButton({ status, onOpen, isDeploying }) {
   const isLoading =
     status === DeploymentStatus.Analyzing ||
     status === DeploymentStatus.Building ||
@@ -72,7 +72,7 @@ function DeployStatusButton({ status, onOpen }) {
     <IconButton
       ml={4}
       icon={<RocketIcon width={20} height={20} />}
-      isLoading={isLoading}
+      isLoading={isLoading || isDeploying}
       onClick={onOpen}
     />
   );
