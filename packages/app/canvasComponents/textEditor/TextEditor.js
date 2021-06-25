@@ -2,6 +2,7 @@ import { useComponentId, useEditor } from '@graftini/graft';
 import { useCallback, useEffect, useState } from 'react';
 import { createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
+import Element from './Element';
 import HoveringToolbar from './HoveringToolbar';
 import Leaf from './Leaf';
 
@@ -29,7 +30,12 @@ export default function TextEditor({ value, isEditable }) {
   return (
     <Slate editor={editor} value={value} onChange={onChange}>
       <HoveringToolbar />
-      <Editable readOnly={!isEditable} renderLeaf={Leaf} />
+      <Editable
+        readOnly={!isEditable}
+        renderLeaf={Leaf}
+        renderElement={Element}
+        renderPlaceholder
+      />
     </Slate>
   );
 }
