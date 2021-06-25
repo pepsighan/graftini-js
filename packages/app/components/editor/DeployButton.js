@@ -8,12 +8,13 @@ import {
   IconButton,
   Tooltip,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { RocketIcon } from '@modulz/radix-icons';
-import { useCallback, useRef } from 'react';
-import { useDeployNow } from 'store/projects';
-import { useToast } from '@chakra-ui/react';
 import { useProjectId } from 'hooks/useProjectId';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { usePrevious } from 'react-use';
+import { DeploymentStatus, useDeployNow, useLiveDeploymentStatus } from 'store/deployment';
 
 export default function DeployButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,21 +23,24 @@ export default function DeployButton() {
   const toast = useToast();
   const projectId = useProjectId();
 
-  const [deployNow] = useDeployNow();
+  const { deployment, refetch } = useLiveDeploymentStatus({ projectId });
+
+  const [deployNow, { loading }] = useDeployNow();
   const onDeploy = useCallback(async () => {
     try {
-      await deployNow({ variables: { projectId } });
       onClose();
-      toast({ description: 'Started the deployment.' });
+      toast({ description: 'Started the deployment.', status: 'info' });
+      await deployNow({ variables: { projectId } });
+      await refetch();
     } catch (err) {
       toast({ description: 'Deployment failed.', status: 'error' });
     }
-  }, [deployNow, onClose, projectId, toast]);
+  }, [deployNow, onClose, projectId, refetch, toast]);
 
   return (
     <>
       <Tooltip label="Deploy">
-        <IconButton ml={4} icon={<RocketIcon width={20} height={20} />} onClick={onOpen} />
+        <DeployStatusButton status={deployment?.status} onOpen={onOpen} isDeploying={loading} />
       </Tooltip>
 
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
@@ -57,3 +61,48 @@ export default function DeployButton() {
     </>
   );
 }
+
+const loadingState = [
+  DeploymentStatus.Queued,
+  DeploymentStatus.Initializing,
+  DeploymentStatus.Analyzing,
+  DeploymentStatus.Building,
+  DeploymentStatus.Uploading,
+  DeploymentStatus.Deploying,
+];
+
+const DeployStatusButton = forwardRef(({ status, onOpen, isDeploying }, ref) => {
+  const isLoading = loadingState.includes(status);
+
+  const toast = useToast();
+  const previousStatus = usePrevious(status);
+
+  // Show a toast when the deployment transitions to a final state.
+  useEffect(() => {
+    if (loadingState.includes(previousStatus)) {
+      if (status === DeploymentStatus.Canceled) {
+        toast({ description: 'Deployment was cancelled.', status: 'info' });
+        return;
+      }
+
+      if (status === DeploymentStatus.Error) {
+        toast({ description: 'Deployment failed.', status: 'error' });
+        return;
+      }
+
+      if (status === DeploymentStatus.Ready) {
+        toast({ description: 'Your app is now deployed.', status: 'success' });
+      }
+    }
+  }, [previousStatus, status, toast]);
+
+  return (
+    <IconButton
+      ref={ref}
+      ml={4}
+      icon={<RocketIcon width={20} height={20} />}
+      isLoading={isLoading || isDeploying}
+      onClick={onOpen}
+    />
+  );
+});

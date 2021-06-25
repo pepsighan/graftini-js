@@ -233,16 +233,3 @@ export function useDeletePage({ projectId }) {
     }
   );
 }
-
-/**
- * Hook to deploy the project now.
- */
-export function useDeployNow() {
-  return useMutation(gql`
-    mutation DeployNow($projectId: ID!) {
-      deployProject(projectId: $projectId) {
-        id
-      }
-    }
-  `);
-}
