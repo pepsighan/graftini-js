@@ -35,7 +35,8 @@ type BlockProps = {
 function Block({ block }: BlockProps) {
   if (typeof (block as TextString).text === 'string') {
     const text = (block as any).text;
-    return text;
+    // If empty whitespace in a paragraph, then it is a new line.
+    return text || <br />;
   }
 
   const paragraph = block as Paragraph;
