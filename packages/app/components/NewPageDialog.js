@@ -1,5 +1,7 @@
 import {
   Button,
+  FormControl,
+  FormErrorMessage,
   Input,
   Modal,
   ModalBody,
@@ -11,11 +13,19 @@ import {
   Stack,
 } from '@chakra-ui/react';
 import { defaultComponentMap } from '@graftini/graft';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Root from 'canvasComponents/Root';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useCreatePage } from 'store/projects';
+import { routeRegex } from 'utils/constants';
+import { z } from 'zod';
+
+const schema = z.object({
+  name: z.string().min(1, { message: 'Page name is required.' }),
+  route: z.string().regex(routeRegex, { message: 'Provide a valid route.' }),
+});
 
 export default function NewPageDialog({ isOpen, onClose }) {
   const {
@@ -25,8 +35,9 @@ export default function NewPageDialog({ isOpen, onClose }) {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm();
+    formState: { isSubmitting, errors },
+  } = useForm({ resolver: zodResolver(schema) });
+
   const [createPage] = useCreatePage({ projectId });
 
   const onSubmit = useCallback(
@@ -55,8 +66,14 @@ export default function NewPageDialog({ isOpen, onClose }) {
           <ModalCloseButton />
           <ModalBody>
             <Stack>
-              <Input {...register('name')} placeholder="Name" autoComplete="off" />
-              <Input {...register('route')} placeholder="Route" autoComplete="off" />
+              <FormControl isInvalid={!!errors.name}>
+                <Input {...register('name')} placeholder="Name" autoComplete="off" />
+                <FormErrorMessage>{errors.name?.message}</FormErrorMessage>
+              </FormControl>
+              <FormControl isInvalid={!!errors.route}>
+                <Input {...register('route')} placeholder="Route" autoComplete="off" />
+                <FormErrorMessage>{errors.route?.message}</FormErrorMessage>
+              </FormControl>
             </Stack>
           </ModalBody>
           <ModalFooter>

@@ -30,3 +30,9 @@ export const boxTags: BoxTag[] = [
   'header',
   'footer',
 ];
+
+/**
+ * A route regex which has a compulsory starting `/` and optional trailing `/`.
+ * The route path sections defined by text between `/` can be alphanumeric, -, _ and (.).
+ */
+export const routeRegex = /^(\/|(\/[a-zA-Z0-9-_.]+)+\/?)$/;
