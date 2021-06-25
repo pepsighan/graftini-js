@@ -2,28 +2,29 @@ import { Box, Button, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
 import { ROOT_NODE_ID } from '@graftini/graft';
 import { Tree } from '@graftini/tread';
 import { ChevronDownIcon, ChevronUpIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
-import { useDimensions } from 'hooks/useDimensions';
-import { useCallback, useRef } from 'react';
+import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
 export default function Layers() {
-  const textRef = useRef();
-  const { height } = useDimensions(textRef);
-
   return (
-    <Box flex={1} position="relative" overflow="hidden">
-      <Text ref={textRef} as="span" px={3} fontSize="sm" fontWeight="bold">
+    <Box flex={1} overflow="hidden">
+      <Text as="span" px={3} fontSize="sm" fontWeight="bold">
         Layers
       </Text>
 
       <Box
-        height={`calc(100% - ${height}px)`}
+        mt={4}
         overflowY="scroll"
-        position="absolute"
-        top={`${height + 16}px`}
-        left={0}
-        bottom={0}
-        right="-17px"
+        sx={{
+          // Hide scrollbars on all browsers.
+          // https://stackoverflow.com/a/49278385
+          scrollbarWidth: 'none',
+          '-ms-overflow-style': 'none',
+          '&::-webkit-scrollbar': {
+            width: 0,
+            height: 0,
+          },
+        }}
       >
         <Box px={3}>
           <Tree
