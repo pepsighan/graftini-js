@@ -1,12 +1,12 @@
-import { Box } from '@chakra-ui/react';
-import { useCallback } from 'react';
-import { RightSidebarOpenPane, useDesignerState } from 'store/designer';
+import { Box, Button, ButtonGroup } from '@chakra-ui/react';
+import { useCallback, useState } from 'react';
 import { rightSidebarWidth } from 'utils/constants';
 import ComponentOptions from './ComponentOptions';
 import Queries from './Queries';
 
 export default function RightSidebar() {
-  const openPane = useDesignerState(useCallback((state) => state.rightSidebarOpenPane, []));
+  const [index, setIndex] = useState(0);
+  const onClick = useCallback((index) => () => setIndex(index), []);
 
   return (
     <Box
@@ -15,13 +15,27 @@ export default function RightSidebar() {
       height="100%"
       overflowY="auto"
       bg="gray.100"
-      py={4}
+      py={3}
       px={3}
       borderLeft="1px"
       borderLeftColor="gray.400"
     >
-      {openPane === RightSidebarOpenPane.ComponentOptions && <ComponentOptions />}
-      {openPane === RightSidebarOpenPane.QueryBuilder && <Queries />}
+      <ButtonGroup display="flex" size="xs" mb={4}>
+        <Button flex={1} isActive={index === 0} onClick={onClick(0)}>
+          Design
+        </Button>
+        <Button flex={1} isActive={index === 1} onClick={onClick(1)}>
+          Interaction
+        </Button>
+        <Button flex={1} isActive={index === 2} onClick={onClick(2)}>
+          Query
+        </Button>
+      </ButtonGroup>
+
+      <Box>
+        {index === 0 && <ComponentOptions />}
+        {index === 2 && <Queries />}
+      </Box>
     </Box>
   );
 }
