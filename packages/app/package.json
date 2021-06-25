@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -16,7 +16,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "@emotion/weak-memoize": "^0.2.5",
-    "@graftini/bricks": "^0.2.0",
+    "@graftini/bricks": "^0.2.1",
     "@graftini/graft": "^0.2.0",
     "@graftini/tread": "^0.2.0",
     "@mdi/js": "^5.9.55",
