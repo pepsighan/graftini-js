@@ -3,6 +3,7 @@ import { CSSObject } from '@emotion/react';
 import { ElementType, forwardRef, MouseEventHandler, ReactNode } from 'react';
 import { DragProps, dragProps, PointerEvents } from './box';
 import { RGBA, rgbaToCss } from './colors';
+import TextBody, { Content } from './textBody';
 
 export type TextProps = BaseTextProps & DragProps & TextInteractionStyles & TextInteractionProps;
 
@@ -15,6 +16,7 @@ export type BaseTextProps = {
   textAlign?: TextAlign;
   displayNone?: boolean;
   displayInline?: boolean;
+  text?: Content[];
   children?: ReactNode;
 };
 
@@ -36,24 +38,24 @@ export type TextInteractionProps = {
   onDoubleClick?: MouseEventHandler;
 };
 
-const Text = forwardRef((props: TextProps, ref) => {
-  const Component = (props.tag ?? 'div') as ElementType;
+const Text = forwardRef(({ text, children, ...rest }: TextProps, ref) => {
+  const Component = (rest.tag ?? 'div') as ElementType;
 
   return (
     <Component
       ref={ref}
-      {...interactionProps(props)}
-      {...dragProps(props)}
+      {...interactionProps(rest)}
+      {...dragProps(rest)}
       css={{
         // Append -gr in class names rather than -Text.
         label: 'gr',
-        display: props.displayNone ? 'none' : props.displayInline ? 'inline' : 'block',
+        display: rest.displayNone ? 'none' : rest.displayInline ? 'inline' : 'block',
         width: '100%',
-        pointerEvents: props.pointerEvents,
-        ...baseStyles(props),
+        pointerEvents: rest.pointerEvents,
+        ...baseStyles(rest),
       }}
     >
-      {props.children}
+      {text ? <TextBody content={text} /> : children}
     </Component>
   );
 });

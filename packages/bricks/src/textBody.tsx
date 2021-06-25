@@ -1,10 +1,10 @@
 import React from 'react';
 
-export type TextBodyProps = {
+type TextBodyProps = {
   content: Content[];
 };
 
-type Content = Paragraph | TextString;
+export type Content = Paragraph | TextString;
 type Paragraph = {
   type: 'paragraph';
   children: Content[];
@@ -17,6 +17,7 @@ type TextString = {
 /**
  * A renderer for the text content.
  */
+/** @internal */
 export default function TextBody({ content }: TextBodyProps) {
   return (
     <>
