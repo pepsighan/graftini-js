@@ -8,12 +8,12 @@ import {
   IconButton,
   Tooltip,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import { RocketIcon } from '@modulz/radix-icons';
-import { useCallback, useRef } from 'react';
-import { useDeployNow } from 'store/projects';
-import { useToast } from '@chakra-ui/react';
 import { useProjectId } from 'hooks/useProjectId';
+import { useCallback, useRef } from 'react';
+import { useDeployNow } from 'store/deployment';
 
 export default function DeployButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
