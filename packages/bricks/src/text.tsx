@@ -55,7 +55,8 @@ const Text = forwardRef(({ text, children, ...rest }: TextProps, ref) => {
         ...baseStyles(rest),
       }}
     >
-      {text ? <TextBody content={text} /> : children}
+      {/* If children is provided render it. It may be a content editor. */}
+      {children ?? <TextBody content={text ?? []} />}
     </Component>
   );
 });
