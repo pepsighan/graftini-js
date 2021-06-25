@@ -1,6 +1,6 @@
 {
   "name": "@graftini/bricks",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "The core components for the UI built with Graftini.",
   "main": "dist/bricks.cjs.js",
   "module": "dist/bricks.esm.js",
