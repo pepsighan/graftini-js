@@ -45,4 +45,4 @@ export {
   TextInteractionStyles,
   TextProps,
 } from './text';
-export { default as TextBody, TextBodyProps } from './textBody';
+export { Content } from './textBody';
