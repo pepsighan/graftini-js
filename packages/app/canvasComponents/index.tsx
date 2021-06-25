@@ -1,6 +1,6 @@
+import { Box as BoxRender } from '@graftini/bricks';
 import Box from './Box';
 import BoxOptions from './BoxOptions';
-import BoxRender from './BoxRender';
 import RootOptions from './RootOptions';
 import Text from './Text';
 import TextOptions from './TextOptions';
