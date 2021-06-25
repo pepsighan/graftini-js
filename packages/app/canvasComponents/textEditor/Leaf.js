@@ -1,17 +1,7 @@
-/** @jsxImportSource @emotion/react */
-
-export default function Leaf({ attributes, children, leaf }) {
-  if (leaf.bold) {
-    children = <strong css={{ fontWeight: 'bold' }}>{children}</strong>;
-  }
-
-  if (leaf.italic) {
-    children = <em css={{ fontStyle: 'italic' }}>{children}</em>;
-  }
-
-  if (leaf.underlined) {
-    children = <u css={{ textDecoration: 'underline' }}>{children}</u>;
-  }
-
+/**
+ * The leaf markup is adopted from the Bricks' TextBody component. They both
+ * should look the same at all times.
+ */
+export default function Leaf({ attributes, children }) {
   return <span {...attributes}>{children}</span>;
 }
