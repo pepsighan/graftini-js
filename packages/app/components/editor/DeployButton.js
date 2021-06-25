@@ -13,7 +13,7 @@ import {
 import { RocketIcon } from '@modulz/radix-icons';
 import { useProjectId } from 'hooks/useProjectId';
 import { useCallback, useRef } from 'react';
-import { useDeployNow } from 'store/deployment';
+import { DeploymentStatus, useDeployNow, useLiveDeploymentStatus } from 'store/deployment';
 
 export default function DeployButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,21 +22,24 @@ export default function DeployButton() {
   const toast = useToast();
   const projectId = useProjectId();
 
+  const { deployment, refetch } = useLiveDeploymentStatus({ projectId });
+
   const [deployNow] = useDeployNow();
   const onDeploy = useCallback(async () => {
     try {
       await deployNow({ variables: { projectId } });
       onClose();
+      await refetch();
       toast({ description: 'Started the deployment.' });
     } catch (err) {
       toast({ description: 'Deployment failed.', status: 'error' });
     }
-  }, [deployNow, onClose, projectId, toast]);
+  }, [deployNow, onClose, projectId, refetch, toast]);
 
   return (
     <>
       <Tooltip label="Deploy">
-        <IconButton ml={4} icon={<RocketIcon width={20} height={20} />} onClick={onOpen} />
+        <DeployStatusButton status={deployment?.status} onOpen={onOpen} />
       </Tooltip>
 
       <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
@@ -55,5 +58,22 @@ export default function DeployButton() {
         </AlertDialogContent>
       </AlertDialog>
     </>
+  );
+}
+
+function DeployStatusButton({ status, onOpen }) {
+  const isLoading =
+    status === DeploymentStatus.Analyzing ||
+    status === DeploymentStatus.Building ||
+    status === DeploymentStatus.Deploying ||
+    status === DeploymentStatus.Initializing;
+
+  return (
+    <IconButton
+      ml={4}
+      icon={<RocketIcon width={20} height={20} />}
+      isLoading={isLoading}
+      onClick={onOpen}
+    />
   );
 }
