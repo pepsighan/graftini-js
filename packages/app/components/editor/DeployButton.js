@@ -12,7 +12,8 @@ import {
 } from '@chakra-ui/react';
 import { RocketIcon } from '@modulz/radix-icons';
 import { useProjectId } from 'hooks/useProjectId';
-import { useCallback, useRef } from 'react';
+import { forwardRef, useCallback, useEffect, useRef } from 'react';
+import { usePrevious } from 'react-use';
 import { DeploymentStatus, useDeployNow, useLiveDeploymentStatus } from 'store/deployment';
 
 export default function DeployButton() {
@@ -28,9 +29,9 @@ export default function DeployButton() {
   const onDeploy = useCallback(async () => {
     try {
       onClose();
+      toast({ description: 'Started the deployment.', status: 'info' });
       await deployNow({ variables: { projectId } });
       await refetch();
-      toast({ description: 'Started the deployment.' });
     } catch (err) {
       toast({ description: 'Deployment failed.', status: 'error' });
     }
@@ -61,19 +62,45 @@ export default function DeployButton() {
   );
 }
 
-function DeployStatusButton({ status, onOpen, isDeploying }) {
-  const isLoading =
-    status === DeploymentStatus.Analyzing ||
-    status === DeploymentStatus.Building ||
-    status === DeploymentStatus.Deploying ||
-    status === DeploymentStatus.Initializing;
+const loadingState = [
+  DeploymentStatus.Analyzing,
+  DeploymentStatus.Building,
+  DeploymentStatus.Deploying,
+  DeploymentStatus.Initializing,
+];
+
+const DeployStatusButton = forwardRef(({ status, onOpen, isDeploying }, ref) => {
+  const isLoading = loadingState.includes(status);
+
+  const toast = useToast();
+  const previousStatus = usePrevious(status);
+
+  // Show a toast when the deployment transitions to a final state.
+  useEffect(() => {
+    if (loadingState.includes(previousStatus)) {
+      if (status === DeploymentStatus.Canceled) {
+        toast({ description: 'Deployment was cancelled.', status: 'info' });
+        return;
+      }
+
+      if (status === DeploymentStatus.Error) {
+        toast({ description: 'Deployment failed.', status: 'error' });
+        return;
+      }
+
+      if (status === DeploymentStatus.Ready) {
+        toast({ description: 'Your app is now deployed.', status: 'success' });
+      }
+    }
+  }, [previousStatus, status, toast]);
 
   return (
     <IconButton
+      ref={ref}
       ml={4}
       icon={<RocketIcon width={20} height={20} />}
       isLoading={isLoading || isDeploying}
       onClick={onOpen}
     />
   );
-}
+});
