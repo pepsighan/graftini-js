@@ -63,10 +63,12 @@ export default function DeployButton() {
 }
 
 const loadingState = [
+  DeploymentStatus.Queued,
+  DeploymentStatus.Initializing,
   DeploymentStatus.Analyzing,
   DeploymentStatus.Building,
+  DeploymentStatus.Uploading,
   DeploymentStatus.Deploying,
-  DeploymentStatus.Initializing,
 ];
 
 const DeployStatusButton = forwardRef(({ status, onOpen, isDeploying }, ref) => {

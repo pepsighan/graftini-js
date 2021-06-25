@@ -9,16 +9,20 @@ export function useDeployNow() {
     mutation DeployNow($projectId: ID!) {
       deployProject(projectId: $projectId) {
         id
+        status
       }
     }
   `);
 }
 
 export enum DeploymentStatus {
+  Queued = 'QUEUED',
   Initializing = 'INITIALIZING',
   Analyzing = 'ANALYZING',
   Building = 'BUILDING',
+  Uploading = 'UPLOADING',
   Deploying = 'DEPLOYING',
+  Archived = 'ARCHIVED', // This is only for those deployments that are no longer active.
   Ready = 'READY',
   Error = 'ERROR',
   Canceled = 'CANCELED',
