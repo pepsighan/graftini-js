@@ -22,6 +22,17 @@ export default function InteractionOptions() {
     }, [])
   );
 
+  const onSync = useCallback((props, state) => {
+    if (!state.link) {
+      props.link = null;
+      return;
+    }
+
+    props.link ??= {};
+    props.link.pageId = state.link.pageId;
+    props.link.href = state.link.pageId ? null : state.link.href;
+  }, []);
+
   if (!selectedComponentId || type === 'Root') {
     return (
       <Box px={3} py={2} bg="gray.200" borderRadius="md">
@@ -39,13 +50,9 @@ export default function InteractionOptions() {
   }
 
   return (
-    <CanvasForm
-      componentId={selectedComponentId}
-      onInitialize={(initialState) => initialState}
-      onTransformValues={() => {}}
-    >
+    <CanvasForm componentId={selectedComponentId} onSync={onSync}>
       <Box as="form">
-        <TextInput label="Link" name="link.to" />
+        <TextInput label="Link" name="link.pageId" />
       </Box>
     </CanvasForm>
   );
