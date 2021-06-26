@@ -19,7 +19,7 @@ export default function Layers() {
           // Hide scrollbars on all browsers.
           // https://stackoverflow.com/a/49278385
           scrollbarWidth: 'none',
-          '-ms-overflow-style': 'none',
+          msOverflowStyle: 'none',
           '&::-webkit-scrollbar': {
             width: 0,
             height: 0,
