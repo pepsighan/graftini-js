@@ -10,8 +10,8 @@ import { useEditor } from '@graftini/graft';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import { boxTags } from 'utils/constants';
-import { parseInteger, parsePositiveFloat, parsePositiveInteger } from 'utils/parser';
-import { BoxComponentProps, default as CanvasBox } from './Box';
+import { parsePositiveInteger } from 'utils/parser';
+import { BoxComponentProps } from './Box';
 import AlignmentInput from './form/AlignmentInput';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -26,17 +26,18 @@ import SelectInputWithLabel from './form/SelectInputWithLabel';
 import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
+import SyncFormState from './form/SyncFormState';
 import TextInputWithLabel from './form/TextInputWithLabel';
 import SyncResize, { transformToRawHeight, transformToRawWidth } from './SyncResize';
 
 type RawDimension = {
-  size: string;
+  size: number;
   unit: 'px' | '%';
   toggle?: 'auto';
 };
 
 type RawDimensionLimit = {
-  size: string;
+  size: number;
   unit: 'px' | '%';
 };
 
@@ -49,44 +50,6 @@ type BoxOptionsFields = BoxComponentProps & {
   minHeightRaw: RawDimensionLimit;
   maxHeightRaw: RawDimensionLimit;
 };
-
-function parseDimension(dim: RawDimension): DimensionSize {
-  if (dim.toggle) {
-    return dim.toggle;
-  }
-
-  return {
-    size: parsePositiveInteger(dim.size) || 0,
-    unit: dim.unit,
-  };
-}
-
-function parseLimitDimension(
-  dim: RawDimensionLimit,
-  isMin: boolean
-): DimensionMinLimit | DimensionMaxLimit {
-  const size = parsePositiveInteger(dim.size);
-  if (typeof size === 'number') {
-    return {
-      size,
-      unit: dim.unit,
-    };
-  }
-
-  return isMin ? 'auto' : 'none';
-}
-
-function hasBorderRadiusAllOrEachToggle(borderRadius: BorderRadius): 'all' | 'each' {
-  if (
-    borderRadius.bottomLeft === borderRadius.bottomRight &&
-    borderRadius.bottomLeft === borderRadius.topLeft &&
-    borderRadius.topLeft === borderRadius.topRight
-  ) {
-    return 'all';
-  }
-
-  return 'each';
-}
 
 export default function BoxOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<BoxComponentProps, BoxOptionsFields>;
@@ -101,19 +64,19 @@ export default function BoxOptions({ componentId }: OptionsProps) {
           widthRaw: transformToRawWidth(initialState.width),
           heightRaw: transformToRawHeight(initialState.height),
           minWidthRaw: {
-            size: (initialState.minWidth as any)?.size?.toString(),
+            size: (initialState.minWidth as any)?.size,
             unit: (initialState.minWidth as any)?.unit ?? 'px',
           },
           maxWidthRaw: {
-            size: (initialState.maxWidth as any)?.size?.toString(),
+            size: (initialState.maxWidth as any)?.size,
             unit: (initialState.maxWidth as any)?.unit ?? 'px',
           },
           minHeightRaw: {
-            size: (initialState.minHeight as any)?.size?.toString(),
+            size: (initialState.minHeight as any)?.size,
             unit: (initialState.minHeight as any)?.unit ?? 'px',
           },
           maxHeightRaw: {
-            size: (initialState.maxHeight as any)?.size?.toString(),
+            size: (initialState.maxHeight as any)?.size,
             unit: (initialState.maxHeight as any)?.unit ?? 'px',
           },
           borderRadius: {
@@ -123,42 +86,40 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         }),
         []
       )}
-      onTransformValues={useCallback(
-        (values: BoxOptionsFields) => {
-          values.width = parseDimension(values.widthRaw);
-          values.height = parseDimension(values.heightRaw);
-          values.minWidth = parseLimitDimension(values.minWidthRaw, true) as DimensionMinLimit;
-          values.maxWidth = parseLimitDimension(values.maxWidthRaw, false) as DimensionMaxLimit;
-          values.minHeight = parseLimitDimension(values.minHeightRaw, true) as DimensionMinLimit;
-          values.maxHeight = parseLimitDimension(values.maxHeightRaw, false) as DimensionMaxLimit;
-
-          values.padding.top = parseInteger(values.padding?.top) || 0;
-          values.padding.right = parseInteger(values.padding?.right) || 0;
-          values.padding.bottom = parseInteger(values.padding?.bottom) || 0;
-          values.padding.left = parseInteger(values.padding?.left) || 0;
-
-          values.margin.top = parseInteger(values.margin?.top) || 0;
-          values.margin.right = parseInteger(values.margin?.right) || 0;
-          values.margin.bottom = parseInteger(values.margin?.bottom) || 0;
-          values.margin.left = parseInteger(values.margin?.left) || 0;
-
-          values.opacity = parsePositiveFloat(values.opacity);
-          values.opacity = values.opacity > 1 ? 1 : values.opacity;
-
-          values.flexShrink = parsePositiveInteger(values.flexShrink) || 0;
-          values.flexGrow = parsePositiveInteger(values.flexGrow) || 0;
-          values.flexGap = parsePositiveInteger(values.flexGap) || 0;
-
-          // Sync the append direction based on the flex direction.
-          setChildAppendDirection(
-            componentId,
-            values.flexDirection === 'column' ? 'vertical' : 'horizontal'
-          );
-        },
-        [componentId, setChildAppendDirection]
-      )}
     >
       <SyncResize componentId={componentId} />
+      <SyncFormState
+        componentId={componentId}
+        onSync={useCallback(
+          ({
+            widthRaw,
+            heightRaw,
+            minWidthRaw,
+            maxWidthRaw,
+            minHeightRaw,
+            maxHeightRaw,
+            borderRadius,
+            ...rest
+          }: BoxOptionsFields) => {
+            // Sync the append direction based on the flex direction.
+            setChildAppendDirection(
+              componentId,
+              rest.flexDirection === 'column' ? 'vertical' : 'horizontal'
+            );
+
+            return {
+              ...rest,
+              width: parseDimension(widthRaw),
+              height: parseDimension(heightRaw),
+              minWidth: parseLimitDimension(minWidthRaw, true),
+              maxWidth: parseLimitDimension(maxWidthRaw, false),
+              minHeight: parseLimitDimension(minHeightRaw, true),
+              maxHeight: parseLimitDimension(maxHeightRaw, false),
+            } as BoxComponentProps;
+          },
+          [componentId, setChildAppendDirection]
+        )}
+      />
 
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
@@ -341,4 +302,42 @@ function SectionDivider() {
       <Divider borderColor="gray.400" />
     </GridItem>
   );
+}
+
+function parseDimension(dim: RawDimension): DimensionSize {
+  if (dim.toggle) {
+    return dim.toggle;
+  }
+
+  return {
+    size: dim.size,
+    unit: dim.unit,
+  };
+}
+
+function parseLimitDimension(
+  dim: RawDimensionLimit,
+  isMin: boolean
+): DimensionMinLimit | DimensionMaxLimit {
+  const size = parsePositiveInteger(dim.size);
+  if (typeof size === 'number') {
+    return {
+      size,
+      unit: dim.unit,
+    };
+  }
+
+  return isMin ? 'auto' : 'none';
+}
+
+function hasBorderRadiusAllOrEachToggle(borderRadius: BorderRadius): 'all' | 'each' {
+  if (
+    borderRadius.bottomLeft === borderRadius.bottomRight &&
+    borderRadius.bottomLeft === borderRadius.topLeft &&
+    borderRadius.topLeft === borderRadius.topRight
+  ) {
+    return 'all';
+  }
+
+  return 'each';
 }
