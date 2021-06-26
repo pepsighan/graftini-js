@@ -316,9 +316,13 @@ function SectionDivider() {
 function assignDimension(props: BoxComponentProps, field: string, raw: RawDimension) {
   if (raw.toggle) {
     props[field] = raw.toggle;
+    return;
   }
 
-  props[field] ??= {};
+  if (typeof props[field] !== 'object') {
+    props[field] = {};
+  }
+
   props[field].size = raw.size;
   props[field].unit = raw.unit;
 }
@@ -331,9 +335,13 @@ function parseLimitDimension(
 ) {
   const size = parsePositiveInteger(raw.size);
   if (typeof size === 'number') {
-    props[field] ??= {};
+    if (typeof props[field] !== 'object') {
+      props[field] = {};
+    }
+
     props[field].size = size;
     props[field].unit = raw.unit;
+    return;
   }
 
   props[field] = isMin ? 'auto' : 'none';
