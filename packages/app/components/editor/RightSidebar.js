@@ -15,7 +15,8 @@ export default function RightSidebar() {
       height="100%"
       overflowY="auto"
       bg="gray.100"
-      py={3}
+      pt={3}
+      pb={12}
       px={3}
       borderLeft="1px"
       borderLeftColor="gray.400"
