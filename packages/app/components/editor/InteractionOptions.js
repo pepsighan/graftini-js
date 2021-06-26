@@ -1,5 +1,7 @@
 import { Box, Text } from '@chakra-ui/react';
 import { ROOT_NODE_ID } from '@graftini/graft';
+import CanvasForm from 'canvasComponents/form/CanvasForm';
+import TextInputWithLabel from 'canvasComponents/form/TextInputWithLabel';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
@@ -36,5 +38,15 @@ export default function InteractionOptions() {
     );
   }
 
-  return <>{selectedComponentId}</>;
+  return (
+    <CanvasForm
+      componentId={selectedComponentId}
+      onInitialize={(initialState) => initialState}
+      onTransformValues={() => {}}
+    >
+      <Box as="form">
+        <TextInputWithLabel label="Link" name="link.to" />
+      </Box>
+    </CanvasForm>
+  );
 }
