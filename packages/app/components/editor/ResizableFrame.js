@@ -352,10 +352,11 @@ function useDimensionUpdate({ componentId }) {
         size = Math.floor(size);
       }
 
-      updateComponentProps(componentId, (props) => ({
-        ...props,
-        width: { size, unit: isCtrl ? '%' : 'px' },
-      }));
+      updateComponentProps(componentId, (props) => {
+        props.width ??= {};
+        props.width.size = size;
+        props.width.unit = isCtrl ? '%' : 'px';
+      });
     },
     [componentId, getDimensions, updateComponentProps]
   );
@@ -372,10 +373,11 @@ function useDimensionUpdate({ componentId }) {
         size = Math.floor(size);
       }
 
-      updateComponentProps(componentId, (props) => ({
-        ...props,
-        height: { size, unit: isCtrl ? '%' : 'px' },
-      }));
+      updateComponentProps(componentId, (props) => {
+        props.height ??= {};
+        props.height.size = size;
+        props.height.unit = isCtrl ? '%' : 'px';
+      });
     },
     [componentId, getDimensions, updateComponentProps]
   );

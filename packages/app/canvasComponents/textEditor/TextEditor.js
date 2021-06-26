@@ -22,7 +22,9 @@ export default function TextEditor({ value, isEditable }) {
 
   const onChange = useCallback(
     (value) => {
-      updateComponentProps(componentId, (props) => ({ ...props, text: value }));
+      updateComponentProps(componentId, (props) => {
+        props.text = value;
+      });
     },
     [componentId, updateComponentProps]
   );
