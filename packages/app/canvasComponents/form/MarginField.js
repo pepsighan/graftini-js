@@ -1,8 +1,11 @@
 import { Grid, GridItem, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { parsePositiveInteger } from 'utils/parser';
+import { parseInteger } from 'utils/parser';
 
+// TODO: Typing negative numbers is kind of weird. Cannot start typing with - right now.
+// Has to be some non-zero positive number written first and then - prepended. Which is
+// not good experience.
 export default function MarginField({ name }) {
   return (
     <Grid templateColumns="repeat(3, minmax(0, 1fr))">
@@ -43,7 +46,7 @@ function NumberInputWithLabel({ name, label }) {
         {...rest}
         onChange={useCallback(
           (event) => {
-            setValue(name, parsePositiveInteger(event.target.value) || 0, {
+            setValue(name, parseInteger(event.target.value) || 0, {
               shouldDirty: true,
               shouldValidate: true,
             });
