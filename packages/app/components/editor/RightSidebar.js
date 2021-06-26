@@ -2,7 +2,7 @@ import { Box, Button, ButtonGroup } from '@chakra-ui/react';
 import { useCallback, useState } from 'react';
 import { rightSidebarWidth } from 'utils/constants';
 import ComponentOptions from './ComponentOptions';
-import Queries from './Queries';
+import InteractionOptions from './InteractionOptions';
 
 export default function RightSidebar() {
   const [index, setIndex] = useState(0);
@@ -37,14 +37,11 @@ export default function RightSidebar() {
         <Button flex={1} isActive={index === 1} onClick={onClick(1)}>
           Interaction
         </Button>
-        <Button flex={1} isActive={index === 2} onClick={onClick(2)}>
-          Query
-        </Button>
       </ButtonGroup>
 
       <Box>
         {index === 0 && <ComponentOptions />}
-        {index === 2 && <Queries />}
+        {index === 1 && <InteractionOptions />}
       </Box>
     </Box>
   );
