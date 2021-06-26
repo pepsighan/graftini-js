@@ -27,7 +27,7 @@ import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
 import SyncFormState from './form/SyncFormState';
-import TextInputWithLabel from './form/TextInputWithLabel';
+import TextInput from './form/TextInput';
 import SyncResize, { transformToRawHeight, transformToRawWidth } from './SyncResize';
 
 type RawDimension = {
@@ -159,7 +159,7 @@ function PropertiesSection() {
   return (
     <>
       <GridItem colSpan={8}>
-        <TextInputWithLabel name="name" label="Name" />
+        <TextInput name="name" label="Name" />
       </GridItem>
       <GridItem colSpan={8}>
         <SelectInputWithLabel name="tag" label="Tag">

@@ -5,7 +5,6 @@ import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
-import Labelled from './form/Labelled';
 import SelectInputWithLabel from './form/SelectInputWithLabel';
 import SyncFormState from './form/SyncFormState';
 import TextAlignInput from './form/TextAlignInput';
@@ -32,9 +31,9 @@ export default function TextOptions({ componentId }: OptionsProps) {
 
         <SectionDivider />
 
-        <Labelled label="Name">
-          <TextInput name="name" />
-        </Labelled>
+        <GridItem colSpan={8}>
+          <TextInput name="name" label="Label" />
+        </GridItem>
 
         <SectionDivider />
 
