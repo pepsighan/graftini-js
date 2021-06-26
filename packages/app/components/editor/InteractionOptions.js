@@ -1,13 +1,14 @@
-import { Box, Text, Stack } from '@chakra-ui/react';
+import { Box, Stack, Text } from '@chakra-ui/react';
 import { ROOT_NODE_ID } from '@graftini/graft';
 import CanvasForm from 'canvasComponents/form/CanvasForm';
-import TextInput from 'canvasComponents/form/TextInput';
-import { useCallback, useEffect } from 'react';
-import { useDesignerState } from 'store/designer';
 import SelectInput from 'canvasComponents/form/SelectInput';
-import { useFormContext, useWatch } from 'react-hook-form';
-import { useMyProject } from 'store/projects';
+import TextInput from 'canvasComponents/form/TextInput';
 import { useProjectId } from 'hooks/useProjectId';
+import { useCallback } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useDesignerState } from 'store/designer';
+import { useMyProject } from 'store/projects';
+import { z } from 'zod';
 
 export default function InteractionOptions() {
   const selectedComponentId = useDesignerState(
@@ -50,7 +51,7 @@ export default function InteractionOptions() {
       !state.link ||
       !state.link.action ||
       (state.link.action === 'pageId' && !state.link.pageId) ||
-      (state.link.action === 'href' && !state.link.href)
+      (state.link.action === 'href' && !isUrl(state.link.href))
     ) {
       props.link = null;
       return;
@@ -84,6 +85,16 @@ export default function InteractionOptions() {
       </Stack>
     </CanvasForm>
   );
+}
+
+const url = z.string().url();
+function isUrl(value) {
+  try {
+    url.parse(value);
+    return true;
+  } catch (_) {
+    return false;
+  }
 }
 
 function OnClick() {
