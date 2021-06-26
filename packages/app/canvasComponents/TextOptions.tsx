@@ -18,10 +18,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
 
   return (
     <CF componentId={componentId} onInitialize={useCallback((initialState) => initialState, [])}>
-      <SyncFormState
-        componentId={componentId}
-        onSync={useCallback((state: TextOptionsFields) => state, [])}
-      />
+      <SyncFormState componentId={componentId} onSync={useCallback(() => {}, [])} />
 
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>

@@ -19,12 +19,11 @@ const CanvasForm: FunctionComponent = <T, S>({
   children,
 }: CanvasFormProps<T, S>) => {
   const { getState } = useEditor();
-  const componentProps = useMemo(() => getState()[componentId].props, [componentId, getState]) as T;
 
   const form = useForm({
     // Get the default values for the form and initialize it once.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    defaultValues: useMemo(() => onInitialize(componentProps) as any, []),
+    defaultValues: useMemo(() => onInitialize(getState()[componentId].props as T) as any, []),
     mode: 'onChange',
   });
 

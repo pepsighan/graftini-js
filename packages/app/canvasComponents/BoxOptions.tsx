@@ -91,31 +91,25 @@ export default function BoxOptions({ componentId }: OptionsProps) {
       <SyncFormState
         componentId={componentId}
         onSync={useCallback(
-          ({
-            widthRaw,
-            heightRaw,
-            minWidthRaw,
-            maxWidthRaw,
-            minHeightRaw,
-            maxHeightRaw,
-            borderRadius,
-            ...rest
-          }: BoxOptionsFields) => {
+          (props: BoxComponentProps, formState: BoxOptionsFields) => {
             // Sync the append direction based on the flex direction.
             setChildAppendDirection(
               componentId,
-              rest.flexDirection === 'column' ? 'vertical' : 'horizontal'
+              formState.flexDirection === 'column' ? 'vertical' : 'horizontal'
             );
 
-            return {
-              ...rest,
-              width: parseDimension(widthRaw),
-              height: parseDimension(heightRaw),
-              minWidth: parseLimitDimension(minWidthRaw, true),
-              maxWidth: parseLimitDimension(maxWidthRaw, false),
-              minHeight: parseLimitDimension(minHeightRaw, true),
-              maxHeight: parseLimitDimension(maxHeightRaw, false),
-            } as BoxComponentProps;
+            props.width = parseDimension(formState.widthRaw);
+            props.height = parseDimension(formState.heightRaw);
+            props.minWidth = parseLimitDimension(formState.minWidthRaw, true) as DimensionMinLimit;
+            props.maxWidth = parseLimitDimension(formState.maxWidthRaw, false) as DimensionMaxLimit;
+            props.minHeight = parseLimitDimension(
+              formState.minHeightRaw,
+              true
+            ) as DimensionMinLimit;
+            props.maxHeight = parseLimitDimension(
+              formState.maxHeightRaw,
+              false
+            ) as DimensionMaxLimit;
           },
           [componentId, setChildAppendDirection]
         )}

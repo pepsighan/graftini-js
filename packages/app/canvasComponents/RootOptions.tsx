@@ -11,10 +11,7 @@ export default function RootOptions() {
 
   return (
     <CF componentId={ROOT_NODE_ID} onInitialize={useCallback((initialState) => initialState, [])}>
-      <SyncFormState
-        componentId={ROOT_NODE_ID}
-        onSync={useCallback((state: RootProps) => state, [])}
-      />
+      <SyncFormState componentId={ROOT_NODE_ID} onSync={useCallback(() => {}, [])} />
 
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
