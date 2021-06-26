@@ -3,7 +3,6 @@ import { ROOT_NODE_ID } from '@graftini/graft';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
-import SyncFormState from './form/SyncFormState';
 import { RootProps } from './Root';
 
 export default function RootOptions() {
@@ -11,8 +10,6 @@ export default function RootOptions() {
 
   return (
     <CF componentId={ROOT_NODE_ID} onInitialize={useCallback((initialState) => initialState, [])}>
-      <SyncFormState componentId={ROOT_NODE_ID} onSync={useCallback(() => {}, [])} />
-
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
         <GridItem colSpan={8} mb={1}>

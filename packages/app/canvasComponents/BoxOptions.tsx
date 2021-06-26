@@ -26,7 +26,7 @@ import SelectInput from './form/SelectInput';
 import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
-import SyncFormState from './form/SyncFormState';
+import useSyncFormState from './form/SyncFormState';
 import TextInput from './form/TextInput';
 import SyncResize, { transformToRawHeight, transformToRawWidth } from './SyncResize';
 
@@ -86,34 +86,53 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         }),
         []
       )}
+      onSync={useCallback(
+        (
+          props: BoxComponentProps,
+          {
+            borderRadius,
+            widthRaw,
+            heightRaw,
+            minWidthRaw,
+            maxWidthRaw,
+            minHeightRaw,
+            maxHeightRaw,
+            width,
+            height,
+            minWidth,
+            maxWidth,
+            minHeight,
+            maxHeight,
+            ...rest
+          }: BoxOptionsFields
+        ) => {
+          // Sync the append direction based on the flex direction.
+          setChildAppendDirection(
+            componentId,
+            rest.flexDirection === 'column' ? 'vertical' : 'horizontal'
+          );
+
+          Object.keys(rest).forEach((key) => {
+            props[key] = rest[key];
+          });
+
+          props.borderRadius ??= {} as any;
+          props.borderRadius.topLeft = borderRadius.topLeft;
+          props.borderRadius.topRight = borderRadius.topRight;
+          props.borderRadius.bottomRight = borderRadius.bottomRight;
+          props.borderRadius.bottomLeft = borderRadius.bottomLeft;
+
+          assignDimension(props, 'width', widthRaw);
+          assignDimension(props, 'height', heightRaw);
+          parseLimitDimension(props, 'minWidth', minWidthRaw, true);
+          parseLimitDimension(props, 'maxWidth', maxWidthRaw, false);
+          parseLimitDimension(props, 'minHeight', minHeightRaw, true);
+          parseLimitDimension(props, 'maxHeight', maxHeightRaw, false);
+        },
+        [componentId, setChildAppendDirection]
+      )}
     >
       <SyncResize componentId={componentId} />
-      <SyncFormState
-        componentId={componentId}
-        onSync={useCallback(
-          (props: BoxComponentProps, formState: BoxOptionsFields) => {
-            // Sync the append direction based on the flex direction.
-            setChildAppendDirection(
-              componentId,
-              formState.flexDirection === 'column' ? 'vertical' : 'horizontal'
-            );
-
-            props.width = parseDimension(formState.widthRaw);
-            props.height = parseDimension(formState.heightRaw);
-            props.minWidth = parseLimitDimension(formState.minWidthRaw, true) as DimensionMinLimit;
-            props.maxWidth = parseLimitDimension(formState.maxWidthRaw, false) as DimensionMaxLimit;
-            props.minHeight = parseLimitDimension(
-              formState.minHeightRaw,
-              true
-            ) as DimensionMinLimit;
-            props.maxHeight = parseLimitDimension(
-              formState.maxHeightRaw,
-              false
-            ) as DimensionMaxLimit;
-          },
-          [componentId, setChildAppendDirection]
-        )}
-      />
 
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
@@ -298,30 +317,30 @@ function SectionDivider() {
   );
 }
 
-function parseDimension(dim: RawDimension): DimensionSize {
-  if (dim.toggle) {
-    return dim.toggle;
+function assignDimension(props: BoxComponentProps, field: string, raw: RawDimension) {
+  if (raw.toggle) {
+    props[field] = raw.toggle;
   }
 
-  return {
-    size: dim.size,
-    unit: dim.unit,
-  };
+  props[field] ??= {};
+  props[field].size = raw.size;
+  props[field].unit = raw.unit;
 }
 
 function parseLimitDimension(
-  dim: RawDimensionLimit,
+  props: BoxComponentProps,
+  field: string,
+  raw: RawDimensionLimit,
   isMin: boolean
-): DimensionMinLimit | DimensionMaxLimit {
-  const size = parsePositiveInteger(dim.size);
+) {
+  const size = parsePositiveInteger(raw.size);
   if (typeof size === 'number') {
-    return {
-      size,
-      unit: dim.unit,
-    };
+    props[field] ??= {};
+    props[field].size = size;
+    props[field].unit = raw.unit;
   }
 
-  return isMin ? 'auto' : 'none';
+  props[field] = isMin ? 'auto' : 'none';
 }
 
 function hasBorderRadiusAllOrEachToggle(borderRadius: BorderRadius): 'all' | 'each' {
