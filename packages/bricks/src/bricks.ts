@@ -15,6 +15,7 @@ export {
   DimensionSize,
   DimensionUnit,
   DragProps,
+  EditorInteractionProps,
   FlexDirection,
   FlexStyles,
   FlexWrap,

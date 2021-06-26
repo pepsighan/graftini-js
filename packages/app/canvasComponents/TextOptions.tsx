@@ -1,17 +1,14 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
-import { FontWeight } from '@graftini/bricks';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
-import { parseInteger, parsePositiveInteger } from 'utils/parser';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
-import Labelled from './form/Labelled';
-import SelectInputWithLabel from './form/SelectInputWithLabel';
+import SelectInput from './form/SelectInput';
 import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
-import Txt, { TextComponentProps } from './Text';
+import { TextComponentProps } from './Text';
 
 type TextOptionsFields = TextComponentProps;
 
@@ -21,11 +18,11 @@ export default function TextOptions({ componentId }: OptionsProps) {
   return (
     <CF
       componentId={componentId}
-      fieldNames={Object.keys(Txt.graftOptions.defaultProps)}
-      onInitialize={useCallback((initialState) => initialState, [])}
-      onTransformValues={useCallback((values: TextOptionsFields) => {
-        values.fontSize.size = parsePositiveInteger(values.fontSize.size);
-        values.fontWeight = parseInteger(values.fontWeight) as FontWeight;
+      onSync={useCallback((props, state) => {
+        // Copy the state to the props as-is.
+        Object.keys(state).forEach((key) => {
+          props[key] = state[key];
+        });
       }, [])}
     >
       {/* Making a 8 column grid system. */}
@@ -36,9 +33,9 @@ export default function TextOptions({ componentId }: OptionsProps) {
 
         <SectionDivider />
 
-        <Labelled label="Name">
-          <TextInput name="name" />
-        </Labelled>
+        <GridItem colSpan={8}>
+          <TextInput name="name" label="Label" />
+        </GridItem>
 
         <SectionDivider />
 
@@ -52,14 +49,14 @@ export default function TextOptions({ componentId }: OptionsProps) {
           <FontSize name="fontSize" />
         </GridItem>
         <GridItem colSpan={8}>
-          <SelectInputWithLabel name="fontFamily" label="Font" labelWidth="4.5rem">
+          <SelectInput name="fontFamily" label="Font" labelWidth="4.5rem">
             <option value="sans-serif">Sans Serif</option>
             <option value="serif">Serif</option>
             <option value="monospace">Monospace</option>
-          </SelectInputWithLabel>
+          </SelectInput>
         </GridItem>
         <GridItem colSpan={8}>
-          <SelectInputWithLabel name="fontWeight" label="Weight" labelWidth="4.5rem">
+          <SelectInput name="fontWeight" label="Weight" labelWidth="4.5rem">
             <option value={100}>Extra Thin</option>
             <option value={200}>Thin</option>
             <option value={300}>Light</option>
@@ -69,7 +66,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
             <option value={700}>Bold</option>
             <option value={800}>Extra Bold</option>
             <option value={900}>Extra Extra Bold</option>
-          </SelectInputWithLabel>
+          </SelectInput>
         </GridItem>
         <GridItem colSpan={8}>
           <ColorPicker name="color" label="Color" labelWidth="4.5rem" />

@@ -1,3 +1,4 @@
+import produce from 'immer';
 import React, { ReactNode, useCallback, useEffect, useState } from 'react';
 import { StateListener, StateSelector } from 'zustand';
 import { RootComponent } from './componentTypes';
@@ -95,7 +96,7 @@ interface EditorStateSubscribe {
 /**
  * A callback which accepts existing props and expects a new & updated props.
  */
-type PropsUpdater = (props: ComponentProps) => ComponentProps;
+type PropsUpdater = (props: ComponentProps) => void;
 
 /**
  * The actions returned by the useEditor hook. All of the values or actions are lazy. They
@@ -105,7 +106,7 @@ type UseEditor = {
   getState(): ComponentMap;
   subscribe: EditorStateSubscribe;
   getComponentNode(componentId: string): ComponentNode | null;
-  updateComponentProps(componentId: string, props: ComponentProps | PropsUpdater): void;
+  updateComponentProps(componentId: string, immerSet: PropsUpdater): void;
   deleteComponentNode(componentId: string): void;
   setIsCanvas(componentId: string, isCanvas: boolean): void;
   setChildAppendDirection(componentId: string, childAppendDirection: ChildAppendDirection): void;
@@ -135,7 +136,7 @@ export function useEditor(): UseEditor {
   );
 
   const updateComponentProps = useCallback(
-    (componentId: string, props: ComponentProps) => {
+    (componentId: string, immerSet: PropsUpdater) => {
       immerSetEditor((state: EditorStore) => {
         const component = state.componentMap[componentId];
 
@@ -145,10 +146,9 @@ export function useEditor(): UseEditor {
           );
         }
 
-        // Merge the props if it is an object type or replace the props if it is a callback.
-        const newProps =
-          typeof props === 'function' ? props(component.props) : { ...component.props, props };
-        state.componentMap[componentId].props = newProps;
+        // Use immer to update the props.
+        const newProps = produce(component.props, immerSet);
+        component.props = newProps;
       });
     },
     [immerSetEditor]

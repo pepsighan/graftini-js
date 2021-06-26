@@ -4,7 +4,7 @@ import {
   useCurrentCreateComponentType,
   useForgetCreateComponent,
 } from '@graftini/graft';
-import { CodeIcon, CursorArrowIcon, PlayIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
+import { CursorArrowIcon, PlayIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
 import BackButton from 'components/BackButton';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
@@ -15,10 +15,6 @@ import DeployButton from './DeployButton';
 
 export default function EditorNavigation() {
   const { query, push } = useRouter();
-
-  const toggleQueryBuilderPane = useDesignerState(
-    useCallback((state) => state.toggleQueryBuilderPane, [])
-  );
 
   return (
     <Flex
@@ -50,9 +46,6 @@ export default function EditorNavigation() {
       </Flex>
 
       <Flex>
-        <Tooltip label="Query Pane">
-          <IconButton icon={<CodeIcon width={20} height={20} />} onClick={toggleQueryBuilderPane} />
-        </Tooltip>
         <Tooltip label="Preview">
           <IconButton
             ml={4}

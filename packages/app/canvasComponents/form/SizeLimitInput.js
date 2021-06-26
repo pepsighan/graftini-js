@@ -9,13 +9,16 @@ import {
   MenuList,
   Portal,
 } from '@chakra-ui/react';
-import { ChevronDownIcon, CheckIcon } from '@modulz/radix-icons';
+import { CheckIcon, ChevronDownIcon } from '@modulz/radix-icons';
+import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { parsePositiveInteger } from 'utils/parser';
 
 const units = ['px', '%'];
 
 export default function SizeLimitInput({ name, label }) {
-  const { register, setValue, control } = useFormContext();
+  const { setValue, control } = useFormContext();
+  const size = useWatch({ control, name: `${name}.size` });
   const unit = useWatch({ control, name: `${name}.unit` });
 
   return (
@@ -33,8 +36,13 @@ export default function SizeLimitInput({ name, label }) {
       </InputLeftElement>
 
       <Input
-        {...register(`${name}.size`)}
-        type="number"
+        value={size}
+        onChange={useCallback(
+          (event) => {
+            setValue(`${name}.size`, parsePositiveInteger(event.target.value) || 0);
+          },
+          [name, setValue]
+        )}
         size="sm"
         bg="white"
         autoComplete="off"

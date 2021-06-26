@@ -5,13 +5,7 @@ import create from 'zustand';
 import createContext from 'zustand/context';
 import { ProjectPage } from './projects';
 
-export enum RightSidebarOpenPane {
-  QueryBuilder,
-  ComponentOptions,
-}
-
 type UseDesignerState = {
-  rightSidebarOpenPane: RightSidebarOpenPane;
   currentOpenPage?: string | null;
   selectedComponentId?: string | null;
   isTextEditingEnabled: boolean; // Only makes sense in case a text component is selected.
@@ -24,7 +18,6 @@ type UseDesignerState = {
   unselectComponent(): void;
   startEditingText(): void;
   setIsBoxResizing(resizing: boolean): void;
-  toggleQueryBuilderPane(): void;
   setCurrentPage(pageId: string): void;
   updatePageDesign(pageId: string, componentMap: ComponentMap): void;
   deletePage(pageId: string): void;
@@ -35,7 +28,6 @@ const createDesignerState = (pages: ProjectPage[]) =>
     const immerSet = (fn: (state: UseDesignerState) => void) => set(produce(fn));
 
     return {
-      rightSidebarOpenPane: RightSidebarOpenPane.ComponentOptions,
       currentOpenPage: pages.length > 0 ? pages[0].id : null,
       selectedComponentId: null,
       isTextEditingEnabled: false,
@@ -67,14 +59,6 @@ const createDesignerState = (pages: ProjectPage[]) =>
       setIsBoxResizing(resizing: boolean) {
         immerSet((state) => {
           state.isBoxResizing = resizing;
-        });
-      },
-      toggleQueryBuilderPane() {
-        immerSet((state) => {
-          state.rightSidebarOpenPane =
-            state.rightSidebarOpenPane === RightSidebarOpenPane.QueryBuilder
-              ? RightSidebarOpenPane.ComponentOptions
-              : RightSidebarOpenPane.QueryBuilder;
         });
       },
       setCurrentPage(pageId: string) {

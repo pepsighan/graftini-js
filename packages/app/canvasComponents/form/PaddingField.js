@@ -1,7 +1,9 @@
 import { Grid, GridItem, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
-import { useFormContext } from 'react-hook-form';
+import { useCallback } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { parsePositiveInteger } from 'utils/parser';
 
-export default function SpacingField({ name }) {
+export default function PaddingField({ name }) {
   return (
     <Grid templateColumns="repeat(3, minmax(0, 1fr))">
       <GridItem colStart={2} colEnd={3}>
@@ -21,7 +23,8 @@ export default function SpacingField({ name }) {
 }
 
 function NumberInputWithLabel({ name, label }) {
-  const { register } = useFormContext();
+  const { control, setValue } = useFormContext();
+  const value = useWatch({ control, name });
 
   return (
     <InputGroup>
@@ -37,8 +40,13 @@ function NumberInputWithLabel({ name, label }) {
         {label}
       </InputLeftElement>
       <Input
-        {...register(name)}
-        type="number"
+        value={value}
+        onChange={useCallback(
+          (event) => {
+            setValue(name, parsePositiveInteger(event.target.value) || 0);
+          },
+          [name, setValue]
+        )}
         size="sm"
         bg="white"
         autoComplete="off"

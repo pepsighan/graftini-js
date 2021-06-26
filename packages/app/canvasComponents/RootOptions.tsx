@@ -3,7 +3,7 @@ import { ROOT_NODE_ID } from '@graftini/graft';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
-import Root, { RootProps } from './Root';
+import { RootProps } from './Root';
 
 export default function RootOptions() {
   const CF = CanvasForm as CanvasFormComponent<RootProps, RootProps>;
@@ -11,10 +11,8 @@ export default function RootOptions() {
   return (
     <CF
       componentId={ROOT_NODE_ID}
-      fieldNames={Object.keys(Root.graftOptions.defaultProps)}
-      onInitialize={useCallback((initialState) => initialState, [])}
-      onTransformValues={useCallback(() => {
-        // No modification needed here.
+      onSync={useCallback((props, state) => {
+        props.color = state.color;
       }, [])}
     >
       {/* Making a 8 column grid system. */}

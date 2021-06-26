@@ -6,11 +6,14 @@ import {
   ElementType,
   FocusEventHandler,
   forwardRef,
+  MouseEvent,
   MouseEventHandler,
   ReactNode,
+  useCallback,
 } from 'react';
 import { RGBA, rgbaToCss } from './colors';
 import { FontSize, FontWeight, TextAlign } from './text';
+import router from 'next/router';
 
 export type BoxProps = BaseBoxProps &
   LayoutStyles &
@@ -22,7 +25,8 @@ export type BoxProps = BaseBoxProps &
   InteractionProps &
   InputStyles &
   InputProps &
-  DragProps;
+  DragProps &
+  EditorInteractionProps;
 
 export type BaseBoxProps = {
   tag?: string;
@@ -69,8 +73,10 @@ export type InteractionStyles = {
 };
 
 export type InteractionProps = {
+  /** To is same as href but for internal links */
+  to?: string;
+  /** For external links. */
   href?: string;
-  onClick?: MouseEventHandler;
 };
 
 export type PositionStyles = {
@@ -174,6 +180,10 @@ export type Cursor = 'pointer'; // Will need to add more as needed.
 export type FlexWrap = 'wrap' | 'nowrap';
 export type PointerEvents = 'auto' | 'none';
 
+export type EditorInteractionProps = {
+  onClick?: MouseEventHandler;
+};
+
 export type DragProps = {
   onDragStart?: DragEventHandler;
   onDrag?: DragEventHandler;
@@ -192,6 +202,7 @@ const Box = forwardRef((props: BoxProps, ref) => {
       {...inputProps(props)}
       {...interactionProps(props)}
       {...dragProps(props)}
+      {...editorInteractionProps(props)}
       css={{
         // Append -gr in class names rather than -Box.
         label: 'gr',
@@ -302,16 +313,25 @@ function interactionStyles({ cursor, pointerEvents }: InteractionStyles): CSSObj
   };
 }
 
-function interactionProps({ tag, href, onClick }: InteractionProps & BaseBoxProps): any {
-  const props: any = {
-    onClick,
+function interactionProps({ tag, href, to }: InteractionProps & BaseBoxProps): any {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const onClick = useCallback(
+    (ev: MouseEvent) => {
+      ev.preventDefault();
+      router.push(to!);
+    },
+    [to]
+  );
+
+  const obj: any = {
+    onClick: to ? onClick : undefined,
   };
 
   if (tag === 'a') {
-    props.href = href;
+    obj.href = to || href;
   }
 
-  return props;
+  return obj;
 }
 
 export function positionStyles({ position, top, right, bottom, left }: PositionStyles): CSSObject {
@@ -385,6 +405,12 @@ export function dragProps({
     onDragEnd,
     onDragOver,
     draggable,
+  };
+}
+
+function editorInteractionProps({ onClick }: EditorInteractionProps): any {
+  return {
+    onClick,
   };
 }
 

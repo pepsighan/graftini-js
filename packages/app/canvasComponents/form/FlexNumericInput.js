@@ -1,8 +1,11 @@
 import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
-import { useFormContext } from 'react-hook-form';
+import { useCallback } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { parsePositiveInteger } from 'utils/parser';
 
-export default function NumberInputWithLabel({ name, label }) {
-  const { register } = useFormContext();
+export default function FlexNumericInput({ name, label }) {
+  const { control, setValue } = useFormContext();
+  const value = useWatch({ control, name });
 
   return (
     <InputGroup>
@@ -18,8 +21,13 @@ export default function NumberInputWithLabel({ name, label }) {
         {label}
       </InputLeftElement>
       <Input
-        {...register(name)}
-        type="number"
+        onChange={useCallback(
+          (event) => {
+            setValue(name, parsePositiveInteger(event.target.value) || 0);
+          },
+          [name, setValue]
+        )}
+        value={value}
         size="sm"
         bg="white"
         autoComplete="off"

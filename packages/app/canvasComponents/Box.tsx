@@ -48,10 +48,14 @@ export type BoxComponentProps = {
   flexWrap: FlexWrap;
   flexGap: number;
   children?: ReactNode;
+  link?: {
+    pageId?: string;
+    href?: string;
+  };
 };
 
 const Box: GraftComponent<BoxComponentProps> = forwardRef(
-  ({ children, draggable, onDragStart, onDragEnd, onDragOver, onDrag, ...rest }, ref) => {
+  ({ children, draggable, onDragStart, onDragEnd, onDragOver, onDrag, link, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
@@ -129,6 +133,7 @@ Box.graftOptions = {
     flexShrink: 0,
     flexWrap: 'nowrap',
     flexGap: 0,
+    link: null,
   },
 };
 
