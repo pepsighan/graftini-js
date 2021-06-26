@@ -1,7 +1,9 @@
 import { Grid, GridItem, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
+import { parsePositiveInteger } from 'utils/parser';
 
-export default function SpacingField({ name }) {
+export default function MarginField({ name }) {
   return (
     <Grid templateColumns="repeat(3, minmax(0, 1fr))">
       <GridItem colStart={2} colEnd={3}>
@@ -21,7 +23,8 @@ export default function SpacingField({ name }) {
 }
 
 function NumberInputWithLabel({ name, label }) {
-  const { register } = useFormContext();
+  const { register, setValue } = useFormContext();
+  const { onChange, onBlur, ...rest } = register(name);
 
   return (
     <InputGroup>
@@ -37,8 +40,16 @@ function NumberInputWithLabel({ name, label }) {
         {label}
       </InputLeftElement>
       <Input
-        {...register(name)}
-        type="number"
+        {...rest}
+        onChange={useCallback(
+          (event) => {
+            setValue(name, parsePositiveInteger(event.target.value) || 0, {
+              shouldDirty: true,
+              shouldValidate: true,
+            });
+          },
+          [name, setValue]
+        )}
         size="sm"
         bg="white"
         autoComplete="off"

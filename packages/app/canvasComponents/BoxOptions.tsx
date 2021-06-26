@@ -11,16 +11,17 @@ import AlignmentInput from './form/AlignmentInput';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import DirectionInput from './form/DirectionInput';
-import Labelled from './form/Labelled';
 import FlexNumericInput from './form/FlexNumericInput';
+import Labelled from './form/Labelled';
+import MarginField from './form/MarginField';
 import OpacityInput from './form/OpacityInput';
 import OverflowInput from './form/OverflowInput';
+import PaddingField from './form/PaddingField';
 import RadiusInput from './form/RadiusInput';
 import SegmentedInput from './form/SegmentedInput';
 import SelectInput from './form/SelectInput';
 import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
-import SpacingField from './form/SpacingField';
 import TextInput from './form/TextInput';
 import SyncResize, { transformToRawHeight, transformToRawWidth } from './SyncResize';
 
@@ -245,10 +246,10 @@ function LayoutSection() {
         <SizeLimitInput name="maxHeightRaw" label="Max W" />
       </GridItem>
       <Labelled label="Padding">
-        <SpacingField name="padding" />
+        <PaddingField name="padding" />
       </Labelled>
       <Labelled label="Margin">
-        <SpacingField name="margin" />
+        <MarginField name="margin" />
       </Labelled>
     </>
   );
