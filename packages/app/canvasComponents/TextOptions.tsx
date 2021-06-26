@@ -11,7 +11,7 @@ import Labelled from './form/Labelled';
 import SelectInputWithLabel from './form/SelectInputWithLabel';
 import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
-import Txt, { TextComponentProps } from './Text';
+import { TextComponentProps } from './Text';
 
 type TextOptionsFields = TextComponentProps;
 
@@ -21,7 +21,6 @@ export default function TextOptions({ componentId }: OptionsProps) {
   return (
     <CF
       componentId={componentId}
-      fieldNames={Object.keys(Txt.graftOptions.defaultProps)}
       onInitialize={useCallback((initialState) => initialState, [])}
       onTransformValues={useCallback((values: TextOptionsFields) => {
         values.fontSize.size = parsePositiveInteger(values.fontSize.size);

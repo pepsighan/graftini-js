@@ -95,7 +95,6 @@ export default function BoxOptions({ componentId }: OptionsProps) {
   return (
     <CF
       componentId={componentId}
-      fieldNames={Object.keys(CanvasBox.graftOptions.defaultProps)}
       onInitialize={useCallback(
         (initialState) => ({
           ...initialState,
