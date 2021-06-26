@@ -2,6 +2,7 @@ import { Flex, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
 import { BoxIcon, CornersIcon } from '@modulz/radix-icons';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { parsePositiveInteger } from 'utils/parser';
 import SegmentedInput from './SegmentedInput';
 
 export default function RadiusInput({ name }) {
@@ -30,7 +31,6 @@ export default function RadiusInput({ name }) {
             Radius
           </InputLeftElement>
           <Input
-            type="number"
             size="sm"
             bg="white"
             autoComplete="off"
@@ -42,10 +42,12 @@ export default function RadiusInput({ name }) {
             onChange={useCallback(
               (event) => {
                 setV(`${name}.toggle`, 'all');
-                setV(`${name}.topLeft`, event.target.value);
-                setV(`${name}.topRight`, event.target.value);
-                setV(`${name}.bottomLeft`, event.target.value);
-                setV(`${name}.bottomRight`, event.target.value);
+
+                const v = parsePositiveInteger(event.target.value) || 0;
+                setV(`${name}.topLeft`, v);
+                setV(`${name}.topRight`, v);
+                setV(`${name}.bottomLeft`, v);
+                setV(`${name}.bottomRight`, v);
               },
               [name, setV]
             )}
@@ -74,7 +76,15 @@ export default function RadiusInput({ name }) {
 }
 
 function NumberInputWithLabel({ name, label }) {
-  const { register } = useFormContext();
+  const { control, setValue } = useFormContext();
+  const value = useWatch({ control, name });
+
+  const onChange = useCallback(
+    (event) => {
+      setValue(name, parsePositiveInteger(event.target.value) || 0);
+    },
+    [name, setValue]
+  );
 
   return (
     <InputGroup>
@@ -90,8 +100,8 @@ function NumberInputWithLabel({ name, label }) {
         {label}
       </InputLeftElement>
       <Input
-        {...register(name)}
-        type="number"
+        value={value}
+        onChange={onChange}
         size="sm"
         bg="white"
         autoComplete="off"
