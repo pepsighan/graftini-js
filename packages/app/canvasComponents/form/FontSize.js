@@ -11,12 +11,15 @@ import {
   Portal,
 } from '@chakra-ui/react';
 import { CheckIcon, ChevronDownIcon } from '@modulz/radix-icons';
+import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { parsePositiveInteger } from 'utils/parser';
 
 const units = ['px', 'rem'];
 
 export default function FontSize({ name }) {
-  const { register, control, setValue } = useFormContext();
+  const { control, setValue } = useFormContext();
+  const size = useWatch({ control, name: `${name}.size` });
   const unit = useWatch({ control, name: `${name}.unit` });
 
   return (
@@ -33,8 +36,13 @@ export default function FontSize({ name }) {
         Size
       </InputLeftElement>
       <Input
-        {...register(`${name}.size`)}
-        type="number"
+        value={size}
+        onChange={useCallback(
+          (event) => {
+            setValue(`${name}.size`, parsePositiveInteger(event.target.value) || 0);
+          },
+          [name, setValue]
+        )}
         size="sm"
         bg="white"
         autoComplete="off"
