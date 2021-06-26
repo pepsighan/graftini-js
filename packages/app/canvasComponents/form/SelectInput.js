@@ -22,7 +22,6 @@ export default function SelectInput({ name, children, label, labelWidth = '14' }
         size="sm"
         bg="white"
         autoComplete="off"
-        pb="1px" // Align the input text with the label.
         sx={{
           paddingInlineStart: labelWidth,
         }}

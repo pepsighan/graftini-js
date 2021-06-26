@@ -1,9 +1,10 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, Stack } from '@chakra-ui/react';
 import { ROOT_NODE_ID } from '@graftini/graft';
 import CanvasForm from 'canvasComponents/form/CanvasForm';
 import TextInput from 'canvasComponents/form/TextInput';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
+import SelectInput from 'canvasComponents/form/SelectInput';
 
 export default function InteractionOptions() {
   const selectedComponentId = useDesignerState(
@@ -20,6 +21,19 @@ export default function InteractionOptions() {
         ? state.pages[state.currentOpenPage]?.[state.selectedComponentId]?.type ?? null
         : null;
     }, [])
+  );
+
+  const onInitialize = useCallback(
+    (props) => ({
+      link: props.link
+        ? {
+            pageId: props.link.pageId,
+            href: props.link.href,
+            action: props.link.href ? 'href' : 'pageId',
+          }
+        : null,
+    }),
+    []
   );
 
   const onSync = useCallback((props, state) => {
@@ -50,10 +64,27 @@ export default function InteractionOptions() {
   }
 
   return (
-    <CanvasForm componentId={selectedComponentId} onSync={onSync}>
-      <Box as="form">
-        <TextInput label="Link" name="link.pageId" />
-      </Box>
+    <CanvasForm componentId={selectedComponentId} onInitialize={onInitialize} onSync={onSync}>
+      <Stack spacing={4}>
+        <OnClick />
+      </Stack>
     </CanvasForm>
+  );
+}
+
+function OnClick() {
+  return (
+    <>
+      <Text fontSize="sm" fontWeight="bold" mb={1}>
+        On Click
+      </Text>
+
+      <SelectInput label="Action" name="link.action" labelWidth="16">
+        <option value="pageId">Go to page</option>
+        <option value="href">Open external link</option>
+      </SelectInput>
+
+      <TextInput label="Link" name="link.pageId" labelWidth="16" />
+    </>
   );
 }
