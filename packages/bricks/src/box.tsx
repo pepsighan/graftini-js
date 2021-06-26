@@ -25,6 +25,7 @@ export type BoxProps = BaseBoxProps &
   InteractionProps &
   InputStyles &
   InputProps &
+  EditorProps &
   DragProps &
   EditorInteractionProps;
 
@@ -180,6 +181,14 @@ export type Cursor = 'pointer'; // Will need to add more as needed.
 export type FlexWrap = 'wrap' | 'nowrap';
 export type PointerEvents = 'auto' | 'none';
 
+export type EditorProps = {
+  /**
+   * If this is true, then the following [EditorInteractionProps] & [DragProps]
+   * will be ignored.
+   */
+  isEditor?: boolean;
+};
+
 export type EditorInteractionProps = {
   onClick?: MouseEventHandler;
 };
@@ -318,13 +327,18 @@ function interactionProps({ tag, href, to }: InteractionProps & BaseBoxProps): a
   const onClick = useCallback(
     (ev: MouseEvent) => {
       ev.preventDefault();
-      router.push(to!);
+      if (to) {
+        router.push(to!);
+      }
+      if (href) {
+        router.push(href);
+      }
     },
-    [to]
+    [href, to]
   );
 
   const obj: any = {
-    onClick: to ? onClick : undefined,
+    onClick: to || href ? onClick : undefined,
   };
 
   if (tag === 'a') {
@@ -393,12 +407,17 @@ function borderStyle(borderSide?: BorderSide): string | undefined {
 }
 
 export function dragProps({
+  isEditor,
   onDragStart,
   onDrag,
   onDragEnd,
   onDragOver,
   draggable,
-}: DragProps): any {
+}: EditorProps & DragProps): any {
+  if (!isEditor) {
+    return {};
+  }
+
   return {
     onDragStart,
     onDrag,
@@ -408,7 +427,11 @@ export function dragProps({
   };
 }
 
-function editorInteractionProps({ onClick }: EditorInteractionProps): any {
+function editorInteractionProps({ isEditor, onClick }: EditorProps & EditorInteractionProps): any {
+  if (!isEditor) {
+    return {};
+  }
+
   return {
     onClick,
   };

@@ -1,18 +1,17 @@
 import { Box } from '@graftini/bricks';
-import { useProjectId } from 'hooks/useProjectId';
-import { useMyProject } from 'store/projects';
+import { useRouter } from 'next/router';
 import { BoxComponentProps } from './Box';
 
 export default function BoxRender({ link, ...rest }: BoxComponentProps) {
-  const projectId = useProjectId();
-  const { project } = useMyProject({ projectId });
+  const { route, query } = useRouter();
 
   let to: string | undefined;
 
-  // Get the relative link if the link is a page.
   if (link?.pageId) {
-    const page = (project?.pages ?? []).find((it) => it.id === link.pageId);
-    to = page?.route;
+    // We cannot have the routing system for the preview with actual path, so we will just
+    // use the page ids. The actual deployment is able to do it because it knows all about what
+    // routes exist based on the files generated.
+    to = `${route.replace('[projectId]', query.projectId as string)}?page=${link.pageId}`;
   }
 
   return <Box {...rest} to={to} href={link?.href} />;

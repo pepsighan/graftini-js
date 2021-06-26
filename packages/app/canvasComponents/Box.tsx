@@ -73,6 +73,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
       <BoxComp
         ref={ref}
         {...boxProps}
+        isEditor
         draggable={isDraggingDisabled ? false : draggable}
         onDragStart={useUnselectOnDragStart(onDragStart)}
         onDragEnd={onDragEnd}
