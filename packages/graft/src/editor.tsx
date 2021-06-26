@@ -147,7 +147,7 @@ export function useEditor(): UseEditor {
         }
 
         // Use immer to update the props.
-        const newProps = produce(component, immerSet);
+        const newProps = produce(component.props, immerSet);
         component.props = newProps;
       });
     },
