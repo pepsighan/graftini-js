@@ -2,9 +2,12 @@ import { Box, Text, Stack } from '@chakra-ui/react';
 import { ROOT_NODE_ID } from '@graftini/graft';
 import CanvasForm from 'canvasComponents/form/CanvasForm';
 import TextInput from 'canvasComponents/form/TextInput';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useDesignerState } from 'store/designer';
 import SelectInput from 'canvasComponents/form/SelectInput';
+import { useFormContext, useWatch } from 'react-hook-form';
+import { useMyProject } from 'store/projects';
+import { useProjectId } from 'hooks/useProjectId';
 
 export default function InteractionOptions() {
   const selectedComponentId = useDesignerState(
@@ -23,21 +26,32 @@ export default function InteractionOptions() {
     }, [])
   );
 
-  const onInitialize = useCallback(
-    (props) => ({
+  const onInitialize = useCallback((props) => {
+    let action = '';
+    if (props.link?.href) {
+      action = 'href';
+    } else if (props.link?.pageId) {
+      action = 'pageId';
+    }
+
+    return {
       link: props.link
         ? {
             pageId: props.link.pageId,
             href: props.link.href,
-            action: props.link.href ? 'href' : 'pageId',
+            action,
           }
         : null,
-    }),
-    []
-  );
+    };
+  }, []);
 
   const onSync = useCallback((props, state) => {
-    if (!state.link) {
+    if (
+      !state.link ||
+      !state.link.action ||
+      (state.link.action === 'pageId' && !state.link.pageId) ||
+      (state.link.action === 'href' && !state.link.href)
+    ) {
       props.link = null;
       return;
     }
@@ -73,6 +87,11 @@ export default function InteractionOptions() {
 }
 
 function OnClick() {
+  const { control } = useFormContext();
+  const action = useWatch({ control, name: 'link.action' });
+
+  const { project } = useMyProject({ projectId: useProjectId() });
+
   return (
     <>
       <Text fontSize="sm" fontWeight="bold" mb={1}>
@@ -80,11 +99,22 @@ function OnClick() {
       </Text>
 
       <SelectInput label="Action" name="link.action" labelWidth="16">
+        <option value="">Do nothing</option>
         <option value="pageId">Go to page</option>
         <option value="href">Open external link</option>
       </SelectInput>
 
-      <TextInput label="Link" name="link.pageId" labelWidth="16" />
+      {action === 'pageId' && (
+        <SelectInput label="Page" name="link.pageId" labelWidth="16">
+          {project.pages.map((it) => (
+            <option key={it.id} value={it.id}>
+              {it.name}
+            </option>
+          ))}
+        </SelectInput>
+      )}
+
+      {action === 'href' && <TextInput label="Link" name="link.href" labelWidth="16" />}
     </>
   );
 }
