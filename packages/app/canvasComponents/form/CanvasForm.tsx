@@ -1,7 +1,7 @@
 import { useEditor } from '@graftini/graft';
 import { useEffect } from 'react';
 import { FunctionComponent, ReactNode, useMemo } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, Resolver, useForm } from 'react-hook-form';
 
 type CanvasFormProps<T, S> = {
   componentId: string;
@@ -13,6 +13,7 @@ type CanvasFormProps<T, S> = {
    * Sync the form state to the component props.
    */
   onSync(props: T, formState: S): void;
+  resolver?: Resolver;
   children?: ReactNode;
 };
 
@@ -22,6 +23,7 @@ const CanvasForm: FunctionComponent = <T, S>({
   componentId,
   onInitialize,
   onSync,
+  resolver,
   children,
 }: CanvasFormProps<T, S>) => {
   const { getState } = useEditor();
@@ -37,6 +39,7 @@ const CanvasForm: FunctionComponent = <T, S>({
       []
     ),
     mode: 'onChange',
+    resolver,
   });
 
   useSyncFormState({ watch: form.watch, componentId, onSync });
