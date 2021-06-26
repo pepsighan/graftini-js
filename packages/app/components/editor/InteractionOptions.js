@@ -1,14 +1,27 @@
-import { Box, Stack, Text } from '@chakra-ui/react';
+import { Box, FormControl, Stack, Text, FormErrorMessage } from '@chakra-ui/react';
 import { ROOT_NODE_ID } from '@graftini/graft';
+import { zodResolver } from '@hookform/resolvers/zod';
 import CanvasForm from 'canvasComponents/form/CanvasForm';
 import SelectInput from 'canvasComponents/form/SelectInput';
 import TextInput from 'canvasComponents/form/TextInput';
 import { useProjectId } from 'hooks/useProjectId';
 import { useCallback } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 import { useDesignerState } from 'store/designer';
 import { useMyProject } from 'store/projects';
 import { z } from 'zod';
+
+const url = z.string().regex(
+  // eslint-disable-next-line no-useless-escape
+  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
+  { message: 'Not a valid URL. Starts with http or https.' }
+);
+
+const schema = z.object({
+  link: z.object({
+    href: url,
+  }),
+});
 
 export default function InteractionOptions() {
   const selectedComponentId = useDesignerState(
@@ -79,7 +92,12 @@ export default function InteractionOptions() {
   }
 
   return (
-    <CanvasForm componentId={selectedComponentId} onInitialize={onInitialize} onSync={onSync}>
+    <CanvasForm
+      componentId={selectedComponentId}
+      resolver={zodResolver(schema)}
+      onInitialize={onInitialize}
+      onSync={onSync}
+    >
       <Stack spacing={4}>
         <OnClick />
       </Stack>
@@ -87,7 +105,6 @@ export default function InteractionOptions() {
   );
 }
 
-const url = z.string().url();
 function isUrl(value) {
   try {
     url.parse(value);
@@ -99,6 +116,7 @@ function isUrl(value) {
 
 function OnClick() {
   const { control } = useFormContext();
+  const { errors } = useFormState({ control });
   const action = useWatch({ control, name: 'link.action' });
 
   const { project } = useMyProject({ projectId: useProjectId() });
@@ -125,7 +143,12 @@ function OnClick() {
         </SelectInput>
       )}
 
-      {action === 'href' && <TextInput label="Link" name="link.href" labelWidth="16" />}
+      {action === 'href' && (
+        <FormControl isInvalid={!!errors.link?.href}>
+          <TextInput label="Link" name="link.href" labelWidth="16" />
+          <FormErrorMessage>{errors.link?.href?.message}</FormErrorMessage>
+        </FormControl>
+      )}
     </>
   );
 }
