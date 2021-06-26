@@ -71,8 +71,8 @@ export default function InteractionOptions() {
     }
 
     props.link ??= {};
-    props.link.pageId = state.link.pageId;
-    props.link.href = state.link.pageId ? null : state.link.href;
+    props.link.pageId = state.link.action === 'pageId' ? state.link.pageId : null;
+    props.link.href = state.link.action === 'href' ? state.link.href : null;
   }, []);
 
   if (!selectedComponentId || type === 'Root') {
