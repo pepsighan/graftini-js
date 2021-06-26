@@ -17,14 +17,23 @@ import { CheckIcon, ChevronDownIcon } from '@modulz/radix-icons';
 import Icon from 'components/Icon';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { parsePositiveInteger } from 'utils/parser';
 import SegmentedInput from './SegmentedInput';
 
 const units = ['px', '%'];
 
 export default function SizeInput({ name, isWidth, label }) {
-  const { register, control, setValue } = useFormContext();
+  const { control, setValue } = useFormContext();
+  const size = useWatch({ control, name: `${name}.size` });
   const unit = useWatch({ control, name: `${name}.unit` });
   const toggle = useWatch({ control, name: `${name}.toggle` });
+
+  const onSizeChange = useCallback(
+    (event) => {
+      setValue(`${name}.size`, parsePositiveInteger(event.target.value) || 0);
+    },
+    [name, setValue]
+  );
 
   const unsetToggle = useCallback(
     () => setValue(`${name}.toggle`, null, { shouldDirty: true, shouldValidate: true }),
@@ -49,8 +58,8 @@ export default function SizeInput({ name, isWidth, label }) {
         {!toggle && (
           <>
             <Input
-              {...register(`${name}.size`)}
-              type="number"
+              value={size}
+              onChange={onSizeChange}
               size="sm"
               bg="white"
               autoComplete="off"
