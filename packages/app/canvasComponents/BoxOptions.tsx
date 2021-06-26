@@ -1,11 +1,6 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
-import {
-  BorderRadius,
-  DimensionMaxLimit,
-  DimensionMinLimit,
-  DimensionSize,
-} from '@graftini/bricks';
+import { BorderRadius } from '@graftini/bricks';
 import { useEditor } from '@graftini/graft';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
@@ -26,7 +21,6 @@ import SelectInput from './form/SelectInput';
 import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
-import useSyncFormState from './form/SyncFormState';
 import TextInput from './form/TextInput';
 import SyncResize, { transformToRawHeight, transformToRawWidth } from './SyncResize';
 
@@ -112,10 +106,12 @@ export default function BoxOptions({ componentId }: OptionsProps) {
             rest.flexDirection === 'column' ? 'vertical' : 'horizontal'
           );
 
+          // Copy the matching states as is.
           Object.keys(rest).forEach((key) => {
             props[key] = rest[key];
           });
 
+          // Other states needs to be transformed back to the standard form.
           props.borderRadius ??= {} as any;
           props.borderRadius.topLeft = borderRadius.topLeft;
           props.borderRadius.topRight = borderRadius.topRight;

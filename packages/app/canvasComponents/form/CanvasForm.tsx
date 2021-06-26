@@ -9,7 +9,10 @@ type CanvasFormProps<T, S> = {
    * Transform the initial state to the one consumable by the form.
    */
   onInitialize?(initialState: T): S;
-  onSync?(props: T, formState: S): void;
+  /**
+   * Sync the form state to the component props.
+   */
+  onSync(props: T, formState: S): void;
   children?: ReactNode;
 };
 
@@ -36,7 +39,7 @@ const CanvasForm: FunctionComponent = <T, S>({
     mode: 'onChange',
   });
 
-  useSyncFormState({ watch: form.watch, componentId, onSync: onSync ?? (() => {}) });
+  useSyncFormState({ watch: form.watch, componentId, onSync });
   return <FormProvider {...form}>{children}</FormProvider>;
 };
 

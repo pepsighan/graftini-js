@@ -1,5 +1,6 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { ROOT_NODE_ID } from '@graftini/graft';
+import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import { RootProps } from './Root';
@@ -8,7 +9,12 @@ export default function RootOptions() {
   const CF = CanvasForm as CanvasFormComponent<RootProps, RootProps>;
 
   return (
-    <CF componentId={ROOT_NODE_ID}>
+    <CF
+      componentId={ROOT_NODE_ID}
+      onSync={useCallback((props, state) => {
+        props.color = state.color;
+      }, [])}
+    >
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
         <GridItem colSpan={8} mb={1}>

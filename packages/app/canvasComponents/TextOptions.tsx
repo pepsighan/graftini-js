@@ -1,6 +1,7 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
 import { OptionsProps } from 'canvasComponents';
+import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
@@ -15,7 +16,15 @@ export default function TextOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
 
   return (
-    <CF componentId={componentId}>
+    <CF
+      componentId={componentId}
+      onSync={useCallback((props, state) => {
+        // Copy the state to the props as-is.
+        Object.keys(state).forEach((key) => {
+          props[key] = state[key];
+        });
+      }, [])}
+    >
       {/* Making a 8 column grid system. */}
       <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
         <GridItem colSpan={8}>
