@@ -4,16 +4,22 @@ import { ROOT_NODE_ID } from '@graftini/graft';
 import IFrame from 'components/IFrame';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { ProjectIdProvider } from 'hooks/useProjectId';
+import { useRouter } from 'next/router';
 import NotFound from 'pages/404';
 import { useMemo } from 'react';
 import { parseComponentMap } from 'store/designer';
 import ComponentRender from './ComponentRender';
 
-export default function Preview({ initialRoute }) {
+export default function Preview() {
+  const { query } = useRouter();
+  const pageId = query.page;
+
   const { project } = useMyProjectFromRouter();
+
   const page = useMemo(
-    () => project.pages.find((it) => it.route === initialRoute),
-    [initialRoute, project.pages]
+    // If page id is provided, then open that page otherwise get the default page.
+    () => project.pages.find((it) => (pageId ? it.id === pageId : it.route === '/')),
+    [pageId, project.pages]
   );
 
   if (!page) {

@@ -21,7 +21,7 @@ export default protectedPage(function ProjectPreview() {
     <>
       <SEO title={`Preview - ${project.name}`} />
       <PreviewNavigation projectName={project.name} />
-      <Preview initialRoute="/" />
+      <Preview />
     </>
   );
 });
