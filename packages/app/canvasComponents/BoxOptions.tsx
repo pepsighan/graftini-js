@@ -17,12 +17,12 @@ import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import DirectionInput from './form/DirectionInput';
 import Labelled from './form/Labelled';
-import NumberInputWithLabel from './form/NumberInputWithLabel';
+import NumberInput from './form/NumberInput';
 import OpacityInput from './form/OpacityInput';
 import OverflowInput from './form/OverflowInput';
 import RadiusInput from './form/RadiusInput';
 import SegmentedInput from './form/SegmentedInput';
-import SelectInputWithLabel from './form/SelectInputWithLabel';
+import SelectInput from './form/SelectInput';
 import SizeInput from './form/SizeInput';
 import SizeLimitInput from './form/SizeLimitInput';
 import SpacingField from './form/SpacingField';
@@ -162,13 +162,13 @@ function PropertiesSection() {
         <TextInput name="name" label="Name" />
       </GridItem>
       <GridItem colSpan={8}>
-        <SelectInputWithLabel name="tag" label="Tag">
+        <SelectInput name="tag" label="Tag">
           {boxTags.map((tag) => (
             <option key={tag} value={tag}>
               {tag}
             </option>
           ))}
-        </SelectInputWithLabel>
+        </SelectInput>
       </GridItem>
     </>
   );
@@ -184,15 +184,15 @@ function FlexSection() {
       </GridItem>
 
       <GridItem colSpan={4}>
-        <NumberInputWithLabel name="flexGrow" label="Grow" />
+        <NumberInput name="flexGrow" label="Grow" />
       </GridItem>
 
       <GridItem colSpan={4}>
-        <NumberInputWithLabel name="flexShrink" label="Shrink" />
+        <NumberInput name="flexShrink" label="Shrink" />
       </GridItem>
 
       <GridItem colSpan={4}>
-        <NumberInputWithLabel name="flexGap" label="Gap" />
+        <NumberInput name="flexGap" label="Gap" />
       </GridItem>
 
       <GridItem colSpan={8}>

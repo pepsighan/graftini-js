@@ -5,7 +5,7 @@ import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
-import SelectInputWithLabel from './form/SelectInputWithLabel';
+import SelectInput from './form/SelectInput';
 import SyncFormState from './form/SyncFormState';
 import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
@@ -47,14 +47,14 @@ export default function TextOptions({ componentId }: OptionsProps) {
           <FontSize name="fontSize" />
         </GridItem>
         <GridItem colSpan={8}>
-          <SelectInputWithLabel name="fontFamily" label="Font" labelWidth="4.5rem">
+          <SelectInput name="fontFamily" label="Font" labelWidth="4.5rem">
             <option value="sans-serif">Sans Serif</option>
             <option value="serif">Serif</option>
             <option value="monospace">Monospace</option>
-          </SelectInputWithLabel>
+          </SelectInput>
         </GridItem>
         <GridItem colSpan={8}>
-          <SelectInputWithLabel name="fontWeight" label="Weight" labelWidth="4.5rem">
+          <SelectInput name="fontWeight" label="Weight" labelWidth="4.5rem">
             <option value={100}>Extra Thin</option>
             <option value={200}>Thin</option>
             <option value={300}>Light</option>
@@ -64,7 +64,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
             <option value={700}>Bold</option>
             <option value={800}>Extra Bold</option>
             <option value={900}>Extra Extra Bold</option>
-          </SelectInputWithLabel>
+          </SelectInput>
         </GridItem>
         <GridItem colSpan={8}>
           <ColorPicker name="color" label="Color" labelWidth="4.5rem" />
