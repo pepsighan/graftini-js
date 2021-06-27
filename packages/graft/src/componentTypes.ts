@@ -32,11 +32,11 @@ export type GraftComponentProps = {
   /**
    * This event handler triggers a drag operation.
    */
-  onMouseDown: MouseEventHandler;
+  onMouseDown?: MouseEventHandler | null;
   /**
    * This event commits the new location of the component.
    */
-  onMouseUp: MouseEventHandler;
+  onMouseUp?: MouseEventHandler | null;
   /**
    * The children of the component.
    */
