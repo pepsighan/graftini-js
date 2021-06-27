@@ -1,5 +1,4 @@
 import {
-  DragEventHandler,
   ForwardRefExoticComponent,
   MouseEventHandler,
   ReactNode,
@@ -9,15 +8,10 @@ import {
 
 export type RootComponent<T extends object> = ForwardRefExoticComponent<
   RefAttributes<{}> & {
-    onDragEnter: DragEventHandler;
-    onDragLeave: DragEventHandler;
-    onDragOver: DragEventHandler;
     onScroll: UIEventHandler;
     onMouseUp: MouseEventHandler;
     onMouseDown: MouseEventHandler;
     onMouseMove: MouseEventHandler;
-    onMouseEnter: MouseEventHandler;
-    onMouseLeave: MouseEventHandler;
     children: ReactNode;
   } & T
 > & {
