@@ -32,23 +32,11 @@ export type GraftComponentProps = {
   /**
    * This event handler triggers a drag operation.
    */
-  onDragStart: DragEventHandler;
-  /**
-   * This event is used to track the current cursor position when dragging.
-   */
-  onDrag: DragEventHandler;
+  onMouseDown: MouseEventHandler;
   /**
    * This event commits the new location of the component.
    */
-  onDragEnd: DragEventHandler;
-  /**
-   * This event is useful for the correct functioning of the drag.
-   */
-  onDragOver: DragEventHandler;
-  /**
-   * Whether the draggability of the component is enabled or not.
-   */
-  draggable: boolean;
+  onMouseUp: MouseEventHandler;
   /**
    * The children of the component.
    */
