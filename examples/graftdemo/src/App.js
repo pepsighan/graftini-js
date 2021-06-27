@@ -86,6 +86,7 @@ const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
   return (
     <Box
       ref={ref}
+      isEditor
       {...rest}
       border={{
         left: border,
@@ -110,7 +111,7 @@ const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
 const Text = forwardRef(({ ...rest }, ref) => {
   const id = useComponentId();
   return (
-    <Txt ref={ref} {...rest}>
+    <Txt ref={ref} isEditor {...rest}>
       Click {id}
     </Txt>
   );
