@@ -1,5 +1,6 @@
 import { motion, useMotionValue } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
+import { is3pxAway } from './drag';
 import { useDraggedOverStoreApi } from './store/draggedOver';
 import { useComponentRegionStoreApi } from './store/regionMap';
 
@@ -11,7 +12,7 @@ type DragPreviewProps = {
  * Shows a drag preview which is snapped to the cursor.
  */
 export function DragPreview({ color = '#9090DD' }: DragPreviewProps) {
-  const { subscribe } = useDraggedOverStoreApi();
+  const { subscribe, getState: getDragState } = useDraggedOverStoreApi();
   const { getState: getRegionState } = useComponentRegionStoreApi();
 
   const [isVisible, setIsVisible] = useState(false);
@@ -27,7 +28,20 @@ export function DragPreview({ color = '#9090DD' }: DragPreviewProps) {
           ? getRegionState().regionMap[selection.componentId]
           : null;
 
-        if (selection.componentId && selection.position && selection.isOnIFrame && region) {
+        // Only when the cursor has dragged 3px from the original point can it be deemed
+        // to be a drag operation.
+        const drag = getDragState().draggedOver;
+        const threePxAway = drag?.cursorPosition
+          ? is3pxAway(drag.initialCursorPosition!, drag.cursorPosition)
+          : false;
+
+        if (
+          selection.componentId &&
+          selection.position &&
+          selection.isOnIFrame &&
+          region &&
+          threePxAway
+        ) {
           setIsVisible(true);
           posX.set(selection.position.x - region.width / 2);
           posY.set(selection.position.y - region.height / 2);
@@ -53,7 +67,7 @@ export function DragPreview({ color = '#9090DD' }: DragPreviewProps) {
         left.position?.y === right.position?.y &&
         left.isOnIFrame === right.isOnIFrame
     );
-  }, [getRegionState, height, posX, posY, subscribe, width]);
+  }, [getDragState, getRegionState, height, posX, posY, subscribe, width]);
 
   return (
     <>
