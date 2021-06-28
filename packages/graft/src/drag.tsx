@@ -1,4 +1,4 @@
-import { MouseEventHandler, MutableRefObject, useCallback, useEffect, useRef } from 'react';
+import { MouseEventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { addComponentToDropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
@@ -41,7 +41,6 @@ export function useOnDragStart(): MouseEventHandler {
 }
 
 type UseDrop = {
-  ref: MutableRefObject<HTMLElement | null>;
   onMouseUp: MouseEventHandler;
   onMouseMove: MouseEventHandler;
 };
@@ -50,51 +49,10 @@ type UseDrop = {
  * Hook that lets graft know where to drop a dragged component.
  */
 export function useDrop(): UseDrop {
-  const ref = useRef<HTMLElement | null>(null);
   const onMouseUp = useOnDragEnd();
   const onMouseMove = useTrackDragCursorPosition();
 
-  const immerSet = useDraggedOverStore(
-    useCallback((state: DraggedOverStore) => state.immerSet, [])
-  );
-  useEffect(() => {
-    // We want to stop the drag event immediately if the cursor is on the document
-    // and the left click is no longer being pressed.
-    // For cases where the cursor leaves the document itself directly from the canvas,
-    // it is handled by [onMouseMove].
-    const onMouseMoveOnDoc = (event: MouseEvent) => {
-      if (!ref.current) {
-        return;
-      }
-
-      if (isLeftMouseButtonPressed(event)) {
-        return;
-      }
-
-      // Stop the drag event because the left click is no longer active.
-      immerSet((state) => {
-        if (!state.draggedOver.isDragging) {
-          return;
-        }
-
-        state.draggedOver = {
-          isDragging: false,
-          isOnRoot: false,
-        };
-      });
-
-      // Run the drag end to run cleanups or otherwise.
-      onMouseUp(event as any);
-    };
-
-    document.addEventListener('mousemove', onMouseMoveOnDoc);
-    return () => {
-      document.removeEventListener('mousemove', onMouseMoveOnDoc);
-    };
-  }, [immerSet, onMouseMove, onMouseUp]);
-
   return {
-    ref,
     onMouseUp,
     onMouseMove,
   };
