@@ -26,12 +26,7 @@ function Designer() {
   return (
     <div {...useDrop()}>
       <Menu />
-      <IFrame
-        style={{
-          width: '100%',
-          height: 'calc(100vh - 74px)', // Why subtracting +4px than the actual menu height? Don't know.
-        }}
-      >
+      <IFrame style={{ width: '100%', height: 'calc(100vh - 74px)' }}>
         {() => (
           <div
             style={{

@@ -1,6 +1,5 @@
 import { MouseEvent, MouseEventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
-import { useCorrectCursorPosition } from './correction';
 import { addComponentToDropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 import {
@@ -83,14 +82,11 @@ function useOnDragEnd(): MouseEventHandler {
     immerSetDraggedOver((draggedState: DraggedOverStore) => {
       const dropRegion = draggedState.draggedOver.dropRegion;
       if (!dropRegion) {
-        draggedState.draggedOver = {
-          isDragging: false,
-          isOnRoot: false,
-        };
+        draggedState.draggedOver = { isDragging: false };
         return;
       }
 
-      draggedState.draggedOver = { isDragging: false, isOnRoot: false };
+      draggedState.draggedOver = { isDragging: false };
     });
 
     immerSetEditor((editorState: EditorStore) => {
@@ -134,7 +130,6 @@ function useOnDragEnd(): MouseEventHandler {
 function useTrackDragCursorPosition(): MouseEventHandler {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
   const onnDragEnd = useOnDragEnd();
-  const correctPosition = useCorrectCursorPosition();
 
   return useCallback(
     (event: MouseEvent) => {
@@ -148,22 +143,18 @@ function useTrackDragCursorPosition(): MouseEventHandler {
           // This may happen when during the drag operation, mouse up event (drag end)
           // took place outside the event target. We need to stop the drag event manually
           // now.
-          state.draggedOver = {
-            isDragging: false,
-            isOnRoot: false,
-          };
+          state.draggedOver = { isDragging: false };
           // Run the drag end to run cleanups or otherwise.
           onnDragEnd(event);
           return;
         }
 
-        draggedOver.cursorPosition = correctPosition(
-          { x: event.clientX, y: event.clientY },
-          draggedOver.isOnRoot
-        );
+        draggedOver.cursorPosition ??= {} as any;
+        draggedOver.cursorPosition!.x = event.clientX;
+        draggedOver.cursorPosition!.y = event.clientY;
       });
     },
-    [correctPosition, immerSet, onnDragEnd]
+    [immerSet, onnDragEnd]
   );
 }
 
