@@ -19,7 +19,7 @@ export default function HoverOutline() {
   const height = useMotionValue(0);
 
   useEffect(() => {
-    subscribe((state) => {
+    return subscribe((state) => {
       // Do not show the outline when on root.
       if (state && state.componentId !== ROOT_NODE_ID) {
         posX.set(state.region.x);
@@ -36,7 +36,7 @@ export default function HoverOutline() {
       height.set(0);
       setIsVisible(false);
     });
-  });
+  }, [height, posX, posY, subscribe, width]);
 
   return (
     <>
