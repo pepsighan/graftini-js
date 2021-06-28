@@ -1,4 +1,4 @@
-import { useEditorState, useEditorStoreApi } from '@graftini/graft';
+import { useEditorStore, useEditorStoreApi } from '@graftini/graft';
 import { FunctionComponent, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { FormProvider, Resolver, useForm } from 'react-hook-form';
 
@@ -46,7 +46,7 @@ const CanvasForm: FunctionComponent = <T, S>({
 };
 
 function useSyncFormState({ watch, componentId, onSync }) {
-  const immerSetEditor = useEditorState(useCallback((state) => state.immerSet, []));
+  const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
 
   // Sync the form state to the component props.
   useEffect(() => {

@@ -4,7 +4,7 @@ import { CanvasContext, ComponentContext, useComponentId } from './context';
 import { useOnDragStart } from './drag';
 import { useResolveComponent } from './resolver';
 import { CreateComponentStore, useCreateComponentStore } from './store/createComponent';
-import { ComponentNode as CN, EditorStore, useEditorState } from './store/editor';
+import { ComponentNode as CN, EditorStore, useEditorStore } from './store/editor';
 import { useSyncRegion } from './useRegion';
 
 type ComponentNodeProps = {
@@ -18,7 +18,7 @@ type ComponentNodeProps = {
  */
 /** @internal */
 export function ComponentNode({ componentId }: ComponentNodeProps) {
-  const { type, isCanvas, childrenNodes } = useEditorState(
+  const { type, isCanvas, childrenNodes } = useEditorStore(
     useCallback((state: EditorStore) => state.componentMap[componentId], [componentId]),
     // Only use the selected props when they change.
     useCallback(
@@ -66,7 +66,7 @@ function ComponentWrapper({ component: Component, children }: DragOverNotifierPr
   const isCreatingNew = useCreateComponentStore(
     useCallback((state: CreateComponentStore) => !!state.newComponent, [])
   );
-  const componentProps = useEditorState(
+  const componentProps = useEditorStore(
     useCallback((state: EditorStore) => state.componentMap[componentId].props, [componentId])
   );
 

@@ -5,7 +5,7 @@ import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from '.
 import {
   EditorStore,
   isComponentWithinSubTree,
-  useEditorState,
+  useEditorStore,
   useEditorStoreApi,
 } from './store/editor';
 import { useRootScrollStoreApi } from './store/rootScroll';
@@ -71,7 +71,7 @@ export function useDrop(): UseDrop {
 function useOnDragEnd(): MouseEventHandler {
   const immerSetDraggedOver = useDraggedOverStore(useCallback((state) => state.immerSet, []));
   const { getState: getDraggedOverState } = useDraggedOverStoreApi();
-  const immerSetEditor = useEditorState(useCallback((state) => state.immerSet, []));
+  const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
   const { setState: setRootScroll } = useRootScrollStoreApi();
 
   return useCallback(() => {

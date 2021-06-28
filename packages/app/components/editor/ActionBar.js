@@ -1,12 +1,12 @@
 /** @jsxImportSource @emotion/react */
-import { useEditorState } from '@graftini/graft';
+import { useEditorStore } from '@graftini/graft';
 import { TrashIcon } from '@modulz/radix-icons';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
 export default function ActionBar({ componentId }) {
-  const name = useEditorState(
+  const name = useEditorStore(
     useCallback((state) => state.componentMap[componentId].props.name, [componentId])
   );
   const onDelete = useOnDelete({ componentId });
@@ -34,7 +34,7 @@ export default function ActionBar({ componentId }) {
 }
 
 function useOnDelete({ componentId }) {
-  const immerSet = useEditorState(useCallback((state) => state.immerSet, []));
+  const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
 
   return useCallback(

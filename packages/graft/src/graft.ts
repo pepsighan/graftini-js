@@ -26,7 +26,7 @@ export {
   defaultComponentMap,
   EditorStore,
   ROOT_NODE_ID,
-  useEditorState,
+  useEditorStore,
   useEditorStoreApi,
 } from './store/editor';
 export { HoverStore, useHoverStore, useHoverStoreApi } from './store/hover';

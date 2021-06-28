@@ -135,7 +135,7 @@ function createEditorStore(componentMap?: ComponentMap, rootOverride?: GraftComp
 
 const { Provider, useStore, useStoreApi } = createContext<EditorStore>();
 
-export const useEditorState = useStore;
+export const useEditorStore = useStore;
 
 export const useEditorStoreApi = useStoreApi;
 
@@ -150,7 +150,7 @@ type EditorStateProviderProps = {
 
 /**
  * A provider to add the editor state to the context. The editor state is accessible within
- * the children by using `useEditorState`.
+ * the children by using `useEditorStore`.
  */
 /** @internal */
 export function EditorStateProvider({ elementMap, children }: EditorStateProviderProps) {

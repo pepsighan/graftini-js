@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import { useComponentRegionStoreApi, useEditorState } from '@graftini/graft';
+import { useComponentRegionStoreApi, useEditorStore } from '@graftini/graft';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -335,7 +335,7 @@ function useBottomLeftCorner({ posX, posY, height }) {
  * pressed during updation, then they are updated as % values rather than px values.
  */
 function useDimensionUpdate({ componentId }) {
-  const immerSet = useEditorState(useCallback((state) => state.immerSet, []));
+  const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
   const { getState: getRegionState } = useComponentRegionStoreApi();
 
   const updateWidth = useCallback(

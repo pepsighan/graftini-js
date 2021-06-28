@@ -1,7 +1,7 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
 import { BorderRadius } from '@graftini/bricks';
-import { useEditorState } from '@graftini/graft';
+import { useEditorStore } from '@graftini/graft';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import { boxTags } from 'utils/constants';
@@ -48,7 +48,7 @@ type BoxOptionsFields = BoxComponentProps & {
 
 export default function BoxOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<BoxComponentProps, BoxOptionsFields>;
-  const immerSetEditor = useEditorState(useCallback((state) => state.immerSet, []));
+  const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
 
   return (
     <CF
