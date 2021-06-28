@@ -21,7 +21,7 @@ import { useRootScrollStoreApi } from './store/rootScroll';
  */
 /** @internal */
 export const Root__Graft__Component = forwardRef(
-  ({ children, ...rest }: GraftComponentProps, ref: ForwardedRef<any>) => {
+  ({ children, onMouseDown: _, ...rest }: GraftComponentProps, ref: ForwardedRef<any>) => {
     const { setState: setRootScroll } = useRootScrollStoreApi();
 
     const {
@@ -88,12 +88,12 @@ export const Root__Graft__Component = forwardRef(
 
     return (
       <RootOverrideComponent
+        {...rest}
         ref={mergedRef}
         onScroll={onScroll}
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
         onMouseDown={onMouseDownToDraw}
-        {...rest}
       >
         {children}
       </RootOverrideComponent>
