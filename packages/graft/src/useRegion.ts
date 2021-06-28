@@ -1,4 +1,5 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useContext, useLayoutEffect, useState } from 'react';
+import { RootRefContext } from './context';
 import { useEditorStoreApiInternal } from './store/editor';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
 import { useRootScrollStoreApi } from './store/rootScroll';
@@ -22,6 +23,8 @@ export function useSyncRegion(componentId: string) {
   const { subscribe: subscribeEditor } = useEditorStoreApiInternal();
   const { getState: getRootScroll } = useRootScrollStoreApi();
 
+  const rootRef = useContext(RootRefContext);
+
   useLayoutEffect(() => {
     if (!ref) {
       return;
@@ -31,12 +34,18 @@ export function useSyncRegion(componentId: string) {
       window.requestAnimationFrame(() => {
         const rect = ref.getBoundingClientRect();
 
+        // It may be undefined if the region is ROOT itself or is not
+        // initialized yet. Either way it is fine as the regions will
+        // be eventually correct.
+        const offsetLeft = rootRef?.offsetLeft ?? 0;
+        const offsetTop = rootRef?.offsetTop ?? 0;
+
         immerSet((state: ComponentRegionStore) => {
           // Doing away with typescript here for extract performance from immer.
           state.regionMap[componentId] ??= {} as any;
           const region = state.regionMap[componentId];
-          region.x = rect.x;
-          region.y = rect.y;
+          region.x = rect.x + offsetLeft;
+          region.y = rect.y + offsetTop;
           region.width = rect.width;
           region.height = rect.height;
         });
@@ -53,7 +62,15 @@ export function useSyncRegion(componentId: string) {
       window.removeEventListener('resize', measureRegion);
       unsubscribeStore();
     };
-  }, [componentId, getRootScroll, immerSet, ref, subscribeEditor]);
+  }, [
+    componentId,
+    getRootScroll,
+    immerSet,
+    ref,
+    rootRef?.offsetLeft,
+    rootRef?.offsetTop,
+    subscribeEditor,
+  ]);
 
   return setRef;
 }

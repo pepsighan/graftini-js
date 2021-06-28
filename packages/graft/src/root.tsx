@@ -15,6 +15,7 @@ import { useDrop } from './drag';
 import { useRefreshHoverRegion, useSyncHoverRegion } from './hover';
 import { useScrollWhenDragging } from './scroll';
 import { useRootScrollStoreApi } from './store/rootScroll';
+import { RootRefContext } from './context';
 
 /**
  * A canvas root component returns the children as-is.
@@ -73,30 +74,34 @@ export const Root__Graft__Component = forwardRef(
     const RootOverrideComponent = useContext(RootOverrideContext);
     if (!RootOverrideComponent) {
       return (
-        <div
+        <RootRefContext.Provider value={rootRef}>
+          <div
+            ref={mergedRef}
+            style={{ width: '100%', height: '100%', overflow: 'auto' }}
+            onScroll={onScroll}
+            onMouseUp={onMouseUp}
+            onMouseMove={onMouseMove}
+            onMouseDown={onMouseDownToDraw}
+          >
+            {children}
+          </div>
+        </RootRefContext.Provider>
+      );
+    }
+
+    return (
+      <RootRefContext.Provider value={rootRef}>
+        <RootOverrideComponent
+          {...rest}
           ref={mergedRef}
-          style={{ width: '100%', height: '100%', overflow: 'auto' }}
           onScroll={onScroll}
           onMouseUp={onMouseUp}
           onMouseMove={onMouseMove}
           onMouseDown={onMouseDownToDraw}
         >
           {children}
-        </div>
-      );
-    }
-
-    return (
-      <RootOverrideComponent
-        {...rest}
-        ref={mergedRef}
-        onScroll={onScroll}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
-        onMouseDown={onMouseDownToDraw}
-      >
-        {children}
-      </RootOverrideComponent>
+        </RootOverrideComponent>
+      </RootRefContext.Provider>
     );
   }
 );

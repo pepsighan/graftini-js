@@ -34,3 +34,10 @@ export function useComponentId(): string {
  */
 /** @internal */
 export const RootOverrideContext = createContext<RootComponent<any> | null>(null);
+
+/**
+ * This context stores the ref for the root component so that it can be used to
+ * calculate the region of the components within it. Look at [useRegion].
+ */
+/** @internal */
+export const RootRefContext = createContext<HTMLElement | null>(null);
