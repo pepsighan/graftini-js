@@ -9,13 +9,22 @@ import {
   useComponentId,
   useCreateComponent,
   useForgetCreateComponent,
+  useDrop,
 } from '@graftini/graft';
 import { forwardRef } from 'react';
 import IFrame from './IFrame';
 
 export default function App() {
   return (
-    <Editor resolvers={{ Container, Text }} iframeCorrection={{ x: 0, y: 70 }}>
+    <Editor resolvers={{ Container, Text }}>
+      <Designer />
+    </Editor>
+  );
+}
+
+function Designer() {
+  return (
+    <div {...useDrop()}>
       <Menu />
       <IFrame
         style={{
@@ -38,7 +47,7 @@ export default function App() {
         )}
       </IFrame>
       <DragPreview />
-    </Editor>
+    </div>
   );
 }
 
@@ -102,7 +111,18 @@ const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
       position="relative"
       overflow={{ x: 'hidden', y: 'hidden' }}
     >
-      <div style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}>{id}</div>
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          pointerEvents: 'none',
+          cursor: 'pointer',
+          userSelect: 'none',
+        }}
+      >
+        {id}
+      </div>
       {children}
     </Box>
   );
@@ -112,7 +132,15 @@ const Text = forwardRef(({ ...rest }, ref) => {
   const id = useComponentId();
   return (
     <Txt ref={ref} isEditor {...rest}>
-      Click {id}
+      <div
+        style={{
+          pointerEvents: 'none',
+          cursor: 'pointer',
+          userSelect: 'none',
+        }}
+      >
+        Click {id}
+      </div>
     </Txt>
   );
 });

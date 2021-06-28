@@ -41,12 +41,30 @@ export function useOnDragStart(): MouseEventHandler {
   );
 }
 
+type UseDrop = {
+  onMouseUp: MouseEventHandler;
+  onMouseMove: MouseEventHandler;
+};
+
+/**
+ * Hook that lets graft know where to drop a dragged component.
+ */
+export function useDrop(): UseDrop {
+  const onMouseUp = useOnDragEnd();
+  const onMouseMove = useTrackDragCursorPosition();
+
+  return {
+    onMouseUp,
+    onMouseMove,
+  };
+}
+
 /**
  * Add the component to the map once it has been dropped onto the canvas. If the mouse
  * is outside any canvas, ignore it.
  */
 /** @internal */
-export function useOnDragEnd(): MouseEventHandler {
+function useOnDragEnd(): MouseEventHandler {
   const immerSetDraggedOver = useDraggedOverStore(useCallback((state) => state.immerSet, []));
   const { getState: getDraggedOverState } = useDraggedOverStoreApi();
   const immerSetEditor = useEditorStateInternal(useCallback((state) => state.immerSet, []));
@@ -112,7 +130,8 @@ export function useOnDragEnd(): MouseEventHandler {
 /**
  * Track the current position of the cursor during a drag operation.
  */
-export function useTrackDragCursorPosition(): MouseEventHandler {
+/** @internal */
+function useTrackDragCursorPosition(): MouseEventHandler {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
   const correctPosition = useCorrectCursorPosition();
 

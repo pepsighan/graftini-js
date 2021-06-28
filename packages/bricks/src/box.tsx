@@ -194,11 +194,8 @@ export type EditorInteractionProps = {
 };
 
 export type DragProps = {
-  onDragStart?: DragEventHandler;
-  onDrag?: DragEventHandler;
-  onDragEnd?: DragEventHandler;
-  onDragOver?: DragEventHandler;
-  draggable?: boolean;
+  onMouseDown?: MouseEventHandler;
+  onMouseUp?: MouseEventHandler;
 };
 
 const Box = forwardRef((props: BoxProps, ref) => {
@@ -406,24 +403,14 @@ function borderStyle(borderSide?: BorderSide): string | undefined {
     : undefined;
 }
 
-export function dragProps({
-  isEditor,
-  onDragStart,
-  onDrag,
-  onDragEnd,
-  onDragOver,
-  draggable,
-}: EditorProps & DragProps): any {
+export function dragProps({ isEditor, onMouseDown, onMouseUp }: EditorProps & DragProps): any {
   if (!isEditor) {
     return {};
   }
 
   return {
-    onDragStart,
-    onDrag,
-    onDragEnd,
-    onDragOver,
-    draggable,
+    onMouseDown,
+    onMouseUp,
   };
 }
 

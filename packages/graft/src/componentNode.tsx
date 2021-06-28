@@ -1,7 +1,7 @@
 import React, { ReactNode, useCallback } from 'react';
 import { GraftComponent } from './componentTypes';
 import { CanvasContext, ComponentContext, useComponentId } from './context';
-import { useOnDragEnd, useOnDragStart } from './drag';
+import { useOnDragStart } from './drag';
 import { useResolveComponent } from './resolver';
 import { CreateComponentStore, useCreateComponentStore } from './store/createComponent';
 import { ComponentNode as CN, EditorStore, useEditorStateInternal } from './store/editor';
@@ -71,15 +71,9 @@ function ComponentWrapper({ component: Component, children }: DragOverNotifierPr
   );
 
   const onDragStart = useOnDragStart();
-  const onDragEnd = useOnDragEnd();
 
   return (
-    <Component
-      ref={ref}
-      onMouseDown={!isCreatingNew ? onDragStart : null}
-      onMouseUp={!isCreatingNew ? onDragEnd : null}
-      {...componentProps}
-    >
+    <Component ref={ref} onMouseDown={!isCreatingNew ? onDragStart : null} {...componentProps}>
       {children}
     </Component>
   );

@@ -28,10 +28,6 @@ export type GraftComponentProps = {
    */
   onMouseDown?: MouseEventHandler | null;
   /**
-   * This event commits the new location of the component.
-   */
-  onMouseUp?: MouseEventHandler | null;
-  /**
    * The children of the component.
    */
   children?: ReactNode;
