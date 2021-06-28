@@ -340,17 +340,19 @@ function useDimensionUpdate({ componentId }) {
 
   const updateWidth = useCallback(
     (width, isCtrl) => {
-      let size = width <= 0 ? 0 : width;
-      if (isCtrl) {
-        // In percentage.
-        const width = getRegionState().regionMap[componentId].width;
-        size = Math.floor((size * 100) / width);
-      } else {
-        // In actual pixels.
-        size = Math.floor(size);
-      }
-
       immerSet((state) => {
+        const parentId = state.componentMap[componentId].parentId;
+
+        let size = width <= 0 ? 0 : width;
+        if (isCtrl) {
+          // In percentage.
+          const parentWidth = getRegionState().regionMap[parentId].width;
+          size = Math.floor((size * 100) / parentWidth);
+        } else {
+          // In actual pixels.
+          size = Math.floor(size);
+        }
+
         const props = state.componentMap[componentId].props;
         props.width ??= {};
         props.width.size = size;
@@ -362,17 +364,19 @@ function useDimensionUpdate({ componentId }) {
 
   const updateHeight = useCallback(
     (height, isCtrl) => {
-      let size = height <= 0 ? 0 : height;
-      if (isCtrl) {
-        // In percentage.
-        const height = getRegionState().regionMap[componentId].height;
-        size = Math.floor((size * 100) / height);
-      } else {
-        // In actual pixels.
-        size = Math.floor(size);
-      }
-
       immerSet((state) => {
+        const parentId = state.componentMap[componentId].parentId;
+
+        let size = height <= 0 ? 0 : height;
+        if (isCtrl) {
+          // In percentage.
+          const parentHeight = getRegionState().regionMap[parentId].height;
+          size = Math.floor((size * 100) / parentHeight);
+        } else {
+          // In actual pixels.
+          size = Math.floor(size);
+        }
+
         const props = state.componentMap[componentId].props;
 
         props.height ??= {};
