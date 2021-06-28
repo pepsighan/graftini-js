@@ -8,7 +8,6 @@ import { Position } from './draggedOver';
 /**
  * Stores the current position of the cursor when hovering.
  */
-/** @internal */
 export type HoverStore = {
   /**
    * The current position of the cursor that is corrected depending on if it
@@ -43,7 +42,6 @@ export function HoverStoreProvider({ children }: PropsWithChildren<{}>) {
   return <Provider initialStore={createHoverStore()}>{children}</Provider>;
 }
 
-/** @internal */
 export const useHoverStore = useStore;
 
 export const useHoverStoreApi = useStoreApi;

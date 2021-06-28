@@ -65,7 +65,6 @@ export type ComponentMap = {
  * The state of the editor which holds the representation of the drawn component in
  * the canvas.
  */
-/** @internal */
 export type EditorStore = {
   /**
    * The representation of the view that is rendered on the canvas.

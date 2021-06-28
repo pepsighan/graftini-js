@@ -16,7 +16,6 @@ export type Position = {
 /**
  * Values related to a dragging action.
  */
-/** @internal */
 export type DraggedOver = {
   /**
    * Whether a component is being dragged.
@@ -40,7 +39,6 @@ export type DraggedOver = {
   dropRegion?: DropRegion | null;
 };
 
-/** @internal */
 export type DraggedOverStore = {
   /**
    * Whenever a component is dragged the following properties is set to signify the location of the

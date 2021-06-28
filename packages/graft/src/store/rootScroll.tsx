@@ -3,7 +3,6 @@ import create from 'zustand';
 import createContext from 'zustand/context';
 import { Position } from './draggedOver';
 
-/** @internal */
 export type RootScrollStore = {
   /**
    * The current position of the scroll of the root component.
@@ -29,7 +28,6 @@ export function RootScrollStoreProvider({ children }: PropsWithChildren<{}>) {
   return <Provider initialStore={createRootScrollStore()}>{children}</Provider>;
 }
 
-/** @internal */
 export const useRootScrollStore = useStore;
 
 export const useRootScrollStoreApi = useStoreApi;

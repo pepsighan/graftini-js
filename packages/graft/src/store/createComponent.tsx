@@ -37,7 +37,6 @@ export type NewComponent = {
 /**
  * When creating a new component this store tracks the whole process.
  */
-/** @internal */
 export type CreateComponentStore = {
   /**
    * A new component that is to be created when drawn.
