@@ -1,5 +1,5 @@
-import { useComponentRegion, useComponentRegionStoreApi } from '@graftini/graft';
-import { motion, useMotionValue } from 'framer-motion';
+import { useComponentRegionStoreApi, useRootScrollStoreApi } from '@graftini/graft';
+import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
@@ -13,14 +13,59 @@ export default function Selection() {
 }
 
 function ActualSelection({ componentId }) {
-  const { getState, subscribe } = useComponentRegionStoreApi();
-
   const isResizable = useDesignerState(
     useCallback(
       (state) => state.pages[state.currentOpenPage][componentId].type === 'Box',
       [componentId]
     )
   );
+
+  const { isShown, posX, posY, width, height, actionPosY } = useSelection({ componentId });
+  const { scrollX, scrollY } = useScrollPosition();
+
+  const actualX = useTransform([posX, scrollX], ([p, s]) => p - s);
+  const actualY = useTransform([posY, scrollY], ([p, s]) => p - s);
+  const actualActionPosY = useTransform([actionPosY, scrollY], ([p, s]) => p - s);
+
+  return isShown ? (
+    <>
+      {/* This is the panel on which options of the components are show. */}
+      <motion.div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          x: actualX,
+          y: actualActionPosY,
+          backgroundColor: theme.colors.primary[400],
+          fontSize: 12,
+          height: 20,
+          paddingLeft: 8,
+          paddingRight: 8,
+        }}
+      >
+        <ActionBar componentId={componentId} />
+      </motion.div>
+
+      <PlainOutline posX={actualX} posY={actualY} width={width} height={height} />
+      {isResizable && (
+        <ResizeableFrame
+          posX={actualX}
+          posY={actualY}
+          width={width}
+          height={height}
+          componentId={componentId}
+        />
+      )}
+    </>
+  ) : null;
+}
+
+function useSelection({ componentId }) {
+  const [isShown, setIsShown] = useState(false);
+  const { getState, subscribe } = useComponentRegionStoreApi();
 
   const posX = useMotionValue(0);
   const posY = useMotionValue(0);
@@ -29,19 +74,17 @@ function ActualSelection({ componentId }) {
 
   const actionPosY = useMotionValue(0);
 
-  const [isShown, setIsShown] = useState(false);
-
   useEffect(() => {
     const updateMotion = (state) => {
       if (state) {
-        // If it overflows from the top, then show it to the bottom of the component.
-        const y = state.y - 19 >= 0 ? state.y - 19 : state.y + state.height - 1;
-
         posX.set(state.x);
         posY.set(state.y);
         width.set(state.width);
         height.set(state.height);
 
+        // If the action bar overflows from the top, then show it to the bottom of
+        // the component.
+        const y = state.y - 19 >= 0 ? state.y - 19 : state.y + state.height - 1;
         actionPosY.set(y);
         setIsShown(true);
         return;
@@ -60,38 +103,21 @@ function ActualSelection({ componentId }) {
     return subscribe(updateMotion, (state) => state.regionMap[componentId]);
   }, [actionPosY, componentId, getState, height, posX, posY, subscribe, width]);
 
-  return isShown ? (
-    <>
-      {/* This is the panel on which options of the components are show. */}
-      <motion.div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          x: posX,
-          y: actionPosY,
-          backgroundColor: theme.colors.primary[400],
-          fontSize: 12,
-          height: 20,
-          paddingLeft: 8,
-          paddingRight: 8,
-        }}
-      >
-        <ActionBar componentId={componentId} />
-      </motion.div>
+  return { isShown, posX, posY, width, height, actionPosY };
+}
 
-      <PlainOutline posX={posX} posY={posY} width={width} height={height} />
-      {isResizable && (
-        <ResizeableFrame
-          posX={posX}
-          posY={posY}
-          width={width}
-          height={height}
-          componentId={componentId}
-        />
-      )}
-    </>
-  ) : null;
+function useScrollPosition() {
+  const { subscribe } = useRootScrollStoreApi();
+
+  const scrollX = useMotionValue(0);
+  const scrollY = useMotionValue(0);
+
+  useEffect(() => {
+    return subscribe((state) => {
+      scrollX.set(state.position.x);
+      scrollY.set(state.position.y);
+    });
+  }, [scrollX, scrollY, subscribe]);
+
+  return { scrollX, scrollY };
 }
