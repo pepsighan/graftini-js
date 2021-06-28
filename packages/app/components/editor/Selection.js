@@ -20,12 +20,19 @@ function ActualSelection({ componentId }) {
     )
   );
 
-  const { isShown, posX, posY, width, height, actionPosY } = useSelection({ componentId });
+  const posX = useMotionValue(0);
+  const posY = useMotionValue(0);
+  const width = useMotionValue(0);
+  const height = useMotionValue(0);
+  const actionPosY = useMotionValue(0);
+
   const { scrollX, scrollY } = useScrollPosition();
 
-  const actualX = useTransform([posX, scrollX], ([p, s]) => p - s);
-  const actualY = useTransform([posY, scrollY], ([p, s]) => p - s);
-  const actualActionPosY = useTransform([actionPosY, scrollY], ([p, s]) => p - s);
+  const actualX = useTransform([posX, scrollX], subtractScroll);
+  const actualY = useTransform([posY, scrollY], subtractScroll);
+  const actualActionPosY = useTransform([actionPosY, scrollY], subtractScroll);
+
+  const isShown = useSelection({ componentId, posX, posY, width, height, actionPosY });
 
   return isShown ? (
     <>
@@ -63,16 +70,9 @@ function ActualSelection({ componentId }) {
   ) : null;
 }
 
-function useSelection({ componentId }) {
+function useSelection({ componentId, posX, posY, width, height, actionPosY }) {
   const [isShown, setIsShown] = useState(false);
   const { getState, subscribe } = useComponentRegionStoreApi();
-
-  const posX = useMotionValue(0);
-  const posY = useMotionValue(0);
-  const width = useMotionValue(0);
-  const height = useMotionValue(0);
-
-  const actionPosY = useMotionValue(0);
 
   useEffect(() => {
     const updateMotion = (state) => {
@@ -103,7 +103,7 @@ function useSelection({ componentId }) {
     return subscribe(updateMotion, (state) => state.regionMap[componentId]);
   }, [actionPosY, componentId, getState, height, posX, posY, subscribe, width]);
 
-  return { isShown, posX, posY, width, height, actionPosY };
+  return isShown;
 }
 
 function useScrollPosition() {
@@ -120,4 +120,8 @@ function useScrollPosition() {
   }, [scrollX, scrollY, subscribe]);
 
   return { scrollX, scrollY };
+}
+
+function subtractScroll([position, scrollPosition]) {
+  return position - scrollPosition;
 }
