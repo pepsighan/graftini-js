@@ -33,7 +33,7 @@ const CanvasForm: FunctionComponent = <T, S>({
       () =>
         onInitialize
           ? (onInitialize(getState().componentMap[componentId].props as T) as any)
-          : getState()[componentId].props,
+          : getState().componentMap[componentId].props,
       // eslint-disable-next-line react-hooks/exhaustive-deps
       []
     ),
