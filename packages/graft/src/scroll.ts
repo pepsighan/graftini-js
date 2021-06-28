@@ -23,13 +23,7 @@ export function useScroll(ref: HTMLElement | null) {
         y: event.currentTarget.scrollTop,
       };
       onRefreshHover(position);
-
-      setRootScroll({
-        position: {
-          left: position.x,
-          top: position.y,
-        },
-      });
+      setRootScroll({ position });
     },
     [onRefreshHover, setRootScroll]
   );

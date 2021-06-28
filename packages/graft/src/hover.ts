@@ -32,8 +32,8 @@ export function useSyncHoverRegion(): MouseEventHandler {
         y: event.clientY,
       };
       const realPosition = {
-        x: position.x + scrollPos.left,
-        y: position.y + scrollPos.top,
+        x: position.x + scrollPos.x,
+        y: position.y + scrollPos.y,
       };
 
       // Track where the cursor is hovering at.
@@ -48,8 +48,8 @@ export function useSyncHoverRegion(): MouseEventHandler {
 
         if (state.hoverRegion) {
           // Update the position of the component based on the scroll position.
-          state.hoverRegion.region.x = hoverRegion!.region.x - scrollPos.left;
-          state.hoverRegion.region.y = hoverRegion!.region.y - scrollPos.top;
+          state.hoverRegion.region.x = hoverRegion!.region.x - scrollPos.x;
+          state.hoverRegion.region.y = hoverRegion!.region.y - scrollPos.y;
         }
       });
     },
