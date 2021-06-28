@@ -27,7 +27,6 @@ const Root: RootComponent<RootProps> = forwardRef(
 
     return (
       <div
-        ref={ref as any}
         css={{
           width: '100%',
           height: '100%',
@@ -38,6 +37,7 @@ const Root: RootComponent<RootProps> = forwardRef(
         onClick={onSelect}
       >
         <div
+          ref={ref as any}
           css={{
             width: '100%',
             height: '100%',
