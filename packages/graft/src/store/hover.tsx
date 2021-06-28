@@ -16,7 +16,8 @@ export type HoverStore = {
    */
   cursorPosition?: Position | null;
   /**
-   * The current component that is being hovered over.
+   * The current component & its region that is being hovered over. The position
+   * is relative to the document (i.e. the iframe).
    */
   hoverRegion?: HoverRegion | null;
   /**

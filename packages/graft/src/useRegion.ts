@@ -20,7 +20,6 @@ export function useSyncRegion(componentId: string) {
   const immerSet = useComponentRegionStore(useCallback((state) => state.immerSet, []));
   const [ref, setRef] = useState<HTMLElement | null>(null);
   const { subscribe: subscribeEditor } = useEditorStoreApiInternal();
-  const { subscribe: subscribeRootScroll } = useRootScrollStoreApi();
   const { getState: getRootScroll } = useRootScrollStoreApi();
 
   useLayoutEffect(() => {
@@ -45,26 +44,16 @@ export function useSyncRegion(componentId: string) {
 
     // Measure it for the first time.
     measureRegion();
-
-    const onResize = () => measureRegion();
     // Measure on window resize.
-    window.addEventListener('resize', onResize);
-
+    window.addEventListener('resize', measureRegion);
     // Also measure the region if there is change anywhere in the component tree.
-    const unsubscribeStore = subscribeEditor(
-      () => measureRegion(),
-      (state) => state.componentMap
-    );
-
-    // Update the region when there is scroll on the root component.
-    const unsubscribeScroll = subscribeRootScroll((state) => measureRegion());
+    const unsubscribeStore = subscribeEditor(measureRegion, (state) => state.componentMap);
 
     return () => {
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', measureRegion);
       unsubscribeStore();
-      unsubscribeScroll();
     };
-  }, [componentId, getRootScroll, immerSet, ref, subscribeEditor, subscribeRootScroll]);
+  }, [componentId, getRootScroll, immerSet, ref, subscribeEditor]);
 
   return setRef;
 }

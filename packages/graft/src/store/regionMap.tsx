@@ -12,7 +12,7 @@ import { Region } from '../useRegion';
 export type ComponentRegionMap = {
   /**
    * The region on the screen that this component occupies. This is automatically updated based on
-   * where it renders.
+   * where it renders. The position is relative to the parent document (i.e. the iframe).
    */
   [componentId: string]: Region;
 };
