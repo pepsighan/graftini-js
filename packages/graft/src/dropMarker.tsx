@@ -1,5 +1,5 @@
 import { motion, useMotionValue } from 'framer-motion';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { DropKind, dropMarkerWidth, DropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 import { isComponentWithinSubTree, useEditorStoreApiInternal } from './store/editor';
@@ -15,11 +15,14 @@ export type DropMarkerProps = {
 export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
   const backgroundColor = useMotionValue(color);
   const border = useMotionValue<string | null>(null);
-  const [isDraggingOnRoot, setIsDraggingOnRoot] = useState(false);
   const posX = useMotionValue(0);
   const posY = useMotionValue(0);
   const width = useMotionValue(0);
   const height = useMotionValue(0);
+
+  const isOnRoot = useDraggedOverStore(
+    useCallback((state: DraggedOverStore) => state.draggedOver.isOnRoot, [])
+  );
 
   const { getState } = useEditorStoreApiInternal();
   const isOutsideSelf = useDraggedOverStore(
@@ -52,8 +55,6 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
           border.set(null);
         }
 
-        setIsDraggingOnRoot(!!dropRegion);
-
         if (dropRegion?.dropMarkerRegion) {
           posX.set(dropRegion.dropMarkerRegion.x);
           posY.set(dropRegion.dropMarkerRegion.y);
@@ -75,7 +76,7 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
   // to be dropped in.
   return (
     <>
-      {isDraggingOnRoot && isOutsideSelf && (
+      {isOnRoot && isOutsideSelf && (
         <motion.div
           style={{
             position: 'fixed',

@@ -23,6 +23,10 @@ export type DraggedOver = {
    */
   isDragging: boolean;
   /**
+   * Whether the cursor in on the root.
+   */
+  isOnRoot: boolean;
+  /**
    * The position of the cursor when dragging.
    */
   cursorPosition?: Position | null;
@@ -52,7 +56,7 @@ export type DraggedOverStore = {
 /** @internal */
 export const createDraggedOverStore = () =>
   create<DraggedOverStore>((set) => ({
-    draggedOver: { isDragging: false },
+    draggedOver: { isDragging: false, isOnRoot: false },
     immerSet: (fn) => set(produce(fn)),
   }));
 
