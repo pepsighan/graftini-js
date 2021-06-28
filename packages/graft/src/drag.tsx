@@ -1,4 +1,4 @@
-import { MouseEventHandler, useCallback } from 'react';
+import { MouseEventHandler, useCallback, MouseEvent } from 'react';
 import { useComponentId } from './context';
 import { addComponentToDropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
@@ -23,6 +23,11 @@ export function useOnDragStart(): MouseEventHandler {
   return useCallback(
     (event) => {
       event.stopPropagation();
+
+      if (event.buttons !== 1) {
+        // If the left mouse button is not clicked ignore this.
+        return;
+      }
 
       // The component is not yet being dragged. It will only start dragging once it moves a few pixels
       // away. We are just storing the data of the current component that is to be dragged.
@@ -132,6 +137,11 @@ function useTrackDragCursorPosition(): MouseEventHandler {
 
   return useCallback(
     (event) => {
+      if (event.buttons !== 1) {
+        // If the left mouse button is not clicked ignore this.
+        return;
+      }
+
       immerSet((state: DraggedOverStore) => {
         const draggedOver = state.draggedOver;
         if (!draggedOver.isDragging) {
