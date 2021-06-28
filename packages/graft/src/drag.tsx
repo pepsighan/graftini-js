@@ -68,20 +68,18 @@ export function useDrop(): UseDrop {
       }
 
       if (isLeftMouseButtonPressed(event)) {
-        // Nothing to do if the left button is still pressed.
-        return;
-      }
-
-      if (ref.current.contains(event.target as any)) {
-        // If the event comes from within the canvas, then it is to
-        // be handled by the onMouseMove returned by this hook.
         return;
       }
 
       // Stop the drag event because the left click is no longer active.
       immerSet((state) => {
+        if (!state.draggedOver.isDragging) {
+          return;
+        }
+
         state.draggedOver = {
           isDragging: false,
+          isOnRoot: false,
         };
       });
 
@@ -126,11 +124,11 @@ function useOnDragEnd(): MouseEventHandler {
     immerSetDraggedOver((draggedState: DraggedOverStore) => {
       const dropRegion = draggedState.draggedOver.dropRegion;
       if (!dropRegion) {
-        draggedState.draggedOver = { isDragging: false };
+        draggedState.draggedOver = { isDragging: false, isOnRoot: false };
         return;
       }
 
-      draggedState.draggedOver = { isDragging: false };
+      draggedState.draggedOver = { isDragging: false, isOnRoot: false };
     });
 
     immerSetEditor((editorState: EditorStore) => {
@@ -184,14 +182,13 @@ function useTrackDragCursorPosition(): MouseEventHandler {
         }
 
         if (!isLeftMouseButtonPressed(event)) {
-          console.log('stopping now');
           // This may happen when during the drag operation, mouse up event (drag end)
           // took place outside the event target. We need to stop the drag event manually
           // now. This is useful when the unpressed cursor enters the canvas directly.
           //
           // And this is not the complete picture. A similar logic is used on the
           // document as well at [useDrop].
-          state.draggedOver = { isDragging: false };
+          state.draggedOver = { isDragging: false, isOnRoot: false };
           // Run the drag end to run cleanups or otherwise.
           onDragEnd(event);
           return;
@@ -200,6 +197,7 @@ function useTrackDragCursorPosition(): MouseEventHandler {
         draggedOver.cursorPosition ??= {} as any;
         draggedOver.cursorPosition!.x = event.clientX;
         draggedOver.cursorPosition!.y = event.clientY;
+        draggedOver.isOnRoot = true;
       });
     },
     [immerSet, onDragEnd]
