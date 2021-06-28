@@ -4,7 +4,6 @@ import { Position } from './store/draggedOver';
 import { ComponentMap, ROOT_NODE_ID, useEditorStoreApiInternal } from './store/editor';
 import { HoverStore, useHoverStore } from './store/hover';
 import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
-import { useRealCursorPosition } from './store/rootScroll';
 import { Region } from './useRegion';
 
 export type HoverRegion = {
@@ -52,23 +51,37 @@ export function useRefreshHoverRegion(): Function {
   const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
-  const realCursorPosition = useRealCursorPosition();
 
-  return useCallback(() => {
-    // Track where the cursor is hovering at.
-    immerSet((state) => {
-      if (!state.cursorPosition) {
-        return;
-      }
+  return useCallback(
+    (scrollPosition: Position) => {
+      // Track where the cursor is hovering at.
+      immerSet((state) => {
+        if (!state.cursorPosition) {
+          return;
+        }
 
-      const hoverRegion = identifyHoverRegion(
-        getEditorState().componentMap,
-        getRegionState().regionMap,
-        realCursorPosition(state.cursorPosition)
-      );
-      state.hoverRegion = hoverRegion;
-    });
-  }, [getEditorState, getRegionState, immerSet, realCursorPosition]);
+        const realPosition = {
+          x: state.cursorPosition.x + scrollPosition.x,
+          y: state.cursorPosition.y + scrollPosition.y,
+        };
+
+        const hoverRegion = identifyHoverRegion(
+          getEditorState().componentMap,
+          getRegionState().regionMap,
+          realPosition
+        );
+
+        state.hoverRegion = hoverRegion;
+        if (state.hoverRegion) {
+          // Update the position based on the scroll position.
+          state.hoverRegion.region.x = hoverRegion!.region.x - scrollPosition.x;
+          state.hoverRegion.region.y = hoverRegion!.region.y - scrollPosition.y;
+          return;
+        }
+      });
+    },
+    [getEditorState, getRegionState, immerSet]
+  );
 }
 
 /**

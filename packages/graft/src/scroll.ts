@@ -18,12 +18,16 @@ export function useScroll(ref: HTMLElement | null) {
 
   const onScroll = useCallback(
     (event: UIEvent) => {
-      onRefreshHover();
+      const position = {
+        x: event.currentTarget.scrollLeft,
+        y: event.currentTarget.scrollTop,
+      };
+      onRefreshHover(position);
 
       setRootScroll({
         position: {
-          top: event.currentTarget.scrollTop,
-          left: event.currentTarget.scrollLeft,
+          left: position.x,
+          top: position.y,
         },
       });
     },

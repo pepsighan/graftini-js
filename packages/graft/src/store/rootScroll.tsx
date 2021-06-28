@@ -1,7 +1,6 @@
-import React, { PropsWithChildren, useCallback } from 'react';
+import React, { PropsWithChildren } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
-import { Position } from './draggedOver';
 
 /** @internal */
 export type RootScrollStore = {
@@ -37,23 +36,3 @@ export const useRootScrollStore = useStore;
 
 /** @internal */
 export const useRootScrollStoreApi = useStoreApi;
-
-/**
- * Resolves the client cursor positions to the one which is relative
- * to the document's (iframe) top-left.
- */
-/** @internal */
-export function useRealCursorPosition() {
-  const { getState } = useRootScrollStoreApi();
-
-  return useCallback(
-    (position: Position) => {
-      const scrollPos = getState().position;
-      return {
-        x: position.x + scrollPos.left,
-        y: position.y + scrollPos.top,
-      };
-    },
-    [getState]
-  );
-}
