@@ -13,20 +13,26 @@ export { Editor, EditorProps } from './editor';
 export { useCheckCursorOnIFrame } from './iframe';
 export { DragPreview } from './preview';
 export {
+  CreateComponentStore,
   NewComponent,
   useCreateComponentStore,
   useCreateComponentStoreApi,
 } from './store/createComponent';
-export { useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
+export { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
 export {
   ComponentMap,
   ComponentNode,
   ComponentProps,
   defaultComponentMap,
+  EditorStore,
   ROOT_NODE_ID,
   useEditorState,
   useEditorStoreApi,
 } from './store/editor';
-export { useHoverStore, useHoverStoreApi } from './store/hover';
-export { useComponentRegionStore, useComponentRegionStoreApi } from './store/regionMap';
-export { useRootScrollStore, useRootScrollStoreApi } from './store/rootScroll';
+export { HoverStore, useHoverStore, useHoverStoreApi } from './store/hover';
+export {
+  ComponentRegionStore,
+  useComponentRegionStore,
+  useComponentRegionStoreApi,
+} from './store/regionMap';
+export { RootScrollStore, useRootScrollStore, useRootScrollStoreApi } from './store/rootScroll';

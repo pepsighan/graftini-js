@@ -1,16 +1,16 @@
 import { Flex } from '@chakra-ui/layout';
-import { Editor, useEditor } from '@graftini/graft';
+import { Editor } from '@graftini/graft';
 import components from 'canvasComponents';
 import Root from 'canvasComponents/Root';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
-import { debounce } from 'lodash-es';
-import { useCallback, useEffect, useMemo } from 'react';
-import { useDesignerState, useDesignerStateApi } from 'store/designer';
-import { useUpdateProjectDesign } from 'store/projects';
+import useSyncDesignerStateToBackend from 'hooks/useSyncDesignerStateToBackend';
+import { useCallback, useMemo } from 'react';
+import { useDesignerState } from 'store/designer';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
+import SyncEditorAndDesignerState from './SyncEditorAndDesignerState';
 
 export default function Designer({ projectId }) {
   const currentPageId = useDesignerState(useCallback((state) => state.currentOpenPage, []));
@@ -46,59 +46,4 @@ function Editorial() {
       </Flex>
     </Editor>
   );
-}
-
-/**
- * This renderless component syncs the internal state of editor and the designer in that direction.
- */
-function SyncEditorAndDesignerState() {
-  const { subscribe } = useEditor();
-  const { setState } = useDesignerStateApi();
-
-  useEffect(() => {
-    return subscribe((editorState) => {
-      setState((designerState) => ({
-        ...designerState,
-        pages: {
-          ...designerState.pages,
-          [designerState.currentOpenPage]: editorState,
-        },
-      }));
-    });
-  }, [setState, subscribe]);
-
-  return <></>;
-}
-
-/**
- * Hook that syncs the designer state to the backend. This hook is retained
- * until the project designer page is open. Changing pages does not affect this as
- * all the designs of all the pages are synced every time.
- */
-function useSyncDesignerStateToBackend({ projectId }) {
-  const { subscribe } = useDesignerStateApi();
-  const [updateDesign] = useUpdateProjectDesign();
-
-  useEffect(() => {
-    // Update every two seconds.
-    const debouncedUpdate = debounce(async (pages) => {
-      await updateDesign({
-        variables: {
-          input: {
-            projectId,
-            pages: Object.keys(pages).map((pageId) => ({
-              pageId,
-              componentMap: pages[pageId]
-                ? // Cleanup any deleted component nodes before saving them to
-                  // backend.
-                  JSON.stringify({ ...pages[pageId] })
-                : null,
-            })),
-          },
-        },
-      });
-    }, 2000);
-
-    return subscribe(debouncedUpdate, (state) => state.pages);
-  }, [projectId, subscribe, updateDesign]);
 }
