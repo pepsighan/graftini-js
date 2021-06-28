@@ -52,10 +52,7 @@ export type DraggedOverStore = {
 /** @internal */
 export const createDraggedOverStore = () =>
   create<DraggedOverStore>((set) => ({
-    draggedOver: {
-      isDragging: false,
-      isOnRoot: false,
-    },
+    draggedOver: { isDragging: false },
     immerSet: (fn) => set(produce(fn)),
   }));
 

@@ -20,10 +20,6 @@ export type HoverStore = {
    */
   hoverRegion?: HoverRegion | null;
   /**
-   * Whether the cursor is hovering over the root.
-   */
-  isOnRoot: boolean;
-  /**
    * A setter which uses immer.
    */
   immerSet(fn: (state: HoverStore) => void): void;
@@ -32,7 +28,6 @@ export type HoverStore = {
 /** @internal */
 export const createHoverStore = () =>
   create<HoverStore>((set) => ({
-    isOnRoot: false,
     immerSet: (fn) => set(produce(fn)),
   }));
 
