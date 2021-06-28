@@ -9,7 +9,6 @@ import {
   useComponentId,
   useCreateComponent,
   useForgetCreateComponent,
-  useDrop,
 } from '@graftini/graft';
 import { forwardRef } from 'react';
 import IFrame from './IFrame';
@@ -25,7 +24,7 @@ export default function App() {
 
 function Designer() {
   return (
-    <div {...useDrop()}>
+    <>
       <IFrame style={{ width: '100%', height: 'calc(100vh - 74px)' }}>
         {() => (
           <div
@@ -42,7 +41,7 @@ function Designer() {
         )}
       </IFrame>
       <DragPreview />
-    </div>
+    </>
   );
 }
 

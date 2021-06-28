@@ -7,7 +7,6 @@ export {
 } from './componentTypes';
 export { useCanvasId, useComponentId } from './context';
 export { useCreateComponent, useForgetCreateComponent } from './create';
-export { useDrop } from './drag';
 export { DrawMarker, DrawMarkerProps } from './drawMarker';
 export { DropMarker, DropMarkerProps } from './dropMarker';
 export { Editor, EditorProps, useEditor, useEditorState } from './editor';

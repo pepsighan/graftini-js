@@ -11,6 +11,7 @@ import mergeRefs from 'react-merge-refs';
 import { GraftComponentProps } from './componentTypes';
 import { RootOverrideContext } from './context';
 import { useDrawComponent } from './create';
+import { useDrop } from './drag';
 import { useRefreshHoverRegion, useSyncHoverRegion } from './hover';
 import { useScrollWhenDragging } from './scroll';
 import { useRootScrollStoreApi } from './store/rootScroll';
@@ -23,7 +24,13 @@ export const Root__Graft__Component = forwardRef(
   ({ children, ...rest }: GraftComponentProps, ref: ForwardedRef<any>) => {
     const { setState: setRootScroll } = useRootScrollStoreApi();
 
-    const { onMouseUp, onMouseMove: onMouseMoveToDraw, onMouseDown } = useDrawComponent();
+    const {
+      onMouseUp: onMouseUpToDraw,
+      onMouseMove: onMouseMoveToDraw,
+      onMouseDown: onMouseDownToDraw,
+    } = useDrawComponent();
+    const { onMouseUp: onMouseUpToDrop, onMouseMove: onMouseMoveToDrop } = useDrop();
+
     const onMouseMoveToHover = useSyncHoverRegion();
     const onRefreshHover = useRefreshHoverRegion();
 
@@ -50,8 +57,17 @@ export const Root__Graft__Component = forwardRef(
       (event: MouseEvent) => {
         onMouseMoveToDraw(event);
         onMouseMoveToHover(event);
+        onMouseMoveToDrop(event);
       },
-      [onMouseMoveToDraw, onMouseMoveToHover]
+      [onMouseMoveToDraw, onMouseMoveToDrop, onMouseMoveToHover]
+    );
+
+    const onMouseUp = useCallback(
+      (event) => {
+        onMouseUpToDraw(event);
+        onMouseUpToDrop(event);
+      },
+      [onMouseUpToDraw, onMouseUpToDrop]
     );
 
     const RootOverrideComponent = useContext(RootOverrideContext);
@@ -63,7 +79,7 @@ export const Root__Graft__Component = forwardRef(
           onScroll={onScroll}
           onMouseUp={onMouseUp}
           onMouseMove={onMouseMove}
-          onMouseDown={onMouseDown}
+          onMouseDown={onMouseDownToDraw}
         >
           {children}
         </div>
@@ -76,7 +92,7 @@ export const Root__Graft__Component = forwardRef(
         onScroll={onScroll}
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
-        onMouseDown={onMouseDown}
+        onMouseDown={onMouseDownToDraw}
         {...rest}
       >
         {children}
