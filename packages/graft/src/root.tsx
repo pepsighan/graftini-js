@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 import mergeRefs from 'react-merge-refs';
 import { GraftComponentProps } from './componentTypes';
-import { RootOverrideContext, RootRefContext } from './context';
+import { RootOverrideContext } from './context';
 import { useDrawComponent } from './create';
 import { useDrop } from './drag';
 import { useSyncHoverRegion } from './hover';
@@ -55,34 +55,30 @@ export const Root__Graft__Component = forwardRef(
     const RootOverrideComponent = useContext(RootOverrideContext);
     if (!RootOverrideComponent) {
       return (
-        <RootRefContext.Provider value={rootRef}>
-          <div
-            ref={mergedRef}
-            style={{ width: '100%', height: '100%', overflow: 'auto' }}
-            onScroll={onScroll}
-            onMouseUp={onMouseUp}
-            onMouseMove={onMouseMove}
-            onMouseDown={onMouseDownToDraw}
-          >
-            {children}
-          </div>
-        </RootRefContext.Provider>
-      );
-    }
-
-    return (
-      <RootRefContext.Provider value={rootRef}>
-        <RootOverrideComponent
-          {...rest}
+        <div
           ref={mergedRef}
+          style={{ width: '100%', height: '100%', overflow: 'auto' }}
           onScroll={onScroll}
           onMouseUp={onMouseUp}
           onMouseMove={onMouseMove}
           onMouseDown={onMouseDownToDraw}
         >
           {children}
-        </RootOverrideComponent>
-      </RootRefContext.Provider>
+        </div>
+      );
+    }
+
+    return (
+      <RootOverrideComponent
+        {...rest}
+        ref={mergedRef}
+        onScroll={onScroll}
+        onMouseUp={onMouseUp}
+        onMouseMove={onMouseMove}
+        onMouseDown={onMouseDownToDraw}
+      >
+        {children}
+      </RootOverrideComponent>
     );
   }
 );
