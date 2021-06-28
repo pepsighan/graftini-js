@@ -111,8 +111,8 @@ const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
           top: 0,
           left: 0,
           pointerEvents: 'none',
-          cursor: 'pointer',
           userSelect: 'none',
+          WebkitUserSelect: 'none',
         }}
       >
         {id}
@@ -129,8 +129,8 @@ const Text = forwardRef(({ ...rest }, ref) => {
       <div
         style={{
           pointerEvents: 'none',
-          cursor: 'pointer',
           userSelect: 'none',
+          WebkitUserSelect: 'none',
         }}
       >
         Click {id}
