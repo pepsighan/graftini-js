@@ -20,8 +20,8 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
   const width = useMotionValue(0);
   const height = useMotionValue(0);
 
-  const isOnRoot = useDraggedOverStore(
-    useCallback((state: DraggedOverStore) => state.draggedOver.isOnRoot, [])
+  const isOnIFrame = useDraggedOverStore(
+    useCallback((state: DraggedOverStore) => state.draggedOver.isOnIFrame, [])
   );
 
   const { getState } = useEditorStoreApiInternal();
@@ -76,7 +76,7 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
   // to be dropped in.
   return (
     <>
-      {isOnRoot && isOutsideSelf && (
+      {isOnIFrame && isOutsideSelf && (
         <motion.div
           style={{
             position: 'fixed',

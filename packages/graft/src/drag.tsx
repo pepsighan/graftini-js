@@ -81,17 +81,17 @@ function useOnDragEnd(): MouseEventHandler {
     // on the variable above to be used when updating the editor itself.
     immerSetDraggedOver((draggedState: DraggedOverStore) => {
       const dropRegion = draggedState.draggedOver.dropRegion;
-      if (!dropRegion) {
-        draggedState.draggedOver = { isDragging: false, isOnRoot: false };
+      if (!dropRegion || !draggedState.draggedOver.isOnIFrame) {
+        draggedState.draggedOver = { isDragging: false };
         return;
       }
 
-      draggedState.draggedOver = { isDragging: false, isOnRoot: false };
+      draggedState.draggedOver = { isDragging: false };
     });
 
     immerSetEditor((editorState: EditorStore) => {
       const dropRegion = draggedOver.dropRegion;
-      if (!dropRegion) {
+      if (!dropRegion || !draggedOver.isOnIFrame) {
         return;
       }
 
@@ -129,7 +129,6 @@ function useOnDragEnd(): MouseEventHandler {
 /** @internal */
 function useTrackDragCursorPosition(): MouseEventHandler {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
-  const onDragEnd = useOnDragEnd();
 
   return useCallback(
     (event) => {
@@ -139,29 +138,11 @@ function useTrackDragCursorPosition(): MouseEventHandler {
           return;
         }
 
-        if (!isLeftMouseButtonPressed(event)) {
-          // This may happen when during the drag operation, mouse up event (drag end)
-          // took place outside the event target. We need to stop the drag event manually
-          // now. This is useful when the unpressed cursor enters the canvas directly.
-          //
-          // And this is not the complete picture. A similar logic is used on the
-          // document as well at [useDrop].
-          state.draggedOver = { isDragging: false, isOnRoot: false };
-          // Run the drag end to run cleanups or otherwise.
-          onDragEnd(event);
-          return;
-        }
-
         draggedOver.cursorPosition ??= {} as any;
         draggedOver.cursorPosition!.x = event.clientX;
         draggedOver.cursorPosition!.y = event.clientY;
-        draggedOver.isOnRoot = true;
       });
     },
-    [immerSet, onDragEnd]
+    [immerSet]
   );
-}
-
-function isLeftMouseButtonPressed(event: React.MouseEvent | MouseEvent) {
-  return event.buttons === 1 || event.button === 1;
 }
