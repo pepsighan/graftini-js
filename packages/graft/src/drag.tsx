@@ -1,4 +1,4 @@
-import { MouseEventHandler, useCallback, MouseEvent } from 'react';
+import { MouseEventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { addComponentToDropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';

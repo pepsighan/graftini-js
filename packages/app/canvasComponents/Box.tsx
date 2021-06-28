@@ -16,7 +16,6 @@ import {
   Spacing,
 } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
-import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, ReactNode, useCallback } from 'react';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
@@ -55,7 +54,7 @@ export type BoxComponentProps = {
 };
 
 const Box: GraftComponent<BoxComponentProps> = forwardRef(
-  ({ children, draggable, onDragStart, onDragEnd, onDragOver, onDrag, link, ...rest }, ref) => {
+  ({ children, onMouseDown, link, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
@@ -74,11 +73,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
         ref={ref}
         {...boxProps}
         isEditor
-        draggable={isDraggingDisabled ? false : draggable}
-        onDragStart={useUnselectOnDragStart(onDragStart)}
-        onDragEnd={onDragEnd}
-        onDragOver={onDragOver}
-        onDrag={onDrag}
+        onMouseDown={!isDraggingDisabled ? onMouseDown : null}
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();
