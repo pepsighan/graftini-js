@@ -2,7 +2,6 @@ import { Box, Button, Flex, IconButton, Text, Tooltip } from '@chakra-ui/react';
 import {
   useCreateComponent,
   useCreateComponentStore,
-  useCurrentCreateComponentType,
   useForgetCreateComponent,
 } from '@graftini/graft';
 import { CursorArrowIcon, PlayIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';

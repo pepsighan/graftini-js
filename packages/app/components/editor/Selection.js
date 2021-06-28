@@ -1,4 +1,4 @@
-import { useComponentRegion } from '@graftini/graft';
+import { useComponentRegion, useComponentRegionStoreApi } from '@graftini/graft';
 import { motion, useMotionValue } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -13,7 +13,7 @@ export default function Selection() {
 }
 
 function ActualSelection({ componentId }) {
-  const { get, subscribe } = useComponentRegion(componentId);
+  const { getState, subscribe } = useComponentRegionStoreApi();
 
   const isResizable = useDesignerState(
     useCallback(
@@ -56,9 +56,9 @@ function ActualSelection({ componentId }) {
     };
 
     // Initialize with the first value.
-    updateMotion(get());
-    return subscribe(updateMotion);
-  }, [actionPosY, get, height, posX, posY, subscribe, width]);
+    updateMotion(getState().regionMap[componentId]);
+    return subscribe(updateMotion, (state) => state.regionMap[componentId]);
+  }, [actionPosY, componentId, getState, height, posX, posY, subscribe, width]);
 
   return isShown ? (
     <>
