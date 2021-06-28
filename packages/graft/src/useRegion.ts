@@ -1,5 +1,4 @@
-import { useCallback, useContext, useLayoutEffect, useState } from 'react';
-import { RootRefContext } from './context';
+import { useCallback, useLayoutEffect, useState } from 'react';
 import { useEditorStoreApi } from './store/editor';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
 import { useRootScrollStoreApi } from './store/rootScroll';
@@ -23,8 +22,6 @@ export function useSyncRegion(componentId: string) {
   const { subscribe: subscribeEditor } = useEditorStoreApi();
   const { getState: getRootScroll } = useRootScrollStoreApi();
 
-  const rootRef = useContext(RootRefContext);
-
   useLayoutEffect(() => {
     if (!ref) {
       return;
@@ -33,19 +30,15 @@ export function useSyncRegion(componentId: string) {
     const measureRegion = () =>
       window.requestAnimationFrame(() => {
         const rect = ref.getBoundingClientRect();
-
-        // It may be undefined if the region is ROOT itself or is not
-        // initialized yet. Either way it is fine as the regions will
-        // be eventually correct.
-        const offsetLeft = rootRef?.offsetLeft ?? 0;
-        const offsetTop = rootRef?.offsetTop ?? 0;
+        const scrollPosition = getRootScroll().position;
 
         immerSet((state: ComponentRegionStore) => {
           // Doing away with typescript here for extract performance from immer.
           state.regionMap[componentId] ??= {} as any;
           const region = state.regionMap[componentId];
-          region.x = rect.x + offsetLeft;
-          region.y = rect.y + offsetTop;
+          // Place the position relative to the document (iframe).
+          region.x = rect.x + scrollPosition.x;
+          region.y = rect.y + scrollPosition.y;
           region.width = rect.width;
           region.height = rect.height;
         });
@@ -62,15 +55,7 @@ export function useSyncRegion(componentId: string) {
       window.removeEventListener('resize', measureRegion);
       unsubscribeStore();
     };
-  }, [
-    componentId,
-    getRootScroll,
-    immerSet,
-    ref,
-    rootRef?.offsetLeft,
-    rootRef?.offsetTop,
-    subscribeEditor,
-  ]);
+  }, [componentId, getRootScroll, immerSet, ref, subscribeEditor]);
 
   return setRef;
 }
