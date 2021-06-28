@@ -26,6 +26,10 @@ export type DraggedOver = {
    */
   isOnIFrame?: boolean;
   /**
+   * The initial cursor position when drag starts.
+   */
+  initialCursorPosition?: Position | null;
+  /**
    * The position of the cursor when dragging.
    */
   cursorPosition?: Position | null;

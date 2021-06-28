@@ -1,7 +1,12 @@
 import { MouseEventHandler, useCallback } from 'react';
 import { useComponentId } from './context';
 import { addComponentToDropRegion } from './dropLocation';
-import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
+import {
+  DraggedOverStore,
+  Position,
+  useDraggedOverStore,
+  useDraggedOverStoreApi,
+} from './store/draggedOver';
 import {
   EditorStore,
   isComponentWithinSubTree,
@@ -82,11 +87,22 @@ function useOnDragEnd(): MouseEventHandler {
 
     const draggedOver = getDraggedOverState().draggedOver;
 
+    const dropRegion = draggedOver.dropRegion;
+    const component = draggedOver.component;
+    const cursorPosition = draggedOver.cursorPosition;
+    const isOnIFrame = draggedOver.isOnIFrame;
+
+    const isInvalidDrop =
+      !dropRegion ||
+      !component ||
+      !cursorPosition ||
+      !isOnIFrame ||
+      !is3pxAway(draggedOver.initialCursorPosition!, cursorPosition);
+
     // Update the dragged over state separately. But have cached the last value
     // on the variable above to be used when updating the editor itself.
     immerSetDraggedOver((draggedState: DraggedOverStore) => {
-      const dropRegion = draggedState.draggedOver.dropRegion;
-      if (!dropRegion || !draggedState.draggedOver.isOnIFrame) {
+      if (isInvalidDrop) {
         draggedState.draggedOver = { isDragging: false };
         return;
       }
@@ -96,7 +112,7 @@ function useOnDragEnd(): MouseEventHandler {
 
     immerSetEditor((editorState: EditorStore) => {
       const dropRegion = draggedOver.dropRegion;
-      if (!dropRegion || !draggedOver.isOnIFrame) {
+      if (isInvalidDrop) {
         return;
       }
 
@@ -105,7 +121,7 @@ function useOnDragEnd(): MouseEventHandler {
       if (
         isComponentWithinSubTree(
           componentToDrop.id,
-          dropRegion.componentId,
+          dropRegion!.componentId,
           editorState.componentMap
         )
       ) {
@@ -123,7 +139,7 @@ function useOnDragEnd(): MouseEventHandler {
         ...editorState.componentMap[componentToDrop.parentId!].childrenNodes,
       ];
 
-      addComponentToDropRegion(componentToDrop.id, dropRegion, editorState.componentMap);
+      addComponentToDropRegion(componentToDrop.id, dropRegion!, editorState.componentMap);
     });
   }, [getDraggedOverState, immerSetDraggedOver, immerSetEditor, setRootScroll]);
 }
@@ -148,6 +164,10 @@ function useTrackDragCursorPosition(): MouseEventHandler {
           return;
         }
 
+        if (!draggedOver.initialCursorPosition) {
+          draggedOver.initialCursorPosition = { x: event.clientX, y: event.clientY };
+        }
+
         draggedOver.cursorPosition ??= {} as any;
         draggedOver.cursorPosition!.x = event.clientX;
         draggedOver.cursorPosition!.y = event.clientY;
@@ -155,4 +175,12 @@ function useTrackDragCursorPosition(): MouseEventHandler {
     },
     [immerSet]
   );
+}
+
+/**
+ * Only when the cursor has dragged 3px from the original point can it be deemed
+ * to be a drag operation.
+ */
+export function is3pxAway(initial: Position, now: Position) {
+  return Math.abs(initial.x - now.x) > 3 || Math.abs(initial.y - now.y) > 3;
 }
