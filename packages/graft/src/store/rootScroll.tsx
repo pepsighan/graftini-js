@@ -32,5 +32,4 @@ export function RootScrollStoreProvider({ children }: PropsWithChildren<{}>) {
 /** @internal */
 export const useRootScrollStore = useStore;
 
-/** @internal */
 export const useRootScrollStoreApi = useStoreApi;

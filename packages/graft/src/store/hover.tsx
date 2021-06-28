@@ -46,20 +46,4 @@ export function HoverStoreProvider({ children }: PropsWithChildren<{}>) {
 /** @internal */
 export const useHoverStore = useStore;
 
-/** @internal */
 export const useHoverStoreApi = useStoreApi;
-
-export type UseHoverSubscriber = (
-  listener: StateListener<HoverRegion | null | undefined>
-) => () => void;
-
-/**
- * Hook that returns a subscriber that can be imperatively subscribed to listen to hover states.
- */
-export function useHoverSubscriber(): UseHoverSubscriber {
-  const { subscribe } = useHoverStoreApi();
-  return (listener) =>
-    subscribe((state, previousState) =>
-      listener(state.isOnIFrame ? state.hoverRegion : null, previousState.hoverRegion)
-    );
-}

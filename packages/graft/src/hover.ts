@@ -1,7 +1,7 @@
 import { MouseEventHandler, useCallback } from 'react';
 import { isCursorWithinRegion } from './dropLocation';
 import { Position } from './store/draggedOver';
-import { ComponentMap, ROOT_NODE_ID, useEditorStoreApiInternal } from './store/editor';
+import { ComponentMap, ROOT_NODE_ID, useEditorStoreApi } from './store/editor';
 import { HoverStore, useHoverStore } from './store/hover';
 import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
 import { useRootScrollStoreApi } from './store/rootScroll';
@@ -19,7 +19,7 @@ export type HoverRegion = {
 export function useSyncHoverRegion(): MouseEventHandler {
   const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
 
-  const { getState: getEditorState } = useEditorStoreApiInternal();
+  const { getState: getEditorState } = useEditorStoreApi();
   const { getState: getRegionState } = useComponentRegionStoreApi();
   const { getState: getScrollState } = useRootScrollStoreApi();
 
@@ -63,7 +63,7 @@ export function useSyncHoverRegion(): MouseEventHandler {
  */
 export function useRefreshHoverRegion(): Function {
   const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
-  const { getState: getEditorState } = useEditorStoreApiInternal();
+  const { getState: getEditorState } = useEditorStoreApi();
   const { getState: getRegionState } = useComponentRegionStoreApi();
 
   return useCallback(

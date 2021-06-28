@@ -67,8 +67,6 @@ export function DraggedOverStoreProvider({ children }: PropsWithChildren<{}>) {
   return <Provider initialStore={createDraggedOverStore()}>{children}</Provider>;
 }
 
-/** @internal */
 export const useDraggedOverStore = useStore;
 
-/** @internal */
 export const useDraggedOverStoreApi = useStoreApi;

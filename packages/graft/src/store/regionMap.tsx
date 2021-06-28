@@ -43,30 +43,4 @@ export function ComponentRegionStateProvider({ children }: PropsWithChildren<{}>
 /** @internal */
 export const useComponentRegionStore = useStore;
 
-/** @internal */
 export const useComponentRegionStoreApi = useStoreApi;
-
-export type UseComponentRegion = {
-  get(): Region | null;
-  subscribe(listener: StateListener<Region | null | undefined>): () => void;
-};
-
-/**
- * Hook that returns a subscriber that can be imperatively subscribed to listen to a component's region.
- */
-export function useComponentRegion(componentId: string): UseComponentRegion {
-  const { subscribe, getState } = useComponentRegionStoreApi();
-
-  const get = useCallback(() => getState().regionMap[componentId], [componentId, getState]);
-
-  const subscribeComponent = useCallback(
-    (listener) =>
-      subscribe(
-        (region: Region | null, previousRegion: Region | null) => listener(region, previousRegion),
-        (state) => state.regionMap[componentId]
-      ),
-    [componentId, subscribe]
-  );
-
-  return { get, subscribe: subscribeComponent };
-}

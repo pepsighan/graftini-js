@@ -2,7 +2,7 @@ import { motion, useMotionValue } from 'framer-motion';
 import React, { useCallback, useEffect } from 'react';
 import { DropKind, dropMarkerWidth, DropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
-import { isComponentWithinSubTree, useEditorStoreApiInternal } from './store/editor';
+import { isComponentWithinSubTree, useEditorStoreApi } from './store/editor';
 
 export type DropMarkerProps = {
   color?: string;
@@ -24,7 +24,7 @@ export function DropMarker({ color = '#9090DD' }: DropMarkerProps) {
     useCallback((state: DraggedOverStore) => state.draggedOver.isOnIFrame, [])
   );
 
-  const { getState } = useEditorStoreApiInternal();
+  const { getState } = useEditorStoreApi();
   const isOutsideSelf = useDraggedOverStore(
     useCallback(
       (state: DraggedOverStore) => {

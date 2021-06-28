@@ -1,6 +1,6 @@
 import { useCallback, useContext, useLayoutEffect, useState } from 'react';
 import { RootRefContext } from './context';
-import { useEditorStoreApiInternal } from './store/editor';
+import { useEditorStoreApi } from './store/editor';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
 import { useRootScrollStoreApi } from './store/rootScroll';
 
@@ -20,7 +20,7 @@ export type Region = {
 export function useSyncRegion(componentId: string) {
   const immerSet = useComponentRegionStore(useCallback((state) => state.immerSet, []));
   const [ref, setRef] = useState<HTMLElement | null>(null);
-  const { subscribe: subscribeEditor } = useEditorStoreApiInternal();
+  const { subscribe: subscribeEditor } = useEditorStoreApi();
   const { getState: getRootScroll } = useRootScrollStoreApi();
 
   const rootRef = useContext(RootRefContext);

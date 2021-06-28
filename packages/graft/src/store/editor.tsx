@@ -136,11 +136,9 @@ function createEditorStore(componentMap?: ComponentMap, rootOverride?: GraftComp
 
 const { Provider, useStore, useStoreApi } = createContext<EditorStore>();
 
-/** @internal */
-export const useEditorStateInternal = useStore;
+export const useEditorState = useStore;
 
-/** @internal */
-export const useEditorStoreApiInternal = useStoreApi;
+export const useEditorStoreApi = useStoreApi;
 
 /**
  * The props for editor state provider.
@@ -166,6 +164,7 @@ export function EditorStateProvider({ elementMap, children }: EditorStateProvide
  * Checks whether a component is within the tree of another component. If both the components are same,
  * then also it holds true.
  */
+/** @internal */
 export function isComponentWithinSubTree(
   subtreeComponentId: string,
   componentId: string,

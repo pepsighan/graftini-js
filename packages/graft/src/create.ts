@@ -7,12 +7,7 @@ import {
   NewComponent,
   useCreateComponentStore,
 } from './store/createComponent';
-import {
-  ComponentNode,
-  EditorStore,
-  useEditorStateInternal,
-  useEditorStoreApiInternal,
-} from './store/editor';
+import { ComponentNode, EditorStore, useEditorState, useEditorStoreApi } from './store/editor';
 import { useComponentRegionStoreApi } from './store/regionMap';
 
 /**
@@ -69,10 +64,8 @@ export function useDrawComponent(): UseDrawComponent {
   const immerSetCreateComponent = useCreateComponentStore(
     useCallback((state: CreateComponentStore) => state.immerSet, [])
   );
-  const immerSetEditor = useEditorStateInternal(
-    useCallback((state: EditorStore) => state.immerSet, [])
-  );
-  const { getState: getEditorState } = useEditorStoreApiInternal();
+  const immerSetEditor = useEditorState(useCallback((state: EditorStore) => state.immerSet, []));
+  const { getState: getEditorState } = useEditorStoreApi();
   const { getState: getRegionState } = useComponentRegionStoreApi();
   const resolverMap = useContext(ResolverContext);
 
