@@ -1,5 +1,6 @@
 import { MouseEventHandler, useCallback } from 'react';
 import { DraggedOverStore, useDraggedOverStore } from './store/draggedOver';
+import { HoverStore, useHoverStore } from './store/hover';
 
 type UseCheckCursorOnIFrame = {
   onMouseEnter: MouseEventHandler;
@@ -11,35 +12,48 @@ type UseCheckCursorOnIFrame = {
  * This hook identifies if the cursor is on the iframe.
  */
 export function useCheckCursorOnIFrame(): UseCheckCursorOnIFrame {
-  const immerSet = useDraggedOverStore(
+  // Separate stores to store different data points even though they are the same.
+  const immerSetDraggedOver = useDraggedOverStore(
     useCallback((state: DraggedOverStore) => state.immerSet, [])
   );
+  const immerSetHover = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
 
-  // We only check if the cursor is on iframe during a drag operation.
   const onMouseEnter = useCallback(() => {
-    immerSet((state) => {
+    immerSetHover((state) => {
+      state.isOnIFrame = true;
+    });
+
+    immerSetDraggedOver((state) => {
       if (state.draggedOver.isDragging) {
         state.draggedOver.isOnIFrame = true;
       }
     });
-  }, [immerSet]);
+  }, [immerSetDraggedOver, immerSetHover]);
 
   // Sometimes the cursor may already be within the canvas.
   const onMouseMove = useCallback(() => {
-    immerSet((state) => {
+    immerSetHover((state) => {
+      state.isOnIFrame = true;
+    });
+
+    immerSetDraggedOver((state) => {
       if (state.draggedOver.isDragging) {
         state.draggedOver.isOnIFrame = true;
       }
     });
-  }, [immerSet]);
+  }, [immerSetDraggedOver, immerSetHover]);
 
   const onMouseLeave = useCallback(() => {
-    immerSet((state) => {
+    immerSetHover((state) => {
+      state.isOnIFrame = false;
+    });
+
+    immerSetDraggedOver((state) => {
       if (state.draggedOver.component) {
         state.draggedOver.isOnIFrame = false;
       }
     });
-  }, [immerSet]);
+  }, [immerSetDraggedOver, immerSetHover]);
 
   return {
     onMouseEnter,

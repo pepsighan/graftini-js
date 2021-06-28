@@ -20,6 +20,10 @@ export type HoverStore = {
    */
   hoverRegion?: HoverRegion | null;
   /**
+   * Whether the cursor in on the iframe.
+   */
+  isOnIFrame?: boolean;
+  /**
    * A setter which uses immer.
    */
   immerSet(fn: (state: HoverStore) => void): void;
@@ -54,5 +58,7 @@ export type UseHoverSubscriber = (
 export function useHoverSubscriber(): UseHoverSubscriber {
   const { subscribe } = useHoverStoreApi();
   return (listener) =>
-    subscribe((state, previousState) => listener(state.hoverRegion, previousState.hoverRegion));
+    subscribe((state, previousState) =>
+      listener(state.isOnIFrame ? state.hoverRegion : null, previousState.hoverRegion)
+    );
 }
