@@ -4,6 +4,7 @@ import { Position } from './store/draggedOver';
 import { ComponentMap, ROOT_NODE_ID, useEditorStoreApiInternal } from './store/editor';
 import { HoverStore, useHoverStore } from './store/hover';
 import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
+import { useRootScrollStoreApi } from './store/rootScroll';
 import { Region } from './useRegion';
 
 export type HoverRegion = {
@@ -20,12 +21,19 @@ export function useSyncHoverRegion(): MouseEventHandler {
 
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
+  const { getState: getScrollState } = useRootScrollStoreApi();
 
   return useCallback(
     (event) => {
+      const scrollPos = getScrollState().position;
+
       const position = {
         x: event.clientX,
         y: event.clientY,
+      };
+      const realPosition = {
+        x: position.x + scrollPos.left,
+        y: position.y + scrollPos.top,
       };
 
       // Track where the cursor is hovering at.
@@ -33,13 +41,19 @@ export function useSyncHoverRegion(): MouseEventHandler {
         const hoverRegion = identifyHoverRegion(
           getEditorState().componentMap,
           getRegionState().regionMap,
-          position
+          realPosition
         );
         state.hoverRegion = hoverRegion;
         state.cursorPosition = position;
+
+        if (state.hoverRegion) {
+          // Update the position of the component based on the scroll position.
+          state.hoverRegion.region.x = hoverRegion!.region.x - scrollPos.left;
+          state.hoverRegion.region.y = hoverRegion!.region.y - scrollPos.top;
+        }
       });
     },
-    [getEditorState, getRegionState, immerSet]
+    [getEditorState, getRegionState, getScrollState, immerSet]
   );
 }
 
@@ -73,7 +87,7 @@ export function useRefreshHoverRegion(): Function {
 
         state.hoverRegion = hoverRegion;
         if (state.hoverRegion) {
-          // Update the position based on the scroll position.
+          // Update the position of the component based on the scroll position.
           state.hoverRegion.region.x = hoverRegion!.region.x - scrollPosition.x;
           state.hoverRegion.region.y = hoverRegion!.region.y - scrollPosition.y;
           return;
@@ -106,7 +120,8 @@ export function identifyHoverRegion(
 
   return {
     componentId: leafId,
-    region: regionMap[leafId],
+    // The region map may be read-only if the region map is from the store.
+    region: { ...regionMap[leafId] },
   };
 }
 
