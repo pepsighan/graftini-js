@@ -1,4 +1,4 @@
-import { MouseEvent, MouseEventHandler, useCallback } from 'react';
+import { MouseEventHandler, MutableRefObject, useCallback, useEffect, useRef } from 'react';
 import { useComponentId } from './context';
 import { addComponentToDropRegion } from './dropLocation';
 import { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
@@ -21,7 +21,7 @@ export function useOnDragStart(): MouseEventHandler {
   const { setState } = useRootScrollStoreApi();
 
   return useCallback(
-    (event: MouseEvent) => {
+    (event) => {
       event.stopPropagation();
 
       // The component is not yet being dragged. It will only start dragging once it moves a few pixels
@@ -41,6 +41,7 @@ export function useOnDragStart(): MouseEventHandler {
 }
 
 type UseDrop = {
+  ref: MutableRefObject<HTMLElement | null>;
   onMouseUp: MouseEventHandler;
   onMouseMove: MouseEventHandler;
 };
@@ -49,10 +50,53 @@ type UseDrop = {
  * Hook that lets graft know where to drop a dragged component.
  */
 export function useDrop(): UseDrop {
+  const ref = useRef<HTMLElement | null>(null);
   const onMouseUp = useOnDragEnd();
   const onMouseMove = useTrackDragCursorPosition();
 
+  const immerSet = useDraggedOverStore(
+    useCallback((state: DraggedOverStore) => state.immerSet, [])
+  );
+  useEffect(() => {
+    // We want to stop the drag event immediately if the cursor is on the document
+    // and the left click is no longer being pressed.
+    // For cases where the cursor leaves the document itself directly from the canvas,
+    // it is handled by [onMouseMove].
+    const onMouseMoveOnDoc = (event: MouseEvent) => {
+      if (!ref.current) {
+        return;
+      }
+
+      if (isLeftMouseButtonPressed(event)) {
+        // Nothing to do if the left button is still pressed.
+        return;
+      }
+
+      if (ref.current.contains(event.target as any)) {
+        // If the event comes from within the canvas, then it is to
+        // be handled by the onMouseMove returned by this hook.
+        return;
+      }
+
+      // Stop the drag event because the left click is no longer active.
+      immerSet((state) => {
+        state.draggedOver = {
+          isDragging: false,
+        };
+      });
+
+      // Run the drag end to run cleanups or otherwise.
+      onMouseUp(event as any);
+    };
+
+    document.addEventListener('mousemove', onMouseMoveOnDoc);
+    return () => {
+      document.removeEventListener('mousemove', onMouseMoveOnDoc);
+    };
+  }, [immerSet, onMouseMove, onMouseUp]);
+
   return {
+    ref,
     onMouseUp,
     onMouseMove,
   };
@@ -129,10 +173,10 @@ function useOnDragEnd(): MouseEventHandler {
 /** @internal */
 function useTrackDragCursorPosition(): MouseEventHandler {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
-  const onnDragEnd = useOnDragEnd();
+  const onDragEnd = useOnDragEnd();
 
   return useCallback(
-    (event: MouseEvent) => {
+    (event) => {
       immerSet((state: DraggedOverStore) => {
         const draggedOver = state.draggedOver;
         if (!draggedOver.isDragging) {
@@ -140,12 +184,16 @@ function useTrackDragCursorPosition(): MouseEventHandler {
         }
 
         if (!isLeftMouseButtonPressed(event)) {
+          console.log('stopping now');
           // This may happen when during the drag operation, mouse up event (drag end)
           // took place outside the event target. We need to stop the drag event manually
-          // now.
+          // now. This is useful when the unpressed cursor enters the canvas directly.
+          //
+          // And this is not the complete picture. A similar logic is used on the
+          // document as well at [useDrop].
           state.draggedOver = { isDragging: false };
           // Run the drag end to run cleanups or otherwise.
-          onnDragEnd(event);
+          onDragEnd(event);
           return;
         }
 
@@ -154,10 +202,10 @@ function useTrackDragCursorPosition(): MouseEventHandler {
         draggedOver.cursorPosition!.y = event.clientY;
       });
     },
-    [immerSet, onnDragEnd]
+    [immerSet, onDragEnd]
   );
 }
 
-function isLeftMouseButtonPressed(event: MouseEvent) {
+function isLeftMouseButtonPressed(event: React.MouseEvent | MouseEvent) {
   return event.buttons === 1 || event.button === 1;
 }

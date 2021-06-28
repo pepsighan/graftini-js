@@ -17,6 +17,7 @@ import IFrame from './IFrame';
 export default function App() {
   return (
     <Editor resolvers={{ Container, Text }}>
+      <Menu />
       <Designer />
     </Editor>
   );
@@ -25,7 +26,6 @@ export default function App() {
 function Designer() {
   return (
     <div {...useDrop()}>
-      <Menu />
       <IFrame style={{ width: '100%', height: 'calc(100vh - 74px)' }}>
         {() => (
           <div
