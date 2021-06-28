@@ -10,6 +10,7 @@ export { useCreateComponent, useForgetCreateComponent } from './create';
 export { DrawMarker, DrawMarkerProps } from './drawMarker';
 export { DropMarker, DropMarkerProps } from './dropMarker';
 export { Editor, EditorProps, useEditor, useEditorState } from './editor';
+export { useCheckCursorOnIFrame } from './iframe';
 export { DragPreview } from './preview';
 export { NewComponent, useCurrentCreateComponentType } from './store/createComponent';
 export {

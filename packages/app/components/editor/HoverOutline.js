@@ -1,4 +1,4 @@
-import { ROOT_NODE_ID, useHoverSubscriber } from '@graftini/graft';
+import { ROOT_NODE_ID, useCurrentCreateComponentType, useHoverSubscriber } from '@graftini/graft';
 import { motion, useMotionValue } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -6,11 +6,13 @@ import theme from 'utils/theme';
 
 export default function HoverOutline() {
   const [isVisible, setIsVisible] = useState(false);
+  const isDrawingNew = !!useCurrentCreateComponentType();
 
   // Do not show the hover outline when a resize operation is ongoing.
   const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
 
   const subscribe = useHoverSubscriber();
+
   const posX = useMotionValue(0);
   const posY = useMotionValue(0);
   const width = useMotionValue(0);
@@ -38,7 +40,7 @@ export default function HoverOutline() {
 
   return (
     <>
-      {isVisible && !isBoxResizing && (
+      {isVisible && !isDrawingNew && !isBoxResizing && (
         <motion.div
           style={{
             position: 'absolute',

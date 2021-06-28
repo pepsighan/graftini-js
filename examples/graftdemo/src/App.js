@@ -15,14 +15,17 @@ import IFrame from './IFrame';
 
 export default function App() {
   return (
-    <Editor resolvers={{ Container, Text }} iframeCorrection={{ x: 0, y: 70 }}>
+    <Editor resolvers={{ Container, Text }}>
       <Menu />
-      <IFrame
-        style={{
-          width: '100%',
-          height: 'calc(100vh - 74px)', // Why subtracting +4px than the actual menu height? Don't know.
-        }}
-      >
+      <Designer />
+    </Editor>
+  );
+}
+
+function Designer() {
+  return (
+    <>
+      <IFrame style={{ width: '100%', height: 'calc(100vh - 74px)' }}>
         {() => (
           <div
             style={{
@@ -34,11 +37,11 @@ export default function App() {
             <Canvas />
             <DropMarker color="#3344BB" />
             <DrawMarker color="#3344BB" />
+            <DragPreview />
           </div>
         )}
       </IFrame>
-      <DragPreview />
-    </Editor>
+    </>
   );
 }
 
@@ -86,6 +89,7 @@ const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
   return (
     <Box
       ref={ref}
+      isEditor
       {...rest}
       border={{
         left: border,
@@ -101,7 +105,18 @@ const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
       position="relative"
       overflow={{ x: 'hidden', y: 'hidden' }}
     >
-      <div style={{ position: 'absolute', top: 0, left: 0, pointerEvents: 'none' }}>{id}</div>
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          pointerEvents: 'none',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+        }}
+      >
+        {id}
+      </div>
       {children}
     </Box>
   );
@@ -110,8 +125,16 @@ const Container = forwardRef(({ children, width, height, ...rest }, ref) => {
 const Text = forwardRef(({ ...rest }, ref) => {
   const id = useComponentId();
   return (
-    <Txt ref={ref} {...rest}>
-      Click {id}
+    <Txt ref={ref} isEditor {...rest}>
+      <div
+        style={{
+          pointerEvents: 'none',
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+        }}
+      >
+        Click {id}
+      </div>
     </Txt>
   );
 });

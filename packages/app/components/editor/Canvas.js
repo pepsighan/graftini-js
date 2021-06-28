@@ -1,14 +1,12 @@
-import { Canvas as Canvs, DrawMarker, DropMarker } from '@graftini/graft';
+import { Canvas as Canvs, DragPreview, DrawMarker, DropMarker } from '@graftini/graft';
 import IFrame from 'components/IFrame';
-import { forwardRef } from 'react';
 import theme from 'utils/theme';
 import HoverOutline from './HoverOutline';
 import Selection from './Selection';
 
-const Canvas = forwardRef((_, ref) => {
+export default function Canvas() {
   return (
     <div
-      ref={ref}
       style={{
         width: '100%',
         height: '100%',
@@ -34,6 +32,7 @@ const Canvas = forwardRef((_, ref) => {
             <Canvs />
             <DropMarker color={theme.colors.primary[500]} />
             <DrawMarker color={theme.colors.primary[500]} />
+            <DragPreview color={theme.colors.primary[500]} />
           </div>
         )}
       </IFrame>
@@ -42,6 +41,4 @@ const Canvas = forwardRef((_, ref) => {
       <Selection />
     </div>
   );
-});
-
-export default Canvas;
+}

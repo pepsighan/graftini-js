@@ -1,7 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
-import useUnselectOnDragStart from 'hooks/useUnselectOnDragStart';
 import { forwardRef, MouseEvent, useCallback } from 'react';
 import { Descendant } from 'slate';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
@@ -19,7 +18,7 @@ export type TextComponentProps = {
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(
-  ({ text, onDragStart, draggable, ...rest }, ref) => {
+  ({ text, onMouseDown, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
@@ -62,9 +61,8 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
     return (
       <Txt
         ref={ref}
-        draggable={isDraggingDisabled ? false : draggable}
-        onDragStart={useUnselectOnDragStart(onDragStart)}
         {...textProps}
+        onMouseDown={!isDraggingDisabled ? onMouseDown : null}
         onClick={onClick}
         onDoubleClick={onDoubleClick}
       >

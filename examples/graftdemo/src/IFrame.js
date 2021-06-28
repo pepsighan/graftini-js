@@ -3,6 +3,7 @@ import { CacheProvider } from '@emotion/react';
 import weakMemoize from '@emotion/weak-memoize';
 import { Reset } from '@graftini/bricks';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
+import { useCheckCursorOnIFrame } from '@graftini/graft';
 
 const cacheKey = 'example';
 
@@ -21,7 +22,7 @@ export default function IFrame({ title, style, children }) {
 `;
 
   return (
-    <Frame initialContent={initialContent} style={style}>
+    <Frame initialContent={initialContent} style={style} {...useCheckCursorOnIFrame()}>
       <FrameContextConsumer>
         {({ document }) => (
           <CacheProvider value={memoizedCreateCache(document.head)}>

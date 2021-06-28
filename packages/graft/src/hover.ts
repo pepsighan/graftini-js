@@ -1,5 +1,4 @@
 import { MouseEventHandler, useCallback } from 'react';
-import { useCorrectCursorPosition } from './correction';
 import { isCursorWithinRegion } from './dropLocation';
 import { Position } from './store/draggedOver';
 import { ComponentMap, ROOT_NODE_ID, useEditorStoreApiInternal } from './store/editor';
@@ -21,7 +20,6 @@ export function useSyncHoverRegion(): MouseEventHandler {
 
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
-  const correctCursorPosition = useCorrectCursorPosition();
 
   return useCallback(
     (event) => {
@@ -35,13 +33,13 @@ export function useSyncHoverRegion(): MouseEventHandler {
         const hoverRegion = identifyHoverRegion(
           getEditorState().componentMap,
           getRegionState().regionMap,
-          correctCursorPosition(position, state.isOnRoot)
+          position
         );
         state.hoverRegion = hoverRegion;
         state.cursorPosition = position;
       });
     },
-    [correctCursorPosition, getEditorState, getRegionState, immerSet]
+    [getEditorState, getRegionState, immerSet]
   );
 }
 

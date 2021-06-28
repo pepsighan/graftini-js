@@ -1,18 +1,16 @@
 import { Flex } from '@chakra-ui/layout';
-import { DragPreview, Editor, useEditor } from '@graftini/graft';
+import { Editor, useEditor } from '@graftini/graft';
 import components from 'canvasComponents';
 import Root from 'canvasComponents/Root';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
 import LeftSidebar from 'components/editor/LeftSidebar';
 import RightSidebar from 'components/editor/RightSidebar';
-import { useDimensions } from 'hooks/useDimensions';
 import { debounce } from 'lodash-es';
-import { useCallback, useEffect, useMemo, useRef } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
 import { useUpdateProjectDesign } from 'store/projects';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
-import theme from 'utils/theme';
 
 export default function Designer({ projectId }) {
   const currentPageId = useDesignerState(useCallback((state) => state.currentOpenPage, []));
@@ -35,32 +33,17 @@ function Editorial() {
     useCallback(() => true, [])
   );
 
-  const canvasRef = useRef();
-  const dimensions = useDimensions(canvasRef);
-
-  const xCorrection = dimensions?.left ?? 0;
-  const yCorrection = dimensions?.top ?? 0;
-
   return (
-    <Editor
-      resolvers={components}
-      initialState={editorState}
-      iframeCorrection={{
-        x: xCorrection,
-        y: yCorrection,
-      }}
-      rootComponentOverride={Root}
-    >
+    <Editor resolvers={components} initialState={editorState} rootComponentOverride={Root}>
       <SyncEditorAndDesignerState />
       <EditorNavigation />
       {/* The height of the nav is substracted, so that any of the following does not cause window-wide scroll. 
           Any scroll they have should be within their boundaries.*/}
       <Flex height="calc(100vh - 54px)">
         <LeftSidebar />
-        <Canvas ref={canvasRef} />
+        <Canvas />
         <RightSidebar />
       </Flex>
-      <DragPreview color={theme.colors.primary[500]} />
     </Editor>
   );
 }

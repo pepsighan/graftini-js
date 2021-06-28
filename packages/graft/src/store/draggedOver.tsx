@@ -23,6 +23,10 @@ export type DraggedOver = {
    */
   isDragging: boolean;
   /**
+   * Whether the cursor in on the iframe.
+   */
+  isOnIFrame?: boolean;
+  /**
    * The position of the cursor when dragging.
    */
   cursorPosition?: Position | null;
@@ -34,10 +38,6 @@ export type DraggedOver = {
    * The region where the component is going to be dropped if the drag action ends.
    */
   dropRegion?: DropRegion | null;
-  /**
-   * Whether the cursor is over the root component.
-   */
-  isOnRoot: boolean;
 };
 
 /** @internal */
@@ -56,10 +56,7 @@ export type DraggedOverStore = {
 /** @internal */
 export const createDraggedOverStore = () =>
   create<DraggedOverStore>((set) => ({
-    draggedOver: {
-      isDragging: false,
-      isOnRoot: false,
-    },
+    draggedOver: { isDragging: false },
     immerSet: (fn) => set(produce(fn)),
   }));
 

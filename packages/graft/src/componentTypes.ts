@@ -1,5 +1,4 @@
 import {
-  DragEventHandler,
   ForwardRefExoticComponent,
   MouseEventHandler,
   ReactNode,
@@ -9,15 +8,10 @@ import {
 
 export type RootComponent<T extends object> = ForwardRefExoticComponent<
   RefAttributes<{}> & {
-    onDragEnter: DragEventHandler;
-    onDragLeave: DragEventHandler;
-    onDragOver: DragEventHandler;
     onScroll: UIEventHandler;
     onMouseUp: MouseEventHandler;
     onMouseDown: MouseEventHandler;
     onMouseMove: MouseEventHandler;
-    onMouseEnter: MouseEventHandler;
-    onMouseLeave: MouseEventHandler;
     children: ReactNode;
   } & T
 > & {
@@ -32,23 +26,7 @@ export type GraftComponentProps = {
   /**
    * This event handler triggers a drag operation.
    */
-  onDragStart: DragEventHandler;
-  /**
-   * This event is used to track the current cursor position when dragging.
-   */
-  onDrag: DragEventHandler;
-  /**
-   * This event commits the new location of the component.
-   */
-  onDragEnd: DragEventHandler;
-  /**
-   * This event is useful for the correct functioning of the drag.
-   */
-  onDragOver: DragEventHandler;
-  /**
-   * Whether the draggability of the component is enabled or not.
-   */
-  draggable: boolean;
+  onMouseDown?: MouseEventHandler | null;
   /**
    * The children of the component.
    */

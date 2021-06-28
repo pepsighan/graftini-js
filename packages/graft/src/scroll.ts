@@ -49,10 +49,7 @@ export function useScrollWhenDragging(ref: HTMLElement | null) {
           return;
         }
       },
-      (state) =>
-        state.draggedOver.isDragging && state.draggedOver.isOnRoot
-          ? state.draggedOver.cursorPosition
-          : null
+      (state) => (state.draggedOver.isDragging ? state.draggedOver.cursorPosition : null)
     );
   }, [getRootScroll, ref, rootRegion, subscribe]);
 }

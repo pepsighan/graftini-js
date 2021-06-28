@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { CSSObject } from '@emotion/react';
+import router from 'next/router';
 import {
   ChangeEventHandler,
-  DragEventHandler,
   ElementType,
   FocusEventHandler,
   forwardRef,
@@ -13,7 +13,6 @@ import {
 } from 'react';
 import { RGBA, rgbaToCss } from './colors';
 import { FontSize, FontWeight, TextAlign } from './text';
-import router from 'next/router';
 
 export type BoxProps = BaseBoxProps &
   LayoutStyles &
@@ -194,11 +193,7 @@ export type EditorInteractionProps = {
 };
 
 export type DragProps = {
-  onDragStart?: DragEventHandler;
-  onDrag?: DragEventHandler;
-  onDragEnd?: DragEventHandler;
-  onDragOver?: DragEventHandler;
-  draggable?: boolean;
+  onMouseDown?: MouseEventHandler;
 };
 
 const Box = forwardRef((props: BoxProps, ref) => {
@@ -406,24 +401,13 @@ function borderStyle(borderSide?: BorderSide): string | undefined {
     : undefined;
 }
 
-export function dragProps({
-  isEditor,
-  onDragStart,
-  onDrag,
-  onDragEnd,
-  onDragOver,
-  draggable,
-}: EditorProps & DragProps): any {
+export function dragProps({ isEditor, onMouseDown }: EditorProps & DragProps): any {
   if (!isEditor) {
     return {};
   }
 
   return {
-    onDragStart,
-    onDrag,
-    onDragEnd,
-    onDragOver,
-    draggable,
+    onMouseDown,
   };
 }
 

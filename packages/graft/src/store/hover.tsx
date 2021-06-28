@@ -20,9 +20,9 @@ export type HoverStore = {
    */
   hoverRegion?: HoverRegion | null;
   /**
-   * Whether the cursor is hovering over the root.
+   * Whether the cursor in on the iframe.
    */
-  isOnRoot: boolean;
+  isOnIFrame?: boolean;
   /**
    * A setter which uses immer.
    */
@@ -32,7 +32,6 @@ export type HoverStore = {
 /** @internal */
 export const createHoverStore = () =>
   create<HoverStore>((set) => ({
-    isOnRoot: false,
     immerSet: (fn) => set(produce(fn)),
   }));
 
@@ -59,5 +58,7 @@ export type UseHoverSubscriber = (
 export function useHoverSubscriber(): UseHoverSubscriber {
   const { subscribe } = useHoverStoreApi();
   return (listener) =>
-    subscribe((state, previousState) => listener(state.hoverRegion, previousState.hoverRegion));
+    subscribe((state, previousState) =>
+      listener(state.isOnIFrame ? state.hoverRegion : null, previousState.hoverRegion)
+    );
 }
