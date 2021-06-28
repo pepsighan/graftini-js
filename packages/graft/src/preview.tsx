@@ -30,7 +30,7 @@ export function DragPreview({ color = '#9090DD' }: DragPreviewProps) {
         if (selection.componentId && selection.position && selection.isOnIFrame && region) {
           setIsVisible(true);
           posX.set(selection.position.x - region.width / 2);
-          posY.set(selection.position.y);
+          posY.set(selection.position.y - region.height / 2);
           width.set(region.width);
           height.set(region.height);
           return;

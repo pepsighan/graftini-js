@@ -37,10 +37,10 @@ function Designer() {
             <Canvas />
             <DropMarker color="#3344BB" />
             <DrawMarker color="#3344BB" />
+            <DragPreview />
           </div>
         )}
       </IFrame>
-      <DragPreview />
     </>
   );
 }
