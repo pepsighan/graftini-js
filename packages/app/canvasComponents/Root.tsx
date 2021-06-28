@@ -43,6 +43,14 @@ const Root: RootComponent<RootProps> = forwardRef(
             height: '100%',
             overflow: 'auto',
             pointerEvents: currentCreateType ? 'none' : null,
+            // Hide scrollbars on all browsers.
+            // https://stackoverflow.com/a/49278385
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            '&::-webkit-scrollbar': {
+              width: 0,
+              height: 0,
+            },
           }}
         >
           {children}
