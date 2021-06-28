@@ -7,6 +7,7 @@ export {
 } from './componentTypes';
 export { useCanvasId, useComponentId } from './context';
 export { useCreateComponent, useForgetCreateComponent } from './create';
+export { useOnDelete } from './delete';
 export { DrawMarker, DrawMarkerProps } from './drawMarker';
 export { DropMarker, DropMarkerProps } from './dropMarker';
 export { Editor, EditorProps } from './editor';
