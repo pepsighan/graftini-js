@@ -2,20 +2,17 @@ import React, {
   ForwardedRef,
   forwardRef,
   MouseEvent,
-  UIEvent,
   useCallback,
   useContext,
   useState,
 } from 'react';
 import mergeRefs from 'react-merge-refs';
 import { GraftComponentProps } from './componentTypes';
-import { RootOverrideContext } from './context';
+import { RootOverrideContext, RootRefContext } from './context';
 import { useDrawComponent } from './create';
 import { useDrop } from './drag';
-import { useRefreshHoverRegion, useSyncHoverRegion } from './hover';
-import { useScrollWhenDragging } from './scroll';
-import { useRootScrollStoreApi } from './store/rootScroll';
-import { RootRefContext } from './context';
+import { useSyncHoverRegion } from './hover';
+import { useScroll } from './scroll';
 
 /**
  * A canvas root component returns the children as-is.
@@ -23,8 +20,6 @@ import { RootRefContext } from './context';
 /** @internal */
 export const Root__Graft__Component = forwardRef(
   ({ children, onMouseDown: _, ...rest }: GraftComponentProps, ref: ForwardedRef<any>) => {
-    const { setState: setRootScroll } = useRootScrollStoreApi();
-
     const {
       onMouseUp: onMouseUpToDraw,
       onMouseMove: onMouseMoveToDraw,
@@ -33,26 +28,12 @@ export const Root__Graft__Component = forwardRef(
     const { onMouseUp: onMouseUpToDrop, onMouseMove: onMouseMoveToDrop } = useDrop();
 
     const onMouseMoveToHover = useSyncHoverRegion();
-    const onRefreshHover = useRefreshHoverRegion();
 
     const [rootRef, setRootRef] = useState<HTMLElement | null>(null);
     const mergedRef = mergeRefs([setRootRef, ref]);
 
-    // Scroll the canvas when the item being dragged in near the vertical edges.
-    useScrollWhenDragging(rootRef);
-
-    const onScroll = useCallback(
-      (event: UIEvent) => {
-        onRefreshHover();
-        setRootScroll({
-          position: {
-            top: event.currentTarget.scrollTop,
-            left: event.currentTarget.scrollLeft,
-          },
-        });
-      },
-      [onRefreshHover, setRootScroll]
-    );
+    // Link the scroll to enable hover, region map and drag to scroll.
+    const onScroll = useScroll(rootRef);
 
     const onMouseMove = useCallback(
       (event: MouseEvent) => {
