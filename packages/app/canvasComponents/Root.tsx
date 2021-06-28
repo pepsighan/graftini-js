@@ -15,7 +15,7 @@ export type RootProps = {
 };
 
 const Root: RootComponent<RootProps> = forwardRef(
-  ({ color, ...rest }, ref: ForwardedRef<unknown>) => {
+  ({ color, children, ...rest }, ref: ForwardedRef<unknown>) => {
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const currentCreateType = useCurrentCreateComponentType();
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
@@ -31,13 +31,23 @@ const Root: RootComponent<RootProps> = forwardRef(
         css={{
           width: '100%',
           height: '100%',
-          overflow: 'auto',
           cursor: cursor[currentCreateType] ?? 'auto',
           backgroundColor: rgbaToCss(color),
         }}
         {...rest}
         onClick={onSelect}
-      />
+      >
+        <div
+          css={{
+            width: '100%',
+            height: '100%',
+            overflow: 'auto',
+            pointerEvents: currentCreateType ? 'none' : null,
+          }}
+        >
+          {children}
+        </div>
+      </div>
     );
   }
 );
