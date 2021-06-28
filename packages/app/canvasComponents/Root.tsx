@@ -15,7 +15,7 @@ export type RootProps = {
 };
 
 const Root: RootComponent<RootProps> = forwardRef(
-  ({ color, children, ...rest }, ref: ForwardedRef<unknown>) => {
+  ({ color, children, onScroll, ...rest }, ref: ForwardedRef<unknown>) => {
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const currentCreateType = useCurrentCreateComponentType();
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
@@ -38,6 +38,7 @@ const Root: RootComponent<RootProps> = forwardRef(
       >
         <div
           ref={ref as any}
+          onScroll={onScroll}
           css={{
             width: '100%',
             height: '100%',

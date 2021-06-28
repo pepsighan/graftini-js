@@ -19,6 +19,7 @@ export function useScroll(ref: HTMLElement | null) {
   const onScroll = useCallback(
     (event: UIEvent) => {
       onRefreshHover();
+
       setRootScroll({
         position: {
           top: event.currentTarget.scrollTop,

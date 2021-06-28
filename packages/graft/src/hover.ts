@@ -4,6 +4,7 @@ import { Position } from './store/draggedOver';
 import { ComponentMap, ROOT_NODE_ID, useEditorStoreApiInternal } from './store/editor';
 import { HoverStore, useHoverStore } from './store/hover';
 import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
+import { useRealCursorPosition } from './store/rootScroll';
 import { Region } from './useRegion';
 
 export type HoverRegion = {
@@ -51,6 +52,7 @@ export function useRefreshHoverRegion(): Function {
   const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
   const { getState: getEditorState } = useEditorStoreApiInternal();
   const { getState: getRegionState } = useComponentRegionStoreApi();
+  const realCursorPosition = useRealCursorPosition();
 
   return useCallback(() => {
     // Track where the cursor is hovering at.
@@ -62,11 +64,11 @@ export function useRefreshHoverRegion(): Function {
       const hoverRegion = identifyHoverRegion(
         getEditorState().componentMap,
         getRegionState().regionMap,
-        state.cursorPosition
+        realCursorPosition(state.cursorPosition)
       );
       state.hoverRegion = hoverRegion;
     });
-  }, [getEditorState, getRegionState, immerSet]);
+  }, [getEditorState, getRegionState, immerSet, realCursorPosition]);
 }
 
 /**
