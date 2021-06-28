@@ -1,13 +1,15 @@
 /** @jsxImportSource @emotion/react */
-import { useEditor, useEditorState } from '@graftini/graft';
+import { useEditorStore, useOnDelete } from '@graftini/graft';
 import { TrashIcon } from '@modulz/radix-icons';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import theme from 'utils/theme';
 
 export default function ActionBar({ componentId }) {
-  const name = useEditorState(useCallback((state) => state[componentId].props.name, [componentId]));
-  const onDelete = useOnDelete({ componentId });
+  const name = useEditorStore(
+    useCallback((state) => state.componentMap[componentId].props.name, [componentId])
+  );
+  const onDelete = useOnDeleteComponent({ componentId });
 
   return (
     <>
@@ -31,16 +33,16 @@ export default function ActionBar({ componentId }) {
   );
 }
 
-function useOnDelete({ componentId }) {
-  const { deleteComponentNode } = useEditor();
+function useOnDeleteComponent({ componentId }) {
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
+  const onDeleteComponent = useOnDelete();
 
   return useCallback(
     (ev) => {
       ev.stopPropagation();
       unselectComponent();
-      deleteComponentNode(componentId);
+      onDeleteComponent(componentId);
     },
-    [componentId, deleteComponentNode, unselectComponent]
+    [componentId, onDeleteComponent, unselectComponent]
   );
 }

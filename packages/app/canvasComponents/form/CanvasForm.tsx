@@ -1,6 +1,5 @@
-import { useEditor } from '@graftini/graft';
-import { useEffect } from 'react';
-import { FunctionComponent, ReactNode, useMemo } from 'react';
+import { useEditorStore, useEditorStoreApi } from '@graftini/graft';
+import { FunctionComponent, ReactNode, useCallback, useEffect, useMemo } from 'react';
 import { FormProvider, Resolver, useForm } from 'react-hook-form';
 
 type CanvasFormProps<T, S> = {
@@ -26,15 +25,15 @@ const CanvasForm: FunctionComponent = <T, S>({
   resolver,
   children,
 }: CanvasFormProps<T, S>) => {
-  const { getState } = useEditor();
+  const { getState } = useEditorStoreApi();
 
   const form = useForm({
     // Get the default values for the form and initialize it once.
     defaultValues: useMemo(
       () =>
         onInitialize
-          ? (onInitialize(getState()[componentId].props as T) as any)
-          : getState()[componentId].props,
+          ? (onInitialize(getState().componentMap[componentId].props as T) as any)
+          : getState().componentMap[componentId].props,
       // eslint-disable-next-line react-hooks/exhaustive-deps
       []
     ),
@@ -47,18 +46,18 @@ const CanvasForm: FunctionComponent = <T, S>({
 };
 
 function useSyncFormState({ watch, componentId, onSync }) {
-  const { updateComponentProps } = useEditor();
+  const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
 
   // Sync the form state to the component props.
   useEffect(() => {
     const subscription = watch((formState: any) => {
-      updateComponentProps(componentId, (props) => {
-        onSync(props, formState);
+      immerSetEditor((state) => {
+        onSync(state.componentMap[componentId].props, formState);
       });
     });
 
     return () => subscription.unsubscribe();
-  }, [componentId, onSync, updateComponentProps, watch]);
+  }, [componentId, immerSetEditor, onSync, watch]);
 }
 
 export default CanvasForm;

@@ -1,3 +1,4 @@
+/** @jsxImportSource @emotion/react */
 import { Canvas as Canvs, DragPreview, DrawMarker, DropMarker } from '@graftini/graft';
 import IFrame from 'components/IFrame';
 import theme from 'utils/theme';
@@ -7,7 +8,7 @@ import Selection from './Selection';
 export default function Canvas() {
   return (
     <div
-      style={{
+      css={{
         width: '100%',
         height: '100%',
         position: 'relative',
@@ -23,7 +24,7 @@ export default function Canvas() {
       >
         {() => (
           <div
-            style={{
+            css={{
               width: '100%',
               height: '100vh',
               userSelect: 'none',
@@ -36,7 +37,6 @@ export default function Canvas() {
           </div>
         )}
       </IFrame>
-
       <HoverOutline />
       <Selection />
     </div>

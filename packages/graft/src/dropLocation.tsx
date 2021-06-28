@@ -9,7 +9,7 @@ import {
   ChildAppendDirection,
   ComponentMap,
   ROOT_NODE_ID,
-  useEditorStoreApiInternal,
+  useEditorStoreApi,
 } from './store/editor';
 import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
 import { Region } from './useRegion';
@@ -48,7 +48,7 @@ enum MarkerPosition {
 export function useSyncDropRegion() {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
   const { subscribe: subscribeDraggedOver } = useDraggedOverStoreApi();
-  const { getState: getEditorState } = useEditorStoreApiInternal();
+  const { getState: getEditorState } = useEditorStoreApi();
   const { getState: getComponentRegionState } = useComponentRegionStoreApi();
 
   useEffect(() => {

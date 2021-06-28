@@ -1,5 +1,5 @@
 import { DimensionSize } from '@graftini/bricks';
-import { useEditor } from '@graftini/graft';
+import { useEditorStoreApi } from '@graftini/graft';
 import { useEffect } from 'react';
 import { useFormContext } from 'react-hook-form';
 
@@ -20,18 +20,18 @@ export function transformToRawHeight(height: DimensionSize) {
 }
 
 export default function SyncResize({ componentId }: { componentId: string }) {
-  const { subscribe } = useEditor();
+  const { subscribe } = useEditorStoreApi();
   const { setValue } = useFormContext();
 
   useEffect(() => {
     const unsubWidth = subscribe(
       (width) => setValue('widthRaw', transformToRawWidth(width as DimensionSize)),
-      (state) => state[componentId].props.width
+      (state) => state.componentMap[componentId].props.width
     );
 
     const unsubHeight = subscribe(
       (height) => setValue('heightRaw', transformToRawHeight(height as DimensionSize)),
-      (state) => state[componentId].props.height
+      (state) => state.componentMap[componentId].props.height
     );
 
     return () => {

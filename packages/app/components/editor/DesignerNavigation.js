@@ -1,7 +1,7 @@
 import { Box, Button, Flex, IconButton, Text, Tooltip } from '@chakra-ui/react';
 import {
   useCreateComponent,
-  useCurrentCreateComponentType,
+  useCreateComponentStore,
   useForgetCreateComponent,
 } from '@graftini/graft';
 import { CursorArrowIcon, PlayIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
@@ -64,7 +64,7 @@ export default function EditorNavigation() {
 }
 
 function CursorButton() {
-  const selectedComponent = useCurrentCreateComponentType();
+  const isNoCreate = useCreateComponentStore(useCallback((state) => !state.newComponent, []));
   const forgetCreateComponent = useForgetCreateComponent();
 
   return (
@@ -79,7 +79,7 @@ function CursorButton() {
           '--icon-color': theme.colors.gray[600],
         },
       }}
-      animate={!selectedComponent ? 'active' : 'inactive'}
+      animate={isNoCreate ? 'active' : 'inactive'}
       whileHover="active"
     >
       <Button
@@ -101,7 +101,9 @@ function CursorButton() {
 }
 
 function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection }) {
-  const selectedComponent = useCurrentCreateComponentType();
+  const createComponentType = useCreateComponentStore(
+    useCallback((state) => state.newComponent?.type, [])
+  );
 
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
   const onCreate = useCreateComponent({
@@ -141,7 +143,7 @@ function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection
           '--icon-color': theme.colors.gray[600],
         },
       }}
-      animate={selectedComponent === component ? 'active' : 'inactive'}
+      animate={createComponentType === component ? 'active' : 'inactive'}
       whileHover="active"
     >
       <Button

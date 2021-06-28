@@ -1,9 +1,10 @@
 import { MouseEventHandler, useCallback } from 'react';
 import { isCursorWithinRegion } from './dropLocation';
 import { Position } from './store/draggedOver';
-import { ComponentMap, ROOT_NODE_ID, useEditorStoreApiInternal } from './store/editor';
+import { ComponentMap, ROOT_NODE_ID, useEditorStoreApi } from './store/editor';
 import { HoverStore, useHoverStore } from './store/hover';
 import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
+import { useRootScrollStoreApi } from './store/rootScroll';
 import { Region } from './useRegion';
 
 export type HoverRegion = {
@@ -18,14 +19,21 @@ export type HoverRegion = {
 export function useSyncHoverRegion(): MouseEventHandler {
   const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
 
-  const { getState: getEditorState } = useEditorStoreApiInternal();
+  const { getState: getEditorState } = useEditorStoreApi();
   const { getState: getRegionState } = useComponentRegionStoreApi();
+  const { getState: getScrollState } = useRootScrollStoreApi();
 
   return useCallback(
     (event) => {
+      const scrollPos = getScrollState().position;
+
       const position = {
         x: event.clientX,
         y: event.clientY,
+      };
+      const realPosition = {
+        x: position.x + scrollPos.x,
+        y: position.y + scrollPos.y,
       };
 
       // Track where the cursor is hovering at.
@@ -33,13 +41,19 @@ export function useSyncHoverRegion(): MouseEventHandler {
         const hoverRegion = identifyHoverRegion(
           getEditorState().componentMap,
           getRegionState().regionMap,
-          position
+          realPosition
         );
         state.hoverRegion = hoverRegion;
         state.cursorPosition = position;
+
+        if (state.hoverRegion) {
+          // Update the position of the component based on the scroll position.
+          state.hoverRegion.region.x = hoverRegion!.region.x - scrollPos.x;
+          state.hoverRegion.region.y = hoverRegion!.region.y - scrollPos.y;
+        }
       });
     },
-    [getEditorState, getRegionState, immerSet]
+    [getEditorState, getRegionState, getScrollState, immerSet]
   );
 }
 
@@ -49,24 +63,39 @@ export function useSyncHoverRegion(): MouseEventHandler {
  */
 export function useRefreshHoverRegion(): Function {
   const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
-  const { getState: getEditorState } = useEditorStoreApiInternal();
+  const { getState: getEditorState } = useEditorStoreApi();
   const { getState: getRegionState } = useComponentRegionStoreApi();
 
-  return useCallback(() => {
-    // Track where the cursor is hovering at.
-    immerSet((state) => {
-      if (!state.cursorPosition) {
-        return;
-      }
+  return useCallback(
+    (scrollPosition: Position) => {
+      // Track where the cursor is hovering at.
+      immerSet((state) => {
+        if (!state.cursorPosition) {
+          return;
+        }
 
-      const hoverRegion = identifyHoverRegion(
-        getEditorState().componentMap,
-        getRegionState().regionMap,
-        state.cursorPosition
-      );
-      state.hoverRegion = hoverRegion;
-    });
-  }, [getEditorState, getRegionState, immerSet]);
+        const realPosition = {
+          x: state.cursorPosition.x + scrollPosition.x,
+          y: state.cursorPosition.y + scrollPosition.y,
+        };
+
+        const hoverRegion = identifyHoverRegion(
+          getEditorState().componentMap,
+          getRegionState().regionMap,
+          realPosition
+        );
+
+        state.hoverRegion = hoverRegion;
+        if (state.hoverRegion) {
+          // Update the position of the component based on the scroll position.
+          state.hoverRegion.region.x = hoverRegion!.region.x - scrollPosition.x;
+          state.hoverRegion.region.y = hoverRegion!.region.y - scrollPosition.y;
+          return;
+        }
+      });
+    },
+    [getEditorState, getRegionState, immerSet]
+  );
 }
 
 /**
@@ -91,7 +120,8 @@ export function identifyHoverRegion(
 
   return {
     componentId: leafId,
-    region: regionMap[leafId],
+    // The region map may be read-only if the region map is from the store.
+    region: { ...regionMap[leafId] },
   };
 }
 

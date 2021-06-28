@@ -1,7 +1,7 @@
 import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { Divider } from '@chakra-ui/react';
 import { BorderRadius } from '@graftini/bricks';
-import { useEditor } from '@graftini/graft';
+import { useEditorStore } from '@graftini/graft';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import { boxTags } from 'utils/constants';
@@ -48,7 +48,7 @@ type BoxOptionsFields = BoxComponentProps & {
 
 export default function BoxOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<BoxComponentProps, BoxOptionsFields>;
-  const { setChildAppendDirection } = useEditor();
+  const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
 
   return (
     <CF
@@ -102,10 +102,10 @@ export default function BoxOptions({ componentId }: OptionsProps) {
           }: BoxOptionsFields
         ) => {
           // Sync the append direction based on the flex direction.
-          setChildAppendDirection(
-            componentId,
-            rest.flexDirection === 'column' ? 'vertical' : 'horizontal'
-          );
+          immerSetEditor((state) => {
+            state.componentMap[componentId].childAppendDirection =
+              rest.flexDirection === 'column' ? 'vertical' : 'horizontal';
+          });
 
           // Copy the matching states as is.
           Object.keys(rest).forEach((key) => {
@@ -126,7 +126,7 @@ export default function BoxOptions({ componentId }: OptionsProps) {
           parseLimitDimension(props, 'minHeight', minHeightRaw, true);
           parseLimitDimension(props, 'maxHeight', maxHeightRaw, false);
         },
-        [componentId, setChildAppendDirection]
+        [componentId, immerSetEditor]
       )}
     >
       <SyncResize componentId={componentId} />

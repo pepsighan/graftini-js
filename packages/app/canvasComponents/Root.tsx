@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { RGBA, rgbaToCss } from '@graftini/bricks';
-import { RootComponent, ROOT_NODE_ID, useCurrentCreateComponentType } from '@graftini/graft';
+import { RootComponent, ROOT_NODE_ID, useCreateComponentStore } from '@graftini/graft';
 import { ForwardedRef, forwardRef, useCallback } from 'react';
 import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState } from 'store/designer';
@@ -15,9 +15,11 @@ export type RootProps = {
 };
 
 const Root: RootComponent<RootProps> = forwardRef(
-  ({ color, children, ...rest }, ref: ForwardedRef<unknown>) => {
+  ({ color, children, onScroll, ...rest }, ref: ForwardedRef<unknown>) => {
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
-    const currentCreateType = useCurrentCreateComponentType();
+    const currentCreateType = useCreateComponentStore(
+      useCallback((state) => state.newComponent?.type, [])
+    );
     const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
 
     const onSelect = useCallback(() => {
@@ -27,7 +29,6 @@ const Root: RootComponent<RootProps> = forwardRef(
 
     return (
       <div
-        ref={ref as any}
         css={{
           width: '100%',
           height: '100%',
@@ -38,11 +39,21 @@ const Root: RootComponent<RootProps> = forwardRef(
         onClick={onSelect}
       >
         <div
+          ref={ref as any}
+          onScroll={onScroll}
           css={{
             width: '100%',
             height: '100%',
             overflow: 'auto',
             pointerEvents: currentCreateType ? 'none' : null,
+            // Hide scrollbars on all browsers.
+            // https://stackoverflow.com/a/49278385
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            '&::-webkit-scrollbar': {
+              width: 0,
+              height: 0,
+            },
           }}
         >
           {children}

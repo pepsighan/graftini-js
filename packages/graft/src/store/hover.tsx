@@ -8,7 +8,6 @@ import { Position } from './draggedOver';
 /**
  * Stores the current position of the cursor when hovering.
  */
-/** @internal */
 export type HoverStore = {
   /**
    * The current position of the cursor that is corrected depending on if it
@@ -16,7 +15,8 @@ export type HoverStore = {
    */
   cursorPosition?: Position | null;
   /**
-   * The current component that is being hovered over.
+   * The current component & its region that is being hovered over. The position
+   * is relative to the document (i.e. the iframe).
    */
   hoverRegion?: HoverRegion | null;
   /**
@@ -42,23 +42,6 @@ export function HoverStoreProvider({ children }: PropsWithChildren<{}>) {
   return <Provider initialStore={createHoverStore()}>{children}</Provider>;
 }
 
-/** @internal */
 export const useHoverStore = useStore;
 
-/** @internal */
 export const useHoverStoreApi = useStoreApi;
-
-export type UseHoverSubscriber = (
-  listener: StateListener<HoverRegion | null | undefined>
-) => () => void;
-
-/**
- * Hook that returns a subscriber that can be imperatively subscribed to listen to hover states.
- */
-export function useHoverSubscriber(): UseHoverSubscriber {
-  const { subscribe } = useHoverStoreApi();
-  return (listener) =>
-    subscribe((state, previousState) =>
-      listener(state.isOnIFrame ? state.hoverRegion : null, previousState.hoverRegion)
-    );
-}

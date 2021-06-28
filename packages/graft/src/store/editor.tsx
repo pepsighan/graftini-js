@@ -65,7 +65,6 @@ export type ComponentMap = {
  * The state of the editor which holds the representation of the drawn component in
  * the canvas.
  */
-/** @internal */
 export type EditorStore = {
   /**
    * The representation of the view that is rendered on the canvas.
@@ -136,11 +135,9 @@ function createEditorStore(componentMap?: ComponentMap, rootOverride?: GraftComp
 
 const { Provider, useStore, useStoreApi } = createContext<EditorStore>();
 
-/** @internal */
-export const useEditorStateInternal = useStore;
+export const useEditorStore = useStore;
 
-/** @internal */
-export const useEditorStoreApiInternal = useStoreApi;
+export const useEditorStoreApi = useStoreApi;
 
 /**
  * The props for editor state provider.
@@ -153,7 +150,7 @@ type EditorStateProviderProps = {
 
 /**
  * A provider to add the editor state to the context. The editor state is accessible within
- * the children by using `useEditorState`.
+ * the children by using `useEditorStore`.
  */
 /** @internal */
 export function EditorStateProvider({ elementMap, children }: EditorStateProviderProps) {
@@ -166,6 +163,7 @@ export function EditorStateProvider({ elementMap, children }: EditorStateProvide
  * Checks whether a component is within the tree of another component. If both the components are same,
  * then also it holds true.
  */
+/** @internal */
 export function isComponentWithinSubTree(
   subtreeComponentId: string,
   componentId: string,

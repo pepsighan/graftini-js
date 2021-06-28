@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
-import { useComponentRegion, useEditor } from '@graftini/graft';
+import { useComponentRegionStoreApi, useEditorStore } from '@graftini/graft';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -335,51 +335,56 @@ function useBottomLeftCorner({ posX, posY, height }) {
  * pressed during updation, then they are updated as % values rather than px values.
  */
 function useDimensionUpdate({ componentId }) {
-  const { updateComponentProps, getComponentNode } = useEditor();
-  // The parent won't change during a resize. So, imperative get can work.
-  const parentId = getComponentNode(componentId).parentId;
-  const { get: getDimensions } = useComponentRegion(parentId);
+  const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
+  const { getState: getRegionState } = useComponentRegionStoreApi();
 
   const updateWidth = useCallback(
     (width, isCtrl) => {
-      let size = width <= 0 ? 0 : width;
-      if (isCtrl) {
-        // In percentage.
-        const dimensions = getDimensions();
-        size = Math.floor((size * 100) / dimensions.width);
-      } else {
-        // In actual pixels.
-        size = Math.floor(size);
-      }
+      immerSet((state) => {
+        const parentId = state.componentMap[componentId].parentId;
 
-      updateComponentProps(componentId, (props) => {
+        let size = width <= 0 ? 0 : width;
+        if (isCtrl) {
+          // In percentage.
+          const parentWidth = getRegionState().regionMap[parentId].width;
+          size = Math.floor((size * 100) / parentWidth);
+        } else {
+          // In actual pixels.
+          size = Math.floor(size);
+        }
+
+        const props = state.componentMap[componentId].props;
         props.width ??= {};
         props.width.size = size;
         props.width.unit = isCtrl ? '%' : 'px';
       });
     },
-    [componentId, getDimensions, updateComponentProps]
+    [componentId, getRegionState, immerSet]
   );
 
   const updateHeight = useCallback(
     (height, isCtrl) => {
-      let size = height <= 0 ? 0 : height;
-      if (isCtrl) {
-        // In percentage.
-        const dimensions = getDimensions();
-        size = Math.floor((size * 100) / dimensions.height);
-      } else {
-        // In actual pixels.
-        size = Math.floor(size);
-      }
+      immerSet((state) => {
+        const parentId = state.componentMap[componentId].parentId;
 
-      updateComponentProps(componentId, (props) => {
+        let size = height <= 0 ? 0 : height;
+        if (isCtrl) {
+          // In percentage.
+          const parentHeight = getRegionState().regionMap[parentId].height;
+          size = Math.floor((size * 100) / parentHeight);
+        } else {
+          // In actual pixels.
+          size = Math.floor(size);
+        }
+
+        const props = state.componentMap[componentId].props;
+
         props.height ??= {};
         props.height.size = size;
         props.height.unit = isCtrl ? '%' : 'px';
       });
     },
-    [componentId, getDimensions, updateComponentProps]
+    [componentId, getRegionState, immerSet]
   );
 
   return { updateWidth, updateHeight };
