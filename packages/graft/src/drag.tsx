@@ -133,6 +133,7 @@ function useOnDragEnd(): MouseEventHandler {
 /** @internal */
 function useTrackDragCursorPosition(): MouseEventHandler {
   const immerSet = useDraggedOverStore(useCallback((state) => state.immerSet, []));
+  const onnDragEnd = useOnDragEnd();
   const correctPosition = useCorrectCursorPosition();
 
   return useCallback(
@@ -143,12 +144,29 @@ function useTrackDragCursorPosition(): MouseEventHandler {
           return;
         }
 
+        if (!isLeftMouseButtonPressed(event)) {
+          // This may happen when during the drag operation, mouse up event (drag end)
+          // took place outside the event target. We need to stop the drag event manually
+          // now.
+          state.draggedOver = {
+            isDragging: false,
+            isOnRoot: false,
+          };
+          // Run the drag end to run cleanups or otherwise.
+          onnDragEnd(event);
+          return;
+        }
+
         draggedOver.cursorPosition = correctPosition(
           { x: event.clientX, y: event.clientY },
           draggedOver.isOnRoot
         );
       });
     },
-    [correctPosition, immerSet]
+    [correctPosition, immerSet, onnDragEnd]
   );
+}
+
+function isLeftMouseButtonPressed(event: MouseEvent) {
+  return event.buttons === 1 || event.button === 1;
 }

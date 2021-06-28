@@ -1,8 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { CSSObject } from '@emotion/react';
+import router from 'next/router';
 import {
   ChangeEventHandler,
-  DragEventHandler,
   ElementType,
   FocusEventHandler,
   forwardRef,
@@ -13,7 +13,6 @@ import {
 } from 'react';
 import { RGBA, rgbaToCss } from './colors';
 import { FontSize, FontWeight, TextAlign } from './text';
-import router from 'next/router';
 
 export type BoxProps = BaseBoxProps &
   LayoutStyles &
