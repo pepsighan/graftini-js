@@ -1,4 +1,4 @@
-import { Flex } from '@chakra-ui/layout';
+import { Box } from '@material-ui/core';
 import { Editor } from '@graftini/graft';
 import components from 'canvasComponents';
 import Root from 'canvasComponents/Root';
@@ -39,11 +39,11 @@ function Editorial() {
       <EditorNavigation />
       {/* The height of the nav is substracted, so that any of the following does not cause window-wide scroll. 
           Any scroll they have should be within their boundaries.*/}
-      <Flex height="calc(100vh - 54px)">
+      <Box sx={{ display: 'flex', height: 'calc(100vh - 54px)' }}>
         <LeftSidebar />
         <Canvas />
         <RightSidebar />
-      </Flex>
+      </Box>
     </Editor>
   );
 }

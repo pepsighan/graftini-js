@@ -35,5 +35,12 @@ export default createTheme({
         underline: 'none',
       },
     },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+        },
+      },
+    },
   },
 });
