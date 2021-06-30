@@ -1,4 +1,4 @@
-import { createTheme, colors } from '@material-ui/core';
+import { colors, createTheme } from '@material-ui/core';
 
 const blue = {
   ...colors.indigo,
@@ -25,6 +25,9 @@ export default createTheme({
   },
   components: {
     MuiButton: {
+      defaultProps: {
+        disableElevation: true,
+      },
       styleOverrides: {
         root: {
           textTransform: 'initial',
@@ -35,6 +38,11 @@ export default createTheme({
     MuiButtonBase: {
       defaultProps: {
         disableRipple: true,
+      },
+    },
+    MuiLink: {
+      defaultProps: {
+        underline: 'none',
       },
     },
   },

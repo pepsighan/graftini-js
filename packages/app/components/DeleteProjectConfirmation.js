@@ -1,47 +1,43 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogOverlay,
   Button,
-  useDisclosure,
-} from '@chakra-ui/react';
-import { useCallback, useRef } from 'react';
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  IconButton,
+} from '@material-ui/core';
+import useBoolean from 'hooks/useBoolean';
+import { useCallback } from 'react';
 import { useDeleteProject } from 'store/projects';
 
-export default function DeleteProjectConfirmation({ projectId, children, ...props }) {
+export default function DeleteProjectConfirmation({ projectId, children }) {
   const [deleteProject, { loading }] = useDeleteProject();
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef();
+  const [isOpen, { on, off }] = useBoolean();
 
   const onDelete = useCallback(async () => {
     await deleteProject({ variables: { projectId } });
-    onClose();
-  }, [deleteProject, onClose, projectId]);
+    off();
+  }, [deleteProject, off, projectId]);
 
   return (
     <>
-      <Button onClick={onOpen} {...props}>
+      <IconButton onClick={on} color="error" sx={{ width: 32 }}>
         {children}
-      </Button>
+      </IconButton>
 
-      <AlertDialog isOpen={isOpen} onClose={onClose} leastDestructiveRef={cancelRef}>
-        <AlertDialogOverlay />
-
-        <AlertDialogContent>
-          <AlertDialogBody pt={4}>Are you sure you want to delete this project?</AlertDialogBody>
-          <AlertDialogFooter>
-            <Button ref={cancelRef} onClick={onClose} isDisabled={loading}>
-              Cancel
-            </Button>
-            <Button colorScheme="red" onClick={onDelete} ml={3} isLoading={loading}>
-              Delete
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <Dialog open={isOpen} onClose={off}>
+        <DialogContent>
+          <DialogContentText>Are you sure you want to delete this project?</DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button color="inherit" onClick={off} disabled={loading} autoFocus>
+            Cancel
+          </Button>
+          <Button variant="contained" color="error" onClick={onDelete} disabled={loading}>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
