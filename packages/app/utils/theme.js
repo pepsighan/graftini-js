@@ -1,8 +1,12 @@
 import { colors, createTheme } from '@material-ui/core';
+import { grey } from '@material-ui/core/colors';
 
 export default createTheme({
   palette: {
     primary: colors.blue,
+    drawButton: {
+      main: grey[500],
+    },
   },
   typography: {
     fontSize: 14,
