@@ -1,5 +1,11 @@
 /** @jsxImportSource @emotion/react */
-import { Canvas as Canvs, DragPreview, DrawMarker, DropMarker } from '@graftini/graft';
+import {
+  Canvas as Canvs,
+  DragPreview,
+  DrawMarker,
+  DropMarker,
+  useCheckCursorOnIFrame,
+} from '@graftini/graft';
 import IFrame from 'components/IFrame';
 import theme from 'utils/theme';
 import HoverOutline from './HoverOutline';
@@ -21,6 +27,7 @@ export default function Canvas() {
           width: '100%',
           height: '100%',
         }}
+        {...useCheckCursorOnIFrame()}
       >
         {() => (
           <div
