@@ -1,9 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { useEditorStore, useOnDelete } from '@graftini/graft';
+import { Box, IconButton, Typography } from '@material-ui/core';
 import { TrashIcon } from '@modulz/radix-icons';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
-import theme from 'utils/theme';
 
 export default function ActionBar({ componentId }) {
   const name = useEditorStore(
@@ -12,24 +12,21 @@ export default function ActionBar({ componentId }) {
   const onDelete = useOnDeleteComponent({ componentId });
 
   return (
-    <>
-      <span
-        css={{
-          color: theme.colors.white,
-          lineHeight: 'initial',
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pl: 1 }}>
+      <Typography
+        variant="caption"
+        sx={{
+          color: 'white',
           pointerEvents: 'none',
           userSelect: 'none',
         }}
       >
         {name || 'Untitled'}
-      </span>
-      <button
-        css={{ marginLeft: 6, cursor: 'pointer', color: theme.colors.white }}
-        onClick={onDelete}
-      >
+      </Typography>
+      <IconButton size="small" css={{ ml: 2, color: 'white' }} onClick={onDelete}>
         <TrashIcon />
-      </button>
-    </>
+      </IconButton>
+    </Box>
   );
 }
 

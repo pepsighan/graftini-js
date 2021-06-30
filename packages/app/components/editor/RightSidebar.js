@@ -1,4 +1,4 @@
-import { Box, ButtonGroup, Button, Tabs, Tab } from '@material-ui/core';
+import { Box, Tab, Tabs } from '@material-ui/core';
 import { useCallback, useState } from 'react';
 import { rightSidebarWidth } from 'utils/constants';
 import ComponentOptions from './ComponentOptions';

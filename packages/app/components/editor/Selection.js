@@ -1,8 +1,8 @@
 import { useComponentRegionStoreApi, useRootScrollStoreApi } from '@graftini/graft';
+import { useTheme } from '@material-ui/core';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
-import theme from 'utils/theme';
 import ActionBar from './ActionBar';
 import PlainOutline from './PlainOutline';
 import ResizeableFrame from './ResizableFrame';
@@ -33,24 +33,20 @@ function ActualSelection({ componentId }) {
   const actualActionPosY = useTransform([actionPosY, scrollY], subtractScroll);
 
   const isShown = useSelection({ componentId, posX, posY, width, height, actionPosY });
+  const { palette } = useTheme();
 
   return isShown ? (
     <>
       {/* This is the panel on which options of the components are show. */}
       <motion.div
         style={{
-          display: 'flex',
-          alignItems: 'center',
           position: 'absolute',
           top: 0,
           left: 0,
           x: actualX,
           y: actualActionPosY,
-          backgroundColor: theme.colors.primary[400],
-          fontSize: 12,
-          height: 20,
-          paddingLeft: 8,
-          paddingRight: 8,
+          backgroundColor: palette.primary[400],
+          height: 24,
         }}
       >
         <ActionBar componentId={componentId} />
@@ -84,7 +80,7 @@ function useSelection({ componentId, posX, posY, width, height, actionPosY }) {
 
         // If the action bar overflows from the top, then show it to the bottom of
         // the component.
-        const y = state.y - 19 >= 0 ? state.y - 19 : state.y + state.height - 1;
+        const y = state.y - 23 >= 0 ? state.y - 23 : state.y + state.height - 1;
         actionPosY.set(y);
         setIsShown(true);
         return;
