@@ -19,6 +19,23 @@ export default createTheme({
     primary: blue,
   },
   typography: {
-    fontFamily: '"Inter", "Roboto", "Helvetica", "Arial", sans-serif',
+    fontSize: 14,
+    fontFamily: 'Inter, Roboto, Helvetica, Arial, sans-serif',
+    fontWeightMedium: 500,
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'initial',
+          fontWeight: 'medium',
+        },
+      },
+    },
+    MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
+    },
   },
 });
