@@ -1,4 +1,4 @@
-import { useComponentId, useEditor } from '@graftini/graft';
+import { useComponentId, useEditorStore } from '@graftini/graft';
 import { useCallback, useEffect, useState } from 'react';
 import { createEditor } from 'slate';
 import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
@@ -8,7 +8,7 @@ import Leaf from './Leaf';
 
 export default function TextEditor({ value, isEditable }) {
   const componentId = useComponentId();
-  const { updateComponentProps } = useEditor();
+  const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
 
   // Only initialize the editor once.
   const [editor] = useState(() => withReact(createEditor()));
@@ -22,11 +22,11 @@ export default function TextEditor({ value, isEditable }) {
 
   const onChange = useCallback(
     (value) => {
-      updateComponentProps(componentId, (props) => {
-        props.text = value;
+      immerSet((state) => {
+        state.componentMap[componentId].props.text = value;
       });
     },
-    [componentId, updateComponentProps]
+    [componentId, immerSet]
   );
 
   return (
