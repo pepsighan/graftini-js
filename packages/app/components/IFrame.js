@@ -2,7 +2,6 @@ import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import weakMemoize from '@emotion/weak-memoize';
 import { Reset } from '@graftini/bricks';
-import { useCheckCursorOnIFrame } from '@graftini/graft';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 
 const cacheKey = 'app';
@@ -10,7 +9,7 @@ const cacheKey = 'app';
 /**
  * This is an iframe which supports emotion styles.
  */
-export default function IFrame({ title, style, children }) {
+export default function IFrame({ title, style, children, ...rest }) {
   const initialContent = `
 <!DOCTYPE html>
 <html>
@@ -25,7 +24,7 @@ export default function IFrame({ title, style, children }) {
 `;
 
   return (
-    <Frame initialContent={initialContent} style={style} {...useCheckCursorOnIFrame()}>
+    <Frame initialContent={initialContent} style={style} {...rest}>
       <FrameContextConsumer>
         {({ document }) => (
           <CacheProvider value={memoizedCreateCache(document.head)}>
