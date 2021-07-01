@@ -4,6 +4,7 @@ import { grey } from '@material-ui/core/colors';
 export default createTheme({
   palette: {
     primary: colors.blue,
+    secondary: colors.grey,
     drawButton: {
       main: grey[500],
     },

@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Tooltip } from '@chakra-ui/react';
+import { Button, ButtonGroup, Tooltip } from '@material-ui/core';
 import {
   TextAlignCenterIcon,
   TextAlignJustifyIcon,
@@ -26,7 +26,7 @@ export default function TextAlignInput({ name }) {
   const { control } = useFormContext();
 
   return (
-    <ButtonGroup isAttached display="flex">
+    <ButtonGroup sx={{ justifyContent: 'center' }}>
       <Controller
         name={name}
         control={control}
@@ -43,15 +43,11 @@ function SegmentedInput({ options, value, onChange }) {
     <>
       {options.map(({ value: valueOpt, icon, tooltip }) => {
         return (
-          <Tooltip key={valueOpt} label={tooltip}>
+          <Tooltip key={valueOpt} title={tooltip}>
             <Button
               key={valueOpt}
-              color={valueOpt === value ? 'primary.500' : 'gray.600'}
               onClick={() => onChange(valueOpt)}
-              minWidth="auto"
-              paddingInlineStart="unset"
-              paddingInlineEnd="unset"
-              flex={1}
+              color={value === valueOpt ? 'primary' : 'secondary'}
             >
               {icon}
             </Button>
