@@ -1,4 +1,4 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Typography } from '@material-ui/core';
 import { ROOT_NODE_ID } from '@graftini/graft';
 import { componentOptions } from 'canvasComponents';
 import { useCallback } from 'react';
@@ -23,8 +23,8 @@ export default function StyleOptions() {
 
   if (!selectedComponentId) {
     return (
-      <Box px={3} py={2} bg="gray.200" borderRadius="md">
-        <Text fontSize="sm">Select a component from the canvas to view options.</Text>
+      <Box mt={2}>
+        <Typography variant="body2">Select a component from the canvas to view options.</Typography>
       </Box>
     );
   }
