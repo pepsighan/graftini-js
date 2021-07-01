@@ -1,5 +1,5 @@
-import { Box, Button, Container, Stack, Typography } from '@material-ui/core';
-import { TrashIcon, PlusIcon } from '@modulz/radix-icons';
+import { Box, Button, Container, Grid, Typography } from '@material-ui/core';
+import { PlusIcon, TrashIcon } from '@modulz/radix-icons';
 import DeleteProjectConfirmation from 'components/DeleteProjectConfirmation';
 import Link from 'components/Link';
 import Navigation from 'components/Navigation';
@@ -20,7 +20,7 @@ export default protectedPage(function Projects() {
       <Navigation />
 
       <Container sx={{ mt: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
           <Typography variant="subtitle2">All Projects</Typography>
           <Button variant="contained" size="small" onClick={on}>
             <PlusIcon /> <Box sx={{ ml: 0.5 }}>New</Box>
@@ -28,11 +28,13 @@ export default protectedPage(function Projects() {
         </Box>
 
         {!loading && (
-          <Stack mt={2}>
+          <Grid container spacing={4}>
             {myProjects.map((it) => (
-              <ProjectItem key={it.id} id={it.id} name={it.name} />
+              <Grid item key={it.id}>
+                <ProjectItem id={it.id} name={it.name} />
+              </Grid>
             ))}
-          </Stack>
+          </Grid>
         )}
       </Container>
 
