@@ -1,4 +1,4 @@
-import { Box } from '@material-ui/core';
+import { Box, Divider } from '@material-ui/core';
 import Layers from './Layers';
 import Pages from './Pages';
 
@@ -12,9 +12,11 @@ export default function LeftSidebar() {
         width: 250,
         borderRight: '1px solid',
         borderColor: 'grey.400',
+        gap: 1.5,
       }}
     >
       <Pages />
+      <Divider sx={{ mx: 1.5 }} />
       <Layers />
     </Box>
   );
