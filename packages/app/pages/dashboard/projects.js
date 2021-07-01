@@ -19,7 +19,7 @@ export default protectedPage(function Projects() {
       <SEO title="All Projects" />
       <Navigation />
 
-      <Container>
+      <Container sx={{ mt: 4 }}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <Typography variant="subtitle2">All Projects</Typography>
           <Button variant="contained" size="small" onClick={on}>

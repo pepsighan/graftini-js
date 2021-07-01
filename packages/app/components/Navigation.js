@@ -15,7 +15,15 @@ export default function Navigation() {
   const { user } = useAuthUser();
 
   return (
-    <AppBar position="static" color="transparent" elevation={0}>
+    <AppBar
+      position="static"
+      color="transparent"
+      elevation={0}
+      sx={{
+        borderBottom: '1px solid',
+        borderColor: 'grey.400',
+      }}
+    >
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
         <Link href="/" passHref>
           <Button component="a" color="inherit">
