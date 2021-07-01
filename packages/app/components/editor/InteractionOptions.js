@@ -77,16 +77,16 @@ export default function InteractionOptions() {
 
   if (!selectedComponentId || type === 'Root') {
     return (
-      <Box>
-        <Typography>Select a component from the canvas to view options.</Typography>
+      <Box mt={2}>
+        <Typography variant="body2">Select a component from the canvas to view options.</Typography>
       </Box>
     );
   }
 
   if (type !== 'Box') {
     return (
-      <Box>
-        <Typography>Select a box from the canvas to view options.</Typography>
+      <Box mt={2}>
+        <Typography variant="body2">Select a box from the canvas to view options.</Typography>
       </Box>
     );
   }
