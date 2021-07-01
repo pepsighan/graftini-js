@@ -80,6 +80,7 @@ export default createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'white',
+          fontSize: '0.875rem',
         },
         input: {
           paddingTop: 6,

@@ -1,14 +1,13 @@
 import { InputAdornment, TextField, Typography } from '@material-ui/core';
 import { useFormContext, Controller } from 'react-hook-form';
 
-export default function SelectInput({ name, children, label, defaultValue }) {
+export default function SelectInput({ name, children, label }) {
   const { control } = useFormContext();
 
   return (
     <Controller
       name={name}
       control={control}
-      defaultValue={defaultValue}
       render={({ field }) => (
         <TextField
           {...field}
