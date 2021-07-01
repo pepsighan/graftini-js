@@ -16,6 +16,7 @@ export default createTheme({
     MuiButton: {
       defaultProps: {
         disableElevation: true,
+        disableRipple: true,
       },
       styleOverrides: {
         root: {
@@ -25,6 +26,11 @@ export default createTheme({
       },
     },
     MuiButtonBase: {
+      defaultProps: {
+        disableRipple: true,
+      },
+    },
+    MuiButtonGroup: {
       defaultProps: {
         disableRipple: true,
       },
