@@ -42,13 +42,13 @@ export default function EditorNavigation() {
         </Stack>
 
         <Stack direction="row" spacing={2}>
-          <Tooltip title="Preview">
-            <Link href={`/dashboard/project/${query.projectId}/preview`}>
+          <Link href={`/dashboard/project/${query.projectId}/preview`}>
+            <Tooltip title="Preview">
               <IconButton>
                 <PlayIcon />
               </IconButton>
-            </Link>
-          </Tooltip>
+            </Tooltip>
+          </Link>
 
           <DeployButton />
         </Stack>

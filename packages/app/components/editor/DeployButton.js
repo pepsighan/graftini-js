@@ -27,7 +27,7 @@ export default function DeployButton() {
 
   return (
     <Tooltip title="Deploy">
-      <IconButton isLoading={isLoading || loading} onClick={onDeploy}>
+      <IconButton disabled={isLoading || loading} onClick={onDeploy}>
         <RocketIcon />
       </IconButton>
     </Tooltip>
