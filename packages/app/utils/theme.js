@@ -69,5 +69,34 @@ export default createTheme({
         },
       },
     },
+    MuiTextField: {
+      defaultProps: {
+        size: 'small',
+        variant: 'outlined',
+        autoComplete: 'off',
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          backgroundColor: 'white',
+        },
+        input: {
+          paddingTop: 6,
+          paddingBottom: 6,
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        select: {
+          fontSize: '0.875rem',
+        },
+        outlined: {
+          paddingTop: 6,
+          paddingBottom: 6,
+        },
+      },
+    },
   },
 });
