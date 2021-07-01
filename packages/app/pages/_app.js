@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client';
-import { CssBaseline } from '@material-ui/core';
+import { CssBaseline, GlobalStyles } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/system';
 import Head from 'next/head';
 import { useMemo } from 'react';
@@ -27,6 +27,14 @@ export default function MyApp({ Component, pageProps }) {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Component {...pageProps} />
+
+        <GlobalStyles
+          styles={`
+            html {
+              font-size: 14px;
+            }
+          `}
+        />
       </ThemeProvider>
     </ApolloProvider>
   );

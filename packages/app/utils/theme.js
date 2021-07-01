@@ -9,7 +9,6 @@ export default createTheme({
     },
   },
   typography: {
-    fontSize: 14,
     fontFamily: 'Inter, Roboto, Helvetica, Arial, sans-serif',
     fontWeightMedium: 500,
   },
