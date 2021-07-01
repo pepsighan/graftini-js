@@ -1,4 +1,3 @@
-import { Link } from '@chakra-ui/react';
 import {
   useCreateComponent,
   useCreateComponentStore,
@@ -7,6 +6,7 @@ import {
 import { AppBar, IconButton, Stack, Toolbar, Tooltip } from '@material-ui/core';
 import { CursorArrowIcon, PlayIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
 import BackButton from 'components/BackButton';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
