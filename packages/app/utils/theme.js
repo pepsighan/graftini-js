@@ -41,5 +41,27 @@ export default createTheme({
         },
       },
     },
+    MuiMenu: {
+      defaultProps: {
+        elevation: 1,
+        MenuListProps: {
+          dense: true,
+        },
+      },
+      styleOverrides: {
+        list: {
+          padding: 0,
+        },
+      },
+    },
+    MuiMenuItem: {
+      defaultProps: {},
+      styleOverrides: {
+        root: {
+          fontSize: '0.875rem',
+          cursor: 'auto',
+        },
+      },
+    },
   },
 });

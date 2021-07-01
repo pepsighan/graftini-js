@@ -4,7 +4,7 @@ import Pages from './Pages';
 
 export default function LeftSidebar() {
   return (
-    <Box sx={{ px: 1, width: 250 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', py: 1, width: 250 }}>
       <Pages />
       <Layers />
     </Box>

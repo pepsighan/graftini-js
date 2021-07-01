@@ -1,69 +1,42 @@
-import { Box, Button, useDisclosure } from '@chakra-ui/react';
+import { useBoolean } from '@chakra-ui/react';
+import { Menu, MenuItem } from '@material-ui/core';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
-import { useCallback, useRef } from 'react';
-import { useClickAway } from 'react-use';
+import { useCallback } from 'react';
 import DeletePageConfirmation from './DeletePageConfirmation';
 
 export default function PageContextMenu({ context, onClose }) {
-  const ref = useRef();
-  useClickAway(ref, onClose);
-
-  const { isOpen: isDeleteOpen, onOpen: onDeleteOpen, onClose: onDeleteClose } = useDisclosure();
+  const [isOpen, { on, off }] = useBoolean();
 
   const onCloseDeleteConfirmation = useCallback(() => {
-    onDeleteClose();
+    off();
     onClose();
-  }, [onClose, onDeleteClose]);
+  }, [off, onClose]);
 
   const { project } = useMyProjectFromRouter();
   const page = project.pages.find((it) => it.id === context.pageId);
 
   return (
     <>
-      {!isDeleteOpen && (
-        <Box
-          ref={ref}
-          position="fixed"
-          top={`${context.y}px`}
-          left={`${context.x}px`}
-          zIndex="popover"
-          bg="white"
-          shadow="md"
-          width={200}
-          py={1}
-          borderRadius="md"
-        >
-          <Button
-            size="sm"
-            px={5}
-            isFullWidth
-            borderRadius="none"
-            justifyContent="flex-start"
-            fontWeight="normal"
-            bg="white"
-            disabled
-          >
-            Edit
-          </Button>
-          {page.route !== '/' && (
-            <Button
-              size="sm"
-              px={5}
-              isFullWidth
-              borderRadius="none"
-              justifyContent="flex-start"
-              fontWeight="normal"
-              bg="white"
-              onClick={onDeleteOpen}
-            >
-              Delete
-            </Button>
-          )}
-        </Box>
-      )}
+      <Menu
+        open
+        onClose={onClose}
+        anchorReference="anchorPosition"
+        anchorPosition={
+          context
+            ? {
+                left: context.x,
+                top: context.y,
+              }
+            : null
+        }
+        MenuListProps={{ sx: { width: 150 } }}
+      >
+        <MenuItem disabled>Edit</MenuItem>
+        {page.route !== '/' && <MenuItem onClick={on}>Delete</MenuItem>}
+      </Menu>
 
       <DeletePageConfirmation
-        isOpen={isDeleteOpen}
+        isOpen={isOpen}
         pageId={context.pageId}
         projectId={context.projectId}
         onClose={onCloseDeleteConfirmation}
