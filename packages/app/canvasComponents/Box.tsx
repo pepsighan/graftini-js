@@ -17,7 +17,6 @@ import {
 } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
 import { forwardRef, ReactNode, useCallback } from 'react';
-import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import { BoxTag } from 'utils/constants';
 
@@ -57,7 +56,6 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
   ({ children, onMouseDown, link, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
-    const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
 
     const isDraggingDisabled = useIsDraggingDisabled();
 
@@ -77,12 +75,9 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
         onClick={useCallback(
           (ev) => {
             ev.stopPropagation();
-            // We need to trigger a click to be notified because we are stopping propagation.
-            // Stopping propagation is also needed for us to select the top most component.
-            triggerClick();
             return selectComponent(componentId);
           },
-          [componentId, selectComponent, triggerClick]
+          [componentId, selectComponent]
         )}
       >
         {children}

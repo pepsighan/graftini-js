@@ -2,7 +2,6 @@
 import { RGBA, rgbaToCss } from '@graftini/bricks';
 import { RootComponent, ROOT_NODE_ID, useCreateComponentStore } from '@graftini/graft';
 import { ForwardedRef, forwardRef, useCallback } from 'react';
-import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState } from 'store/designer';
 
 const cursor = {
@@ -20,12 +19,10 @@ const Root: RootComponent<RootProps> = forwardRef(
     const currentCreateType = useCreateComponentStore(
       useCallback((state) => state.newComponent?.type, [])
     );
-    const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
 
     const onSelect = useCallback(() => {
       selectComponent(ROOT_NODE_ID);
-      triggerClick();
-    }, [selectComponent, triggerClick]);
+    }, [selectComponent]);
 
     return (
       <div

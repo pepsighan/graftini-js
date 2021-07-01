@@ -3,7 +3,6 @@ import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from '@graftini/br
 import { GraftComponent, useComponentId } from '@graftini/graft';
 import { forwardRef, MouseEvent, useCallback } from 'react';
 import { Descendant } from 'slate';
-import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
 
@@ -21,7 +20,6 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
   ({ text, onMouseDown, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
-    const triggerClick = useCanvasClickTrigger(useCallback((state: any) => state.trigger, []));
     const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
 
     const isEditable = useDesignerState(
@@ -36,12 +34,9 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
     const onClick = useCallback(
       (ev: MouseEvent) => {
         ev.stopPropagation();
-        // We need to trigger a click to be notified because we are stopping propagation.
-        // Stopping propagation is also needed for us to select the top most component.
-        triggerClick();
         return selectComponent(componentId);
       },
-      [componentId, selectComponent, triggerClick]
+      [componentId, selectComponent]
     );
 
     // Enable editing.
