@@ -21,6 +21,7 @@ export default function Canvas() {
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
+        backgroundColor: 'white',
       }}
     >
       <IFrame
@@ -28,6 +29,7 @@ export default function Canvas() {
         style={{
           width: '100%',
           height: '100%',
+          border: 'none',
         }}
         {...useCheckCursorOnIFrame()}
       >

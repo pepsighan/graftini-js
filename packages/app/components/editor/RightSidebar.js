@@ -13,6 +13,8 @@ export default function RightSidebar() {
       sx={{
         px: 1,
         width: rightSidebarWidth,
+        borderLeft: '1px solid',
+        borderColor: 'grey.400',
         // Hide scrollbars on all browsers.
         // https://stackoverflow.com/a/49278385
         scrollbarWidth: 'none',
