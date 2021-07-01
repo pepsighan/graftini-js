@@ -1,7 +1,7 @@
-import { Grid, GridItem, Text } from '@chakra-ui/layout';
-import { Divider } from '@chakra-ui/react';
+import { Text } from '@chakra-ui/layout';
 import { BorderRadius } from '@graftini/bricks';
 import { useEditorStore } from '@graftini/graft';
+import { Divider, Stack } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import { boxTags } from 'utils/constants';
@@ -12,7 +12,6 @@ import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import DirectionInput from './form/DirectionInput';
 import FlexNumericInput from './form/FlexNumericInput';
-import Labelled from './form/Labelled';
 import MarginField from './form/MarginField';
 import OpacityInput from './form/OpacityInput';
 import OverflowInput from './form/OverflowInput';
@@ -131,22 +130,21 @@ export default function BoxOptions({ componentId }: OptionsProps) {
     >
       <SyncResize componentId={componentId} />
 
-      {/* Making a 8 column grid system. */}
-      <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
+      <Stack spacing={2} mt={2}>
         <AlignmentSection />
-        <SectionDivider />
+        <Divider />
         <PropertiesSection />
-        <SectionDivider />
+        <Divider />
         <LayoutSection />
-        <SectionDivider />
+        <Divider />
         <OverflowSection />
-        <SectionDivider />
+        <Divider />
         <FlexSection />
-        <SectionDivider />
+        <Divider />
         <AppearanceSection />
-        <SectionDivider />
+        <Divider />
         <BorderSection />
-      </Grid>
+      </Stack>
     </CF>
   );
 }
@@ -154,13 +152,8 @@ export default function BoxOptions({ componentId }: OptionsProps) {
 function AlignmentSection() {
   return (
     <>
-      <GridItem colSpan={8}>
-        <AlignmentInput />
-      </GridItem>
-
-      <GridItem colSpan={8}>
-        <DirectionInput />
-      </GridItem>
+      <AlignmentInput />
+      <DirectionInput />
     </>
   );
 }
@@ -168,18 +161,14 @@ function AlignmentSection() {
 function PropertiesSection() {
   return (
     <>
-      <GridItem colSpan={8}>
-        <TextInput name="name" label="Name" />
-      </GridItem>
-      <GridItem colSpan={8}>
-        <SelectInput name="tag" label="Tag">
-          {boxTags.map((tag) => (
-            <option key={tag} value={tag}>
-              {tag}
-            </option>
-          ))}
-        </SelectInput>
-      </GridItem>
+      <TextInput name="name" label="Name" />
+      <SelectInput name="tag" label="Tag">
+        {boxTags.map((tag) => (
+          <option key={tag} value={tag}>
+            {tag}
+          </option>
+        ))}
+      </SelectInput>
     </>
   );
 }
@@ -187,34 +176,20 @@ function PropertiesSection() {
 function FlexSection() {
   return (
     <>
-      <GridItem colSpan={8} mb={1}>
-        <Text fontSize="sm" fontWeight="bold">
-          Flex
-        </Text>
-      </GridItem>
-
-      <GridItem colSpan={4}>
-        <FlexNumericInput name="flexGrow" label="Grow" />
-      </GridItem>
-
-      <GridItem colSpan={4}>
-        <FlexNumericInput name="flexShrink" label="Shrink" />
-      </GridItem>
-
-      <GridItem colSpan={4}>
-        <FlexNumericInput name="flexGap" label="Gap" />
-      </GridItem>
-
-      <GridItem colSpan={8}>
-        <SegmentedInput
-          name="flexWrap"
-          isFullWidth
-          options={[
-            { value: 'wrap', label: 'Wrap' },
-            { value: 'nowrap', label: 'No Wrap' },
-          ]}
-        />
-      </GridItem>
+      <Text fontSize="sm" fontWeight="bold">
+        Flex
+      </Text>
+      <FlexNumericInput name="flexGrow" label="Grow" />
+      <FlexNumericInput name="flexShrink" label="Shrink" />
+      <FlexNumericInput name="flexGap" label="Gap" />
+      <SegmentedInput
+        name="flexWrap"
+        isFullWidth
+        options={[
+          { value: 'wrap', label: 'Wrap' },
+          { value: 'nowrap', label: 'No Wrap' },
+        ]}
+      />
     </>
   );
 }
@@ -222,35 +197,17 @@ function FlexSection() {
 function LayoutSection() {
   return (
     <>
-      <GridItem colSpan={8} mb={1}>
-        <Text fontSize="sm" fontWeight="bold">
-          Layout
-        </Text>
-      </GridItem>
-      <GridItem colSpan={8}>
-        <SizeInput name="widthRaw" label="Width" isWidth />
-      </GridItem>
-      <GridItem colSpan={8}>
-        <SizeInput name="heightRaw" label="Height" isWidth={false} />
-      </GridItem>
-      <GridItem colSpan={4}>
-        <SizeLimitInput name="minWidthRaw" label="Min W" />
-      </GridItem>
-      <GridItem colSpan={4}>
-        <SizeLimitInput name="maxWidthRaw" label="Max W" />
-      </GridItem>
-      <GridItem colSpan={4}>
-        <SizeLimitInput name="minHeightRaw" label="Min H" />
-      </GridItem>
-      <GridItem colSpan={4}>
-        <SizeLimitInput name="maxHeightRaw" label="Max W" />
-      </GridItem>
-      <Labelled label="Padding">
-        <PaddingField name="padding" />
-      </Labelled>
-      <Labelled label="Margin">
-        <MarginField name="margin" />
-      </Labelled>
+      <Text fontSize="sm" fontWeight="bold">
+        Layout
+      </Text>
+      <SizeInput name="widthRaw" label="Width" isWidth />
+      <SizeInput name="heightRaw" label="Height" isWidth={false} />
+      <SizeLimitInput name="minWidthRaw" label="Min W" />
+      <SizeLimitInput name="maxWidthRaw" label="Max W" />
+      <SizeLimitInput name="minHeightRaw" label="Min H" />
+      <SizeLimitInput name="maxHeightRaw" label="Max W" />
+      <PaddingField name="padding" />
+      <MarginField name="margin" />
     </>
   );
 }
@@ -258,14 +215,10 @@ function LayoutSection() {
 function OverflowSection() {
   return (
     <>
-      <GridItem colSpan={8} mb={1}>
-        <Text fontSize="sm" fontWeight="bold">
-          Overflow
-        </Text>
-      </GridItem>
-      <GridItem colSpan={8}>
-        <OverflowInput name="overflow" />
-      </GridItem>
+      <Text fontSize="sm" fontWeight="bold">
+        Overflow
+      </Text>
+      <OverflowInput name="overflow" />
     </>
   );
 }
@@ -273,17 +226,11 @@ function OverflowSection() {
 function AppearanceSection() {
   return (
     <>
-      <GridItem colSpan={8} mb={1}>
-        <Text fontSize="sm" fontWeight="bold">
-          Appearance
-        </Text>
-      </GridItem>
-      <GridItem colSpan={4}>
-        <ColorPicker name="color" />
-      </GridItem>
-      <GridItem colSpan={4}>
-        <OpacityInput name="opacity" />
-      </GridItem>
+      <Text fontSize="sm" fontWeight="bold">
+        Appearance
+      </Text>
+      <ColorPicker name="color" />
+      <OpacityInput name="opacity" />
     </>
   );
 }
@@ -291,26 +238,11 @@ function AppearanceSection() {
 function BorderSection() {
   return (
     <>
-      <GridItem colSpan={8} mb={1}>
-        <Text fontSize="sm" fontWeight="bold">
-          Border
-        </Text>
-      </GridItem>
-      {/* <Labelled label="Border">
-        <TextInput name="border" />
-      </Labelled> */}
-      <GridItem colSpan={8}>
-        <RadiusInput name="borderRadius" />
-      </GridItem>
+      <Text fontSize="sm" fontWeight="bold">
+        Border
+      </Text>
+      <RadiusInput name="borderRadius" />
     </>
-  );
-}
-
-function SectionDivider() {
-  return (
-    <GridItem colSpan={8}>
-      <Divider borderColor="gray.400" />
-    </GridItem>
   );
 }
 
