@@ -1,16 +1,16 @@
+import { defaultComponentMap } from '@graftini/graft';
 import {
   Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-} from '@chakra-ui/react';
-import { defaultComponentMap } from '@graftini/graft';
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  InputAdornment,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import Root from 'canvasComponents/Root';
+import { materialRegister } from 'hooks/useMaterialFormRegister';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
@@ -56,22 +56,29 @@ export default function NewProjectDialog({ isOpen, onClose }) {
   );
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay />
+    <Dialog open={isOpen} onClose={onClose}>
+      <DialogTitle>New Project</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <ModalContent>
-          <ModalHeader>New Project</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Input {...register('name')} placeholder="Name of the project" autoComplete="off" />
-          </ModalBody>
-          <ModalFooter>
-            <Button type="submit" isLoading={isSubmitting}>
-              Create
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+        <DialogContent>
+          <TextField
+            {...materialRegister(register, 'name')}
+            autoComplete="off"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Typography variant="body2">Name</Typography>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </DialogContent>
+
+        <DialogActions>
+          <Button type="submit" variant="contained" disabled={isSubmitting}>
+            Create
+          </Button>
+        </DialogActions>
       </form>
-    </Modal>
+    </Dialog>
   );
 }
