@@ -1,13 +1,13 @@
 import { useDisclosure } from '@chakra-ui/hooks';
 import { Box, IconButton, Typography } from '@material-ui/core';
 import { PlusIcon } from '@modulz/radix-icons';
-import NewPageDialog from 'components/NewPageDialog';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import { encode } from 'utils/url';
 import { useEffectOnce } from 'utils/useEffect';
+import NewPageDialog from './NewPageDialog';
 import PageItem from './PageItem';
 
 export default function Pages() {

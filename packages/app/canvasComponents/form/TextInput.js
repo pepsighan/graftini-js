@@ -1,5 +1,5 @@
 import { InputAdornment, TextField, Typography } from '@material-ui/core';
-import useMaterialFormRegister from 'hooks/useMaterialFormContext';
+import useMaterialFormRegister from 'hooks/useMaterialFormRegister';
 
 export default function TextInput({ name, label, error, helperText }) {
   return (

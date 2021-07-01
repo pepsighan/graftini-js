@@ -17,6 +17,7 @@ export default createTheme({
       defaultProps: {
         disableElevation: true,
         disableRipple: true,
+        size: 'small',
       },
       styleOverrides: {
         root: {
@@ -33,6 +34,7 @@ export default createTheme({
     MuiButtonGroup: {
       defaultProps: {
         disableRipple: true,
+        size: 'small',
       },
     },
     MuiLink: {
@@ -96,6 +98,28 @@ export default createTheme({
         outlined: {
           paddingTop: 6,
           paddingBottom: 6,
+        },
+      },
+    },
+    MuiDialogTitle: {
+      styleOverrides: {
+        root: {
+          fontSize: '1rem',
+          padding: '8px 16px',
+        },
+      },
+    },
+    MuiDialogContent: {
+      styleOverrides: {
+        root: {
+          padding: '8px 16px',
+        },
+      },
+    },
+    MuiDialogActions: {
+      styleOverrides: {
+        root: {
+          padding: '8px 16px',
         },
       },
     },
