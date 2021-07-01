@@ -106,7 +106,7 @@ const LayerView = forwardRef(({ nodeId }, ref) => {
           <SquareIcon width={12} height={12} />
         )}
         <Typography variant="body2" sx={{ ml: 0.5 }}>
-          {props.name || 'Untitled'}
+          {nodeId === ROOT_NODE_ID ? 'Root' : props.name || 'Untitled'}
         </Typography>
       </Button>
     </ButtonGroup>
