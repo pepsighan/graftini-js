@@ -1,11 +1,16 @@
 import { useComponentId, useEditorStore } from '@graftini/graft';
 import { Box } from '@material-ui/core';
-import { convertToRaw, convertFromRaw, Editor, EditorState } from 'draft-js';
+import { convertFromRaw, convertToRaw, Editor, EditorState } from 'draft-js';
 import { useCallback, useState } from 'react';
+import { useDesignerState } from 'store/designer';
 
-export default function TextEditor({ value, isEditable }) {
+export default function TextEditor({ value }) {
   const componentId = useComponentId();
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
+
+  const isSelected = useDesignerState(
+    useCallback((state) => state.selectedComponentId === componentId, [componentId])
+  );
 
   const [editorState, setEditorState] = useState(() =>
     EditorState.createWithContent(convertFromRaw(value))
@@ -26,8 +31,9 @@ export default function TextEditor({ value, isEditable }) {
   );
 
   return (
-    <Box sx={{ cursor: isEditable ? 'text' : 'default' }}>
-      <Editor editorState={editorState} onChange={onChange} readOnly={!isEditable} />
+    <Box sx={{ cursor: isSelected ? 'text' : 'default' }}>
+      {/* [isSelected] makes the editor to be functional only after the second click. */}
+      <Editor editorState={editorState} onChange={onChange} readOnly={!isSelected} />
     </Box>
   );
 }
