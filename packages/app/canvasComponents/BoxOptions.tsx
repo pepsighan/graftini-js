@@ -1,7 +1,6 @@
-import { Text } from '@chakra-ui/layout';
 import { BorderRadius } from '@graftini/bricks';
 import { useEditorStore } from '@graftini/graft';
-import { Divider, Stack, MenuItem } from '@material-ui/core';
+import { Divider, MenuItem, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import { boxTags } from 'utils/constants';
@@ -176,9 +175,7 @@ function PropertiesSection() {
 function FlexSection() {
   return (
     <>
-      <Text fontSize="sm" fontWeight="bold">
-        Flex
-      </Text>
+      <Typography variant="subtitle2">Flex</Typography>
       <FlexNumericInput name="flexGrow" label="Grow" />
       <FlexNumericInput name="flexShrink" label="Shrink" />
       <FlexNumericInput name="flexGap" label="Gap" />
@@ -196,9 +193,7 @@ function FlexSection() {
 function LayoutSection() {
   return (
     <>
-      <Text fontSize="sm" fontWeight="bold">
-        Layout
-      </Text>
+      <Typography variant="subtitle2">Layout</Typography>
       <SizeInput name="widthRaw" label="Width" isWidth />
       <SizeInput name="heightRaw" label="Height" isWidth={false} />
       <SizeLimitInput name="minWidthRaw" label="Min W" />
@@ -214,9 +209,7 @@ function LayoutSection() {
 function OverflowSection() {
   return (
     <>
-      <Text fontSize="sm" fontWeight="bold">
-        Overflow
-      </Text>
+      <Typography variant="subtitle2">Overflow</Typography>
       <OverflowInput name="overflow" />
     </>
   );
@@ -225,9 +218,7 @@ function OverflowSection() {
 function AppearanceSection() {
   return (
     <>
-      <Text fontSize="sm" fontWeight="bold">
-        Appearance
-      </Text>
+      <Typography variant="subtitle2">Appearance</Typography>
       <ColorPicker name="color" label="Fill" />
       <OpacityInput name="opacity" />
     </>
@@ -237,9 +228,7 @@ function AppearanceSection() {
 function BorderSection() {
   return (
     <>
-      <Text fontSize="sm" fontWeight="bold">
-        Border
-      </Text>
+      <Typography variant="subtitle2">Border</Typography>
       <RadiusInput name="borderRadius" />
     </>
   );
