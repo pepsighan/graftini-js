@@ -137,5 +137,24 @@ export default createTheme({
         disableShrink: true,
       },
     },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          '& .MuiTab-root': {
+            color: 'inherit',
+            paddingTop: 4,
+            paddingBottom: 4,
+            borderRadius: 4,
+            '&.Mui-selected': {
+              backgroundColor: colors.grey[200],
+            },
+          },
+        },
+        indicator: {
+          // Do not show the underline unique to Material Design.
+          display: 'none',
+        },
+      },
+    },
   },
 });

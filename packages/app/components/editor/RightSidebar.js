@@ -27,7 +27,7 @@ export default function RightSidebar() {
         },
       }}
     >
-      <Tabs value={currentTab} onChange={onChange} centered sx={{ minHeight: 'auto' }}>
+      <Tabs value={currentTab} onChange={onChange} centered sx={{ mt: 1, minHeight: 'auto' }}>
         <Tab label="Design" sx={{ padding: 1, minHeight: 0 }} />
         <Tab label="Interaction" sx={{ padding: 1, minHeight: 0 }} />
       </Tabs>
