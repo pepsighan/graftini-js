@@ -42,9 +42,10 @@ function Editorial() {
       <GlobalStyles styles={` body { background-color: ${palette.grey[50]}; } `} />
 
       <EditorNavigation />
-      {/* The height of the nav is substracted, so that any of the following does not cause window-wide scroll. 
-          Any scroll they have should be within their boundaries.*/}
-      <Box sx={{ display: 'flex', height: 'calc(100vh - 48px)' }}>
+      {/* The height of the nav is subtracted, so that any of the following does not cause window-wide scroll. 
+          Any scroll they have should be within their boundaries. The height of the nav is ~49px.
+      */}
+      <Box sx={{ display: 'flex', height: 'calc(100vh - 49px)' }}>
         <LeftSidebar />
         <Canvas />
         <RightSidebar />
