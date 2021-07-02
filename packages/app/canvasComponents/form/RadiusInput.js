@@ -21,8 +21,6 @@ export default function RadiusInput({ name }) {
     [setValue]
   );
 
-  console.log({ toggle });
-
   return (
     <>
       <TextField

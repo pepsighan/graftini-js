@@ -16,7 +16,8 @@ export default function SizeLimitInput({ name, label }) {
       value={size}
       onChange={useCallback(
         (event) => {
-          setValue(`${name}.size`, parsePositiveInteger(event.target.value) || 0);
+          const value = event.target.value.trim();
+          setValue(`${name}.size`, value ? parsePositiveInteger(value) || 0 : '');
         },
         [name, setValue]
       )}
