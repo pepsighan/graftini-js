@@ -60,6 +60,7 @@ type MyProject = {
   name: string;
   pages: ProjectPage[];
   queries: Query[];
+  appUrl?: string;
 };
 
 export type ProjectPage = {
@@ -80,6 +81,7 @@ const QUERY_MY_PROJECT = gql`
     myProject(id: $id) {
       id
       name
+      appUrl
       pages {
         id
         name
