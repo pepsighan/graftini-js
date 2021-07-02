@@ -70,7 +70,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         {...bottom}
         componentId={componentId}
         original={restFrozen}
-        cursor="n-resize"
+        cursor="s-resize"
         type="bottom"
         onResizingStart={onResizingStart}
         onResizingEnd={onResizingEnd}
@@ -80,7 +80,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         {...left}
         componentId={componentId}
         original={restFrozen}
-        cursor="e-resize"
+        cursor="w-resize"
         type="left"
         onResizingStart={onResizingStart}
         onResizingEnd={onResizingEnd}
