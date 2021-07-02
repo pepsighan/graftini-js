@@ -146,6 +146,7 @@ export default createTheme({
             paddingBottom: 4,
             borderRadius: 4,
             '&.Mui-selected': {
+              color: 'inherit',
               backgroundColor: colors.grey[200],
             },
           },
