@@ -43,7 +43,7 @@ export default function DeployButton() {
     <>
       <Tooltip title="Deploy">
         <IconButton onClick={onOpen}>
-          {isDeploying || isStartingDeployment ? <CircularProgress size={20} /> : <RocketIcon />}
+          {isDeploying || isStartingDeployment ? <CircularProgress size={18} /> : <RocketIcon />}
         </IconButton>
       </Tooltip>
 
