@@ -57,8 +57,6 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
 
 /**
  * Enables editing text only if the same component is clicked twice.
- * Though enabling text editing is no required for it to work. This is to
- * notify the rest of the app that a text editor is active.
  */
 function useEnableTextEditing({ componentId }) {
   const clickCount = useRef(0);

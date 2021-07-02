@@ -1,16 +1,12 @@
 import { useComponentId, useEditorStore } from '@graftini/graft';
 import { Box } from '@material-ui/core';
 import { convertFromRaw, convertToRaw, Editor, EditorState } from 'draft-js';
-import { useCallback, useState } from 'react';
-import { useDesignerState } from 'store/designer';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useDesignerState, useDesignerStateApi } from 'store/designer';
 
 export default function TextEditor({ value }) {
   const componentId = useComponentId();
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
-
-  const isSelected = useDesignerState(
-    useCallback((state) => state.selectedComponentId === componentId, [componentId])
-  );
 
   const [editorState, setEditorState] = useState(() =>
     EditorState.createWithContent(convertFromRaw(value))
@@ -30,10 +26,54 @@ export default function TextEditor({ value }) {
     [componentId, immerSet]
   );
 
+  const editorRef = useRef();
+
+  const { isSelected, isEditable } = useFocusOnEditingMode({ componentId, editorRef });
+
   return (
     <Box sx={{ cursor: isSelected ? 'text' : 'default' }}>
       {/* [isSelected] makes the editor to be functional only after the second click. */}
-      <Editor editorState={editorState} onChange={onChange} readOnly={!isSelected} />
+      <Editor
+        ref={editorRef}
+        editorState={editorState}
+        onChange={onChange}
+        readOnly={!isEditable}
+      />
     </Box>
   );
+}
+
+function useFocusOnEditingMode({ componentId, editorRef }) {
+  const isSelected = useDesignerState(
+    useCallback((state) => state.selectedComponentId === componentId, [componentId])
+  );
+
+  const isEditable = useDesignerState(
+    useCallback(
+      (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled,
+      [componentId]
+    )
+  );
+
+  const { subscribe } = useDesignerStateApi();
+  useEffect(() => {
+    return subscribe(
+      (isEditable) => {
+        if (!editorRef.current) {
+          return;
+        }
+
+        // Forcefully focus the editor. Sometimes it does not automatically
+        // give the focus when the editor turns off readOnly mode.
+        if (isEditable) {
+          editorRef.current.focus();
+        } else {
+          editorRef.current.blur();
+        }
+      },
+      (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled
+    );
+  }, [componentId, editorRef, subscribe]);
+
+  return { isSelected, isEditable };
 }
