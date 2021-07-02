@@ -10,7 +10,7 @@ import AlignmentInput from './form/AlignmentInput';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import DirectionInput from './form/DirectionInput';
-import FlexNumericInput from './form/FlexNumericInput';
+import FlexProperties from './form/FlexProperties';
 import MarginField from './form/MarginField';
 import OpacityInput from './form/OpacityInput';
 import OverflowInput from './form/OverflowInput';
@@ -176,9 +176,7 @@ function FlexSection() {
   return (
     <>
       <Typography variant="subtitle2">Flex</Typography>
-      <FlexNumericInput name="flexGrow" label="Grow" />
-      <FlexNumericInput name="flexShrink" label="Shrink" />
-      <FlexNumericInput name="flexGap" label="Gap" />
+      <FlexProperties />
       <SegmentedInput
         name="flexWrap"
         options={[
