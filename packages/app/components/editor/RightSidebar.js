@@ -12,6 +12,7 @@ export default function RightSidebar() {
     <Box
       sx={{
         px: 1.5,
+        pb: 4,
         width: rightSidebarWidth,
         borderLeft: '1px solid',
         borderColor: 'grey.400',
