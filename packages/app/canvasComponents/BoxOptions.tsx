@@ -184,7 +184,6 @@ function FlexSection() {
       <FlexNumericInput name="flexGap" label="Gap" />
       <SegmentedInput
         name="flexWrap"
-        isFullWidth
         options={[
           { value: 'wrap', label: 'Wrap' },
           { value: 'nowrap', label: 'No Wrap' },

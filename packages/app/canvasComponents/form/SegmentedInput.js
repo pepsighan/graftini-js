@@ -1,53 +1,26 @@
-import { Button, ButtonGroup } from '@chakra-ui/button';
-import { Tooltip } from '@chakra-ui/tooltip';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/core';
 import { Controller, useFormContext } from 'react-hook-form';
 
-export default function SegmentedInput({ name, size = 'sm', isFullWidth = false, options }) {
+export default function SegmentedInput({ name, options }) {
   const { control } = useFormContext();
   return (
     <Controller
       name={name}
       control={control}
       render={({ field }) => (
-        <SegmentedInputInner
-          options={options}
+        <ToggleButtonGroup
           value={field.value}
-          size={size}
-          isFullWidth={isFullWidth}
-          onChange={field.onChange}
-        />
+          onChange={(_, value) => field.onChange(value)}
+          sx={{ justifyContent: 'center' }}
+          fullWidth
+        >
+          {options.map((it) => (
+            <ToggleButton key={it.value} value={it.value}>
+              {it.label}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
       )}
     />
-  );
-}
-
-function SegmentedInputInner({ size, options, value, isFullWidth, onChange }) {
-  return (
-    <ButtonGroup size={size} isAttached variant="outline" width={isFullWidth ? '100%' : null}>
-      {options.map(({ value: valueOpt, label, tooltip, ...rest }) => {
-        const button = (
-          <Button
-            key={valueOpt}
-            bg={valueOpt === value ? 'white' : 'gray.200'}
-            color={valueOpt === value ? 'black' : 'gray.600'}
-            onClick={() => onChange(valueOpt)}
-            flex={isFullWidth ? 1 : null}
-            {...rest}
-          >
-            {label}
-          </Button>
-        );
-
-        if (tooltip) {
-          return (
-            <Tooltip key={valueOpt} label={tooltip}>
-              {button}
-            </Tooltip>
-          );
-        }
-
-        return button;
-      })}
-    </ButtonGroup>
   );
 }
