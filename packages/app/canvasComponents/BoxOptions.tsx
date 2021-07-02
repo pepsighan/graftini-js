@@ -1,7 +1,7 @@
 import { Text } from '@chakra-ui/layout';
 import { BorderRadius } from '@graftini/bricks';
 import { useEditorStore } from '@graftini/graft';
-import { Divider, Stack } from '@material-ui/core';
+import { Divider, Stack, MenuItem } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import { boxTags } from 'utils/constants';
@@ -164,9 +164,9 @@ function PropertiesSection() {
       <TextInput name="name" label="Name" />
       <SelectInput name="tag" label="Tag">
         {boxTags.map((tag) => (
-          <option key={tag} value={tag}>
+          <MenuItem key={tag} value={tag}>
             {tag}
-          </option>
+          </MenuItem>
         ))}
       </SelectInput>
     </>
