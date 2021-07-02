@@ -228,7 +228,7 @@ function AppearanceSection() {
       <Text fontSize="sm" fontWeight="bold">
         Appearance
       </Text>
-      <ColorPicker name="color" />
+      <ColorPicker name="color" label="Fill" />
       <OpacityInput name="opacity" />
     </>
   );
