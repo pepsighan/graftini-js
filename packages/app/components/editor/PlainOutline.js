@@ -1,7 +1,9 @@
+import { useTheme } from '@emotion/react';
 import { motion } from 'framer-motion';
-import theme from 'utils/theme';
 
 export default function PlainOutline({ posX, posY, width, height }) {
+  const { palette } = useTheme();
+
   return (
     <motion.div
       style={{
@@ -12,7 +14,7 @@ export default function PlainOutline({ posX, posY, width, height }) {
         y: posY,
         width,
         height,
-        border: `1px solid ${theme.colors.primary[400]}`,
+        border: `1px solid ${palette.primary[400]}`,
         pointerEvents: 'none',
       }}
     />

@@ -6,19 +6,22 @@ import {
   DropMarker,
   useCheckCursorOnIFrame,
 } from '@graftini/graft';
+import { useTheme, Box } from '@material-ui/core';
 import IFrame from 'components/IFrame';
-import theme from 'utils/theme';
 import HoverOutline from './HoverOutline';
 import Selection from './Selection';
 
 export default function Canvas() {
+  const { palette } = useTheme();
+
   return (
-    <div
-      css={{
-        width: '100%',
+    <Box
+      sx={{
+        flex: 1,
         height: '100%',
         position: 'relative',
         overflow: 'hidden',
+        backgroundColor: 'white',
       }}
     >
       <IFrame
@@ -26,6 +29,7 @@ export default function Canvas() {
         style={{
           width: '100%',
           height: '100%',
+          border: 'none',
         }}
         {...useCheckCursorOnIFrame()}
       >
@@ -38,14 +42,14 @@ export default function Canvas() {
             }}
           >
             <Canvs />
-            <DropMarker color={theme.colors.primary[500]} />
-            <DrawMarker color={theme.colors.primary[500]} />
-            <DragPreview color={theme.colors.primary[500]} />
+            <DropMarker color={palette.primary[500]} />
+            <DrawMarker color={palette.primary[500]} />
+            <DragPreview color={palette.primary[500]} />
           </div>
         )}
       </IFrame>
       <HoverOutline />
       <Selection />
-    </div>
+    </Box>
   );
 }

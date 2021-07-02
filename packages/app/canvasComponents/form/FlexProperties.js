@@ -1,26 +1,19 @@
-import { Box, Stack, Typography, TextField, InputAdornment } from '@material-ui/core';
+import { InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
 
-export default function PaddingField({ name }) {
+export default function FlexProperties() {
   return (
-    <Box>
-      <Typography variant="body2" sx={{ mb: 1 }}>
-        Padding
-      </Typography>
-
-      <Stack direction="row" spacing={1}>
-        <NumberInputWithLabel name={`${name}.top`} label="T" />
-        <NumberInputWithLabel name={`${name}.right`} label="R" />
-        <NumberInputWithLabel name={`${name}.bottom`} label="B" />
-        <NumberInputWithLabel name={`${name}.left`} label="L" />
-      </Stack>
-    </Box>
+    <Stack direction="row" spacing={1}>
+      <FlexNumericInput name="flexGrow" label="Grow" />
+      <FlexNumericInput name="flexShrink" label="Shrink" />
+      <FlexNumericInput name="flexGap" label="Gap" />
+    </Stack>
   );
 }
 
-function NumberInputWithLabel({ name, label }) {
+function FlexNumericInput({ name, label }) {
   const { control, setValue } = useFormContext();
   const value = useWatch({ control, name });
 

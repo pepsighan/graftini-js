@@ -1,4 +1,4 @@
-import { Box, Flex, Heading } from '@chakra-ui/react';
+import { AppBar, Toolbar, Typography, Box } from '@material-ui/core';
 import BackButton from 'components/BackButton';
 import { useRouter } from 'next/router';
 
@@ -6,24 +6,22 @@ export default function PreviewNavigation({ projectName }) {
   const { query } = useRouter();
 
   return (
-    <Flex
-      px={4}
-      height="40px"
-      justifyContent="space-between"
-      alignItems="center"
-      position="sticky"
-      top={0}
-      backgroundColor="gray.50"
-      borderBottom="1px"
-      borderBottomColor="gray.200"
+    <AppBar
+      position="static"
+      color="transparent"
+      elevation={0}
+      sx={{
+        borderBottom: '1px solid',
+        borderColor: 'grey.400',
+      }}
     >
-      <BackButton href={`/dashboard/project/${query.projectId}`} />
-
-      <Heading as="h6" size="xs">
-        Preview - {projectName}
-      </Heading>
-
-      <Box />
-    </Flex>
+      <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
+        <BackButton href={`/dashboard/project/${query.projectId}`} />
+        <Typography variant="subtitle2" color="textSecondary">
+          Preview - {projectName}
+        </Typography>
+        <Box />
+      </Toolbar>
+    </AppBar>
   );
 }

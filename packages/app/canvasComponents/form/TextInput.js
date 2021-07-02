@@ -1,32 +1,19 @@
-import { Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
-import { useFormContext } from 'react-hook-form';
+import { InputAdornment, TextField, Typography } from '@material-ui/core';
+import useMaterialFormRegister from 'hooks/useMaterialFormRegister';
 
-export default function TextInput({ name, label, labelWidth = '14' }) {
-  const { register } = useFormContext();
-
+export default function TextInput({ name, label, error = null, helperText = null }) {
   return (
-    <InputGroup>
-      <InputLeftElement
-        pointerEvents="none"
-        fontSize="sm"
-        height="100%"
-        width={labelWidth}
-        color="gray.600"
-        justifyContent="flex-end"
-        pr={2}
-      >
-        {label}
-      </InputLeftElement>
-      <Input
-        {...register(name)}
-        size="sm"
-        bg="white"
-        autoComplete="off"
-        pb="1px" // Align the input text with the label.
-        sx={{
-          paddingInlineStart: labelWidth,
-        }}
-      />
-    </InputGroup>
+    <TextField
+      {...useMaterialFormRegister(name)}
+      error={error}
+      helperText={helperText}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Typography variant="body2">{label}</Typography>
+          </InputAdornment>
+        ),
+      }}
+    />
   );
 }

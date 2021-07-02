@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Tooltip } from '@chakra-ui/react';
+import { Box, ToggleButton, ToggleButtonGroup } from '@material-ui/core';
 import {
   AlignBottomIcon,
   AlignCenterHorizontallyIcon,
@@ -14,50 +14,42 @@ import { useFormContext, useWatch } from 'react-hook-form';
 
 const alignTop = {
   value: 'flex-start',
-  label: <AlignTopIcon />,
-  tooltip: 'Align Top',
+  icon: <AlignTopIcon />,
 };
 
 const alignMiddle = {
   value: 'center',
-  label: <AlignCenterHorizontallyIcon />,
-  tooltip: 'Align Middle',
+  icon: <AlignCenterHorizontallyIcon />,
 };
 
 const alignBottom = {
   value: 'flex-end',
-  label: <AlignBottomIcon />,
-  tooltip: 'Align Bottom',
+  icon: <AlignBottomIcon />,
 };
 
 const alignLeft = {
   value: 'flex-start',
-  label: <AlignLeftIcon />,
-  tooltip: 'Align Left',
+  icon: <AlignLeftIcon />,
 };
 
 const alignCenter = {
   value: 'center',
-  label: <AlignCenterVerticallyIcon />,
-  tooltip: 'Align Center',
+  icon: <AlignCenterVerticallyIcon />,
 };
 
 const alignRight = {
   value: 'flex-end',
-  label: <AlignRightIcon />,
-  tooltip: 'Align Right',
+  icon: <AlignRightIcon />,
 };
 
 const otherJustifyOptions = [
   {
     value: 'space-between',
-    label: <SpaceBetweenHorizontallyIcon />,
-    tooltip: 'Space Between',
+    icon: <SpaceBetweenHorizontallyIcon />,
   },
   {
     value: 'space-evenly',
-    label: <SpaceEvenlyHorizontallyIcon />,
-    tooltip: 'Space Evenly',
+    icon: <SpaceEvenlyHorizontallyIcon />,
   },
 ];
 
@@ -104,43 +96,37 @@ export default function AlignmentInput() {
   );
 
   return (
-    <ButtonGroup isAttached display="flex">
+    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       {direction === 'column' && alignItemsToggle}
-
       <SegmentedInput options={justifyOptions} value={justifyContent} onChange={onJustifyUpdate} />
-
       {direction === 'row' && alignItemsToggle}
-
       <SegmentedInput
         options={otherJustifyOptions}
         value={justifyContent}
         onChange={onJustifyUpdate}
       />
-    </ButtonGroup>
+    </Box>
   );
 }
 
 function SegmentedInput({ options, value, onChange }) {
   return (
-    <>
-      {options.map(({ value: valueOpt, label, tooltip, ...rest }) => {
-        return (
-          <Tooltip key={valueOpt} label={tooltip}>
-            <Button
-              key={valueOpt}
-              color={valueOpt === value ? 'primary.500' : 'gray.600'}
-              onClick={() => onChange(valueOpt)}
-              minWidth="auto"
-              paddingInlineStart="unset"
-              paddingInlineEnd="unset"
-              flex={1}
-              {...rest}
-            >
-              {label}
-            </Button>
-          </Tooltip>
-        );
-      })}
-    </>
+    <ToggleButtonGroup
+      value={value}
+      onChange={(_, value) => onChange(value)}
+      exclusive
+      sx={{
+        justifyContent: 'center',
+        // '& .MuiToggleButtonGroup-grouped': {
+        //   border: 0,
+        // },
+      }}
+    >
+      {options.map(({ value, icon }) => (
+        <ToggleButton key={value} value={value} style={{ borderRadius: 0 }} sx={{ padding: 1.2 }}>
+          {icon}
+        </ToggleButton>
+      ))}
+    </ToggleButtonGroup>
   );
 }

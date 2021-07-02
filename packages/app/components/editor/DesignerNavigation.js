@@ -1,65 +1,59 @@
-import { Box, Button, Flex, IconButton, Text, Tooltip } from '@chakra-ui/react';
 import {
   useCreateComponent,
   useCreateComponentStore,
   useForgetCreateComponent,
 } from '@graftini/graft';
+import { AppBar, IconButton, Stack, Toolbar, Tooltip } from '@material-ui/core';
 import { CursorArrowIcon, PlayIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
 import BackButton from 'components/BackButton';
-import { motion } from 'framer-motion';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
-import theme from 'utils/theme';
 import DeployButton from './DeployButton';
 
 export default function EditorNavigation() {
-  const { query, push } = useRouter();
+  const { query } = useRouter();
 
   return (
-    <Flex
-      height="54px"
-      px={4}
-      justifyContent="space-between"
-      alignItems="center"
-      position="sticky"
-      top={0}
-      backgroundColor="gray.100"
-      borderBottom="1px"
-      borderBottomColor="gray.400"
+    <AppBar
+      position="static"
+      color="transparent"
+      elevation={0}
+      sx={{
+        borderBottom: '1px solid',
+        borderColor: 'grey.400',
+      }}
     >
-      <Box>
+      <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
         <BackButton href="/dashboard/projects" />
-      </Box>
 
-      <Flex>
-        <CursorButton />
-        <DrawButton
-          mr={4}
-          label="Box"
-          component="Box"
-          icon={<SquareIcon color="var(--icon-color)" />}
-          isCanvas
-          childAppendDirection="vertical"
-        />
-        <DrawButton label="Text" component="Text" icon={<TextIcon color="var(--icon-color)" />} />
-      </Flex>
-
-      <Flex>
-        <Tooltip label="Preview">
-          <IconButton
-            ml={4}
-            icon={<PlayIcon width={20} height={20} />}
-            onClick={useCallback(
-              () => push(`/dashboard/project/${query.projectId}/preview`),
-              [push, query.projectId]
-            )}
+        <Stack direction="row" spacing={2}>
+          <CursorButton />
+          <DrawButton
+            mr={4}
+            label="Box"
+            component="Box"
+            icon={<SquareIcon />}
+            isCanvas
+            childAppendDirection="vertical"
           />
-        </Tooltip>
+          <DrawButton label="Text" component="Text" icon={<TextIcon />} />
+        </Stack>
 
-        <DeployButton />
-      </Flex>
-    </Flex>
+        <Stack direction="row" spacing={2}>
+          <Link href={`/dashboard/project/${query.projectId}/preview`}>
+            <Tooltip title="Preview">
+              <IconButton>
+                <PlayIcon />
+              </IconButton>
+            </Tooltip>
+          </Link>
+
+          <DeployButton />
+        </Stack>
+      </Toolbar>
+    </AppBar>
   );
 }
 
@@ -68,42 +62,20 @@ function CursorButton() {
   const forgetCreateComponent = useForgetCreateComponent();
 
   return (
-    <motion.div
-      variants={{
-        active: {
-          color: theme.colors.primary[600],
-          '--icon-color': theme.colors.primary[500],
-        },
-        inactive: {
-          color: theme.colors.gray[800],
-          '--icon-color': theme.colors.gray[600],
-        },
-      }}
-      animate={isNoCreate ? 'active' : 'inactive'}
-      whileHover="active"
-    >
-      <Button
-        size="lg"
-        variant="ghost"
-        flexDirection="column"
-        px={3}
-        mr={4}
-        width="70px"
+    <Tooltip title="Cursor">
+      <IconButton
+        color={isNoCreate ? 'primary' : 'drawButton'}
+        sx={{ flexDirection: 'column' }}
         onClick={forgetCreateComponent}
       >
-        <CursorArrowIcon color="var(--icon-color)" />
-        <Text fontSize="sm" fontWeight="normal" mt={1.5}>
-          Cursor
-        </Text>
-      </Button>
-    </motion.div>
+        <CursorArrowIcon />
+      </IconButton>
+    </Tooltip>
   );
 }
 
-function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection }) {
-  const createComponentType = useCreateComponentStore(
-    useCallback((state) => state.newComponent?.type, [])
-  );
+function DrawButton({ label, icon, component, isCanvas, childAppendDirection }) {
+  const activeType = useCreateComponentStore(useCallback((state) => state.newComponent?.type, []));
 
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
   const onCreate = useCreateComponent({
@@ -132,34 +104,14 @@ function DrawButton({ mr, label, icon, component, isCanvas, childAppendDirection
   );
 
   return (
-    <motion.div
-      variants={{
-        active: {
-          color: theme.colors.primary[600],
-          '--icon-color': theme.colors.primary[500],
-        },
-        inactive: {
-          color: theme.colors.gray[800],
-          '--icon-color': theme.colors.gray[600],
-        },
-      }}
-      animate={createComponentType === component ? 'active' : 'inactive'}
-      whileHover="active"
-    >
-      <Button
-        size="lg"
-        variant="ghost"
-        flexDirection="column"
-        px={3}
-        mr={mr}
-        width="70px"
+    <Tooltip title={label}>
+      <IconButton
+        color={activeType === component ? 'primary' : 'drawButton'}
+        sx={{ flexDirection: 'column' }}
         onClick={onClick}
       >
         {icon}
-        <Text fontSize="sm" fontWeight="normal" mt={1.5}>
-          {label}
-        </Text>
-      </Button>
-    </motion.div>
+      </IconButton>
+    </Tooltip>
   );
 }

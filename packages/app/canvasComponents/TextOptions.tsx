@@ -1,5 +1,4 @@
-import { Grid, GridItem, Text } from '@chakra-ui/layout';
-import { Divider } from '@chakra-ui/react';
+import { Divider, MenuItem, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
@@ -25,61 +24,33 @@ export default function TextOptions({ componentId }: OptionsProps) {
         });
       }, [])}
     >
-      {/* Making a 8 column grid system. */}
-      <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
-        <GridItem colSpan={8}>
-          <TextAlignInput name="textAlign" />
-        </GridItem>
+      <Stack spacing={2} mt={2}>
+        <TextAlignInput name="textAlign" />
+        <Divider />
 
-        <SectionDivider />
+        <TextInput name="name" label="Label" />
+        <Divider />
 
-        <GridItem colSpan={8}>
-          <TextInput name="name" label="Label" />
-        </GridItem>
-
-        <SectionDivider />
-
-        <GridItem colSpan={8} mb={1}>
-          <Text fontSize="sm" fontWeight="bold">
-            Appearance
-          </Text>
-        </GridItem>
-
-        <GridItem colSpan={8}>
-          <FontSize name="fontSize" />
-        </GridItem>
-        <GridItem colSpan={8}>
-          <SelectInput name="fontFamily" label="Font" labelWidth="4.5rem">
-            <option value="sans-serif">Sans Serif</option>
-            <option value="serif">Serif</option>
-            <option value="monospace">Monospace</option>
-          </SelectInput>
-        </GridItem>
-        <GridItem colSpan={8}>
-          <SelectInput name="fontWeight" label="Weight" labelWidth="4.5rem">
-            <option value={100}>Extra Thin</option>
-            <option value={200}>Thin</option>
-            <option value={300}>Light</option>
-            <option value={400}>Normal</option>
-            <option value={500}>Medium</option>
-            <option value={600}>Semi Bold</option>
-            <option value={700}>Bold</option>
-            <option value={800}>Extra Bold</option>
-            <option value={900}>Extra Extra Bold</option>
-          </SelectInput>
-        </GridItem>
-        <GridItem colSpan={8}>
-          <ColorPicker name="color" label="Color" labelWidth="4.5rem" />
-        </GridItem>
-      </Grid>
+        <Typography variant="subtitle2">Appearance</Typography>
+        <FontSize name="fontSize" />
+        <SelectInput name="fontFamily" label="Font">
+          <MenuItem value="sans-serif">Sans Serif</MenuItem>
+          <MenuItem value="serif">Serif</MenuItem>
+          <MenuItem value="monospace">Monospace</MenuItem>
+        </SelectInput>
+        <SelectInput name="fontWeight" label="Weight">
+          <MenuItem value={100}>Extra Thin</MenuItem>
+          <MenuItem value={200}>Thin</MenuItem>
+          <MenuItem value={300}>Light</MenuItem>
+          <MenuItem value={400}>Normal</MenuItem>
+          <MenuItem value={500}>Medium</MenuItem>
+          <MenuItem value={600}>Semi Bold</MenuItem>
+          <MenuItem value={700}>Bold</MenuItem>
+          <MenuItem value={800}>Extra Bold</MenuItem>
+          <MenuItem value={900}>Extra Extra Bold</MenuItem>
+        </SelectInput>
+        <ColorPicker name="color" label="Color" labelWidth="4.5rem" />
+      </Stack>
     </CF>
-  );
-}
-
-function SectionDivider() {
-  return (
-    <GridItem colSpan={8}>
-      <Divider borderColor="gray.400" />
-    </GridItem>
   );
 }

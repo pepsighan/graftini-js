@@ -1,23 +1,23 @@
-import { Divider, Flex, Box } from '@chakra-ui/react';
+import { Box, Divider } from '@material-ui/core';
 import Layers from './Layers';
 import Pages from './Pages';
 
 export default function LeftSidebar() {
   return (
-    <Flex
-      py={4}
-      minWidth={250}
-      width={250}
-      bg="gray.100"
-      borderRight="1px"
-      borderRightColor="gray.400"
-      flexDirection="column"
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        py: 1,
+        width: 250,
+        borderRight: '1px solid',
+        borderColor: 'grey.400',
+        gap: 1.5,
+      }}
     >
       <Pages />
-      <Box px={3} my={2}>
-        <Divider borderColor="gray.400" />
-      </Box>
+      <Divider sx={{ mx: 1.5 }} />
       <Layers />
-    </Flex>
+    </Box>
   );
 }

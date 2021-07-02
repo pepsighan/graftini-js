@@ -1,4 +1,4 @@
-import { Box, Button, ButtonGroup } from '@chakra-ui/react';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/core';
 import { HeightIcon, WidthIcon } from '@modulz/radix-icons';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -19,41 +19,25 @@ export default function DirectionInput() {
   const { control } = useFormContext();
 
   return (
-    <ButtonGroup isAttached display="flex" justifyContent="center">
-      <Controller
-        name="flexDirection"
-        control={control}
-        render={({ field }) => (
-          <Options options={options} value={field.value} onChange={field.onChange} />
-        )}
-      />
-    </ButtonGroup>
-  );
-}
-
-function Options({ options, value, onChange }) {
-  return (
-    <>
-      {options.map(({ value: valueOpt, icon, label, ...rest }) => {
-        return (
-          <Button
-            key={valueOpt}
-            color={valueOpt === value ? 'primary.600' : 'gray.600'}
-            onClick={() => onChange(valueOpt)}
-            flexDirection="column"
-            justifyContent="center"
-            height="auto"
-            width={24}
-            py={2}
-            {...rest}
-          >
-            <Box>{icon}</Box>
-            <Box mt={1} fontSize="sm">
-              {label}
-            </Box>
-          </Button>
-        );
-      })}
-    </>
+    <Controller
+      name="flexDirection"
+      control={control}
+      render={({ field }) => (
+        <ToggleButtonGroup
+          exclusive
+          value={field.value}
+          onChange={(_, value) => field.onChange(value)}
+          sx={{ justifyContent: 'center' }}
+        >
+          {options.map(({ value, icon, label }) => {
+            return (
+              <ToggleButton key={value} value={value}>
+                {icon}
+              </ToggleButton>
+            );
+          })}
+        </ToggleButtonGroup>
+      )}
+    />
   );
 }

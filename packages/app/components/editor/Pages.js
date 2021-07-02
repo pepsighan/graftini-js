@@ -1,14 +1,13 @@
 import { useDisclosure } from '@chakra-ui/hooks';
-import { Box, Flex, IconButton, Text } from '@chakra-ui/react';
-import { mdiPlus } from '@mdi/js';
-import Icon from 'components/Icon';
-import NewPageDialog from 'components/NewPageDialog';
+import { Box, IconButton, Typography } from '@material-ui/core';
+import { PlusIcon } from '@modulz/radix-icons';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import { encode } from 'utils/url';
 import { useEffectOnce } from 'utils/useEffect';
+import NewPageDialog from './NewPageDialog';
 import PageItem from './PageItem';
 
 export default function Pages() {
@@ -36,18 +35,16 @@ export default function Pages() {
   });
 
   return (
-    <Box flex={1} px={3}>
-      <Flex justifyContent="space-between" alignItems="center">
-        <Text as="span" fontSize="sm" fontWeight="bold">
-          Pages
-        </Text>
+    <Box sx={{ flex: 1, px: 1.5 }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+        <Typography variant="subtitle2">Pages</Typography>
 
-        <IconButton onClick={onOpen} size="sm">
-          <Icon icon={mdiPlus} />
+        <IconButton size="small" onClick={onOpen}>
+          <PlusIcon />
         </IconButton>
-      </Flex>
+      </Box>
 
-      <Box mt={1}>
+      <Box>
         {project.pages.map((it) => (
           <PageItem
             key={it.id}

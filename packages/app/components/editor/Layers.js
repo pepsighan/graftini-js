@@ -1,104 +1,114 @@
-import { Box, Button, ButtonGroup, IconButton, Text } from '@chakra-ui/react';
-import { ROOT_NODE_ID } from '@graftini/graft';
-import { Tree } from '@graftini/tread';
+import { ROOT_NODE_ID, useEditorStore, useEditorStoreApi } from '@graftini/graft';
+import { Box, Button, ButtonGroup, Typography } from '@material-ui/core';
+import { TreeItem, TreeView, useTreeItem } from '@material-ui/lab';
 import { ChevronDownIcon, ChevronUpIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
-import { useCallback } from 'react';
+import { forwardRef, useCallback, useState } from 'react';
 import { useDesignerState } from 'store/designer';
 
 export default function Layers() {
-  return (
-    <Box flex={1} overflow="hidden">
-      <Text as="span" px={3} fontSize="sm" fontWeight="bold">
-        Layers
-      </Text>
+  const { getState } = useEditorStoreApi();
 
-      <Box
-        mt={4}
-        overflowY="scroll"
-        sx={{
-          // Hide scrollbars on all browsers.
-          // https://stackoverflow.com/a/49278385
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          '&::-webkit-scrollbar': {
-            width: 0,
-            height: 0,
-          },
-        }}
+  const [expanded, setExpanded] = useState(() => Object.keys(getState().componentMap));
+  const onExpansion = useCallback((_, ids) => setExpanded(ids), []);
+
+  const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+  const onSelect = useCallback((_, id) => selectComponent(id), [selectComponent]);
+
+  const selectedId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
+
+  return (
+    <Box sx={{ flex: 1, px: 1.5 }}>
+      <Typography variant="subtitle2" sx={{ mb: 1 }}>
+        Layers
+      </Typography>
+
+      <TreeView
+        expanded={expanded}
+        selected={selectedId}
+        onNodeToggle={onExpansion}
+        onNodeSelect={onSelect}
       >
-        <Box px={3}>
-          <Tree
-            rootId={ROOT_NODE_ID}
-            renderItem={LayerItem}
-            renderSubTree={SubTree}
-            useTreeItem={useTreeItem}
-          />
-        </Box>
-      </Box>
+        <LayerItem id={ROOT_NODE_ID} />
+      </TreeView>
     </Box>
   );
 }
 
-function LayerItem({ item, onToggle, isCollapsed }) {
-  const isSelected = useDesignerState(
-    useCallback((state) => state.selectedComponentId === item.id, [item.id])
-  );
-  const isChevronVisible = item.isCanvas && item.childrenNodes.length > 0;
-
-  const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
-  const onSelect = useCallback(() => selectComponent(item.id), [item.id, selectComponent]);
-
-  return (
-    <ButtonGroup display="flex" isAttached colorScheme={isSelected ? 'primary' : 'gray'}>
-      {isChevronVisible && (
-        <IconButton
-          size="sm"
-          minWidth="initial"
-          flexGrow={0}
-          flexShrink={0}
-          onClick={onToggle}
-          width={6}
-          sx={{ paddingInlineEnd: 0 }}
-        >
-          {isCollapsed ? <ChevronDownIcon /> : <ChevronUpIcon />}
-        </IconButton>
-      )}
-      <Button
-        fontSize="sm"
-        size="sm"
-        flexGrow={0}
-        flexShrink={0}
-        fontWeight="normal"
-        isFullWidth
-        justifyContent="flex-start"
-        onClick={onSelect}
-        sx={{ paddingInlineStart: isChevronVisible ? 1 : 7 }}
-      >
-        {item.type === 'Text' ? <TextIcon /> : <SquareIcon />}
-        <Text ml={2}>{!item.parentId ? 'Root' : item.props.name || 'Untitled'}</Text>
-      </Button>
-    </ButtonGroup>
-  );
-}
-
-function SubTree({ children }) {
-  return <Box ml={4}>{children}</Box>;
-}
-
-function useTreeItem(itemId) {
-  return useDesignerState(
-    useCallback((state) => state.pages[state.currentOpenPage][itemId], [itemId]),
-    // Only the following checked fields are needed to render a layer. So any changes
-    // in other places won't cause a re-render.
+function LayerItem({ id }) {
+  const { isCanvas, childrenNodes } = useEditorStore(
+    useCallback((state) => state.componentMap[id], [id]),
     useCallback(
       (left, right) =>
         left.id === right.id &&
         left.childrenNodes === right.childrenNodes &&
-        left.isCanvas === right.isCanvas &&
-        left.type === right.type &&
-        left.parentId === right.parentId &&
-        left.props.name === right.props.name,
+        left.isCanvas === right.isCanvas,
       []
     )
   );
+
+  return (
+    <TreeItem nodeId={id} ContentComponent={LayerView}>
+      {isCanvas && childrenNodes.map((it) => <LayerItem key={it} id={it} />)}
+    </TreeItem>
+  );
 }
+
+const LayerView = forwardRef(({ nodeId }, ref) => {
+  const { type, props, childrenNodes } = useEditorStore(
+    useCallback((state) => state.componentMap[nodeId], [nodeId]),
+    useCallback(
+      (left, right) =>
+        left.id === right.id &&
+        left.type === right.type &&
+        left.props.name === right.props.name &&
+        left.childrenNodes === right.childrenNodes &&
+        left.isCanvas === right.isCanvas,
+      []
+    )
+  );
+
+  const { expanded, selected, handleExpansion, handleSelection } = useTreeItem(nodeId);
+
+  return (
+    <ButtonGroup
+      ref={ref}
+      fullWidth
+      size="small"
+      variant="text"
+      color="inherit"
+      sx={{
+        mt: 0.5,
+        backgroundColor: selected ? 'grey.200' : null,
+        '& .MuiButtonGroup-grouped': {
+          minWidth: 'unset',
+        },
+        '& .MuiButtonGroup-grouped:not(:last-of-type)': {
+          border: 'none',
+        },
+      }}
+    >
+      {childrenNodes.length > 0 && (
+        <Button sx={{ width: 20, minWidth: 'unset', p: 0 }} onClick={handleExpansion}>
+          {expanded ? (
+            <ChevronDownIcon width={12} height={12} />
+          ) : (
+            <ChevronUpIcon width={12} height={12} />
+          )}
+        </Button>
+      )}
+      <Button
+        sx={{ justifyContent: 'flex-start', pl: childrenNodes.length === 0 ? '18px' : 0 }}
+        onClick={handleSelection}
+      >
+        {type === 'Text' ? (
+          <TextIcon width={12} height={12} />
+        ) : (
+          <SquareIcon width={12} height={12} />
+        )}
+        <Typography variant="body2" sx={{ ml: 0.5 }}>
+          {nodeId === ROOT_NODE_ID ? 'Root' : props.name || 'Untitled'}
+        </Typography>
+      </Button>
+    </ButtonGroup>
+  );
+});

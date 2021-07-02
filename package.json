@@ -7,8 +7,7 @@
     "app": "yarn workspace app",
     "bricks": "yarn workspace @graftini/bricks",
     "graft": "yarn workspace @graftini/graft",
-    "tread": "yarn workspace @graftini/tread",
-    "build-deps": "yarn bricks build && yarn graft build && yarn tread build",
+    "build-deps": "yarn bricks build && yarn graft build",
     "build": "yarn build-deps && yarn app build"
   },
   "devDependencies": {

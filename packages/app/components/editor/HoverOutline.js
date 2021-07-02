@@ -1,8 +1,8 @@
 import { ROOT_NODE_ID, useCreateComponentStore, useHoverStoreApi } from '@graftini/graft';
+import { useTheme } from '@material-ui/core';
 import { motion, useMotionValue } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
-import theme from 'utils/theme';
 
 export default function HoverOutline() {
   const [isVisible, setIsVisible] = useState(false);
@@ -41,6 +41,8 @@ export default function HoverOutline() {
     );
   }, [height, posX, posY, subscribeHover, width]);
 
+  const { palette } = useTheme();
+
   return (
     <>
       {isVisible && !isDrawingNew && !isBoxResizing && (
@@ -53,7 +55,7 @@ export default function HoverOutline() {
             y: posY,
             width,
             height,
-            border: `1px solid ${theme.colors.primary[400]}`,
+            border: `1px solid ${palette.primary[400]}`,
             pointerEvents: 'none',
             userSelect: 'none',
           }}

@@ -1,10 +1,10 @@
-import { Button, Flex, Text } from '@chakra-ui/react';
+import { AppBar, Box, Button, Toolbar } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { loginWithGitHub, logout, useAuthUser } from 'store/auth';
 
-export default function Navigation({ isTransparent }) {
+export default function Navigation() {
   const { push } = useRouter();
 
   const onLogin = useCallback(async () => {
@@ -15,36 +15,40 @@ export default function Navigation({ isTransparent }) {
   const { user } = useAuthUser();
 
   return (
-    <Flex
-      py={2}
-      px={4}
-      justifyContent="space-between"
-      alignItems="center"
-      position="sticky"
-      top={0}
-      backgroundColor={isTransparent ? 'transparent' : 'gray.50'}
+    <AppBar
+      position="static"
+      color="transparent"
+      elevation={0}
+      sx={{
+        borderBottom: '1px solid',
+        borderColor: 'grey.400',
+      }}
     >
-      <Link href="/" passHref>
-        <Text as="a" fontSize="xl" fontWeight="semibold" color={isTransparent ? 'white' : 'black'}>
-          Graftini
-        </Text>
-      </Link>
-      {!user && (
-        <Button colorScheme="blue" onClick={onLogin}>
-          Login
-        </Button>
-      )}
-      {user && (
-        <Flex>
-          <Link href="/dashboard/projects">
-            <Button colorScheme="blue">Dashboard</Button>
-          </Link>
-
-          <Button ml={2} onClick={logout}>
-            Logout
+      <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
+        <Link href="/" passHref>
+          <Button component="a" color="inherit">
+            Graftini
           </Button>
-        </Flex>
-      )}
-    </Flex>
+        </Link>
+
+        {!user && (
+          <Button color="inherit" onClick={onLogin}>
+            Login
+          </Button>
+        )}
+
+        {user && (
+          <Box>
+            <Link href="/dashboard/projects">
+              <Button color="inherit">Dashboard</Button>
+            </Link>
+
+            <Button color="inherit" onClick={logout} sx={{ ml: 2 }}>
+              Logout
+            </Button>
+          </Box>
+        )}
+      </Toolbar>
+    </AppBar>
   );
 }

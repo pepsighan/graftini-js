@@ -1,4 +1,4 @@
-import { Grid, GridItem, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import { Box, InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { parseInteger } from 'utils/parser';
@@ -8,59 +8,50 @@ import { parseInteger } from 'utils/parser';
 // not good experience.
 export default function MarginField({ name }) {
   return (
-    <Grid templateColumns="repeat(3, minmax(0, 1fr))">
-      <GridItem colStart={2} colEnd={3}>
+    <Box>
+      <Typography variant="body2" sx={{ mb: 1 }}>
+        Margin
+      </Typography>
+
+      <Stack direction="row" spacing={1}>
         <NumberInputWithLabel name={`${name}.top`} label="T" />
-      </GridItem>
-      <GridItem colStart={1} colEnd={2}>
-        <NumberInputWithLabel name={`${name}.left`} label="L" />
-      </GridItem>
-      <GridItem colStart={3}>
         <NumberInputWithLabel name={`${name}.right`} label="R" />
-      </GridItem>
-      <GridItem colStart={2} colEnd={3}>
         <NumberInputWithLabel name={`${name}.bottom`} label="B" />
-      </GridItem>
-    </Grid>
+        <NumberInputWithLabel name={`${name}.left`} label="L" />
+      </Stack>
+    </Box>
   );
 }
 
 function NumberInputWithLabel({ name, label }) {
   const { register, setValue } = useFormContext();
-  const { onChange, onBlur, ...rest } = register(name);
+  const { ref: inputRef } = register(name);
 
   return (
-    <InputGroup>
-      <InputLeftElement
-        pointerEvents="none"
-        fontSize="sm"
-        height="100%"
-        width={6}
-        justifyContent="flex-end"
-        pr={1}
-        color="gray.500"
-      >
-        {label}
-      </InputLeftElement>
-      <Input
-        {...rest}
-        onChange={useCallback(
-          (event) => {
-            setValue(name, parseInteger(event.target.value) || 0, {
-              shouldDirty: true,
-              shouldValidate: true,
-            });
-          },
-          [name, setValue]
-        )}
-        size="sm"
-        bg="white"
-        autoComplete="off"
-        pb="1px" // Align the input text with the label.
-        sx={{
-          paddingInlineStart: 6,
-        }}
-      />
-    </InputGroup>
+    <TextField
+      inputRef={inputRef}
+      name={name}
+      onChange={useCallback(
+        (event) => {
+          setValue(name, parseInteger(event.target.value) || 0, {
+            shouldDirty: true,
+            shouldValidate: true,
+          });
+        },
+        [name, setValue]
+      )}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Typography variant="body2">{label}</Typography>
+          </InputAdornment>
+        ),
+      }}
+      sx={{
+        '& .MuiOutlinedInput-root': {
+          paddingLeft: 1,
+        },
+      }}
+    />
   );
 }

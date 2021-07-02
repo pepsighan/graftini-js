@@ -1,9 +1,9 @@
 import { Box } from '@chakra-ui/react';
 import { useComponentRegionStoreApi, useEditorStore } from '@graftini/graft';
+import { useTheme } from '@material-ui/core';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
-import theme from 'utils/theme';
 
 export default function ResizeableFrame({ componentId, ...rest }) {
   const { isFrozen, ...restFrozen } = useFrozenProps(rest);
@@ -214,6 +214,8 @@ function FrameCorner({
     [cursor, onResizingStart]
   );
 
+  const { palette } = useTheme();
+
   return (
     <motion.div
       onPointerDown={onPointerDown}
@@ -248,7 +250,7 @@ function FrameCorner({
         width,
         height,
         cursor,
-        border: `1px solid ${theme.colors.primary[400]}`,
+        border: `1px solid ${palette.primary[400]}`,
         backgroundColor: 'white',
       }}
     />

@@ -1,9 +1,15 @@
-import { Flex, Input, InputGroup, InputLeftElement } from '@chakra-ui/react';
+import {
+  InputAdornment,
+  Stack,
+  TextField,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from '@material-ui/core';
 import { BoxIcon, CornersIcon } from '@modulz/radix-icons';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
-import SegmentedInput from './SegmentedInput';
 
 export default function RadiusInput({ name }) {
   const { control, setValue } = useFormContext();
@@ -17,59 +23,63 @@ export default function RadiusInput({ name }) {
 
   return (
     <>
-      <Flex>
-        <InputGroup mr={2}>
-          <InputLeftElement
-            pointerEvents="none"
-            fontSize="sm"
-            height="100%"
-            width={14}
-            justifyContent="flex-end"
-            pr={1}
-            color="gray.500"
-          >
-            Radius
-          </InputLeftElement>
-          <Input
-            size="sm"
-            bg="white"
-            autoComplete="off"
-            pb="1px" // Align the input text with the label.
-            sx={{
-              paddingInlineStart: 14,
-            }}
-            value={toggle === 'all' ? singleValue : ''}
-            onChange={useCallback(
-              (event) => {
-                setV(`${name}.toggle`, 'all');
+      <TextField
+        value={toggle === 'all' ? singleValue : ''}
+        onChange={useCallback(
+          (event) => {
+            setV(`${name}.toggle`, 'all');
 
-                const v = parsePositiveInteger(event.target.value) || 0;
-                setV(`${name}.topLeft`, v);
-                setV(`${name}.topRight`, v);
-                setV(`${name}.bottomLeft`, v);
-                setV(`${name}.bottomRight`, v);
-              },
-              [name, setV]
-            )}
-          />
-        </InputGroup>
-
-        <SegmentedInput
-          name={`${name}.toggle`}
-          options={[
-            { value: 'all', label: <BoxIcon />, tooltip: 'Radius' },
-            { value: 'each', label: <CornersIcon />, tooltip: 'Radius Per Corner' },
-          ]}
-        />
-      </Flex>
+            const v = parsePositiveInteger(event.target.value) || 0;
+            setV(`${name}.topLeft`, v);
+            setV(`${name}.topRight`, v);
+            setV(`${name}.bottomLeft`, v);
+            setV(`${name}.bottomRight`, v);
+          },
+          [name, setV]
+        )}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <Typography variant="body2">Radius</Typography>
+            </InputAdornment>
+          ),
+          endAdornment: (
+            <InputAdornment position="end">
+              <ToggleButtonGroup
+                size="small"
+                value={toggle}
+                exclusive
+                onChange={useCallback(
+                  (_, value) => {
+                    setV(`${name}.toggle`, value);
+                  },
+                  [name, setV]
+                )}
+              >
+                <ToggleButton value="all">
+                  <BoxIcon />
+                </ToggleButton>
+                <ToggleButton value="each">
+                  <CornersIcon />
+                </ToggleButton>
+              </ToggleButtonGroup>
+            </InputAdornment>
+          ),
+        }}
+        sx={{
+          '& .MuiOutlinedInput-root': {
+            paddingRight: 0,
+          },
+        }}
+      />
 
       {toggle === 'each' && (
-        <Flex mt={2}>
+        <Stack direction="row" spacing={1}>
           <NumberInputWithLabel name={`${name}.topLeft`} label="TL" />
           <NumberInputWithLabel name={`${name}.topRight`} label="TR" />
           <NumberInputWithLabel name={`${name}.bottomLeft`} label="BL" />
           <NumberInputWithLabel name={`${name}.bottomRight`} label="BR" />
-        </Flex>
+        </Stack>
       )}
     </>
   );
@@ -87,29 +97,22 @@ function NumberInputWithLabel({ name, label }) {
   );
 
   return (
-    <InputGroup>
-      <InputLeftElement
-        pointerEvents="none"
-        fontSize="sm"
-        height="100%"
-        width={8}
-        justifyContent="flex-end"
-        pr={1}
-        color="gray.500"
-      >
-        {label}
-      </InputLeftElement>
-      <Input
-        value={value}
-        onChange={onChange}
-        size="sm"
-        bg="white"
-        autoComplete="off"
-        pb="1px" // Align the input text with the label.
-        sx={{
-          paddingInlineStart: 8,
-        }}
-      />
-    </InputGroup>
+    <TextField
+      name={name}
+      value={value}
+      onChange={onChange}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">
+            <Typography variant="body2">{label}</Typography>
+          </InputAdornment>
+        ),
+      }}
+      sx={{
+        '& .MuiOutlinedInput-root': {
+          paddingLeft: 1,
+        },
+      }}
+    />
   );
 }

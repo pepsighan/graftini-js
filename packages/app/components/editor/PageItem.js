@@ -1,4 +1,4 @@
-import { Button, Tooltip } from '@chakra-ui/react';
+import { Button, Tooltip } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -46,17 +46,14 @@ export default function PageItem({ id, name, route, slugProjectId, projectId }) 
   // the views in the editor rather than change route for the app.
   return (
     <>
-      <Tooltip label={route}>
+      <Tooltip title={route}>
         <Button
-          isFullWidth
-          justifyContent="space-between"
-          alignItems="flex-start"
-          fontSize="sm"
-          fontWeight="normal"
-          height="unset"
-          lineHeight="unset"
-          py={2}
-          isActive={isSelected}
+          fullWidth
+          color="inherit"
+          sx={{
+            justifyContent: 'flex-start',
+            backgroundColor: isSelected ? 'grey.200' : null,
+          }}
           onClick={onPageChange}
           onContextMenu={onOpenContextMenu}
         >

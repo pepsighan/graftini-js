@@ -1,33 +1,29 @@
-import { InputGroup, InputLeftElement, Select } from '@chakra-ui/react';
-import { useFormContext } from 'react-hook-form';
+import { InputAdornment, TextField, Typography } from '@material-ui/core';
+import { useFormContext, Controller } from 'react-hook-form';
 
-export default function SelectInput({ name, children, label, labelWidth = '14' }) {
-  const { register } = useFormContext();
+export default function SelectInput({ name, children, label }) {
+  const { control } = useFormContext();
 
   return (
-    <InputGroup>
-      <InputLeftElement
-        pointerEvents="none"
-        fontSize="sm"
-        height="100%"
-        width={labelWidth}
-        justifyContent="flex-end"
-        pr={2}
-        color="gray.600"
-      >
-        {label}
-      </InputLeftElement>
-      <Select
-        {...register(name)}
-        size="sm"
-        bg="white"
-        autoComplete="off"
-        sx={{
-          paddingInlineStart: labelWidth,
-        }}
-      >
-        {children}
-      </Select>
-    </InputGroup>
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <TextField
+          {...field}
+          value={field.value ?? ''}
+          select
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Typography variant="body2">{label}</Typography>
+              </InputAdornment>
+            ),
+          }}
+        >
+          {children}
+        </TextField>
+      )}
+    />
   );
 }

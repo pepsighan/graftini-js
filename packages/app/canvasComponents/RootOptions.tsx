@@ -1,5 +1,5 @@
-import { Grid, GridItem, Text } from '@chakra-ui/layout';
 import { ROOT_NODE_ID } from '@graftini/graft';
+import { Stack, Typography } from '@material-ui/core';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -15,17 +15,10 @@ export default function RootOptions() {
         props.color = state.color;
       }, [])}
     >
-      {/* Making a 8 column grid system. */}
-      <Grid templateColumns="repeat(8, minmax(0, 1fr))" alignItems="center" gap={4}>
-        <GridItem colSpan={8} mb={1}>
-          <Text fontSize="sm" fontWeight="bold">
-            Appearance
-          </Text>
-        </GridItem>
-        <GridItem colSpan={8}>
-          <ColorPicker name="color" label="Color" />
-        </GridItem>
-      </Grid>
+      <Stack spacing={2} mt={2}>
+        <Typography variant="subtitle2">Appearance</Typography>
+        <ColorPicker name="color" label="Color" />
+      </Stack>
     </CF>
   );
 }

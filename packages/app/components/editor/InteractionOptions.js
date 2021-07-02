@@ -1,6 +1,6 @@
-import { Box, FormControl, Stack, Text, FormErrorMessage } from '@chakra-ui/react';
 import { ROOT_NODE_ID } from '@graftini/graft';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Box, MenuItem, Stack, Typography } from '@material-ui/core';
 import CanvasForm from 'canvasComponents/form/CanvasForm';
 import SelectInput from 'canvasComponents/form/SelectInput';
 import TextInput from 'canvasComponents/form/TextInput';
@@ -77,16 +77,16 @@ export default function InteractionOptions() {
 
   if (!selectedComponentId || type === 'Root') {
     return (
-      <Box px={3} py={2} bg="gray.200" borderRadius="md">
-        <Text fontSize="sm">Select a component from the canvas to view options.</Text>
+      <Box mt={2}>
+        <Typography variant="body2">Select a component from the canvas to view options.</Typography>
       </Box>
     );
   }
 
   if (type !== 'Box') {
     return (
-      <Box px={3} py={2} bg="gray.200" borderRadius="md">
-        <Text fontSize="sm">Select a box from the canvas to view options.</Text>
+      <Box mt={2}>
+        <Typography variant="body2">Select a box from the canvas to view options.</Typography>
       </Box>
     );
   }
@@ -98,7 +98,7 @@ export default function InteractionOptions() {
       onInitialize={onInitialize}
       onSync={onSync}
     >
-      <Stack spacing={4}>
+      <Stack spacing={1}>
         <OnClick />
       </Stack>
     </CanvasForm>
@@ -117,37 +117,40 @@ function isUrl(value) {
 function OnClick() {
   const { control } = useFormContext();
   const { errors } = useFormState({ control });
+
   const action = useWatch({ control, name: 'link.action' });
 
   const { project } = useMyProject({ projectId: useProjectId() });
 
   return (
     <>
-      <Text fontSize="sm" fontWeight="bold" mb={1}>
+      <Typography variant="subtitle2" mt={2} mb={0.5}>
         On Click
-      </Text>
+      </Typography>
 
-      <SelectInput label="Action" name="link.action" labelWidth="16">
-        <option value="">Do nothing</option>
-        <option value="pageId">Go to page</option>
-        <option value="href">Open external link</option>
+      <SelectInput label="Action" name="link.action">
+        <MenuItem value="">Do nothing</MenuItem>
+        <MenuItem value="pageId">Go to page</MenuItem>
+        <MenuItem value="href">Open external link</MenuItem>
       </SelectInput>
 
       {action === 'pageId' && (
-        <SelectInput label="Page" name="link.pageId" labelWidth="16">
+        <SelectInput label="Page" name="link.pageId">
           {project.pages.map((it) => (
-            <option key={it.id} value={it.id}>
+            <MenuItem key={it.id} value={it.id}>
               {it.name}
-            </option>
+            </MenuItem>
           ))}
         </SelectInput>
       )}
 
       {action === 'href' && (
-        <FormControl isInvalid={!!errors.link?.href}>
-          <TextInput label="Link" name="link.href" labelWidth="16" />
-          <FormErrorMessage>{errors.link?.href?.message}</FormErrorMessage>
-        </FormControl>
+        <TextInput
+          label="Link"
+          name="link.href"
+          error={!!errors.link?.href}
+          helperText={errors.link?.href?.message}
+        />
       )}
     </>
   );

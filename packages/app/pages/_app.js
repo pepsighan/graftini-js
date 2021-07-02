@@ -1,5 +1,6 @@
 import { ApolloProvider } from '@apollo/client';
-import { ChakraProvider } from '@chakra-ui/react';
+import { CssBaseline, GlobalStyles } from '@material-ui/core';
+import { ThemeProvider } from '@material-ui/system';
 import Head from 'next/head';
 import { useMemo } from 'react';
 import 'utils/firebase';
@@ -17,14 +18,24 @@ export default function MyApp({ Component, pageProps }) {
       <Head>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap"
           rel="stylesheet"
         />
+        <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
 
-      <ChakraProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
         <Component {...pageProps} />
-      </ChakraProvider>
+
+        <GlobalStyles
+          styles={`
+            html {
+              font-size: 14px;
+            }
+          `}
+        />
+      </ThemeProvider>
     </ApolloProvider>
   );
 }

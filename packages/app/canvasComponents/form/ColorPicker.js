@@ -1,135 +1,105 @@
-import {
-  Box,
-  Input,
-  InputGroup,
-  InputLeftElement,
-  useDisclosure,
-  useOutsideClick,
-} from '@chakra-ui/react';
 import { rgbaToCss } from '@graftini/bricks';
+import { Box, InputAdornment, Popover, TextField, Typography } from '@material-ui/core';
 import { TransparencyGridIcon } from '@modulz/radix-icons';
-import { useEffect, useRef } from 'react';
+import { useCallback, useState } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
-import { useCanvasClickTrigger } from 'store/canvasClickTrigger';
-import StickyBox from './StickyBox';
 
 export default function ColorPicker({ name, label = null, labelWidth = '14' }) {
   const { control } = useFormContext();
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const ref = useRef();
+  const [open, setOpen] = useState(null);
+
+  const onOpen = useCallback((event) => {
+    setOpen(event.currentTarget);
+  }, []);
+  const onClose = useCallback(() => setOpen(null), []);
 
   return (
-    <InputGroup>
-      {label && (
-        <InputLeftElement
-          pointerEvents="none"
-          fontSize="sm"
-          height="100%"
-          width={labelWidth}
-          color="gray.600"
-          justifyContent="flex-end"
-          pr={2}
-        >
-          {label}
-        </InputLeftElement>
-      )}
-      <Controller
-        name={name}
-        control={control}
-        render={({ field }) => {
-          return (
-            <>
-              <Box flex={1} position="relative">
-                <Input
-                  ref={ref}
-                  as="div"
-                  size="sm"
-                  bg="white"
-                  display="flex"
-                  alignItems="center"
-                  userSelect="none"
-                  cursor="pointer"
-                  onClick={onOpen}
-                  sx={{
-                    paddingInlineStart: label ? labelWidth : null,
-                  }}
-                >
-                  {/* Show a chessboard bg to signify if there is transparency in the color. */}
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <>
+          <TextField
+            onClick={onOpen}
+            value={rgbaToCss({ ...field.value, a: null })}
+            InputProps={{
+              readOnly: true,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Typography variant="body2">{label}</Typography>
+                </InputAdornment>
+              ),
+              // Show a chessboard bg to signify if there is transparency in the color.
+              endAdornment: (
+                <InputAdornment position="end">
                   <ColorBox value={field.value} />
-                  {/* Only need to show the hex and no transparency as textual. */}
-                  {field.value ? rgbaToCss({ ...field.value, a: null }) : ''}
-                </Input>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root, & .MuiOutlinedInput-input': {
+                cursor: 'pointer',
+              },
+            }}
+          />
 
-                {isOpen && (
-                  <ColorPickerInner
-                    value={field.value}
-                    onChange={field.onChange}
-                    onClose={onClose}
-                    stickToRef={ref}
-                  />
-                )}
-              </Box>
-            </>
-          );
-        }}
-      />
-    </InputGroup>
+          <ColorPickerInner
+            open={open}
+            onClose={onClose}
+            value={field.value}
+            onChange={field.onChange}
+          />
+        </>
+      )}
+    />
   );
 }
 
-function ColorPickerInner({ stickToRef, value, onChange, onClose }) {
-  const ref = useRef();
-  useOutsideClick({ ref, handler: onClose });
-
-  useEffect(() => {
-    // If it received a click event from the the canvas, close this picker.
-    // Normally outside click should have worked. Since, the root component
-    // is within an iframe, it is not able to identify whether there was
-    // a click outside.
-    return useCanvasClickTrigger.subscribe(() => {
-      onClose();
-    });
-  }, [onClose]);
-
+function ColorPickerInner({ value, onChange, open, onClose }) {
   return (
-    <StickyBox
-      stickToRef={stickToRef}
-      heightOfContent={200}
-      sx={{
-        '& .react-colorful': {
-          padding: 3,
-          backgroundColor: 'white',
-          borderRadius: 'md',
-          border: '1px',
-          borderColor: 'gray.300',
-          shadow: 'md',
-          height: 200,
-        },
-        '& .react-colorful__saturation': {
-          borderRadius: 'none',
-          borderBottomWidth: 2,
-        },
-        '& .react-colorful__hue': {
-          my: 3,
-        },
-        '& .react-colorful__hue, & .react-colorful__alpha': {
-          borderRadius: 'none',
-          height: 2,
-        },
-        ['& .react-colorful__saturation-pointer,' +
-        ' & .react-colorful__hue-pointer, ' +
-        ' & .react-colorful__alpha-pointer']: {
-          height: 4,
-          width: 4,
-          cursor: 'pointer',
-        },
+    <Popover
+      open={!!open}
+      anchorEl={open}
+      onClose={onClose}
+      anchorOrigin={{
+        vertical: 'bottom',
+        horizontal: 'right',
       }}
     >
-      <div ref={ref}>
+      <Box
+        sx={{
+          '& .react-colorful': {
+            padding: 1.2,
+            borderRadius: 0,
+            height: 200,
+          },
+          '& .react-colorful__saturation': {
+            borderRadius: '0 !important',
+            borderBottomWidth: 2,
+          },
+          '& .react-colorful__hue': {
+            my: 1,
+          },
+          '& .react-colorful__hue, & .react-colorful__alpha': {
+            borderRadius: '0 !important',
+            height: 6,
+          },
+          ['& .react-colorful__saturation-pointer,' +
+          ' & .react-colorful__hue-pointer, ' +
+          ' & .react-colorful__alpha-pointer']: {
+            height: 10,
+            width: 10,
+            cursor: 'pointer',
+          },
+          '& .react-colorful__last-control': {
+            borderRadius: '0 !important',
+          },
+        }}
+      >
         <RgbaColorPicker color={value} onChange={onChange} />
-      </div>
-    </StickyBox>
+      </Box>
+    </Popover>
   );
 }
 
@@ -140,23 +110,26 @@ function ColorPickerInner({ stickToRef, value, onChange, onClose }) {
 function ColorBox({ value }) {
   return (
     <Box
-      width={5}
-      height={5}
-      borderRadius="sm"
-      overflow="hidden"
-      mr={3}
-      position="relative"
-      border="1px"
-      borderColor="gray.400"
+      sx={{
+        position: 'relative',
+        width: 16,
+        height: 16,
+        borderRadius: 1,
+        overflow: 'hidden',
+        border: '1px solid',
+        borderColor: 'grey.400',
+      }}
     >
       <TransparencyGridIcon width="100%" height="100%" />
       <Box
-        width="100%"
-        height="100%"
-        bg={value ? rgbaToCss(value) : null}
-        position="absolute"
-        top={0}
-        left={0}
+        sx={{
+          width: '100%',
+          height: '100%',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          backgroundColor: value ? rgbaToCss(value) : null,
+        }}
       />
     </Box>
   );
