@@ -1,5 +1,5 @@
-import { useBoolean } from '@chakra-ui/react';
 import { Menu, MenuItem } from '@material-ui/core';
+import useBoolean from 'hooks/useBoolean';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
 import DeletePageConfirmation from './DeletePageConfirmation';
