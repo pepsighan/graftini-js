@@ -1,41 +1,33 @@
 import { useComponentId, useEditorStore } from '@graftini/graft';
-import { useCallback, useEffect, useState } from 'react';
-import { createEditor } from 'slate';
-import { Editable, ReactEditor, Slate, withReact } from 'slate-react';
-import Element from './Element';
-import Leaf from './Leaf';
+import { Box } from '@material-ui/core';
+import { convertToRaw, convertFromRaw, Editor, EditorState } from 'draft-js';
+import { useCallback, useState } from 'react';
 
 export default function TextEditor({ value, isEditable }) {
   const componentId = useComponentId();
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
 
-  // Only initialize the editor once.
-  const [editor] = useState(() => withReact(createEditor()));
-
-  // Focus the editor once it is selected.
-  useEffect(() => {
-    if (isEditable) {
-      ReactEditor.focus(editor);
-    }
-  }, [editor, isEditable]);
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createWithContent(convertFromRaw(value))
+  );
 
   const onChange = useCallback(
-    (value) => {
+    (editorState) => {
+      setEditorState(editorState);
+
+      // Store the standard editor state in the component props.
       immerSet((state) => {
-        state.componentMap[componentId].props.text = value;
+        state.componentMap[componentId].props.content = convertToRaw(
+          editorState.getCurrentContent()
+        );
       });
     },
     [componentId, immerSet]
   );
 
   return (
-    <Slate editor={editor} value={value} onChange={onChange}>
-      <Editable
-        readOnly={!isEditable}
-        renderLeaf={Leaf}
-        renderElement={Element}
-        renderPlaceholder
-      />
-    </Slate>
+    <Box sx={{ cursor: isEditable ? 'text' : 'default' }}>
+      <Editor editorState={editorState} onChange={onChange} readOnly={!isEditable} />
+    </Box>
   );
 }

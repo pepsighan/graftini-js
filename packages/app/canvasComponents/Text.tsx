@@ -1,14 +1,14 @@
 /** @jsxImportSource @emotion/react */
 import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
+import { RawDraftContentState } from 'draft-js';
 import { forwardRef, MouseEvent, useCallback } from 'react';
-import { Descendant } from 'slate';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
 
 export type TextComponentProps = {
   name?: string;
-  text: Descendant[];
+  content: RawDraftContentState;
   color?: RGBA;
   fontSize?: FontSize;
   fontFamily?: string;
@@ -17,7 +17,7 @@ export type TextComponentProps = {
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(
-  ({ text, onMouseDown, ...rest }, ref) => {
+  ({ content, onMouseDown, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
@@ -44,7 +44,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
       startEditingText();
     }, [startEditingText]);
 
-    const { text: textDefault, ...defaultRest } = Text.graftOptions.defaultProps;
+    const { content: contentDefault, ...defaultRest } = Text.graftOptions.defaultProps;
 
     // Merge the incoming props with the default props so that any new props introduced in
     // the future get supported easily for existing projects.
@@ -61,7 +61,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
         onClick={onClick}
         onDoubleClick={onDoubleClick}
       >
-        <TextEditor value={text ?? textDefault} isEditable={isEditable} />
+        <TextEditor value={content ?? contentDefault} isEditable={isEditable} />
       </Txt>
     );
   }
@@ -73,7 +73,11 @@ Text.graftOptions = {
   defaultProps: {
     name: 'Text',
     color: { r: 0, g: 0, b: 0, a: 1 },
-    text: [{ type: 'paragraph', children: [{ text: 'Text' }] }] as any, // The type of the lib is wrong.
+    // The standard format for DraftJS.
+    content: {
+      blocks: [],
+      entityMap: {},
+    },
     fontSize: {
       size: 16,
       unit: 'px',
