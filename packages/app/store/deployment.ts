@@ -1,5 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import { useEffect, useState } from 'react';
+import { useMyProject } from './projects';
 
 /**
  * Hook to deploy the project now.
@@ -33,6 +34,7 @@ export enum DeploymentStatus {
  */
 export function useLiveDeploymentStatus({ projectId }) {
   const [isPolling, setIsPolling] = useState(true);
+  const { refetch: refetchMyProject } = useMyProject({ projectId });
 
   const { data, startPolling, stopPolling, ...rest } = useQuery(
     gql`
@@ -60,6 +62,8 @@ export function useLiveDeploymentStatus({ projectId }) {
       // No further polling required.
       stopPolling();
       setIsPolling(false);
+      // The app url of the project might have changed.
+      refetchMyProject();
       return;
     }
 
@@ -68,7 +72,7 @@ export function useLiveDeploymentStatus({ projectId }) {
     if (!isPolling) {
       startPolling(5000);
     }
-  }, [isPolling, startPolling, status, stopPolling]);
+  }, [isPolling, refetchMyProject, startPolling, status, stopPolling]);
 
   return { deployment, ...rest };
 }
