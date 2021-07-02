@@ -40,9 +40,6 @@ export default function TextAlignInput({ name }) {
           exclusive
           sx={{
             justifyContent: 'center',
-            '& .MuiToggleButtonGroup-grouped': {
-              border: 0,
-            },
           }}
         >
           {options.map(({ value, icon }) => (
