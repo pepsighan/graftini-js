@@ -117,9 +117,9 @@ function SegmentedInput({ options, value, onChange }) {
       exclusive
       sx={{
         justifyContent: 'center',
-        '& .MuiToggleButtonGroup-grouped': {
-          border: 0,
-        },
+        // '& .MuiToggleButtonGroup-grouped': {
+        //   border: 0,
+        // },
       }}
     >
       {options.map(({ value, icon }) => (
