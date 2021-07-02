@@ -132,5 +132,10 @@ export default createTheme({
         },
       },
     },
+    MuiCircularProgress: {
+      defaultProps: {
+        disableShrink: true,
+      },
+    },
   },
 });

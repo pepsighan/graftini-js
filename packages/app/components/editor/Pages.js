@@ -1,6 +1,6 @@
-import { useDisclosure } from '@chakra-ui/hooks';
 import { Box, IconButton, Typography } from '@material-ui/core';
 import { PlusIcon } from '@modulz/radix-icons';
+import useBoolean from 'hooks/useBoolean';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
@@ -14,7 +14,7 @@ export default function Pages() {
   const { query, push } = useRouter();
   const slugProjectId = query.projectId;
 
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, { on, off }] = useBoolean();
   const { project } = useMyProjectFromRouter();
 
   const defaultPageId = useDesignerState(
@@ -39,7 +39,7 @@ export default function Pages() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
         <Typography variant="subtitle2">Pages</Typography>
 
-        <IconButton size="small" onClick={onOpen}>
+        <IconButton size="small" onClick={on}>
           <PlusIcon />
         </IconButton>
       </Box>
@@ -57,7 +57,7 @@ export default function Pages() {
         ))}
       </Box>
 
-      <NewPageDialog key={isOpen} isOpen={isOpen} onClose={onClose} />
+      <NewPageDialog key={isOpen} isOpen={isOpen} onClose={off} />
     </Box>
   );
 }

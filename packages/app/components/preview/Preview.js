@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import NotFound from 'pages/404';
 import { useMemo } from 'react';
 import { parseComponentMap } from 'store/designer';
+import { navBarHeight } from 'utils/constants';
 import ComponentRender from './ComponentRender';
 
 export default function Preview() {
@@ -36,9 +37,10 @@ export default function Preview() {
         style={{
           width: '100%',
           // The height of the nav is substracted, so that the preview does not cause window-wide scroll.
-          height: 'calc(100vh - 40px)',
-          border: '1px',
-          borderColor: 'gray.300',
+          // Had to subtract 6px more because scrolls appeared otherwise. I checked the source of this
+          // additional height on the iframe but could not find.
+          height: `calc(100vh - ${navBarHeight + 6}px)`,
+          border: 0,
           // Any content that overflows vertically will have the scrollbar on this box itself.
           overflowY: 'auto',
         }}

@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
+import { navBarHeight } from 'utils/constants';
 import DeployButton from './DeployButton';
 
 export default function EditorNavigation() {
@@ -23,6 +24,7 @@ export default function EditorNavigation() {
       sx={{
         borderBottom: '1px solid',
         borderColor: 'grey.400',
+        height: navBarHeight,
       }}
     >
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>

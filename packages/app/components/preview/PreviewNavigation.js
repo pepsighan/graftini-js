@@ -1,6 +1,7 @@
-import { AppBar, Toolbar, Typography, Box } from '@material-ui/core';
+import { AppBar, Box, Toolbar, Typography } from '@material-ui/core';
 import BackButton from 'components/BackButton';
 import { useRouter } from 'next/router';
+import { navBarHeight } from 'utils/constants';
 
 export default function PreviewNavigation({ projectName }) {
   const { query } = useRouter();
@@ -13,6 +14,7 @@ export default function PreviewNavigation({ projectName }) {
       sx={{
         borderBottom: '1px solid',
         borderColor: 'grey.400',
+        height: navBarHeight,
       }}
     >
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>

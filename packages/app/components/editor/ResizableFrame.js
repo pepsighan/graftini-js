@@ -1,6 +1,5 @@
-import { Box } from '@chakra-ui/react';
 import { useComponentRegionStoreApi, useEditorStore } from '@graftini/graft';
-import { useTheme } from '@material-ui/core';
+import { Box, useTheme } from '@material-ui/core';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -34,13 +33,15 @@ export default function ResizeableFrame({ componentId, ...rest }) {
       {/* An overlay on top of the UI so that the drag events are not intercepted by others. */}
       {isBoxResizing && (
         <Box
-          position="fixed"
-          top={0}
-          left={0}
-          width="100%"
-          height="100%"
           onPointerUp={onResizingEnd}
-          cursor={cursor}
+          sx={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            cursor,
+          }}
         />
       )}
 
@@ -69,7 +70,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         {...bottom}
         componentId={componentId}
         original={restFrozen}
-        cursor="n-resize"
+        cursor="s-resize"
         type="bottom"
         onResizingStart={onResizingStart}
         onResizingEnd={onResizingEnd}
@@ -79,7 +80,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         {...left}
         componentId={componentId}
         original={restFrozen}
-        cursor="e-resize"
+        cursor="w-resize"
         type="left"
         onResizingStart={onResizingStart}
         onResizingEnd={onResizingEnd}
