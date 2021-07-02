@@ -2,6 +2,7 @@
  * The sidebar width that is shown in the editor of a project.
  */
 export const rightSidebarWidth = 300;
+export const navBarHeight = 48;
 
 export type BoxTag =
   | 'div'

@@ -11,6 +11,7 @@ import { useCallback, useMemo } from 'react';
 import { useDesignerState } from 'store/designer';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 import SyncEditorAndDesignerState from './SyncEditorAndDesignerState';
+import { navBarHeight } from 'utils/constants';
 
 export default function Designer({ projectId }) {
   const currentPageId = useDesignerState(useCallback((state) => state.currentOpenPage, []));
@@ -43,9 +44,9 @@ function Editorial() {
 
       <EditorNavigation />
       {/* The height of the nav is subtracted, so that any of the following does not cause window-wide scroll. 
-          Any scroll they have should be within their boundaries. The height of the nav is ~49px.
+          Any scroll they have should be within their boundaries.
       */}
-      <Box sx={{ display: 'flex', height: 'calc(100vh - 49px)' }}>
+      <Box sx={{ display: 'flex', height: `calc(100vh - ${navBarHeight}px)` }}>
         <LeftSidebar />
         <Canvas />
         <RightSidebar />

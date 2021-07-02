@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { loginWithGitHub, logout, useAuthUser } from 'store/auth';
+import { navBarHeight } from 'utils/constants';
 
 export default function Navigation() {
   const { push } = useRouter();
@@ -22,6 +23,7 @@ export default function Navigation() {
       sx={{
         borderBottom: '1px solid',
         borderColor: 'grey.400',
+        height: navBarHeight,
       }}
     >
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
