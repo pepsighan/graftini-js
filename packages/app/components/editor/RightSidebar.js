@@ -5,8 +5,8 @@ import ComponentOptions from './ComponentOptions';
 import InteractionOptions from './InteractionOptions';
 
 export default function RightSidebar() {
-  const [index, setIndex] = useState(0);
-  const onChange = useCallback((event, index) => setIndex(index), []);
+  const [currentTab, setCurrentTab] = useState(0);
+  const onChange = useCallback((_, index) => setCurrentTab(index), []);
 
   return (
     <Box
@@ -27,15 +27,21 @@ export default function RightSidebar() {
         },
       }}
     >
-      <Tabs value={index} onChange={onChange} centered sx={{ minHeight: 'auto' }}>
+      <Tabs value={currentTab} onChange={onChange} centered sx={{ mt: 1, minHeight: 'auto' }}>
         <Tab label="Design" sx={{ padding: 1, minHeight: 0 }} />
         <Tab label="Interaction" sx={{ padding: 1, minHeight: 0 }} />
       </Tabs>
 
-      <Box>
-        {index === 0 && <ComponentOptions />}
-        {index === 1 && <InteractionOptions />}
-      </Box>
+      <TabPanel value={currentTab} index={0}>
+        <ComponentOptions />
+      </TabPanel>
+      <TabPanel value={currentTab} index={1}>
+        <InteractionOptions />
+      </TabPanel>
     </Box>
   );
+}
+
+function TabPanel({ value, index, children }) {
+  return <Box sx={{ display: value === index ? 'block' : 'none' }}>{children}</Box>;
 }

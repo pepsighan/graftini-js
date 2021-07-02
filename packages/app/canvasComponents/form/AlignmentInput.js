@@ -1,4 +1,4 @@
-import { Box, ToggleButton, ToggleButtonGroup } from '@material-ui/core';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/core';
 import {
   AlignBottomIcon,
   AlignCenterHorizontallyIcon,
@@ -43,14 +43,14 @@ const alignRight = {
 };
 
 const otherJustifyOptions = [
-  {
+  justify({
     value: 'space-between',
     icon: <SpaceBetweenHorizontallyIcon />,
-  },
-  {
+  }),
+  justify({
     value: 'space-evenly',
     icon: <SpaceEvenlyHorizontallyIcon />,
-  },
+  }),
 ];
 
 export default function AlignmentInput() {
@@ -59,74 +59,80 @@ export default function AlignmentInput() {
   const alignItems = useWatch({ control, name: 'alignItems' });
   const direction = useWatch({ control, name: 'flexDirection' });
 
-  const alignOptions = useMemo(
-    () => [
-      direction === 'row' ? alignTop : alignLeft,
-      direction === 'row' ? alignMiddle : alignCenter,
-      direction === 'row' ? alignBottom : alignRight,
-    ],
+  const selections = useMemo(
+    () => [`justify=${justifyContent}`, `align=${alignItems}`],
+    [alignItems, justifyContent]
+  );
+
+  const options = useMemo(
+    () =>
+      [
+        direction === 'column' ? align(alignLeft) : null,
+        direction === 'column' ? align(alignCenter) : null,
+        direction === 'column' ? align(alignRight) : null,
+        justify(direction === 'column' ? alignTop : alignLeft),
+        justify(direction === 'column' ? alignMiddle : alignCenter),
+        justify(direction === 'column' ? alignBottom : alignRight),
+        direction === 'row' ? align(alignTop) : null,
+        direction === 'row' ? align(alignMiddle) : null,
+        direction === 'row' ? align(alignBottom) : null,
+        ...otherJustifyOptions,
+      ].filter((it) => !!it),
     [direction]
   );
 
-  const justifyOptions = useMemo(
-    () => [
-      direction === 'column' ? alignTop : alignLeft,
-      direction === 'column' ? alignMiddle : alignCenter,
-      direction === 'column' ? alignBottom : alignRight,
-    ],
-    [direction]
-  );
+  const onChange = useCallback(
+    (_, newSelections) => {
+      if (newSelections.length <= selections.length) {
+        // Selection was removed.
+        // We do not allow that.
+        return;
+      }
 
-  const onJustifyUpdate = useCallback(
-    (value) => {
-      setValue('justifyContent', value, { shouldDirty: true, shouldValidate: true });
+      // New selection was added. Need to remove and older one that
+      // is replaced by it.
+      const newSelection = newSelections.pop();
+      const split = newSelection.split('=');
+
+      // Update the form state.
+      if (split[0] === 'align') {
+        setValue('alignItems', split[1], { shouldDirty: true, shouldValidate: true });
+      } else {
+        setValue('justifyContent', split[1], { shouldDirty: true, shouldValidate: true });
+      }
     },
-    [setValue]
+    [selections, setValue]
   );
 
-  const onAlignUpdate = useCallback(
-    (value) => {
-      setValue('alignItems', value, { shouldDirty: true, shouldValidate: true });
-    },
-    [setValue]
-  );
-
-  const alignItemsToggle = (
-    <SegmentedInput options={alignOptions} value={alignItems} onChange={onAlignUpdate} />
-  );
-
-  return (
-    <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-      {direction === 'column' && alignItemsToggle}
-      <SegmentedInput options={justifyOptions} value={justifyContent} onChange={onJustifyUpdate} />
-      {direction === 'row' && alignItemsToggle}
-      <SegmentedInput
-        options={otherJustifyOptions}
-        value={justifyContent}
-        onChange={onJustifyUpdate}
-      />
-    </Box>
-  );
-}
-
-function SegmentedInput({ options, value, onChange }) {
   return (
     <ToggleButtonGroup
-      value={value}
-      onChange={(_, value) => onChange(value)}
-      exclusive
-      sx={{
-        justifyContent: 'center',
-        // '& .MuiToggleButtonGroup-grouped': {
-        //   border: 0,
-        // },
-      }}
+      sx={{ justifyContent: 'center' }}
+      value={selections.filter((it) => !!it)}
+      onChange={onChange}
     >
-      {options.map(({ value, icon }) => (
-        <ToggleButton key={value} value={value} style={{ borderRadius: 0 }} sx={{ padding: 1.2 }}>
-          {icon}
+      {options.map((opt) => (
+        <ToggleButton
+          key={`${opt.type}=${opt.value}`}
+          value={`${opt.type}=${opt.value}`}
+          sx={{ padding: 1.2 }}
+        >
+          {opt.icon}
         </ToggleButton>
       ))}
     </ToggleButtonGroup>
   );
+}
+
+function align(obj) {
+  return {
+    ...obj,
+    type: 'align',
+  };
+}
+
+function justify(obj) {
+  return {
+    ...obj,
+    type: 'justify',
+  };
 }
