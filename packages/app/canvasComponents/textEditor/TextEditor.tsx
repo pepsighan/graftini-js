@@ -20,6 +20,7 @@ const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) =
   return (
     <Text
       ref={ref}
+      isEditor
       onFocus={onFocus}
       onBlur={onBlur}
       onMouseDown={onMouseDown}
