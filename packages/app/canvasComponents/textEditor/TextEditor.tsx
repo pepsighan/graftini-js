@@ -1,7 +1,9 @@
 import { Text } from '@graftini/bricks';
 import { Editor } from 'draft-js';
+import { motion } from 'framer-motion';
 import React, { forwardRef, MouseEventHandler, useRef } from 'react';
 import styleMap from './styleMap';
+import useCursor from './useCursor';
 import useFocusOnEditingMode from './useFocusOnEditingMode';
 import useRetainFocus from './useRetainFocus';
 import useSyncEditorState from './useSyncEditorState';
@@ -16,6 +18,7 @@ const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) =
   const [editorState, onChange, setEditorState] = useSyncEditorState();
   useFocusOnEditingMode({ editorRef, setEditorState });
   const [onFocus, onBlur] = useRetainFocus(setEditorState);
+  const cursor = useCursor();
 
   return (
     <Text
@@ -25,14 +28,15 @@ const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) =
       onBlur={onBlur}
       onMouseDown={onMouseDown}
       onClick={onClick}
-      cursor={true ? 'text' : 'default'}
     >
-      <Editor
-        ref={editorRef}
-        editorState={editorState}
-        onChange={onChange}
-        customStyleMap={styleMap}
-      />
+      <motion.div style={{ cursor }}>
+        <Editor
+          ref={editorRef}
+          editorState={editorState}
+          onChange={onChange}
+          customStyleMap={styleMap}
+        />
+      </motion.div>
     </Text>
   );
 });

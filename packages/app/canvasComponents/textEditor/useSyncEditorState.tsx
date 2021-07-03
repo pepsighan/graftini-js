@@ -18,7 +18,7 @@ export default function useSyncEditorState(): [
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
 
   const [editorState, setEditorState] = useState(() =>
-    EditorState.createWithContent(ContentState.createFromText(''))
+    EditorState.createWithContent(ContentState.createFromText('Abc'))
   );
 
   const onChange = useCallback(
