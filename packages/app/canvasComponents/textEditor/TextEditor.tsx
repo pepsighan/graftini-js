@@ -1,6 +1,5 @@
 import { Box } from '@material-ui/core';
 import { Editor } from 'draft-js';
-import 'draft-js/dist/Draft.css';
 import React, { useRef } from 'react';
 import styleMap from './styleMap';
 import useFocusOnEditingMode from './useFocusOnEditingMode';
@@ -9,8 +8,8 @@ import useSyncEditorState from './useSyncEditorState';
 
 export default function TextEditor({ value }) {
   const editorRef = useRef<Editor | null>(null);
-  const { isSelected, isEditable } = useFocusOnEditingMode({ editorRef });
   const [editorState, onChange, setEditorState] = useSyncEditorState({ value });
+  const { isSelected, isEditable } = useFocusOnEditingMode({ editorRef, setEditorState });
 
   const onBlur = useRetainFocus(setEditorState);
 

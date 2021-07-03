@@ -1,12 +1,23 @@
 import { useComponentId } from '@graftini/graft';
+import { Editor, EditorState, Modifier } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { useCallback, useEffect } from 'react';
+import { MutableRefObject, useCallback, useEffect } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
+import { StyleOption } from './styleMap';
+import { EditorStateSetter } from './useSyncEditorState';
+
+type UseFocusOnEditingModeOptions = {
+  editorRef: MutableRefObject<Editor | null>;
+  setEditorState: EditorStateSetter;
+};
 
 /**
  * Manages focus on the editor whenever it gains or loses editable status.
  */
-export default function useFocusOnEditingMode({ editorRef }) {
+export default function useFocusOnEditingMode({
+  editorRef,
+  setEditorState,
+}: UseFocusOnEditingModeOptions) {
   const componentId = useComponentId();
 
   const isSelected = useDesignerState(
@@ -34,11 +45,36 @@ export default function useFocusOnEditingMode({ editorRef }) {
           editorRef.current.focus();
         } else {
           editorRef.current.blur();
+
+          // Remove any text selection.
+          setEditorState((editorState) =>
+            EditorState.createWithContent(
+              Modifier.removeInlineStyle(
+                editorState.getCurrentContent(),
+                selectAll(editorState),
+                StyleOption.TextSelection
+              )
+            )
+          );
         }
       },
       (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled
     );
-  }, [componentId, editorRef, subscribe]);
+  }, [componentId, editorRef, setEditorState, subscribe]);
 
   return { isSelected, isEditable };
+}
+
+/**
+ * Creates a selection that spans everything within the editor.
+ */
+function selectAll(editorState: EditorState) {
+  const currentContent = editorState.getCurrentContent();
+
+  return editorState.getSelection().merge({
+    anchorKey: currentContent.getFirstBlock().getKey(),
+    anchorOffset: 0,
+    focusOffset: currentContent.getLastBlock().getText().length,
+    focusKey: currentContent.getLastBlock().getKey(),
+  });
 }
