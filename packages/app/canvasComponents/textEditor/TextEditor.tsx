@@ -10,14 +10,14 @@ export default function TextEditor({ value }) {
   const editorRef = useRef<Editor | null>(null);
   const [editorState, onChange, setEditorState] = useSyncEditorState({ value });
   const { isSelected, isEditable } = useFocusOnEditingMode({ editorRef, setEditorState });
-
-  const onBlur = useRetainFocus(setEditorState);
+  const [onFocus, onBlur] = useRetainFocus(setEditorState);
 
   return (
     <Box
       sx={{
         cursor: isSelected ? 'text' : 'default',
       }}
+      onFocus={onFocus}
       onBlur={onBlur}
     >
       <Editor

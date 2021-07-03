@@ -68,7 +68,7 @@ export default function useFocusOnEditingMode({
 /**
  * Creates a selection that spans everything within the editor.
  */
-function selectAll(editorState: EditorState) {
+export function selectAll(editorState: EditorState) {
   const currentContent = editorState.getCurrentContent();
 
   return editorState.getSelection().merge({
