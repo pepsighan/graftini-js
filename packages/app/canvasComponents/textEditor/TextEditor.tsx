@@ -1,10 +1,9 @@
-import { useComponentId } from '@graftini/graft';
 import { Box } from '@material-ui/core';
 import { Editor } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import React, { useCallback, useEffect, useRef } from 'react';
-import { useDesignerState, useDesignerStateApi } from 'store/designer';
+import React, { useRef } from 'react';
 import styleMap from './styleMap';
+import useFocusOnEditingMode from './useFocusOnEditingMode';
 import useRetainFocus from './useRetainFocus';
 import useSyncEditorState from './useSyncEditorState';
 
@@ -31,44 +30,4 @@ export default function TextEditor({ value }) {
       />
     </Box>
   );
-}
-
-/**
- * Manages focus on the editor whenever it gains or loses editable status.
- */
-function useFocusOnEditingMode({ editorRef }) {
-  const componentId = useComponentId();
-
-  const isSelected = useDesignerState(
-    useCallback((state) => state.selectedComponentId === componentId, [componentId])
-  );
-
-  const isEditable = useDesignerState(
-    useCallback(
-      (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled,
-      [componentId]
-    )
-  );
-
-  const { subscribe } = useDesignerStateApi();
-  useEffect(() => {
-    return subscribe(
-      (isEditable) => {
-        if (!editorRef.current) {
-          return;
-        }
-
-        // Forcefully focus the editor. Sometimes it does not automatically
-        // give the focus when the editor turns off readOnly mode.
-        if (isEditable) {
-          editorRef.current.focus();
-        } else {
-          editorRef.current.blur();
-        }
-      },
-      (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled
-    );
-  }, [componentId, editorRef, subscribe]);
-
-  return { isSelected, isEditable };
 }
