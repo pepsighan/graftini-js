@@ -5,6 +5,26 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
 
 export default function TextEditor({ value }) {
+  const editorRef = useRef();
+  const { isSelected, isEditable } = useFocusOnEditingMode({ editorRef });
+  const [editorState, onChange] = useSyncEditorState({ value });
+
+  return (
+    <Box sx={{ cursor: isSelected ? 'text' : 'default' }}>
+      <Editor
+        ref={editorRef}
+        editorState={editorState}
+        onChange={onChange}
+        readOnly={!isEditable}
+      />
+    </Box>
+  );
+}
+
+/**
+ * Syncs the state between the editor and the component props.
+ */
+function useSyncEditorState({ value }) {
   const componentId = useComponentId();
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
 
@@ -26,24 +46,15 @@ export default function TextEditor({ value }) {
     [componentId, immerSet]
   );
 
-  const editorRef = useRef();
-
-  const { isSelected, isEditable } = useFocusOnEditingMode({ componentId, editorRef });
-
-  return (
-    <Box sx={{ cursor: isSelected ? 'text' : 'default' }}>
-      {/* [isSelected] makes the editor to be functional only after the second click. */}
-      <Editor
-        ref={editorRef}
-        editorState={editorState}
-        onChange={onChange}
-        readOnly={!isEditable}
-      />
-    </Box>
-  );
+  return [editorState, onChange];
 }
 
-function useFocusOnEditingMode({ componentId, editorRef }) {
+/**
+ * Manages focus on the editor whenever it gains or loses editable status.
+ */
+function useFocusOnEditingMode({ editorRef }) {
+  const componentId = useComponentId();
+
   const isSelected = useDesignerState(
     useCallback((state) => state.selectedComponentId === componentId, [componentId])
   );
