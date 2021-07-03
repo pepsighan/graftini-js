@@ -39,7 +39,6 @@ export type TextInteractionStyles = {
 
 export type EditorTextInteractionProps = {
   onClick?: MouseEventHandler;
-  onDoubleClick?: MouseEventHandler;
   onFocus?: FocusEventHandler;
   onBlur?: FocusEventHandler;
 };
@@ -93,14 +92,12 @@ function textInteractionStyles({ cursor }: TextInteractionStyles): CSSObject {
 function editorTextInteractionProps({
   isEditor,
   onClick,
-  onDoubleClick,
   onFocus,
   onBlur,
 }: EditorTextInteractionProps & EditorProps): any {
   return isEditor
     ? {
         onClick,
-        onDoubleClick,
         onFocus,
         onBlur,
       }
