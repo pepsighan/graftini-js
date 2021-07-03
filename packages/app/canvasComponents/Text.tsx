@@ -4,6 +4,7 @@ import { RawDraftContentState } from 'draft-js';
 import { forwardRef, MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
+import { TextSelectionProvider } from './textEditor/textSelection';
 
 export type TextComponentProps = {
   name?: string;
@@ -32,11 +33,13 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
     <>
       {useMemo(
         () => (
-          <TextEditor
-            ref={ref}
-            onMouseDown={!isDraggingDisabled ? onMouseDown : null}
-            onClick={onClick}
-          />
+          <TextSelectionProvider>
+            <TextEditor
+              ref={ref}
+              onMouseDown={!isDraggingDisabled ? onMouseDown : null}
+              onClick={onClick}
+            />
+          </TextSelectionProvider>
         ),
         [isDraggingDisabled, onClick, onMouseDown, ref]
       )}

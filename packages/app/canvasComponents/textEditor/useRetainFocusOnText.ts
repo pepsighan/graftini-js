@@ -1,7 +1,7 @@
 import { useComponentId } from '@graftini/graft';
 import { FocusEventHandler, useCallback } from 'react';
 import { useDesignerStateApi } from 'store/designer';
-import { markTextAsSelected, resetTextSelection } from './textSelection';
+import { useMarkTextAsSelected, useResetTextSelection } from './textSelection';
 import { EditorStateSetter } from './useSyncEditorState';
 
 /**
@@ -13,6 +13,8 @@ export default function useRetainFocusOnText(
 ): [FocusEventHandler, FocusEventHandler] {
   const componentId = useComponentId();
   const { getState } = useDesignerStateApi();
+  const markTextAsSelected = useMarkTextAsSelected(setState);
+  const resetTextSelection = useResetTextSelection(setState);
 
   // This adds the text selection style when the editor goes out of focus.
   const onBlur = useCallback(() => {
@@ -22,9 +24,9 @@ export default function useRetainFocusOnText(
     if (isSelected) {
       // If the text editor is still selected, even if the editor loses
       // focus, the following style will emulate selection.
-      markTextAsSelected(setState);
+      markTextAsSelected();
     }
-  }, [componentId, getState, setState]);
+  }, [componentId, getState, markTextAsSelected]);
 
   // This removes the text selection style when the editor comes back
   // to focus.
@@ -34,9 +36,9 @@ export default function useRetainFocusOnText(
 
     // Remove the selection style done onBlur when it comes to focus again.
     if (isSelected) {
-      resetTextSelection(setState);
+      resetTextSelection();
     }
-  }, [componentId, getState, setState]);
+  }, [componentId, getState, resetTextSelection]);
 
   return [onFocus, onBlur];
 }

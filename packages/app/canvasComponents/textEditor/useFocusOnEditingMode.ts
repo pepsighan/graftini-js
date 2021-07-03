@@ -2,7 +2,7 @@ import { useComponentId } from '@graftini/graft';
 import { Editor } from 'draft-js';
 import { MutableRefObject, useEffect } from 'react';
 import { useDesignerStateApi } from 'store/designer';
-import { resetTextSelection } from './textSelection';
+import { useResetTextSelection } from './textSelection';
 import { EditorStateSetter } from './useSyncEditorState';
 
 type UseFocusOnEditingModeOptions = {
@@ -18,6 +18,8 @@ export default function useFocusOnEditingMode({
   setEditorState,
 }: UseFocusOnEditingModeOptions) {
   const componentId = useComponentId();
+  // Remove any artificial text selection.
+  const resetTextSelection = useResetTextSelection(setEditorState);
 
   const { subscribe } = useDesignerStateApi();
   useEffect(() => {
@@ -31,12 +33,10 @@ export default function useFocusOnEditingMode({
         // give the focus when the editor turns off readOnly mode.
         if (!isEditable) {
           editorRef.current.blur();
-
-          // Remove any artificial text selection.
-          resetTextSelection(setEditorState);
+          resetTextSelection();
         }
       },
       (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled
     );
-  }, [componentId, editorRef, setEditorState, subscribe]);
+  }, [componentId, editorRef, resetTextSelection, setEditorState, subscribe]);
 }
