@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { GraftComponent, useComponentId } from '@graftini/graft';
 import { RawDraftContentState } from 'draft-js';
-import { forwardRef, MouseEvent, useCallback, useEffect, useRef } from 'react';
+import { forwardRef, MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
 
@@ -10,7 +10,7 @@ export type TextComponentProps = {
   content: RawDraftContentState;
 };
 
-const Text: GraftComponent<TextComponentProps> = forwardRef(({ content, onMouseDown }, ref) => {
+const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, ref) => {
   const componentId = useComponentId();
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
   const isDraggingDisabled = useIsDraggingDisabled();
@@ -27,11 +27,20 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ content, onMouseD
   );
 
   return (
-    <TextEditor
-      ref={ref}
-      onMouseDown={!isDraggingDisabled ? onMouseDown : null}
-      onClick={onClick}
-    />
+    // The text component keeps on changing with changing props.
+    // The text editor does not need to update to those extra props.
+    <>
+      {useMemo(
+        () => (
+          <TextEditor
+            ref={ref}
+            onMouseDown={!isDraggingDisabled ? onMouseDown : null}
+            onClick={onClick}
+          />
+        ),
+        [isDraggingDisabled, onClick, onMouseDown, ref]
+      )}
+    </>
   );
 });
 
