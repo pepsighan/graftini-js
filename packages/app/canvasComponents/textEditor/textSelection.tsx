@@ -47,8 +47,8 @@ export function useResetTextSelection(setState: EditorStateSetter) {
       return;
     }
 
-    setState((editorState) => {
-      return EditorState.createWithContent(
+    setState((editorState) =>
+      EditorState.createWithContent(
         Modifier.removeInlineStyle(
           editorState.getCurrentContent(),
           // We remove selection from all because the cursor selection onBlur
@@ -56,8 +56,15 @@ export function useResetTextSelection(setState: EditorStateSetter) {
           selectAll(editorState),
           StyleOption.TextSelection
         )
-      );
-    });
+      )
+    );
+
+    // This fixes issue with selection when the editor is re-edited (re-focused) and user selects
+    // all the text and starts typing to replace it. Weirdly, the cursor would be present on the
+    // left of the first typed character. This forces the cursor to be at the last. (I think the
+    // editor remembers the last cursor state and this makes it reset whatever weird state the
+    // editor might have been.)
+    setState((editorState) => EditorState.forceSelection(editorState, cursorAtLast(editorState)));
   }, [getSelected, setState]);
 }
 
@@ -70,6 +77,20 @@ export function selectAll(editorState: EditorState) {
   return editorState.getSelection().merge({
     anchorKey: currentContent.getFirstBlock().getKey(),
     anchorOffset: 0,
+    focusKey: currentContent.getLastBlock().getKey(),
+    focusOffset: currentContent.getLastBlock().getText().length,
+  });
+}
+
+/**
+ * Creates a selection which is actually a cursor at the last position.
+ */
+export function cursorAtLast(editorState: EditorState) {
+  const currentContent = editorState.getCurrentContent();
+
+  return editorState.getSelection().merge({
+    anchorKey: currentContent.getLastBlock().getKey(),
+    anchorOffset: currentContent.getLastBlock().getText().length,
     focusKey: currentContent.getLastBlock().getKey(),
     focusOffset: currentContent.getLastBlock().getText().length,
   });
