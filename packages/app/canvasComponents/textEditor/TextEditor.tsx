@@ -14,7 +14,7 @@ type TextEditorProps = {
 const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) => {
   const editorRef = useRef<Editor | null>(null);
   const [editorState, onChange, setEditorState] = useSyncEditorState();
-  const { isSelected, isEditable } = useFocusOnEditingMode({ editorRef, setEditorState });
+  useFocusOnEditingMode({ editorRef, setEditorState });
   const [onFocus, onBlur] = useRetainFocus(setEditorState);
 
   return (
@@ -25,13 +25,12 @@ const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) =
       onBlur={onBlur}
       onMouseDown={onMouseDown}
       onClick={onClick}
-      cursor={isSelected ? 'text' : 'default'}
+      cursor={true ? 'text' : 'default'}
     >
       <Editor
         ref={editorRef}
         editorState={editorState}
         onChange={onChange}
-        readOnly={!isEditable}
         customStyleMap={styleMap}
       />
     </Text>

@@ -1,8 +1,8 @@
 import { useComponentId } from '@graftini/graft';
 import { Editor, EditorState, Modifier } from 'draft-js';
 import 'draft-js/dist/Draft.css';
-import { MutableRefObject, useCallback, useEffect } from 'react';
-import { useDesignerState, useDesignerStateApi } from 'store/designer';
+import { MutableRefObject, useEffect } from 'react';
+import { useDesignerStateApi } from 'store/designer';
 import { StyleOption } from './styleMap';
 import { EditorStateSetter } from './useSyncEditorState';
 
@@ -20,17 +20,6 @@ export default function useFocusOnEditingMode({
 }: UseFocusOnEditingModeOptions) {
   const componentId = useComponentId();
 
-  const isSelected = useDesignerState(
-    useCallback((state) => state.selectedComponentId === componentId, [componentId])
-  );
-
-  const isEditable = useDesignerState(
-    useCallback(
-      (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled,
-      [componentId]
-    )
-  );
-
   const { subscribe } = useDesignerStateApi();
   useEffect(() => {
     return subscribe(
@@ -41,12 +30,10 @@ export default function useFocusOnEditingMode({
 
         // Forcefully focus the editor. Sometimes it does not automatically
         // give the focus when the editor turns off readOnly mode.
-        if (isEditable) {
-          editorRef.current.focus();
-        } else {
+        if (!isEditable) {
           editorRef.current.blur();
 
-          // Remove any text selection.
+          // Remove any artificial text selection.
           setEditorState((editorState) =>
             EditorState.createWithContent(
               Modifier.removeInlineStyle(
@@ -61,8 +48,6 @@ export default function useFocusOnEditingMode({
       (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled
     );
   }, [componentId, editorRef, setEditorState, subscribe]);
-
-  return { isSelected, isEditable };
 }
 
 /**

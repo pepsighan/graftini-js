@@ -1,5 +1,5 @@
 import { useComponentId, useEditorStore } from '@graftini/graft';
-import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
+import { ContentState, convertToRaw, EditorState } from 'draft-js';
 import 'draft-js/dist/Draft.css';
 import { Dispatch, SetStateAction, useCallback, useState } from 'react';
 
@@ -17,7 +17,9 @@ export default function useSyncEditorState(): [
   const componentId = useComponentId();
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
 
-  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
+  const [editorState, setEditorState] = useState(() =>
+    EditorState.createWithContent(ContentState.createFromText(''))
+  );
 
   const onChange = useCallback(
     (editorState: EditorState) => {
