@@ -4,7 +4,7 @@ import React, { forwardRef, MouseEventHandler, useRef } from 'react';
 import styleMap from './styleMap';
 import useEditingState from './useEditingState';
 import useFocusOnEditingMode from './useFocusOnEditingMode';
-import useRetainFocus from './useRetainFocus';
+import useRetainFocusOnText from './useRetainFocusOnText';
 import useSyncEditorState from './useSyncEditorState';
 
 type TextEditorProps = {
@@ -15,7 +15,7 @@ type TextEditorProps = {
 const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) => {
   const editorRef = useRef<Editor | null>(null);
   const [editorState, onChange, setEditorState] = useSyncEditorState();
-  const [onFocus, onBlur] = useRetainFocus(setEditorState);
+  const [onFocus, onBlur] = useRetainFocusOnText(setEditorState);
 
   useFocusOnEditingMode({ editorRef, setEditorState });
   const { isSelected, isEditing } = useEditingState();

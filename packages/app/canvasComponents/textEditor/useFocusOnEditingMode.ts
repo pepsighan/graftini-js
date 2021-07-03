@@ -1,9 +1,8 @@
 import { useComponentId } from '@graftini/graft';
-import { Editor, EditorState, Modifier } from 'draft-js';
-import 'draft-js/dist/Draft.css';
+import { Editor } from 'draft-js';
 import { MutableRefObject, useEffect } from 'react';
 import { useDesignerStateApi } from 'store/designer';
-import { StyleOption } from './styleMap';
+import { resetTextSelection } from './textSelection';
 import { EditorStateSetter } from './useSyncEditorState';
 
 type UseFocusOnEditingModeOptions = {
@@ -34,32 +33,10 @@ export default function useFocusOnEditingMode({
           editorRef.current.blur();
 
           // Remove any artificial text selection.
-          setEditorState((editorState) =>
-            EditorState.createWithContent(
-              Modifier.removeInlineStyle(
-                editorState.getCurrentContent(),
-                selectAll(editorState),
-                StyleOption.TextSelection
-              )
-            )
-          );
+          resetTextSelection(setEditorState);
         }
       },
       (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled
     );
   }, [componentId, editorRef, setEditorState, subscribe]);
-}
-
-/**
- * Creates a selection that spans everything within the editor.
- */
-export function selectAll(editorState: EditorState) {
-  const currentContent = editorState.getCurrentContent();
-
-  return editorState.getSelection().merge({
-    anchorKey: currentContent.getFirstBlock().getKey(),
-    anchorOffset: 0,
-    focusOffset: currentContent.getLastBlock().getText().length,
-    focusKey: currentContent.getLastBlock().getKey(),
-  });
 }

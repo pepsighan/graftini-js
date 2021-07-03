@@ -1,12 +1,14 @@
 import { useComponentId } from '@graftini/graft';
-import { EditorState, Modifier } from 'draft-js';
 import { FocusEventHandler, useCallback } from 'react';
 import { useDesignerStateApi } from 'store/designer';
-import { StyleOption } from './styleMap';
-import { selectAll } from './useFocusOnEditingMode';
+import { markTextAsSelected, resetTextSelection } from './textSelection';
 import { EditorStateSetter } from './useSyncEditorState';
 
-export default function useRetainFocus(
+/**
+ * Hook that retains focus on the selected text within the editor when the user is interacting
+ * with the rest of the app.
+ */
+export default function useRetainFocusOnText(
   setState: EditorStateSetter
 ): [FocusEventHandler, FocusEventHandler] {
   const componentId = useComponentId();
@@ -20,15 +22,7 @@ export default function useRetainFocus(
     if (isSelected) {
       // If the text editor is still selected, even if the editor loses
       // focus, the following style will emulate selection.
-      setState((editorState) =>
-        EditorState.createWithContent(
-          Modifier.applyInlineStyle(
-            editorState.getCurrentContent(),
-            editorState.getSelection(),
-            StyleOption.TextSelection
-          )
-        )
-      );
+      markTextAsSelected(setState);
     }
   }, [componentId, getState, setState]);
 
@@ -38,19 +32,9 @@ export default function useRetainFocus(
     const state = getState();
     const isSelected = state.selectedComponentId === componentId;
 
+    // Remove the selection style done onBlur when it comes to focus again.
     if (isSelected) {
-      // Remove the selection style done onBlur when it comes to focus again.
-      setState((editorState) =>
-        EditorState.createWithContent(
-          Modifier.removeInlineStyle(
-            editorState.getCurrentContent(),
-            // We remove selection from all because the cursor selection onBlur
-            // may still not be present.
-            selectAll(editorState),
-            StyleOption.TextSelection
-          )
-        )
-      );
+      resetTextSelection(setState);
     }
   }, [componentId, getState, setState]);
 
