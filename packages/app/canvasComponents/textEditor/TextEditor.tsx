@@ -1,52 +1,36 @@
-import { useComponentId, useEditorStore } from '@graftini/graft';
+import { useComponentId } from '@graftini/graft';
 import { Box } from '@material-ui/core';
-import { convertFromRaw, convertToRaw, Editor, EditorState } from 'draft-js';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { Editor } from 'draft-js';
+import 'draft-js/dist/Draft.css';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
+import styleMap from './styleMap';
+import useRetainFocus from './useRetainFocus';
+import useSyncEditorState from './useSyncEditorState';
 
 export default function TextEditor({ value }) {
-  const editorRef = useRef();
+  const editorRef = useRef<Editor | null>(null);
   const { isSelected, isEditable } = useFocusOnEditingMode({ editorRef });
-  const [editorState, onChange] = useSyncEditorState({ value });
+  const [editorState, onChange, setEditorState] = useSyncEditorState({ value });
+
+  const onBlur = useRetainFocus(setEditorState);
 
   return (
-    <Box sx={{ cursor: isSelected ? 'text' : 'default' }}>
+    <Box
+      sx={{
+        cursor: isSelected ? 'text' : 'default',
+      }}
+      onBlur={onBlur}
+    >
       <Editor
         ref={editorRef}
         editorState={editorState}
         onChange={onChange}
         readOnly={!isEditable}
+        customStyleMap={styleMap}
       />
     </Box>
   );
-}
-
-/**
- * Syncs the state between the editor and the component props.
- */
-function useSyncEditorState({ value }) {
-  const componentId = useComponentId();
-  const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
-
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createWithContent(convertFromRaw(value))
-  );
-
-  const onChange = useCallback(
-    (editorState) => {
-      setEditorState(editorState);
-
-      // Store the standard editor state in the component props.
-      immerSet((state) => {
-        state.componentMap[componentId].props.content = convertToRaw(
-          editorState.getCurrentContent()
-        );
-      });
-    },
-    [componentId, immerSet]
-  );
-
-  return [editorState, onChange];
 }
 
 /**
