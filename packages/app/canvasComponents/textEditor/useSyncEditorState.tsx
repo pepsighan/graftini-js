@@ -9,15 +9,15 @@ export type EditorStateSetter = Dispatch<SetStateAction<EditorState>>;
 /**
  * Syncs the state between the editor and the component props.
  */
-export default function useSyncEditorState({
-  value,
-}): [EditorState, OnEditorStateChange, EditorStateSetter] {
+export default function useSyncEditorState(): [
+  EditorState,
+  OnEditorStateChange,
+  EditorStateSetter
+] {
   const componentId = useComponentId();
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
 
-  const [editorState, setEditorState] = useState(() =>
-    EditorState.createWithContent(convertFromRaw(value))
-  );
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
 
   const onChange = useCallback(
     (editorState: EditorState) => {

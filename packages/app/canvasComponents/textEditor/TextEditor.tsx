@@ -1,24 +1,30 @@
-import { Box } from '@material-ui/core';
+import { Text } from '@graftini/bricks';
 import { Editor } from 'draft-js';
-import React, { useRef } from 'react';
+import React, { forwardRef, MouseEventHandler, useRef } from 'react';
 import styleMap from './styleMap';
 import useFocusOnEditingMode from './useFocusOnEditingMode';
 import useRetainFocus from './useRetainFocus';
 import useSyncEditorState from './useSyncEditorState';
 
-export default function TextEditor({ value }) {
+type TextEditorProps = {
+  onMouseDown?: MouseEventHandler;
+  onClick: MouseEventHandler;
+};
+
+const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) => {
   const editorRef = useRef<Editor | null>(null);
-  const [editorState, onChange, setEditorState] = useSyncEditorState({ value });
+  const [editorState, onChange, setEditorState] = useSyncEditorState();
   const { isSelected, isEditable } = useFocusOnEditingMode({ editorRef, setEditorState });
   const [onFocus, onBlur] = useRetainFocus(setEditorState);
 
   return (
-    <Box
-      sx={{
-        cursor: isSelected ? 'text' : 'default',
-      }}
+    <Text
+      ref={ref}
       onFocus={onFocus}
       onBlur={onBlur}
+      onMouseDown={onMouseDown}
+      onClick={onClick}
+      cursor={isSelected ? 'text' : 'default'}
     >
       <Editor
         ref={editorRef}
@@ -27,6 +33,8 @@ export default function TextEditor({ value }) {
         readOnly={!isEditable}
         customStyleMap={styleMap}
       />
-    </Box>
+    </Text>
   );
-}
+});
+
+export default TextEditor;
