@@ -28,7 +28,23 @@ export default function useTextEditorState(): [EditorState, EditorStateSetter] {
     )
   );
 
+  const setEditor = useTextEditorStateSetter({ componentId });
+
+  return [editor, setEditor];
+}
+
+type UseTextEditorStateSetterOptions = {
+  componentId: string;
+};
+
+/**
+ * Hook to set the text editor state.
+ */
+export function useTextEditorStateSetter({
+  componentId,
+}: UseTextEditorStateSetterOptions): EditorStateSetter {
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
+
   const setEditor = useCallback(
     (value) => {
       immerSet((state) => {
@@ -58,5 +74,5 @@ export default function useTextEditorState(): [EditorState, EditorStateSetter] {
     [componentId, immerSet]
   );
 
-  return [editor, setEditor];
+  return setEditor;
 }

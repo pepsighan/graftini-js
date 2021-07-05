@@ -9,6 +9,7 @@ import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
 import { TextComponentProps } from './Text';
 import { RGBA, FontSize as FontSizeType, FontWeight, TextAlign } from '@graftini/bricks';
+import { useTextEditorStateSetter } from './textEditor/useTextEditorState';
 
 type TextOptionsFields = TextComponentProps & {
   color?: RGBA;
@@ -20,14 +21,24 @@ type TextOptionsFields = TextComponentProps & {
 
 export default function TextOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
+  const setTextEditor = useTextEditorStateSetter({ componentId });
 
   return (
     <CF
       componentId={componentId}
-      onSync={useCallback((props, state) => {
-        // Only name is to be paste as is to the component prop.
-        props.name = state.name;
-      }, [])}
+      onSync={useCallback(
+        (props, state) => {
+          // Only name is to be paste as is to the component prop.
+          props.name = state.name;
+
+          // Update the text based on the selection made for the rest of the
+          // props.
+          setTextEditor((editorState) => {
+            return editorState;
+          });
+        },
+        [setTextEditor]
+      )}
     >
       <Stack spacing={2} mt={2}>
         <TextAlignInput name="textAlign" />
