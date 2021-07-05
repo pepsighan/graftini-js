@@ -1,9 +1,13 @@
-import { useComponentId, useEditorStore } from '@graftini/graft';
+import { useEditorStore } from '@graftini/graft';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { useCallback } from 'react';
 
 type SetterCallback = (state: EditorState) => EditorState;
 export type EditorStateSetter = (state: EditorState | SetterCallback) => void;
+
+type UseTextEditorStateOptions = {
+  componentId: string;
+};
 
 /**
  * Uses the graft editor store as the place to store the text editor state as-is.
@@ -13,9 +17,9 @@ export type EditorStateSetter = (state: EditorState | SetterCallback) => void;
  * Why we do it this way? So that we can manipulate the text editor state anywhere
  * within the Editor Context (for ex: from the sidebar).
  */
-export default function useTextEditorState(): [EditorState, EditorStateSetter] {
-  const componentId = useComponentId();
-
+export default function useTextEditorState({
+  componentId,
+}: UseTextEditorStateOptions): [EditorState, EditorStateSetter] {
   const editor = useEditorStore(
     useCallback(
       (state) =>
@@ -33,16 +37,12 @@ export default function useTextEditorState(): [EditorState, EditorStateSetter] {
   return [editor, setEditor];
 }
 
-type UseTextEditorStateSetterOptions = {
-  componentId: string;
-};
-
 /**
  * Hook to set the text editor state.
  */
 export function useTextEditorStateSetter({
   componentId,
-}: UseTextEditorStateSetterOptions): EditorStateSetter {
+}: UseTextEditorStateOptions): EditorStateSetter {
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
 
   const setEditor = useCallback(

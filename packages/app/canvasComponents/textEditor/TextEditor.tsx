@@ -1,4 +1,5 @@
 import { Text } from '@graftini/bricks';
+import { useComponentId } from '@graftini/graft';
 import { Editor } from 'draft-js';
 import React, { forwardRef, MouseEventHandler, useRef } from 'react';
 import styleMap from './styleMap';
@@ -14,7 +15,9 @@ type TextEditorProps = {
 
 const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) => {
   const editorRef = useRef<Editor | null>(null);
-  const [editorState, setEditorState] = useTextEditorState();
+  const [editorState, setEditorState] = useTextEditorState({
+    componentId: useComponentId(),
+  });
   const [onFocus, onBlur] = useRetainFocusOnText(setEditorState);
 
   useFocusOnEditingMode({ editorRef, setEditorState });

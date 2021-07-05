@@ -1,5 +1,8 @@
+import { FontSize as FontSizeType, FontWeight, RGBA, TextAlign } from '@graftini/bricks';
+import { useEditorStore } from '@graftini/graft';
 import { Divider, MenuItem, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
+import { EditorState, convertFromRaw } from 'draft-js';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -8,10 +11,10 @@ import SelectInput from './form/SelectInput';
 import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
 import { TextComponentProps } from './Text';
-import { RGBA, FontSize as FontSizeType, FontWeight, TextAlign } from '@graftini/bricks';
 import { useTextEditorStateSetter } from './textEditor/useTextEditorState';
 
-type TextOptionsFields = TextComponentProps & {
+type TextOptionsFields = {
+  name?: string;
   color?: RGBA;
   fontSize?: FontSizeType;
   fontFamily?: string;
@@ -21,11 +24,21 @@ type TextOptionsFields = TextComponentProps & {
 
 export default function TextOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
+
+  const textSelectionId = useTextSelectionId(componentId);
   const setTextEditor = useTextEditorStateSetter({ componentId });
 
+  // Update the form when the text selection changes.
   return (
     <CF
+      key={textSelectionId}
       componentId={componentId}
+      onInitialize={useCallback(
+        (state) => ({
+          name: state.name,
+        }),
+        []
+      )}
       onSync={useCallback(
         (props, state) => {
           // Only name is to be paste as is to the component prop.
@@ -68,5 +81,23 @@ export default function TextOptions({ componentId }: OptionsProps) {
         <ColorPicker name="color" label="Color" labelWidth="4.5rem" />
       </Stack>
     </CF>
+  );
+}
+
+function useTextSelectionId(componentId: string): string {
+  return useEditorStore(
+    useCallback(
+      (state) =>
+        (
+          state.componentMap[componentId].props.editor ??
+          // If the editor is yet not created, create it from raw.
+          EditorState.createWithContent(
+            convertFromRaw(state.componentMap[componentId].props.content)
+          )
+        )
+          .getSelection()
+          .first(),
+      [componentId]
+    )
   );
 }
