@@ -22,7 +22,7 @@ export default function ColorPicker({ name, label = null }) {
         <>
           <TextField
             onClick={onOpen}
-            value={rgbaToCss({ ...field.value, a: null })}
+            value={field.value ? rgbaToCss({ ...field.value, a: null }) : ''}
             InputProps={{
               readOnly: true,
               startAdornment: (
