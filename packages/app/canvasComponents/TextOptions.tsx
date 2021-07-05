@@ -22,6 +22,14 @@ type TextOptionsFields = {
   textAlign?: TextAlign;
 };
 
+export const textDefaultOptions: TextOptionsFields = {
+  color: { r: 0, g: 0, b: 0, a: 1 },
+  fontFamily: 'sans-serif',
+  fontSize: { size: 1, unit: 'rem' },
+  fontWeight: 400,
+  textAlign: 'left',
+};
+
 export default function TextOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
 
@@ -35,6 +43,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
       componentId={componentId}
       onInitialize={useCallback(
         (state) => ({
+          ...textDefaultOptions,
           name: state.name,
         }),
         []
