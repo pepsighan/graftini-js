@@ -78,7 +78,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
           <MenuItem value={800}>Extra Bold</MenuItem>
           <MenuItem value={900}>Extra Extra Bold</MenuItem>
         </SelectInput>
-        <ColorPicker name="color" label="Color" labelWidth="4.5rem" />
+        <ColorPicker name="color" label="Color" />
       </Stack>
     </CF>
   );

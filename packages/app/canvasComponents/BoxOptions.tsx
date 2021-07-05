@@ -192,8 +192,8 @@ function LayoutSection() {
   return (
     <>
       <Typography variant="subtitle2">Layout</Typography>
-      <SizeInput name="widthRaw" label="Width" isWidth />
-      <SizeInput name="heightRaw" label="Height" isWidth={false} />
+      <SizeInput name="widthRaw" label="Width" />
+      <SizeInput name="heightRaw" label="Height" />
       <SizeLimitInput name="minWidthRaw" label="Min W" />
       <SizeLimitInput name="maxWidthRaw" label="Max W" />
       <SizeLimitInput name="minHeightRaw" label="Min H" />

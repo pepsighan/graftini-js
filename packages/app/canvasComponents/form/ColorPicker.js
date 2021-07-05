@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
 
-export default function ColorPicker({ name, label = null, labelWidth = '14' }) {
+export default function ColorPicker({ name, label = null }) {
   const { control } = useFormContext();
   const [open, setOpen] = useState(null);
 
