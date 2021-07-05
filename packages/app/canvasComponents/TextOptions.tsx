@@ -1,5 +1,5 @@
 import { FontSize as FontSizeType, FontWeight, RGBA, TextAlign } from '@graftini/bricks';
-import { useEditorStore } from '@graftini/graft';
+import { ComponentMap, useEditorStore, useEditorStoreApi } from '@graftini/graft';
 import { Divider, MenuItem, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
 import { EditorState, convertFromRaw } from 'draft-js';
@@ -33,6 +33,8 @@ export const textDefaultOptions: TextOptionsFields = {
 export default function TextOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
 
+  const { getState } = useEditorStoreApi();
+
   const textSelectionId = useTextSelectionId(componentId);
   const setTextEditor = useTextEditorStateSetter({ componentId });
 
@@ -42,11 +44,15 @@ export default function TextOptions({ componentId }: OptionsProps) {
       key={textSelectionId}
       componentId={componentId}
       onInitialize={useCallback(
-        (state) => ({
-          ...textDefaultOptions,
-          name: state.name,
-        }),
-        []
+        (state) => {
+          const props = editorState(getState().componentMap, componentId);
+
+          return {
+            ...textDefaultOptions,
+            name: state.name,
+          };
+        },
+        [componentId, getState]
       )}
       onSync={useCallback(
         (props, state) => {
@@ -96,17 +102,16 @@ export default function TextOptions({ componentId }: OptionsProps) {
 function useTextSelectionId(componentId: string): string {
   return useEditorStore(
     useCallback(
-      (state) =>
-        (
-          state.componentMap[componentId].props.editor ??
-          // If the editor is yet not created, create it from raw.
-          EditorState.createWithContent(
-            convertFromRaw(state.componentMap[componentId].props.content)
-          )
-        )
-          .getSelection()
-          .first(),
+      (state) => editorState(state.componentMap, componentId).getSelection().first(),
       [componentId]
     )
+  );
+}
+
+function editorState(componentMap: ComponentMap, componentId: string): EditorState {
+  return (
+    componentMap[componentId].props.editor ??
+    // If the editor is yet not created, create it from raw.
+    EditorState.createWithContent(convertFromRaw(componentMap[componentId].props.content))
   );
 }
