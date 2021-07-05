@@ -24,6 +24,7 @@
     "@mdi/react": "^1.5.0",
     "@modulz/radix-icons": "^4.0.0",
     "@next/bundle-analyzer": "^11.0.0",
+    "draft-js": "^0.11.7",
     "firebase": "^8.6.5",
     "framer-motion": "^4.1.11",
     "graphql": "^15.5.0",
@@ -38,12 +39,11 @@
     "react-frame-component": "^5.1.0",
     "react-hook-form": "7.8.8",
     "react-use": "^17.2.4",
-    "slate": "^0.63.0",
-    "slate-react": "^0.65.2",
     "zod": "^3.2.0",
     "zustand": "^3.5.2"
   },
   "devDependencies": {
+    "@types/draft-js": "^0.11.3",
     "@types/lodash-es": "^4.17.4",
     "@types/node": "^15.12.2",
     "@types/react": "^17.0.11",

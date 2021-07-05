@@ -1,86 +1,90 @@
 /** @jsxImportSource @emotion/react */
-import { FontSize, FontWeight, RGBA, Text as Txt, TextAlign } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
-import { forwardRef, MouseEvent, useCallback } from 'react';
-import { Descendant } from 'slate';
-import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
+import { RawDraftContentState } from 'draft-js';
+import { forwardRef, MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useDesignerState, useDesignerStateApi, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
+import { TextSelectionProvider } from './textEditor/textSelection';
 
 export type TextComponentProps = {
   name?: string;
-  text: Descendant[];
-  color?: RGBA;
-  fontSize?: FontSize;
-  fontFamily?: string;
-  fontWeight?: FontWeight;
-  textAlign?: TextAlign;
+  content: RawDraftContentState;
 };
 
-const Text: GraftComponent<TextComponentProps> = forwardRef(
-  ({ text, onMouseDown, ...rest }, ref) => {
-    const componentId = useComponentId();
-    const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
-    const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
+const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, ref) => {
+  const componentId = useComponentId();
+  const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+  const isDraggingDisabled = useIsDraggingDisabled();
 
-    const isEditable = useDesignerState(
-      useCallback(
-        (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled,
-        [componentId]
-      )
-    );
+  const onEnableTextEditing = useEnableTextEditing({ componentId });
 
-    const isDraggingDisabled = useIsDraggingDisabled();
+  const onClick = useCallback(
+    (ev: MouseEvent) => {
+      ev.stopPropagation();
+      onEnableTextEditing();
+      return selectComponent(componentId);
+    },
+    [componentId, onEnableTextEditing, selectComponent]
+  );
 
-    const onClick = useCallback(
-      (ev: MouseEvent) => {
-        ev.stopPropagation();
-        return selectComponent(componentId);
+  return (
+    // The text component keeps on changing with changing props.
+    // The text editor does not need to update to those extra props.
+    <>
+      {useMemo(
+        () => (
+          <TextSelectionProvider>
+            <TextEditor
+              ref={ref}
+              onMouseDown={!isDraggingDisabled ? onMouseDown : null}
+              onClick={onClick}
+            />
+          </TextSelectionProvider>
+        ),
+        [isDraggingDisabled, onClick, onMouseDown, ref]
+      )}
+    </>
+  );
+});
+
+/**
+ * Enables editing text only if the same component is clicked twice.
+ */
+function useEnableTextEditing({ componentId }) {
+  const clickCount = useRef(0);
+  const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
+
+  const { subscribe } = useDesignerStateApi();
+
+  useEffect(() => {
+    return subscribe(
+      (isSelected) => {
+        if (!isSelected) {
+          // Reset the counter once its no longer selected.
+          clickCount.current = 0;
+        }
       },
-      [componentId, selectComponent]
+      (state) => state.selectedComponentId === componentId
     );
+  }, [componentId, subscribe]);
 
-    // Enable editing.
-    const onDoubleClick = useCallback(() => {
+  return useCallback(() => {
+    clickCount.current += 1;
+    if (clickCount.current >= 2) {
+      // If the same component is clicked twice, start editing text.
       startEditingText();
-    }, [startEditingText]);
-
-    const { text: textDefault, ...defaultRest } = Text.graftOptions.defaultProps;
-
-    // Merge the incoming props with the default props so that any new props introduced in
-    // the future get supported easily for existing projects.
-    const textProps = {
-      ...defaultRest,
-      ...rest,
-    };
-
-    return (
-      <Txt
-        ref={ref}
-        {...textProps}
-        onMouseDown={!isDraggingDisabled ? onMouseDown : null}
-        onClick={onClick}
-        onDoubleClick={onDoubleClick}
-      >
-        <TextEditor value={text ?? textDefault} isEditable={isEditable} />
-      </Txt>
-    );
-  }
-);
+    }
+  }, [startEditingText]);
+}
 
 Text.graftOptions = {
-  // The default props defines all the props that the component can accept exhaustively.
-  // This field is used by the update options logic.
   defaultProps: {
     name: 'Text',
-    color: { r: 0, g: 0, b: 0, a: 1 },
-    text: [{ type: 'paragraph', children: [{ text: 'Text' }] }] as any, // The type of the lib is wrong.
-    fontSize: {
-      size: 16,
-      unit: 'px',
+    // The standard format for DraftJS.
+    content: {
+      blocks: [],
+      entityMap: {},
     },
-    fontFamily: 'sans-serif',
-    fontWeight: 400, // normal weight.
-    textAlign: 'left',
   },
 };
 

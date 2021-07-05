@@ -1,11 +1,15 @@
 /** @jsxImportSource @emotion/react */
 import { CSSObject } from '@emotion/react';
-import { ElementType, forwardRef, MouseEventHandler, ReactNode } from 'react';
-import { DragProps, dragProps, PointerEvents } from './box';
+import { ElementType, FocusEventHandler, forwardRef, MouseEventHandler, ReactNode } from 'react';
+import { DragProps, dragProps, EditorProps } from './box';
 import { RGBA, rgbaToCss } from './colors';
 import TextBody, { Content } from './textBody';
 
-export type TextProps = BaseTextProps & DragProps & TextInteractionStyles & TextInteractionProps;
+export type TextProps = BaseTextProps &
+  DragProps &
+  TextInteractionStyles &
+  EditorTextInteractionProps &
+  EditorProps;
 
 export type BaseTextProps = {
   tag?: string;
@@ -30,12 +34,13 @@ export type FontSizeUnit = 'px' | 'rem';
 export type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
 export type TextInteractionStyles = {
-  pointerEvents?: PointerEvents;
+  cursor?: string;
 };
 
-export type TextInteractionProps = {
+export type EditorTextInteractionProps = {
   onClick?: MouseEventHandler;
-  onDoubleClick?: MouseEventHandler;
+  onFocus?: FocusEventHandler;
+  onBlur?: FocusEventHandler;
 };
 
 const Text = forwardRef(({ text, children, ...rest }: TextProps, ref) => {
@@ -44,15 +49,15 @@ const Text = forwardRef(({ text, children, ...rest }: TextProps, ref) => {
   return (
     <Component
       ref={ref}
-      {...interactionProps(rest)}
+      {...editorTextInteractionProps(rest)}
       {...dragProps(rest)}
       css={{
         // Append -gr in class names rather than -Text.
         label: 'gr',
         display: rest.displayNone ? 'none' : rest.displayInline ? 'inline' : 'block',
         width: '100%',
-        pointerEvents: rest.pointerEvents,
         ...baseStyles(rest),
+        ...textInteractionStyles(rest),
       }}
     >
       {/* If children is provided render it. It may be a content editor. */}
@@ -78,11 +83,25 @@ function baseStyles({
   };
 }
 
-function interactionProps({ onClick, onDoubleClick }: TextInteractionProps): any {
+function textInteractionStyles({ cursor }: TextInteractionStyles): CSSObject {
   return {
-    onClick,
-    onDoubleClick,
+    cursor,
   };
+}
+
+function editorTextInteractionProps({
+  isEditor,
+  onClick,
+  onFocus,
+  onBlur,
+}: EditorTextInteractionProps & EditorProps): any {
+  return isEditor
+    ? {
+        onClick,
+        onFocus,
+        onBlur,
+      }
+    : {};
 }
 
 export default Text;

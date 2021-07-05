@@ -1,5 +1,5 @@
-import { Box, GlobalStyles, useTheme } from '@material-ui/core';
 import { Editor } from '@graftini/graft';
+import { Box, GlobalStyles, useTheme } from '@material-ui/core';
 import components from 'canvasComponents';
 import Root from 'canvasComponents/Root';
 import Canvas from 'components/editor/Canvas';
@@ -9,9 +9,9 @@ import RightSidebar from 'components/editor/RightSidebar';
 import useSyncDesignerStateToBackend from 'hooks/useSyncDesignerStateToBackend';
 import { useCallback, useMemo } from 'react';
 import { useDesignerState } from 'store/designer';
+import { navBarHeight } from 'utils/constants';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
 import SyncEditorAndDesignerState from './SyncEditorAndDesignerState';
-import { navBarHeight } from 'utils/constants';
 
 export default function Designer({ projectId }) {
   const currentPageId = useDesignerState(useCallback((state) => state.currentOpenPage, []));

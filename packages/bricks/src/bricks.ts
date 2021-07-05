@@ -39,11 +39,11 @@ export { default as Reset } from './reset';
 export {
   BaseTextProps,
   default as Text,
+  EditorTextInteractionProps,
   FontSize,
   FontSizeUnit,
   FontWeight,
   TextAlign,
-  TextInteractionProps,
   TextInteractionStyles,
   TextProps,
 } from './text';
