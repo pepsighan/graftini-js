@@ -8,8 +8,15 @@ import SelectInput from './form/SelectInput';
 import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
 import { TextComponentProps } from './Text';
+import { RGBA, FontSize as FontSizeType, FontWeight, TextAlign } from '@graftini/bricks';
 
-type TextOptionsFields = TextComponentProps;
+type TextOptionsFields = TextComponentProps & {
+  color?: RGBA;
+  fontSize?: FontSizeType;
+  fontFamily?: string;
+  fontWeight?: FontWeight;
+  textAlign?: TextAlign;
+};
 
 export default function TextOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
@@ -18,10 +25,8 @@ export default function TextOptions({ componentId }: OptionsProps) {
     <CF
       componentId={componentId}
       onSync={useCallback((props, state) => {
-        // Copy the state to the props as-is.
-        Object.keys(state).forEach((key) => {
-          props[key] = state[key];
-        });
+        // Only name is to be paste as is to the component prop.
+        props.name = state.name;
       }, [])}
     >
       <Stack spacing={2} mt={2}>
