@@ -2,7 +2,7 @@ import { EditorState, Modifier } from 'draft-js';
 import { createContext, PropsWithChildren, useCallback, useContext } from 'react';
 import { useGetSet } from 'react-use';
 import { StyleOption } from './styleMap';
-import { EditorStateSetter } from './useSyncEditorState';
+import { EditorStateSetter } from './useTextEditorState';
 
 const TextSelectionContext = createContext<ReturnType<typeof useGetSet> | null>(null);
 

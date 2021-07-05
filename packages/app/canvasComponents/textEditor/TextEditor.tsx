@@ -5,7 +5,7 @@ import styleMap from './styleMap';
 import useEditingState from './useEditingState';
 import useFocusOnEditingMode from './useFocusOnEditingMode';
 import useRetainFocusOnText from './useRetainFocusOnText';
-import useSyncEditorState from './useSyncEditorState';
+import useTextEditorState from './useTextEditorState';
 
 type TextEditorProps = {
   onMouseDown?: MouseEventHandler;
@@ -14,7 +14,7 @@ type TextEditorProps = {
 
 const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) => {
   const editorRef = useRef<Editor | null>(null);
-  const [editorState, onChange, setEditorState] = useSyncEditorState();
+  const [editorState, setEditorState] = useTextEditorState();
   const [onFocus, onBlur] = useRetainFocusOnText(setEditorState);
 
   useFocusOnEditingMode({ editorRef, setEditorState });
@@ -33,7 +33,7 @@ const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) =
       <Editor
         ref={editorRef}
         editorState={editorState}
-        onChange={onChange}
+        onChange={setEditorState}
         customStyleMap={styleMap}
         readOnly={!isSelected}
       />
