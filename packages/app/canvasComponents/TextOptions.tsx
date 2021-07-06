@@ -2,7 +2,7 @@ import { FontSize as FontSizeType, FontWeight, RGBA, TextAlign } from '@graftini
 import { ComponentMap, useEditorStore, useEditorStoreApi } from '@graftini/graft';
 import { Divider, MenuItem, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
-import { EditorState, convertFromRaw } from 'draft-js';
+import { convertFromRaw, EditorState } from 'draft-js';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
@@ -11,6 +11,7 @@ import SelectInput from './form/SelectInput';
 import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
 import { TextComponentProps } from './Text';
+import { getTextFormValues } from './textEditor/useStyleMap';
 import { useTextEditorStateSetter } from './textEditor/useTextEditorState';
 
 type TextOptionsFields = {
@@ -45,11 +46,14 @@ export default function TextOptions({ componentId }: OptionsProps) {
       componentId={componentId}
       onInitialize={useCallback(
         (state) => {
-          const editorState = getEditorState(getState().componentMap, componentId);
+          const formFields = getTextFormValues(
+            getState().componentMap[componentId].props as TextComponentProps
+          );
 
           return {
             ...textDefaultOptions,
             name: state.name,
+            ...formFields,
           };
         },
         [componentId, getState]
