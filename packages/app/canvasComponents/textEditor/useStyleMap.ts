@@ -2,7 +2,7 @@ import { useEditorStore } from '@graftini/graft';
 import { TextComponentProps } from 'canvasComponents/Text';
 import { DraftStyleMap } from 'draft-js';
 import { useCallback } from 'react';
-import { styleMap } from './styleMap';
+import { addStyleOption, dynamicStyleOptions, styleMap, StyleOption } from './styleMap';
 import { getTextEditorState } from './useTextEditorState';
 
 type UseStyleMapOptions = {
@@ -22,6 +22,9 @@ export default function useStyleMap({ componentId }: UseStyleMapOptions): DraftS
   );
 }
 
+/**
+ * Gets the style map from the props of the text component.
+ */
 function getCustomStyleMap(props: TextComponentProps): DraftStyleMap {
   if (props.customStyleMap) {
     return props.customStyleMap;
@@ -29,7 +32,23 @@ function getCustomStyleMap(props: TextComponentProps): DraftStyleMap {
 
   const defaultMap = { ...styleMap };
   const editorState = getTextEditorState(props);
+
   // Add the dynamic styles based on the text editor state.
+  const inlineStyle = editorState.getCurrentInlineStyle();
+  inlineStyle.forEach((styleOption) => {
+    // Split the style option into its two parts. Left side is the option itself and
+    // right side is the value of the option.
+    const split = styleOption.split('=', 2);
+
+    if (!dynamicStyleOptions.includes(split[0] as any)) {
+      // The style is not dynamic.
+      return;
+    }
+
+    const style = split[1];
+    // Add the style option to the map.
+    addStyleOption(defaultMap, split[0] as StyleOption, style);
+  });
 
   return defaultMap;
 }

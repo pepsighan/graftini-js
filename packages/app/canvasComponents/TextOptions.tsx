@@ -45,7 +45,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
       componentId={componentId}
       onInitialize={useCallback(
         (state) => {
-          const props = editorState(getState().componentMap, componentId);
+          const editorState = getEditorState(getState().componentMap, componentId);
 
           return {
             ...textDefaultOptions,
@@ -102,13 +102,13 @@ export default function TextOptions({ componentId }: OptionsProps) {
 function useTextSelectionId(componentId: string): string {
   return useEditorStore(
     useCallback(
-      (state) => editorState(state.componentMap, componentId).getSelection().first(),
+      (state) => getEditorState(state.componentMap, componentId).getSelection().first(),
       [componentId]
     )
   );
 }
 
-function editorState(componentMap: ComponentMap, componentId: string): EditorState {
+function getEditorState(componentMap: ComponentMap, componentId: string): EditorState {
   return (
     componentMap[componentId].props.editor ??
     // If the editor is yet not created, create it from raw.

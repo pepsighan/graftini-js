@@ -2,6 +2,9 @@ import { DraftStyleMap } from 'draft-js';
 import { CSSProperties } from 'react';
 import theme from 'utils/theme';
 
+/**
+ * All the supported inline style keys.
+ */
 export enum StyleOption {
   TextSelection = 'TEXT_SELECTION',
   FontSize = 'FONT_SIZE',
@@ -11,6 +14,21 @@ export enum StyleOption {
   TextAlignment = 'TEXT_ALIGNMENT',
 }
 
+/**
+ * The style options that can be dynamically set.
+ */
+export const dynamicStyleOptions = [
+  StyleOption.FontSize,
+  StyleOption.FontFamily,
+  StyleOption.FontWeight,
+  StyleOption.TextColor,
+  StyleOption.TextAlignment,
+];
+
+/**
+ * The style map that lists the styles that need to be applied for a particular
+ * option.
+ */
 export const styleMap: DraftStyleMap = {
   [StyleOption.TextSelection]: {
     backgroundColor: theme.palette.primary[200],
