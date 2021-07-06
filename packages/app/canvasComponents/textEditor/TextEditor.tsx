@@ -3,10 +3,10 @@ import { useComponentId } from '@graftini/graft';
 import { textDefaultOptions } from 'canvasComponents/TextOptions';
 import { Editor } from 'draft-js';
 import React, { forwardRef, MouseEventHandler, useRef } from 'react';
-import styleMap from './styleMap';
 import useEditingState from './useEditingState';
 import useFocusOnEditingMode from './useFocusOnEditingMode';
 import useRetainFocusOnText from './useRetainFocusOnText';
+import useStyleMap from './useStyleMap';
 import useTextEditorState from './useTextEditorState';
 
 type TextEditorProps = {
@@ -16,13 +16,17 @@ type TextEditorProps = {
 
 const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) => {
   const editorRef = useRef<Editor | null>(null);
+
+  const componentId = useComponentId();
   const [editorState, setEditorState] = useTextEditorState({
-    componentId: useComponentId(),
+    componentId,
   });
   const [onFocus, onBlur] = useRetainFocusOnText(setEditorState);
 
   useFocusOnEditingMode({ editorRef, setEditorState });
   const { isSelected, isEditing } = useEditingState();
+
+  const styleMap = useStyleMap({ componentId });
 
   return (
     <Text

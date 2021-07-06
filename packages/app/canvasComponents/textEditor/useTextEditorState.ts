@@ -1,4 +1,5 @@
 import { useEditorStore } from '@graftini/graft';
+import { TextComponentProps } from 'canvasComponents/Text';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { useCallback } from 'react';
 
@@ -22,12 +23,7 @@ export default function useTextEditorState({
 }: UseTextEditorStateOptions): [EditorState, EditorStateSetter] {
   const editor = useEditorStore(
     useCallback(
-      (state) =>
-        state.componentMap[componentId].props.editor ??
-        // If the editor is yet not created, create it from raw.
-        EditorState.createWithContent(
-          convertFromRaw(state.componentMap[componentId].props.content)
-        ),
+      (state) => getTextEditorState(state.componentMap[componentId].props as TextComponentProps),
       [componentId]
     )
   );
@@ -48,18 +44,13 @@ export function useTextEditorStateSetter({
   const setEditor = useCallback(
     (value) => {
       immerSet((state) => {
-        const props = state.componentMap[componentId].props;
+        const props = state.componentMap[componentId].props as TextComponentProps;
         let textEditor: EditorState;
 
         // If the value is a callback, then pass the existing editor state which will
         // return an updated editor.
         if (typeof value === 'function') {
-          textEditor = value(
-            props.editor ??
-              EditorState.createWithContent(
-                convertFromRaw(state.componentMap[componentId].props.content)
-              )
-          );
+          textEditor = value(getTextEditorState(props));
         } else {
           // Otherwise the value is the editor state which is to be stored.
           textEditor = value;
@@ -75,4 +66,15 @@ export function useTextEditorStateSetter({
   );
 
   return setEditor;
+}
+
+/**
+ * Gets the text editor state from the text component props.
+ */
+export function getTextEditorState(props: TextComponentProps): EditorState {
+  return (
+    props.editor ??
+    // If the editor is yet not created, create it from raw.
+    EditorState.createWithContent(convertFromRaw(props.content))
+  );
 }
