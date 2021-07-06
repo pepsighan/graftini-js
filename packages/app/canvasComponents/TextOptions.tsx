@@ -12,7 +12,6 @@ import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
 import { TextComponentProps } from './Text';
 import { getTextFormValues } from './textEditor/useStyleMap';
-import { useTextEditorStateSetter } from './textEditor/useTextEditorState';
 
 type TextOptionsFields = {
   name?: string;
@@ -35,9 +34,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
 
   const { getState } = useEditorStoreApi();
-
   const textSelectionId = useTextSelectionId(componentId);
-  const setTextEditor = useTextEditorStateSetter({ componentId });
 
   // Update the form when the text selection changes.
   return (
@@ -58,19 +55,14 @@ export default function TextOptions({ componentId }: OptionsProps) {
         },
         [componentId, getState]
       )}
-      onSync={useCallback(
-        (props, state) => {
-          // Only name is to be paste as is to the component prop.
-          props.name = state.name;
+      onSync={useCallback((props, state) => {
+        // Only name is to be paste as is to the component prop.
+        props.name = state.name;
 
-          // Update the text based on the selection made for the rest of the
-          // props.
-          setTextEditor((editorState) => {
-            return editorState;
-          });
-        },
-        [setTextEditor]
-      )}
+        // Rest of the form state is synced directly from the form fields.
+        // We cannot do blanket update here because that would apply all the styles
+        // regardless of which the user intended to.
+      }, [])}
     >
       <Stack spacing={2} mt={2}>
         <TextAlignInput name="textAlign" />
