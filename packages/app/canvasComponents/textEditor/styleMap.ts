@@ -96,14 +96,6 @@ export function addStyleOption(styleMap: DraftStyleMap, option: StyleOption, sty
 }
 
 /**
- * Remove the dynamic style option from the style map.
- */
-export function removeStyleOption(styleMap: DraftStyleMap, option: StyleOption, style: string) {
-  const key = dynamicStyleOptionName(option, style);
-  delete styleMap[key];
-}
-
-/**
  * The form field for the given style option.
  */
 export function formField(option: StyleOption): string {
