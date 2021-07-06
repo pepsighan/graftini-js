@@ -165,7 +165,7 @@ function parseColor(color: string): RGBA {
 function parseFontSize(size: string): FontSize {
   const splits = size.split(',');
   return {
-    size: parseInt(splits[0], 10),
+    size: splits[1] === 'rem' ? parseFloat(splits[0]) : parseInt(splits[0], 10),
     unit: splits[1] as any,
   };
 }
