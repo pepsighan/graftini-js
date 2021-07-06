@@ -1,6 +1,5 @@
 import { DraftStyleMap } from 'draft-js';
 import { CSSProperties } from 'react';
-import md5 from 'md5';
 import theme from 'utils/theme';
 
 export enum StyleOption {
@@ -19,22 +18,46 @@ export const styleMap: DraftStyleMap = {
 };
 
 /**
+ * Depending on the style option, creates CSS for it.
+ */
+function styleForOption(option: StyleOption, style: string): CSSProperties {
+  switch (option) {
+    case StyleOption.FontFamily:
+      return {
+        fontFamily: style,
+      };
+    case StyleOption.FontSize:
+      return {
+        fontSize: style,
+      };
+    case StyleOption.FontWeight:
+      return {
+        fontWeight: style as any,
+      };
+    case StyleOption.TextAlignment:
+      return {
+        textAlign: style as any,
+      };
+    case StyleOption.TextColor:
+      return {
+        color: style,
+      };
+    default:
+      return {};
+  }
+}
+
+/**
  * Add the dynamic style option to the map.
  */
-export function addStyleOption(styleMap: DraftStyleMap, option: StyleOption, style: CSSProperties) {
-  const hash = md5(JSON.stringify(style));
-  styleMap[`${option}-${hash}`] = style;
+export function addStyleOption(styleMap: DraftStyleMap, option: StyleOption, style: string) {
+  styleMap[`${option}=${style}`] = styleForOption(option, style);
 }
 
 /**
  * Remove the dynamic style option from the style map.
  */
-export function removeStyleOption(
-  styleMap: DraftStyleMap,
-  option: StyleOption,
-  style: CSSProperties
-) {
-  const hash = md5(JSON.stringify(style));
-  const key = `${option}-${hash}`;
+export function removeStyleOption(styleMap: DraftStyleMap, option: StyleOption, style: string) {
+  const key = `${option}=${style}`;
   delete styleMap[key];
 }

@@ -30,7 +30,6 @@
     "graphql": "^15.5.0",
     "immer": "^9.0.3",
     "lodash-es": "^4.17.21",
-    "md5": "^2.3.0",
     "micromustache": "^8.0.3",
     "nanoid": "^3.1.22",
     "next": "11.0.0",
@@ -46,7 +45,6 @@
   "devDependencies": {
     "@types/draft-js": "^0.11.3",
     "@types/lodash-es": "^4.17.4",
-    "@types/md5": "^2.3.0",
     "@types/node": "^15.12.2",
     "@types/react": "^17.0.11",
     "@types/react-color": "^3.0.4",
