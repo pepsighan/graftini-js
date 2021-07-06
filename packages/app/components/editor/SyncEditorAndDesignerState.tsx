@@ -40,11 +40,11 @@ function cleanComponentMap(componentMap: ComponentMap): ComponentMap {
       return;
     }
 
-    // The editor, customStyleMap props are used to manipulate the text editor
-    // from anywhere in the designer page.
-    // We do not need them in the designer store (which is synced with
+    // The editor prop is used to manipulate the text editor from anywhere
+    // in the designer page.
+    // We do not need it in the designer store (which is synced with
     // the backend).
-    const { editor, customStyleMap, ...rest } = component.props;
+    const { editor, ...rest } = component.props;
     newMap[key] = {
       ...component,
       props: rest,

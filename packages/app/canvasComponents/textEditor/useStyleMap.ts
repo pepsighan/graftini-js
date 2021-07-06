@@ -2,7 +2,14 @@ import { useEditorStore } from '@graftini/graft';
 import { TextComponentProps } from 'canvasComponents/Text';
 import { DraftStyleMap } from 'draft-js';
 import { useCallback } from 'react';
-import { addStyleOption, dynamicStyleOptions, styleMap, StyleOption } from './styleMap';
+import {
+  addStyleOption,
+  dynamicStyleOptions,
+  formField,
+  formFieldValue,
+  styleMap,
+  StyleOption,
+} from './styleMap';
 import { getTextEditorState } from './useTextEditorState';
 
 type UseStyleMapOptions = {
@@ -26,10 +33,6 @@ export default function useStyleMap({ componentId }: UseStyleMapOptions): DraftS
  * Gets the style map from the props of the text component.
  */
 function getCustomStyleMap(props: TextComponentProps): DraftStyleMap {
-  if (props.customStyleMap) {
-    return props.customStyleMap;
-  }
-
   const defaultMap = { ...styleMap };
   const editorState = getTextEditorState(props);
 
@@ -51,4 +54,31 @@ function getCustomStyleMap(props: TextComponentProps): DraftStyleMap {
   });
 
   return defaultMap;
+}
+
+/**
+ * Gets the text form values for the dynamic styles. The form values are dependent
+ * on the position of the cursor and the styles under than cursor.
+ */
+export function getTextFormValues(props: TextComponentProps): any {
+  const editorState = getTextEditorState(props);
+  const inlineStyle = editorState.getCurrentInlineStyle();
+
+  const formValues = {};
+
+  inlineStyle.forEach((styleOption) => {
+    // Split the style option into its two parts. Left side is the option itself and
+    // right side is the value of the option.
+    const split = styleOption.split('=', 2);
+
+    if (!dynamicStyleOptions.includes(split[0] as any)) {
+      // The style is not dynamic.
+      return;
+    }
+
+    const style = split[1];
+    formValues[formField(split[0] as StyleOption)] = formFieldValue(split[0] as StyleOption, style);
+  });
+
+  return formValues;
 }
