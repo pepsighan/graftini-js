@@ -65,7 +65,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
       }, [])}
     >
       <Stack spacing={2} mt={2}>
-        <TextAlignInput name="textAlign" />
+        <TextAlignInput name="textAlign" componentId={componentId} />
         <Divider />
 
         <TextInput name="name" label="Label" />

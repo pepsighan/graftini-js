@@ -67,17 +67,39 @@ function styleForOption(option: StyleOption, style: string): CSSProperties {
 }
 
 /**
+ * Generates a dynamic style option name for the option and given style.
+ */
+export function dynamicStyleOptionName(option: StyleOption, style: any): string {
+  if (typeof style === 'string') {
+    // No need to transform it if it already is.
+    return `${option}=${style}`;
+  }
+
+  switch (option) {
+    case StyleOption.FontSize:
+      return `${option}=${fontSizeToString(style)}`;
+    case StyleOption.TextColor:
+      return `${option}=${colorToString(style)}`;
+    case StyleOption.FontFamily:
+    case StyleOption.FontWeight:
+    case StyleOption.TextAlignment:
+    default:
+      return `${option}=${style}`;
+  }
+}
+
+/**
  * Add the dynamic style option to the map.
  */
 export function addStyleOption(styleMap: DraftStyleMap, option: StyleOption, style: string) {
-  styleMap[`${option}=${style}`] = styleForOption(option, style);
+  styleMap[dynamicStyleOptionName(option, style)] = styleForOption(option, style);
 }
 
 /**
  * Remove the dynamic style option from the style map.
  */
 export function removeStyleOption(styleMap: DraftStyleMap, option: StyleOption, style: string) {
-  const key = `${option}=${style}`;
+  const key = dynamicStyleOptionName(option, style);
   delete styleMap[key];
 }
 

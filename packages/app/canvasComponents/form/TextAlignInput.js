@@ -5,6 +5,10 @@ import {
   TextAlignLeftIcon,
   TextAlignRightIcon,
 } from '@modulz/radix-icons';
+import { dynamicStyleOptionName, StyleOption } from 'canvasComponents/textEditor/styleMap';
+import { selectAll } from 'canvasComponents/textEditor/textSelection';
+import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
+import { EditorState, Modifier } from 'draft-js';
 import { Controller, useFormContext } from 'react-hook-form';
 
 const options = [
@@ -26,8 +30,9 @@ const options = [
   },
 ];
 
-export default function TextAlignInput({ name }) {
-  const { control } = useFormContext();
+export default function TextAlignInput({ name, componentId }) {
+  const { control, getValues } = useFormContext();
+  const setTextEditor = useTextEditorStateSetter({ componentId });
 
   return (
     <Controller
@@ -36,7 +41,32 @@ export default function TextAlignInput({ name }) {
       render={({ field }) => (
         <ToggleButtonGroup
           value={field.value}
-          onChange={(_, value) => field.onChange(value)}
+          onChange={(_, value) => {
+            const oldValue = getValues()[name];
+
+            // Update the form state. This value is only used within the form.
+            field.onChange(value);
+
+            // Update the whole text editor with the alignment. Aligment does not
+            // make sense for a sub-selection (at least for now).
+            setTextEditor((editor) => {
+              const all = selectAll(editor);
+
+              const existingAlignmentRemoved = Modifier.removeInlineStyle(
+                editor.getCurrentContent(),
+                all,
+                dynamicStyleOptionName(StyleOption.TextAlignment, oldValue)
+              );
+
+              return EditorState.createWithContent(
+                Modifier.applyInlineStyle(
+                  existingAlignmentRemoved,
+                  all,
+                  dynamicStyleOptionName(StyleOption.TextAlignment, value)
+                )
+              );
+            });
+          }}
           exclusive
           sx={{
             justifyContent: 'center',
