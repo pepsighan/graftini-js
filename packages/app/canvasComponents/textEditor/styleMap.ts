@@ -1,7 +1,7 @@
+import { FontSize, RGBA, rgbaToCss } from '@graftini/bricks';
 import { DraftStyleMap } from 'draft-js';
 import { CSSProperties } from 'react';
 import theme from 'utils/theme';
-import { FontSize, RGBA } from '@graftini/bricks';
 
 /**
  * All the supported inline style keys.
@@ -117,6 +117,20 @@ export function formFieldValue(option: StyleOption, style: string): any {
     default:
       return style;
   }
+}
+
+/**
+ * Convert color to a style accepted by style map.
+ */
+export function colorToString(color: RGBA): string {
+  return rgbaToCss(color);
+}
+
+/**
+ * Convert font size to a style accepted by style map.
+ */
+export function fontSizeToString(size: FontSize): string {
+  return `${size.size},${size.unit}`;
 }
 
 /**
