@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { GraftComponent, useComponentId } from '@graftini/graft';
-import { EditorState, RawDraftContentState } from 'draft-js';
+import { DraftStyleMap, EditorState, RawDraftContentState } from 'draft-js';
 import { forwardRef, MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
@@ -10,6 +10,7 @@ export type TextComponentProps = {
   name?: string;
   content: RawDraftContentState;
   editor?: EditorState;
+  customStyleMap?: DraftStyleMap;
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, ref) => {
@@ -94,6 +95,11 @@ Text.graftOptions = {
     // to manipulate it anywhere within the Editor context (for example
     // from the sidebar).
     editor: null,
+    // This is the style map that is used by the editor. This is specific
+    // to each editor and is used on the client only similar to editor.
+    // Since this needs to be dynamic based on the style selections of the
+    // user, we have placed it here.
+    customStyleMap: null,
   },
 };
 
