@@ -56,10 +56,8 @@ export function useTextEditorStateSetter({
           textEditor = value;
         }
 
-        state.componentMap[componentId].props.editor = textEditor;
-        state.componentMap[componentId].props.content = convertToRaw(
-          textEditor.getCurrentContent()
-        );
+        props.editor = textEditor;
+        props.content = convertToRaw(textEditor.getCurrentContent());
       });
     },
     [componentId, immerSet]
