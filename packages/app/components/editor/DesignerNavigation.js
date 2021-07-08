@@ -85,16 +85,19 @@ function DrawButton({ label, icon, component, isCanvas, childAppendDirection }) 
     isCanvas,
     childAppendDirection,
     // Transform the drawn size to the one usable by the box.
-    transformSize: (width, height) => ({
-      width: {
-        size: width,
-        unit: 'px',
-      },
-      height: {
-        size: height,
-        unit: 'px',
-      },
-    }),
+    transformSize: (width, height) =>
+      component === 'Box'
+        ? {
+            width: {
+              size: width,
+              unit: 'px',
+            },
+            height: {
+              size: height,
+              unit: 'px',
+            },
+          }
+        : {}, // No need to add width and height for Text.
   });
 
   const onClick = useCallback(

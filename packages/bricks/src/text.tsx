@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { CSSObject } from '@emotion/react';
+import { RawDraftContentState } from 'draft-js';
 import { ElementType, FocusEventHandler, forwardRef, MouseEventHandler, ReactNode } from 'react';
 import { DragProps, dragProps, EditorProps } from './box';
 import { RGBA, rgbaToCss } from './colors';
-import TextBody, { Content } from './textBody';
+import TextBody from './textBody';
 
 export type TextProps = BaseTextProps &
   DragProps &
@@ -20,7 +21,7 @@ export type BaseTextProps = {
   textAlign?: TextAlign;
   displayNone?: boolean;
   displayInline?: boolean;
-  text?: Content[];
+  content?: RawDraftContentState;
   children?: ReactNode;
 };
 
@@ -43,7 +44,7 @@ export type EditorTextInteractionProps = {
   onBlur?: FocusEventHandler;
 };
 
-const Text = forwardRef(({ text, children, ...rest }: TextProps, ref) => {
+const Text = forwardRef(({ content, children, ...rest }: TextProps, ref) => {
   const Component = (rest.tag ?? 'div') as ElementType;
 
   return (
@@ -61,7 +62,7 @@ const Text = forwardRef(({ text, children, ...rest }: TextProps, ref) => {
       }}
     >
       {/* If children is provided render it. It may be a content editor. */}
-      {children ?? <TextBody content={text ?? []} />}
+      {children ?? (content ? <TextBody content={content} /> : null)}
     </Component>
   );
 });
