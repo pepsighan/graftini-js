@@ -207,7 +207,7 @@ export function applyStyleOption(
 /**
  * Removes any existing styles in the given selection region of the StyleOption kind.
  */
-function removeExistingStyle(
+export function removeExistingStyle(
   editor: EditorState,
   selection: SelectionState,
   styleOption: StyleOption

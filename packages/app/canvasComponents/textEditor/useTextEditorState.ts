@@ -3,6 +3,8 @@ import { TextComponentProps } from 'canvasComponents/Text';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { useCallback } from 'react';
 import { useDesignerStateApi } from 'store/designer';
+import { removeExistingStyle, StyleOption } from './styleMap';
+import { selectAll } from './textSelection';
 
 type SetterCallback = (state: EditorState) => EditorState;
 export type EditorStateSetter = (state: EditorState | SetterCallback) => void;
@@ -58,7 +60,11 @@ export function useTextEditorStateSetter({
         }
 
         props.editor = textEditor;
-        props.content = convertToRaw(textEditor.getCurrentContent());
+        // Convert to raw. But also do not sync the text selection. It is only for the
+        // frontend.
+        props.content = convertToRaw(
+          removeExistingStyle(textEditor, selectAll(textEditor), StyleOption.TextSelection)
+        );
       });
     },
     [componentId, immerSet]
