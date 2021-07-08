@@ -62,13 +62,19 @@ function getCustomStyleMap(props: TextComponentProps): DraftStyleMap {
  * Gets the text form values for the dynamic styles. The form values are dependent
  * on the position of the cursor and the styles under than cursor.
  */
+// TODO: Show the form value as `-` if there are multiple values for the same field
+// in a given selection.
 export function getTextFormValues(props: TextComponentProps): any {
   const editorState = getTextEditorState(props);
-  const inlineStyle = editorState.getCurrentInlineStyle();
+  // The selection may be provided directly as [textSelection] if the text
+  // editor is not in focus. Otherwise if the editor is active it can be fetched
+  // from the editor state itself.
+  const selection = props.textSelection ?? editorState.getSelection();
+  const inlineStyles = stylesInSelection(editorState, selection);
 
   const formValues = {};
 
-  inlineStyle.forEach((styleOption) => {
+  inlineStyles.forEach((styleOption) => {
     // Split the style option into its two parts. Left side is the option itself and
     // right side is the value of the option.
     const split = styleOption.split('=', 2);
