@@ -40,11 +40,11 @@ function cleanComponentMap(componentMap: ComponentMap): ComponentMap {
       return;
     }
 
-    // The editor prop is used to manipulate the text editor from anywhere
+    // The editor & textSelection props are used to manipulate the text editor from anywhere
     // in the designer page.
-    // We do not need it in the designer store (which is synced with
+    // We do not need them in the designer store (which is synced with
     // the backend).
-    const { editor, ...rest } = component.props;
+    const { editor, textSelection, ...rest } = component.props;
     newMap[key] = {
       ...component,
       props: rest,

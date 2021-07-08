@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { GraftComponent, useComponentId } from '@graftini/graft';
-import { EditorState, RawDraftContentState } from 'draft-js';
+import { EditorState, RawDraftContentState, SelectionState } from 'draft-js';
 import { forwardRef, MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
@@ -10,6 +10,7 @@ export type TextComponentProps = {
   name?: string;
   content: RawDraftContentState;
   editor?: EditorState;
+  textSelection?: SelectionState;
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, ref) => {
@@ -94,6 +95,10 @@ Text.graftOptions = {
     // to manipulate it anywhere within the Editor context (for example
     // from the sidebar).
     editor: null,
+    // Normally the above editor stores the current editor selection. But when
+    // the editor loses focus, it is reset. So using this prop to store the
+    // last text selection position before the editor loses focus.
+    textSelection: null,
   },
 };
 

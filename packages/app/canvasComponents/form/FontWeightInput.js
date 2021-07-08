@@ -1,3 +1,4 @@
+import { useEditorStoreApi } from '@graftini/graft';
 import { InputAdornment, MenuItem, TextField, Typography } from '@material-ui/core';
 import { applyStyleOption, StyleOption } from 'canvasComponents/textEditor/styleMap';
 import { selectAll } from 'canvasComponents/textEditor/textSelection';
@@ -22,6 +23,7 @@ const fontWeights = [
 export default function FontWeightInput({ componentId }) {
   const { control } = useFormContext();
   const getIsTextEditingEnabled = useIsTextEditingEnabledGetter({ componentId });
+  const { getState: getEditorState } = useEditorStoreApi();
   const setTextEditor = useTextEditorStateSetter({ componentId });
 
   return (
@@ -39,8 +41,13 @@ export default function FontWeightInput({ componentId }) {
               // If the editing mode is yet not active but the component is selected to be configured
               // then the selection is deemed to be the whole text within the editor.
               const selection = getIsTextEditingEnabled()
-                ? editor.getSelection()
+                ? // The selection that is available on the editor below does not have the actual
+                  // selection no more because the focus in now on the sidebar where this option
+                  // resides.
+                  getEditorState().componentMap[componentId].props.textSelection
                 : selectAll(editor);
+
+              console.log(getEditorState().componentMap[componentId].props);
 
               return applyStyleOption(
                 editor,

@@ -19,7 +19,7 @@ export default function useFocusOnEditingMode({
 }: UseFocusOnEditingModeOptions) {
   const componentId = useComponentId();
   // Remove any artificial text selection.
-  const resetTextSelection = useResetTextSelection(setEditorState);
+  const resetTextSelection = useResetTextSelection(setEditorState, componentId);
 
   const { subscribe } = useDesignerStateApi();
   useEffect(() => {
