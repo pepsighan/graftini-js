@@ -3,6 +3,7 @@ import { useComponentId } from '@graftini/graft';
 import { textDefaultOptions } from 'canvasComponents/TextOptions';
 import { Editor } from 'draft-js';
 import React, { forwardRef, MouseEventHandler, useRef } from 'react';
+import { blockMap } from './blocks';
 import useEditingState from './useEditingState';
 import useFocusOnEditingMode from './useFocusOnEditingMode';
 import useRetainFocusOnText from './useRetainFocusOnText';
@@ -46,6 +47,7 @@ const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) =
         editorState={editorState}
         onChange={setEditorState}
         customStyleMap={styleMap}
+        blockRenderMap={blockMap}
         readOnly={!isSelected}
       />
     </Text>
