@@ -46,8 +46,9 @@ function styleForOption(option: StyleOption, style: string): CSSProperties {
         fontFamily: style,
       };
     case StyleOption.FontSize:
+      const parsed = parseFontSize(style);
       return {
-        fontSize: style,
+        fontSize: `${parsed.size}${parsed.unit}`,
       };
     case StyleOption.FontWeight:
       return {
