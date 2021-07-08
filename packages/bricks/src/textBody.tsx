@@ -1,6 +1,7 @@
+import { RawDraftContentBlock, RawDraftContentState } from 'draft-js';
 import React, { ReactNode } from 'react';
-import { RawDraftContentState, RawDraftContentBlock } from 'draft-js';
-import Text from './text';
+import { RGBA } from './colors';
+import Text, { FontSize } from './text';
 
 type TextBodyProps = {
   content: RawDraftContentState;
@@ -84,10 +85,84 @@ function isSpanStylesSame(left: Set<string>, right: Set<string>): boolean {
  * Resolves the set of style strings to actual style props for the Text component.
  */
 function resolveStyle(newSpanStyle: Set<string>): any {
-  return {};
+  const props: any = {};
+
+  newSpanStyle.forEach((styleOption) => {
+    const splits = styleOption.split('=');
+    const [key, value] = propForOption(splits[0] as StyleOption, splits[1]);
+    if (key) {
+      props[key] = value;
+    }
+  });
+
+  return props;
 }
 
-// 1. Start adding the characters to a new span.
-// 2. Attach the respective style the span.
-// 3. If the next character has the same style, then add it to the same span.
-//    Otherwise, start from step 1.
+/**
+ * All the supported inline style keys.
+ */
+enum StyleOption {
+  TextSelection = 'TEXT_SELECTION',
+  FontSize = 'FONT_SIZE',
+  FontFamily = 'FONT_FAMILY',
+  FontWeight = 'FONT_WEIGHT',
+  TextColor = 'TEXT_COLOR',
+  TextAlignment = 'TEXT_ALIGNMENT',
+}
+
+/**
+ * Depending on the style option, creates text prop for it.
+ */
+function propForOption(option: StyleOption, style: string): [string, any] {
+  switch (option) {
+    case StyleOption.FontFamily:
+      return ['fontFamily', style];
+    case StyleOption.FontSize:
+      return ['fontSize', parseFontSize(style)];
+    case StyleOption.FontWeight:
+      return ['fontWeight', style];
+    case StyleOption.TextAlignment:
+      return ['textAlign', style];
+    case StyleOption.TextColor:
+      return ['color', parseColor(style)];
+    default:
+      return ['', null];
+  }
+}
+
+/**
+ * Parse the font size from string.
+ */
+function parseFontSize(size: string): FontSize {
+  const splits = size.split(',');
+  return {
+    size: splits[1] === 'rem' ? parseFloat(splits[0]) : parseInt(splits[0], 10),
+    unit: splits[1] as any,
+  };
+}
+
+/**
+ * Parses RGBA color from string.
+ */
+function parseColor(color: string): RGBA {
+  if (color.startsWith('#')) {
+    const r = color.substr(1, 2);
+    const g = color.substr(3, 2);
+    const b = color.substr(5, 2);
+
+    return {
+      r: parseInt(r, 16),
+      g: parseInt(g, 16),
+      b: parseInt(b, 16),
+      a: 1,
+    };
+  }
+
+  const splits = color.replace('rgba(', '').replace(')', '').split(',');
+  return {
+    r: parseInt(splits[0], 10),
+    g: parseInt(splits[1], 10),
+    b: parseInt(splits[2], 10),
+    a: parseFloat(splits[3]),
+  };
+}
