@@ -12,6 +12,8 @@ export default function ComponentRender({ componentId, componentMap }: Component
 
   const { children, ...rest } = props;
 
+  console.log(rest);
+
   return (
     <Render
       {...rest}
