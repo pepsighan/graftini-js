@@ -1,12 +1,32 @@
 import { InputAdornment, MenuItem, Select, TextField, Typography } from '@material-ui/core';
+import { applyStyleOption, StyleOption } from 'canvasComponents/textEditor/styleMap';
+import { useResolveCurrentSelection } from 'canvasComponents/textEditor/textSelection';
+import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
 
-export default function FontSize({ name }) {
+export default function FontSize({ name, componentId }) {
   const { control, setValue } = useFormContext();
   const size = useWatch({ control, name: `${name}.size` });
   const unit = useWatch({ control, name: `${name}.unit` });
+
+  const setTextEditor = useTextEditorStateSetter({ componentId });
+  const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
+
+  const onUpdateStyle = useCallback(
+    (size, unit) => {
+      setTextEditor((editor) => {
+        const selection = resolveCurrentSelection();
+
+        return applyStyleOption(editor, selection, StyleOption.FontSize, {
+          size,
+          unit,
+        });
+      });
+    },
+    [resolveCurrentSelection, setTextEditor]
+  );
 
   return (
     <TextField
@@ -14,9 +34,11 @@ export default function FontSize({ name }) {
       value={size}
       onChange={useCallback(
         (event) => {
-          setValue(`${name}.size`, parsePositiveInteger(event.target.value) || 0);
+          const size = parsePositiveInteger(event.target.value) || 0;
+          setValue(`${name}.size`, size);
+          onUpdateStyle(size, unit);
         },
-        [name, setValue]
+        [name, onUpdateStyle, setValue, unit]
       )}
       InputProps={{
         startAdornment: (
@@ -29,8 +51,11 @@ export default function FontSize({ name }) {
             <Select
               value={unit}
               onChange={useCallback(
-                (event) => setValue(`${name}.unit`, event.target.value),
-                [name, setValue]
+                (event) => {
+                  setValue(`${name}.unit`, event.target.value);
+                  onUpdateStyle(size, event.target.value);
+                },
+                [name, onUpdateStyle, setValue, size]
               )}
               sx={{
                 '& .MuiOutlinedInput-notchedOutline': {

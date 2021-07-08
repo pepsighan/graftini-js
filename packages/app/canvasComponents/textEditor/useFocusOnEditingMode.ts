@@ -3,7 +3,7 @@ import { Editor } from 'draft-js';
 import { MutableRefObject, useEffect } from 'react';
 import { useDesignerStateApi } from 'store/designer';
 import { useResetTextSelection } from './textSelection';
-import { EditorStateSetter } from './useSyncEditorState';
+import { EditorStateSetter } from './useTextEditorState';
 
 type UseFocusOnEditingModeOptions = {
   editorRef: MutableRefObject<Editor | null>;
@@ -19,7 +19,7 @@ export default function useFocusOnEditingMode({
 }: UseFocusOnEditingModeOptions) {
   const componentId = useComponentId();
   // Remove any artificial text selection.
-  const resetTextSelection = useResetTextSelection(setEditorState);
+  const resetTextSelection = useResetTextSelection(setEditorState, componentId);
 
   const { subscribe } = useDesignerStateApi();
   useEffect(() => {

@@ -1,8 +1,14 @@
-import { EditorState, Modifier } from 'draft-js';
+import { useEditorStore, useEditorStoreApi } from '@graftini/graft';
+import { TextComponentProps } from 'canvasComponents/Text';
+import { EditorState, Modifier, SelectionState } from 'draft-js';
 import { createContext, PropsWithChildren, useCallback, useContext } from 'react';
 import { useGetSet } from 'react-use';
 import { StyleOption } from './styleMap';
-import { EditorStateSetter } from './useSyncEditorState';
+import {
+  EditorStateSetter,
+  getTextEditorState,
+  useIsTextEditingEnabledGetter,
+} from './useTextEditorState';
 
 const TextSelectionContext = createContext<ReturnType<typeof useGetSet> | null>(null);
 
@@ -15,11 +21,18 @@ export function TextSelectionProvider({ children }: PropsWithChildren<{}>) {
  * Marks the currently selected text (that is selected using cursor) as selected (in metadata)
  * so that it is retained even when the text editor is not in focus.
  */
-export function useMarkTextAsSelected(setState: EditorStateSetter) {
+export function useMarkTextAsSelected(setState: EditorStateSetter, componentId: string) {
   const setSelected = useContext(TextSelectionContext)[1];
+  const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
 
   return useCallback(() => {
     setSelected(true);
+
+    // Also store the backup of the text selection because it is to be reset by the browser.
+    immerSetEditor((rootEditor) => {
+      const props = rootEditor.componentMap[componentId].props;
+      props.textSelection = props.editor.getSelection();
+    });
 
     return setState((editorState) =>
       EditorState.createWithContent(
@@ -30,14 +43,15 @@ export function useMarkTextAsSelected(setState: EditorStateSetter) {
         )
       )
     );
-  }, [setSelected, setState]);
+  }, [componentId, immerSetEditor, setSelected, setState]);
 }
 
 /**
  * Resets the currently selected text (in metadata).
  */
-export function useResetTextSelection(setState: EditorStateSetter) {
+export function useResetTextSelection(setState: EditorStateSetter, componentId: string) {
   const [getSelected] = useContext(TextSelectionContext);
+  const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
 
   return useCallback(() => {
     const isSelected = getSelected();
@@ -46,6 +60,11 @@ export function useResetTextSelection(setState: EditorStateSetter) {
       // issue with weird text selection issues.
       return;
     }
+
+    // No need to store a backup as it can be tracked from the editorState now.
+    immerSetEditor((rootEditor) => {
+      rootEditor.componentMap[componentId].props.textSelection = null;
+    });
 
     setState((editorState) =>
       EditorState.createWithContent(
@@ -65,7 +84,7 @@ export function useResetTextSelection(setState: EditorStateSetter) {
     // editor remembers the last cursor state and this makes it reset whatever weird state the
     // editor might have been.)
     setState((editorState) => EditorState.forceSelection(editorState, cursorAtLast(editorState)));
-  }, [getSelected, setState]);
+  }, [componentId, getSelected, immerSetEditor, setState]);
 }
 
 /**
@@ -94,4 +113,33 @@ export function cursorAtLast(editorState: EditorState) {
     focusKey: currentContent.getLastBlock().getKey(),
     focusOffset: currentContent.getLastBlock().getText().length,
   });
+}
+
+/**
+ * Gets the current selection. If the editor is active but no selection has been
+ * made, then the whole text is deemed to be selected.
+ */
+export function useResolveCurrentSelection({
+  componentId,
+}: {
+  componentId: string;
+}): () => SelectionState {
+  const getIsTextEditingEnabled = useIsTextEditingEnabledGetter({ componentId });
+  const { getState: getEditorState } = useEditorStoreApi();
+
+  return useCallback(() => {
+    const props = getEditorState().componentMap[componentId].props as TextComponentProps;
+    const textEditor = getTextEditorState(props);
+
+    // If the editing mode is yet not active but the component is selected to be configured
+    // then the selection is deemed to be the whole text within the editor.
+    const selection = getIsTextEditingEnabled()
+      ? // The selection that is available on the editor below does not have the actual
+        // selection no more because the focus in now on the sidebar where this option
+        // resides.
+        props.textSelection
+      : selectAll(textEditor);
+
+    return selection;
+  }, [componentId, getEditorState, getIsTextEditingEnabled]);
 }

@@ -1,4 +1,4 @@
-import { EditorStore, useEditorStoreApi } from '@graftini/graft';
+import { ComponentMap, EditorStore, useEditorStoreApi } from '@graftini/graft';
 import { useEffect } from 'react';
 import { useDesignerStateApi } from 'store/designer';
 
@@ -15,11 +15,41 @@ export default function SyncEditorAndDesignerState() {
         ...designerState,
         pages: {
           ...designerState.pages,
-          [designerState.currentOpenPage]: editorState.componentMap,
+          [designerState.currentOpenPage]: cleanComponentMap(editorState.componentMap),
         },
       }));
     });
   }, [setState, subscribe]);
 
   return <></>;
+}
+
+/**
+ * It removes an temporary states from within the component map that may be used within
+ * the editor.
+ */
+function cleanComponentMap(componentMap: ComponentMap): ComponentMap {
+  // Since the componentMap is readonly, we need to create a new one.
+  const newMap: ComponentMap = {};
+
+  Object.keys(componentMap).forEach((key) => {
+    const component = componentMap[key];
+
+    if (component.type !== 'Text') {
+      newMap[key] = component;
+      return;
+    }
+
+    // The editor & textSelection props are used to manipulate the text editor from anywhere
+    // in the designer page.
+    // We do not need them in the designer store (which is synced with
+    // the backend).
+    const { editor, textSelection, ...rest } = component.props;
+    newMap[key] = {
+      ...component,
+      props: rest,
+    };
+  });
+
+  return newMap;
 }

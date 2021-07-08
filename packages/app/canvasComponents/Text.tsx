@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { GraftComponent, useComponentId } from '@graftini/graft';
-import { RawDraftContentState } from 'draft-js';
+import { EditorState, RawDraftContentState, SelectionState } from 'draft-js';
 import { forwardRef, MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
@@ -9,6 +9,8 @@ import { TextSelectionProvider } from './textEditor/textSelection';
 export type TextComponentProps = {
   name?: string;
   content: RawDraftContentState;
+  editor?: EditorState;
+  textSelection?: SelectionState;
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, ref) => {
@@ -85,6 +87,18 @@ Text.graftOptions = {
       blocks: [],
       entityMap: {},
     },
+    // This is the actual editor state that is used on the browser.
+    // This is not synced to the backend. On the first run, it is derived
+    // from the [content] field. After that, it is self sufficient.
+    // We needed a separate editor state because it also captures other
+    // runtime metadata such as selection. Also, keeping it here is helpful
+    // to manipulate it anywhere within the Editor context (for example
+    // from the sidebar).
+    editor: null,
+    // Normally the above editor stores the current editor selection. But when
+    // the editor loses focus, it is reset. So using this prop to store the
+    // last text selection position before the editor loses focus.
+    textSelection: null,
   },
 };
 

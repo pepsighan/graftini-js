@@ -5,7 +5,7 @@ import { useCallback, useState } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
 
-export default function ColorPicker({ name, label = null, labelWidth = '14' }) {
+export default function ColorPicker({ name, label = null, onChange = null }) {
   const { control } = useFormContext();
   const [open, setOpen] = useState(null);
 
@@ -22,7 +22,7 @@ export default function ColorPicker({ name, label = null, labelWidth = '14' }) {
         <>
           <TextField
             onClick={onOpen}
-            value={rgbaToCss({ ...field.value, a: null })}
+            value={field.value ? rgbaToCss({ ...field.value, a: null }) : ''}
             InputProps={{
               readOnly: true,
               startAdornment: (
@@ -48,7 +48,13 @@ export default function ColorPicker({ name, label = null, labelWidth = '14' }) {
             open={open}
             onClose={onClose}
             value={field.value}
-            onChange={field.onChange}
+            onChange={(rgba) => {
+              field.onChange(rgba);
+
+              if (onChange) {
+                onChange(rgba);
+              }
+            }}
           />
         </>
       )}

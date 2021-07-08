@@ -5,7 +5,7 @@ import { parsePositiveInteger } from 'utils/parser';
 
 const units = ['px', '%'];
 
-export default function SizeInput({ name, isWidth, label }) {
+export default function SizeInput({ name, label }) {
   const { control, setValue } = useFormContext();
   const size = useWatch({ control, name: `${name}.size` });
   const unit = useWatch({ control, name: `${name}.unit` });
