@@ -32,15 +32,20 @@ export const textDefaultOptions: TextOptionsFields = {
 };
 
 export default function TextOptions({ componentId }: OptionsProps) {
-  const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
-
-  const { getState } = useEditorStoreApi();
+  // Using the selection id for keying the form will refresh the form values that
+  // reflect the current selection.
   const textSelectionId = useTextSelectionId(componentId);
+
+  return <FormInner key={textSelectionId} componentId={componentId} />;
+}
+
+function FormInner({ componentId }: OptionsProps) {
+  const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
+  const { getState } = useEditorStoreApi();
 
   // Update the form when the text selection changes.
   return (
     <CF
-      key={textSelectionId}
       componentId={componentId}
       onInitialize={useCallback(
         (state) => {
@@ -89,7 +94,13 @@ export default function TextOptions({ componentId }: OptionsProps) {
 function useTextSelectionId(componentId: string): string {
   return useEditorStore(
     useCallback(
-      (state) => getEditorState(state.componentMap, componentId).getSelection().first(),
+      (state) => {
+        const selection = getEditorState(state.componentMap, componentId).getSelection();
+        return (
+          `${selection.getAnchorKey()}-${selection.getAnchorOffset()}-` +
+          `${selection.getFocusKey()}-${selection.getFocusOffset()}`
+        );
+      },
       [componentId]
     )
   );
