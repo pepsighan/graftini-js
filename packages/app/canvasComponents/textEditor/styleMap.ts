@@ -231,7 +231,7 @@ function removeExistingStyle(
  * Gets a set of inline styles for the given selection. Solution inspired from
  * https://github.com/facebook/draft-js/issues/602#issuecomment-584676405.
  */
-function stylesInSelection(editor: EditorState, selection: SelectionState): string[] {
+export function stylesInSelection(editor: EditorState, selection: SelectionState): string[] {
   const contentState = editor.getCurrentContent();
   const styles = new Set<string>();
 

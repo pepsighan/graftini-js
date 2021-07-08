@@ -9,7 +9,9 @@ import {
   formFieldValue,
   styleMap,
   StyleOption,
+  stylesInSelection,
 } from './styleMap';
+import { selectAll } from './textSelection';
 import { getTextEditorState } from './useTextEditorState';
 
 type UseStyleMapOptions = {
@@ -37,8 +39,8 @@ function getCustomStyleMap(props: TextComponentProps): DraftStyleMap {
   const editorState = getTextEditorState(props);
 
   // Add the dynamic styles based on the text editor state.
-  const inlineStyle = editorState.getCurrentInlineStyle();
-  inlineStyle.forEach((styleOption) => {
+  const styles = stylesInSelection(editorState, selectAll(editorState));
+  styles.forEach((styleOption) => {
     // Split the style option into its two parts. Left side is the option itself and
     // right side is the value of the option.
     const split = styleOption.split('=', 2);
