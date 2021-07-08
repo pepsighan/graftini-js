@@ -47,4 +47,3 @@ export {
   TextInteractionStyles,
   TextProps,
 } from './text';
-export { Content } from './textBody';

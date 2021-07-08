@@ -1,17 +1,8 @@
 import React from 'react';
+import { RawDraftContentState, RawDraftContentBlock } from 'draft-js';
 
 type TextBodyProps = {
-  content: Content[];
-};
-
-export type Content = Paragraph | TextString;
-type Paragraph = {
-  type: 'paragraph';
-  children: Content[];
-};
-
-type TextString = {
-  text: string;
+  content: RawDraftContentState;
 };
 
 /**
@@ -21,35 +12,17 @@ type TextString = {
 export default function TextBody({ content }: TextBodyProps) {
   return (
     <>
-      {content.map((block, index) => (
-        <Block key={index} block={block} />
+      {content.blocks.map((block) => (
+        <Block key={block.key} block={block} />
       ))}
     </>
   );
 }
 
 type BlockProps = {
-  block: Content;
+  block: RawDraftContentBlock;
 };
 
 function Block({ block }: BlockProps) {
-  if (typeof (block as TextString).text === 'string') {
-    const text = (block as any).text;
-    // If empty whitespace in a paragraph, then it is a new line.
-    return text || <br />;
-  }
-
-  const paragraph = block as Paragraph;
-
-  if (paragraph.type === 'paragraph') {
-    return (
-      <p>
-        {paragraph.children.map((n, index) => (
-          <Block key={index} block={n} />
-        ))}
-      </p>
-    );
-  }
-
-  return null;
+  return <div>{block.text ? <>{block.text}</> : <br />}</div>;
 }
