@@ -1,5 +1,5 @@
 import { FontSize, RGBA, rgbaToCss } from '@graftini/bricks';
-import { DraftStyleMap } from 'draft-js';
+import { DraftStyleMap, EditorState, Modifier, SelectionState } from 'draft-js';
 import { CSSProperties } from 'react';
 import theme from 'utils/theme';
 
@@ -182,4 +182,32 @@ function parseFontSize(size: string): FontSize {
     size: splits[1] === 'rem' ? parseFloat(splits[0]) : parseInt(splits[0], 10),
     unit: splits[1] as any,
   };
+}
+
+/**
+ * Apply new style to the selection and optionally remove old style if it exists.
+ */
+export function applyStyleOption(
+  editor: EditorState,
+  selection: SelectionState,
+  styleOption: StyleOption,
+  newStyle: any,
+  oldStyle?: any
+): EditorState {
+  let content = editor.getCurrentContent();
+
+  // Remove the previous style because we do not want overlapping styles causing
+  // issues.
+  if (oldStyle) {
+    content = Modifier.removeInlineStyle(
+      editor.getCurrentContent(),
+      selection,
+      dynamicStyleOptionName(styleOption, oldStyle)
+    );
+  }
+
+  // Add the new style for the selection.
+  return EditorState.createWithContent(
+    Modifier.applyInlineStyle(content, selection, dynamicStyleOptionName(styleOption, newStyle))
+  );
 }

@@ -2,6 +2,7 @@ import { useEditorStore } from '@graftini/graft';
 import { TextComponentProps } from 'canvasComponents/Text';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { useCallback } from 'react';
+import { useDesignerStateApi } from 'store/designer';
 
 type SetterCallback = (state: EditorState) => EditorState;
 export type EditorStateSetter = (state: EditorState | SetterCallback) => void;
@@ -75,4 +76,16 @@ export function getTextEditorState(props: TextComponentProps): EditorState {
     // If the editor is yet not created, create it from raw.
     EditorState.createWithContent(convertFromRaw(props.content))
   );
+}
+
+/**
+ * Gets whether the given component is being edited or not.
+ */
+export function useIsTextEditingEnabledGetter({ componentId }: { componentId: string }) {
+  const { getState } = useDesignerStateApi();
+
+  return useCallback(() => {
+    const state = getState();
+    return state.selectedComponentId === componentId && state.isTextEditingEnabled;
+  }, [componentId, getState]);
 }

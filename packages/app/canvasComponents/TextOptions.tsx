@@ -7,6 +7,7 @@ import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import FontSize from './form/FontSize';
+import FontWeightInput from './form/FontWeightInput';
 import SelectInput from './form/SelectInput';
 import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
@@ -78,17 +79,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
           <MenuItem value="serif">Serif</MenuItem>
           <MenuItem value="monospace">Monospace</MenuItem>
         </SelectInput>
-        <SelectInput name="fontWeight" label="Weight">
-          <MenuItem value={100}>Extra Thin</MenuItem>
-          <MenuItem value={200}>Thin</MenuItem>
-          <MenuItem value={300}>Light</MenuItem>
-          <MenuItem value={400}>Normal</MenuItem>
-          <MenuItem value={500}>Medium</MenuItem>
-          <MenuItem value={600}>Semi Bold</MenuItem>
-          <MenuItem value={700}>Bold</MenuItem>
-          <MenuItem value={800}>Extra Bold</MenuItem>
-          <MenuItem value={900}>Extra Extra Bold</MenuItem>
-        </SelectInput>
+        <FontWeightInput componentId={componentId} />
         <ColorPicker name="color" label="Color" />
       </Stack>
     </CF>
