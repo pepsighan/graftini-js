@@ -1,5 +1,5 @@
 import { FontSize, RGBA, rgbaToCss } from '@graftini/bricks';
-import { DraftStyleMap, EditorState, Modifier, SelectionState } from 'draft-js';
+import { ContentState, DraftStyleMap, EditorState, Modifier, SelectionState } from 'draft-js';
 import { CSSProperties } from 'react';
 import theme from 'utils/theme';
 
@@ -191,23 +191,80 @@ export function applyStyleOption(
   editor: EditorState,
   selection: SelectionState,
   styleOption: StyleOption,
-  newStyle: any,
-  oldStyle?: any
+  newStyle: any
 ): EditorState {
-  let content = editor.getCurrentContent();
-
   // Remove the previous style because we do not want overlapping styles causing
   // issues.
-  if (oldStyle) {
-    content = Modifier.removeInlineStyle(
-      editor.getCurrentContent(),
-      selection,
-      dynamicStyleOptionName(styleOption, oldStyle)
-    );
-  }
+  const content = removeExistingStyle(editor, selection, styleOption);
 
   // Add the new style for the selection.
   return EditorState.createWithContent(
     Modifier.applyInlineStyle(content, selection, dynamicStyleOptionName(styleOption, newStyle))
   );
+}
+
+/**
+ * Removes any existing styles in the given selection region of the StyleOption kind.
+ */
+function removeExistingStyle(
+  editor: EditorState,
+  selection: SelectionState,
+  styleOption: StyleOption
+): ContentState {
+  const styles = stylesInSelection(editor, selection);
+
+  const optionKind = styleOption.split('=')[0];
+  const matchingStyles = styles.filter((it) => it.split('=')[0] === optionKind);
+
+  let content = editor.getCurrentContent();
+
+  // Iterate over the overlapping styles and remove them one by one.
+  for (let index = 0; index < matchingStyles.length; index++) {
+    const match = matchingStyles[index];
+    content = Modifier.removeInlineStyle(content, selection, match);
+  }
+
+  return content;
+}
+
+/**
+ * Gets a set of inline styles for the given selection. Solution inspired from
+ * https://github.com/facebook/draft-js/issues/602#issuecomment-584676405.
+ */
+function stylesInSelection(editor: EditorState, selection: SelectionState): string[] {
+  const contentState = editor.getCurrentContent();
+  const styles = new Set<string>();
+
+  if (selection.isCollapsed()) {
+    editor.getCurrentInlineStyle().forEach((style) => style && styles.add(style));
+    return Array.from(styles);
+  }
+
+  let key = selection.getStartKey();
+  let startOffset = selection.getStartOffset();
+  const endKey = selection.getEndKey();
+  const endOffset = selection.getEndOffset();
+
+  while (true) {
+    const lastRound = key === endKey;
+    const block = contentState.getBlockForKey(key);
+    const offsetEnd = lastRound ? endOffset : block.getLength();
+    const characterList = block.getCharacterList();
+
+    for (let index = startOffset; index < offsetEnd; index++) {
+      characterList
+        .get(index)
+        .getStyle()
+        .forEach((style) => style && styles.add(style));
+    }
+
+    if (lastRound) {
+      break;
+    }
+
+    key = contentState.getKeyAfter(key);
+    startOffset = 0;
+  }
+
+  return Array.from(styles);
 }

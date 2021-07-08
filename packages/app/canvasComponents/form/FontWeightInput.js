@@ -34,7 +34,6 @@ export default function FontWeightInput({ componentId }) {
         <TextField
           ref={ref}
           onChange={(event) => {
-            const oldValue = value;
             onChange(event);
 
             setTextEditor((editor) => {
@@ -47,14 +46,11 @@ export default function FontWeightInput({ componentId }) {
                   getEditorState().componentMap[componentId].props.textSelection
                 : selectAll(editor);
 
-              console.log(getEditorState().componentMap[componentId].props);
-
               return applyStyleOption(
                 editor,
                 selection,
                 StyleOption.FontWeight,
-                event.target.value,
-                oldValue
+                event.target.value
               );
             });
           }}
