@@ -4,26 +4,14 @@ import { useResolveCurrentSelection } from 'canvasComponents/textEditor/textSele
 import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
 import { Controller, useFormContext } from 'react-hook-form';
 
-const fontWeights = [
-  { value: 100, label: 'Extra Thin' },
-  { value: 200, label: 'Thin' },
-  { value: 300, label: 'Light' },
-  { value: 400, label: 'Normal' },
-  { value: 500, label: 'Medium' },
-  { value: 600, label: 'Semi Bold' },
-  { value: 700, label: 'Bold' },
-  { value: 800, label: 'Extra Bold' },
-  { value: 900, label: 'Extra Extra Bold' },
-];
-
-export default function FontWeightInput({ componentId }) {
+export default function FontFamilyInput({ componentId }) {
   const { control } = useFormContext();
   const setTextEditor = useTextEditorStateSetter({ componentId });
   const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
     <Controller
-      name="fontWeight"
+      name="fontFamily"
       control={control}
       render={({ field: { ref, value, onChange } }) => (
         <TextField
@@ -37,7 +25,7 @@ export default function FontWeightInput({ componentId }) {
               return applyStyleOption(
                 editor,
                 selection,
-                StyleOption.FontWeight,
+                StyleOption.FontFamily,
                 event.target.value
               );
             });
@@ -47,16 +35,14 @@ export default function FontWeightInput({ componentId }) {
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
-                <Typography variant="body2">Weight</Typography>
+                <Typography variant="body2">Font</Typography>
               </InputAdornment>
             ),
           }}
         >
-          {fontWeights.map((weight) => (
-            <MenuItem key={weight.value} value={weight.value}>
-              {weight.label}
-            </MenuItem>
-          ))}
+          <MenuItem value="sans-serif">Sans Serif</MenuItem>
+          <MenuItem value="serif">Serif</MenuItem>
+          <MenuItem value="monospace">Monospace</MenuItem>
         </TextField>
       )}
     />

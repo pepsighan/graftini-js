@@ -1,9 +1,14 @@
-import { useEditorStore } from '@graftini/graft';
-import { EditorState, Modifier } from 'draft-js';
+import { useEditorStore, useEditorStoreApi } from '@graftini/graft';
+import { TextComponentProps } from 'canvasComponents/Text';
+import { EditorState, Modifier, SelectionState } from 'draft-js';
 import { createContext, PropsWithChildren, useCallback, useContext } from 'react';
 import { useGetSet } from 'react-use';
 import { StyleOption } from './styleMap';
-import { EditorStateSetter } from './useTextEditorState';
+import {
+  EditorStateSetter,
+  getTextEditorState,
+  useIsTextEditingEnabledGetter,
+} from './useTextEditorState';
 
 const TextSelectionContext = createContext<ReturnType<typeof useGetSet> | null>(null);
 
@@ -108,4 +113,33 @@ export function cursorAtLast(editorState: EditorState) {
     focusKey: currentContent.getLastBlock().getKey(),
     focusOffset: currentContent.getLastBlock().getText().length,
   });
+}
+
+/**
+ * Gets the current selection. If the editor is active but no selection has been
+ * made, then the whole text is deemed to be selected.
+ */
+export function useResolveCurrentSelection({
+  componentId,
+}: {
+  componentId: string;
+}): () => SelectionState {
+  const getIsTextEditingEnabled = useIsTextEditingEnabledGetter({ componentId });
+  const { getState: getEditorState } = useEditorStoreApi();
+
+  return useCallback(() => {
+    const props = getEditorState().componentMap[componentId].props as TextComponentProps;
+    const textEditor = getTextEditorState(props);
+
+    // If the editing mode is yet not active but the component is selected to be configured
+    // then the selection is deemed to be the whole text within the editor.
+    const selection = getIsTextEditingEnabled()
+      ? // The selection that is available on the editor below does not have the actual
+        // selection no more because the focus in now on the sidebar where this option
+        // resides.
+        props.textSelection
+      : selectAll(textEditor);
+
+    return selection;
+  }, [componentId, getEditorState, getIsTextEditingEnabled]);
 }

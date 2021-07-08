@@ -1,14 +1,14 @@
 import { FontSize as FontSizeType, FontWeight, RGBA, TextAlign } from '@graftini/bricks';
 import { ComponentMap, useEditorStore, useEditorStoreApi } from '@graftini/graft';
-import { Divider, MenuItem, Stack, Typography } from '@material-ui/core';
+import { Divider, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
 import { convertFromRaw, EditorState } from 'draft-js';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
+import FontFamilyInput from './form/FontFamilyInput';
 import FontSize from './form/FontSize';
 import FontWeightInput from './form/FontWeightInput';
-import SelectInput from './form/SelectInput';
 import TextAlignInput from './form/TextAlignInput';
 import TextInput from './form/TextInput';
 import { TextComponentProps } from './Text';
@@ -79,11 +79,7 @@ function FormInner({ componentId }: OptionsProps) {
 
         <Typography variant="subtitle2">Appearance</Typography>
         <FontSize name="fontSize" />
-        <SelectInput name="fontFamily" label="Font">
-          <MenuItem value="sans-serif">Sans Serif</MenuItem>
-          <MenuItem value="serif">Serif</MenuItem>
-          <MenuItem value="monospace">Monospace</MenuItem>
-        </SelectInput>
+        <FontFamilyInput componentId={componentId} />
         <FontWeightInput componentId={componentId} />
         <ColorPicker name="color" label="Color" />
       </Stack>
