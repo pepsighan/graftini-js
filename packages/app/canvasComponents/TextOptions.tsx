@@ -12,7 +12,7 @@ import TextAlignInput from './form/TextAlignInput';
 import TextColorPicker from './form/TextColorPicker';
 import TextInput from './form/TextInput';
 import { TextComponentProps } from './Text';
-import { getTextFormValues } from './textEditor/formFields';
+import { defaultTextFormValues, getTextFormValues } from './textEditor/formFields';
 
 type TextOptionsFields = {
   name?: string;
@@ -21,14 +21,6 @@ type TextOptionsFields = {
   fontFamily?: string;
   fontWeight?: FontWeight;
   textAlign?: TextAlign;
-};
-
-export const textDefaultOptions: TextOptionsFields = {
-  color: { r: 0, g: 0, b: 0, a: 1 },
-  fontFamily: 'sans-serif',
-  fontSize: { size: 1, unit: 'rem' },
-  fontWeight: 400,
-  textAlign: 'left',
 };
 
 export default function TextOptions({ componentId }: OptionsProps) {
@@ -54,7 +46,7 @@ function FormInner({ componentId }: OptionsProps) {
           );
 
           return {
-            ...textDefaultOptions,
+            ...defaultTextFormValues,
             name: state.name,
             ...formFields,
           };

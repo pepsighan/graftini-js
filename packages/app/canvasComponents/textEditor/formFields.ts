@@ -1,8 +1,28 @@
 import { TextComponentProps } from 'canvasComponents/Text';
 import { parseColor, parseFontSize } from 'utils/types';
+import { RGBA, FontSize, FontWeight, TextAlign } from '@graftini/bricks';
 import { BlockDataOption, blocksInSelection } from './blocks';
 import { dynamicStyleOptions, StyleOption, stylesInSelection } from './styleMap';
 import { getTextEditorState } from './useTextEditorState';
+
+type TextOptionsFields = {
+  color?: RGBA;
+  fontSize?: FontSize;
+  fontFamily?: string;
+  fontWeight?: FontWeight;
+  textAlign?: TextAlign;
+};
+
+/**
+ * The default text form values if they do not exist.
+ */
+export const defaultTextFormValues: TextOptionsFields = {
+  color: { r: 0, g: 0, b: 0, a: 1 },
+  fontFamily: 'sans-serif',
+  fontSize: { size: 1, unit: 'rem' },
+  fontWeight: 400,
+  textAlign: 'left',
+};
 
 /**
  * The form field for the given style option.
@@ -80,10 +100,10 @@ export function getTextFormValues(props: TextComponentProps): any {
     }
 
     const style = split[1];
-    formValues[formField(split[0] as StyleOption)] = formFieldValueFromInlineStyle(
-      split[0] as StyleOption,
-      style
-    );
+    const fieldName = formField(split[0] as StyleOption);
+    formValues[fieldName] =
+      formFieldValueFromInlineStyle(split[0] as StyleOption, style) ??
+      defaultTextFormValues[fieldName];
   });
 
   // Load the form values from the blocks as well.
@@ -94,10 +114,12 @@ export function getTextFormValues(props: TextComponentProps): any {
   if (blocks.length > 0) {
     const data = blocks[0].getData().toJS();
 
-    formValues[formField(BlockDataOption.TextAlignment)] = formFieldValueFromBlockData(
-      BlockDataOption.TextAlignment,
-      data[BlockDataOption.TextAlignment]
-    );
+    const fieldName = formField(BlockDataOption.TextAlignment);
+    formValues[fieldName] =
+      formFieldValueFromBlockData(
+        BlockDataOption.TextAlignment,
+        data[BlockDataOption.TextAlignment]
+      ) ?? defaultTextFormValues[fieldName];
   }
 
   return formValues;
