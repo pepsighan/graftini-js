@@ -1,4 +1,13 @@
-import { InputAdornment, MenuItem, Popover, Stack, TextField, Typography } from '@material-ui/core';
+import {
+  Button,
+  InputAdornment,
+  MenuItem,
+  Popover,
+  Stack,
+  TextField,
+  Typography,
+} from '@material-ui/core';
+import { Cross1Icon } from '@modulz/radix-icons';
 import { capitalize } from 'lodash-es';
 import { useCallback, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
@@ -12,7 +21,7 @@ export default function BorderInput({ name }) {
   const borderAll = useWatch({ control, name });
   const border = borderAll?.top;
 
-  const { onSetDefault } = useSetFields({ name });
+  const { onSetDefault, onReset } = useSetFields({ name });
 
   const [open, setOpen] = useState(null);
   const onOpen = useCallback(
@@ -47,6 +56,10 @@ export default function BorderInput({ name }) {
           endAdornment: border ? (
             <InputAdornment position="end">
               <ColorBox value={border.color} />
+
+              <Button sx={{ ml: 1, width: 32, minWidth: 'auto' }} onClick={onReset}>
+                <Cross1Icon />
+              </Button>
             </InputAdornment>
           ) : null,
         }}
@@ -54,10 +67,13 @@ export default function BorderInput({ name }) {
           '& .MuiOutlinedInput-root, & .MuiOutlinedInput-input': {
             cursor: 'pointer',
           },
+          '& .MuiOutlinedInput-root': {
+            paddingRight: 0,
+          },
         }}
       />
 
-      <BorderDialog open={open} onClose={onClose} borderSide={border?.top} />
+      <BorderDialog open={open} onClose={onClose} borderSide={border} />
     </>
   );
 }
@@ -197,9 +213,13 @@ function useSetFields({ name }) {
     [name, onSetValue]
   );
 
-  const onReset = useCallback(() => {
-    onSetValue(name, null);
-  }, [name, onSetValue]);
+  const onReset = useCallback(
+    (event) => {
+      event.stopPropagation();
+      onSetValue(name, null);
+    },
+    [name, onSetValue]
+  );
 
   return { onSetDefault, onSetStyle, onSetColor, onSetWidth, onReset };
 }
