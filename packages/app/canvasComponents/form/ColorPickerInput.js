@@ -5,7 +5,7 @@ import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
 import ColorBox from './ColorBox';
 
-export default function ColorPicker({ name, label = null, onChange = null }) {
+export default function ColorPickerInput({ name, label = null, onChange = null }) {
   const { control } = useFormContext();
   const [open, setOpen] = useState(null);
 

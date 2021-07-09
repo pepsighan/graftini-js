@@ -9,13 +9,13 @@ import { BoxComponentProps } from './Box';
 import AlignmentInput from './form/AlignmentInput';
 import BorderInput from './form/BorderInput';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
-import ColorPicker from './form/ColorPicker';
+import ColorPickerInput from './form/ColorPickerInput';
 import DirectionInput from './form/DirectionInput';
-import FlexProperties from './form/FlexProperties';
-import MarginField from './form/MarginField';
+import FlexPropertiesInput from './form/FlexPropertiesInput';
+import MarginInput from './form/MarginInput';
 import OpacityInput from './form/OpacityInput';
 import OverflowInput from './form/OverflowInput';
-import PaddingField from './form/PaddingField';
+import PaddingInput from './form/PaddingInput';
 import RadiusInput from './form/RadiusInput';
 import SegmentedInput from './form/SegmentedInput';
 import SelectInput from './form/SelectInput';
@@ -177,7 +177,7 @@ function FlexSection() {
   return (
     <>
       <Typography variant="subtitle2">Flex</Typography>
-      <FlexProperties />
+      <FlexPropertiesInput />
       <SegmentedInput
         name="flexWrap"
         options={[
@@ -199,8 +199,8 @@ function LayoutSection() {
       <SizeLimitInput name="maxWidthRaw" label="Max W" />
       <SizeLimitInput name="minHeightRaw" label="Min H" />
       <SizeLimitInput name="maxHeightRaw" label="Max W" />
-      <PaddingField name="padding" />
-      <MarginField name="margin" />
+      <PaddingInput name="padding" />
+      <MarginInput name="margin" />
     </>
   );
 }
@@ -218,7 +218,7 @@ function AppearanceSection() {
   return (
     <>
       <Typography variant="subtitle2">Appearance</Typography>
-      <ColorPicker name="color" label="Fill" />
+      <ColorPickerInput name="color" label="Fill" />
       <OpacityInput name="opacity" />
     </>
   );

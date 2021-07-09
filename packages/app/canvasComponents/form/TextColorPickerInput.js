@@ -2,14 +2,14 @@ import { applyStyleOption, StyleOption } from 'canvasComponents/textEditor/style
 import { useResolveCurrentSelection } from 'canvasComponents/textEditor/textSelection';
 import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
 import { useCallback } from 'react';
-import ColorPicker from './ColorPicker';
+import ColorPickerInput from './ColorPickerInput';
 
-export default function TextColorPicker({ componentId }) {
+export default function TextColorPickerInput({ componentId }) {
   const setTextEditor = useTextEditorStateSetter({ componentId });
   const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
-    <ColorPicker
+    <ColorPickerInput
       name="color"
       label="Color"
       onChange={useCallback(

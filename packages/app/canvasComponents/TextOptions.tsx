@@ -6,10 +6,10 @@ import { convertFromRaw, EditorState } from 'draft-js';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import FontFamilyInput from './form/FontFamilyInput';
-import FontSize from './form/FontSize';
+import FontSizeInput from './form/FontSizeInput';
 import FontWeightInput from './form/FontWeightInput';
 import TextAlignInput from './form/TextAlignInput';
-import TextColorPicker from './form/TextColorPicker';
+import TextColorPickerInput from './form/TextColorPickerInput';
 import TextInput from './form/TextInput';
 import { TextComponentProps } from './Text';
 import { defaultTextFormValues, getTextFormValues } from './textEditor/formFields';
@@ -70,10 +70,10 @@ function FormInner({ componentId }: OptionsProps) {
         <Divider />
 
         <Typography variant="subtitle2">Appearance</Typography>
-        <FontSize name="fontSize" componentId={componentId} />
+        <FontSizeInput name="fontSize" componentId={componentId} />
         <FontFamilyInput componentId={componentId} />
         <FontWeightInput componentId={componentId} />
-        <TextColorPicker componentId={componentId} />
+        <TextColorPickerInput componentId={componentId} />
       </Stack>
     </CF>
   );
