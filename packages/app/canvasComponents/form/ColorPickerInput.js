@@ -1,9 +1,9 @@
 import { rgbaToCss } from '@graftini/bricks';
-import { Box, InputAdornment, Popover, TextField, Typography } from '@material-ui/core';
+import { InputAdornment, Popover, TextField, Typography } from '@material-ui/core';
 import { useCallback, useState } from 'react';
-import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
 import ColorBox from './ColorBox';
+import ColorPicker from './ColorPicker';
 
 export default function ColorPickerInput({ name, label = null, onChange = null }) {
   const { control } = useFormContext();
@@ -73,38 +73,7 @@ function ColorPickerInner({ value, onChange, open, onClose }) {
         horizontal: 'right',
       }}
     >
-      <Box
-        sx={{
-          '& .react-colorful': {
-            padding: 1.2,
-            borderRadius: 0,
-            height: 200,
-          },
-          '& .react-colorful__saturation': {
-            borderRadius: '0 !important',
-            borderBottomWidth: 2,
-          },
-          '& .react-colorful__hue': {
-            my: 1,
-          },
-          '& .react-colorful__hue, & .react-colorful__alpha': {
-            borderRadius: '0 !important',
-            height: 6,
-          },
-          ['& .react-colorful__saturation-pointer,' +
-          ' & .react-colorful__hue-pointer, ' +
-          ' & .react-colorful__alpha-pointer']: {
-            height: 10,
-            width: 10,
-            cursor: 'pointer',
-          },
-          '& .react-colorful__last-control': {
-            borderRadius: '0 !important',
-          },
-        }}
-      >
-        <RgbaColorPicker color={value} onChange={onChange} />
-      </Box>
+      <ColorPicker value={value} onChange={onChange} />
     </Popover>
   );
 }
