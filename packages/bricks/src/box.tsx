@@ -310,9 +310,17 @@ function flexStyles({
   };
 }
 
-function interactionStyles({ cursor, pointerEvents }: InteractionStyles): CSSObject {
+function interactionStyles({
+  cursor,
+  pointerEvents,
+  to,
+  href,
+  isEditor,
+}: InteractionStyles & InteractionProps & EditorProps): CSSObject {
   return {
-    cursor,
+    // If the cursor is provided, then use it. Otherwise if there is
+    // to or href link then it needs to be pointer by default.
+    cursor: cursor ?? ((to || href) && !isEditor ? 'pointer' : undefined),
     pointerEvents,
   };
 }
