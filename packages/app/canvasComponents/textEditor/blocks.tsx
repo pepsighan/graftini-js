@@ -3,6 +3,13 @@ import { Map } from 'immutable';
 import { Global } from '@emotion/react';
 
 /**
+ * The options that can be provided in the block data.
+ */
+enum BlockDataOption {
+  TextAlignment = 'TEXT_ALIGNMENT',
+}
+
+/**
  * The kind of blocks that are supported in the editor. Currently only
  * a paragraph (unstyled) is supported.
  */
@@ -23,7 +30,14 @@ export function customBlockStyle(contentBlock: ContentBlock): string {
     return '';
   }
 
-  return 'text-align-left';
+  const data = contentBlock.getData();
+  const alignment = data[BlockDataOption.TextAlignment];
+
+  if (!alignment) {
+    return 'text-align-left';
+  }
+
+  return `text-align-${alignment}`;
 }
 
 /**
