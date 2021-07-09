@@ -1,4 +1,4 @@
-import { ContentBlock } from 'draft-js';
+import { ContentBlock, EditorState, SelectionState } from 'draft-js';
 import { Map } from 'immutable';
 import { Global } from '@emotion/react';
 
@@ -66,4 +66,36 @@ export function GlobalBlockStyles() {
       `}
     />
   );
+}
+
+/**
+ * Returns a series of blocks contained in the selection.
+ */
+export function blocksInSelection(editor: EditorState, selection: SelectionState): ContentBlock[] {
+  const contentState = editor.getCurrentContent();
+
+  if (selection.isCollapsed()) {
+    return [contentState.getBlockForKey(selection.getStartKey())];
+  }
+
+  const contentBlock: ContentBlock[] = [];
+
+  let key = selection.getStartKey();
+  const endKey = selection.getEndKey();
+
+  // Add all the blocks in between the start and end key.
+  while (true) {
+    const lastRound = key === endKey;
+
+    const block = contentState.getBlockForKey(key);
+    contentBlock.push(block);
+
+    if (lastRound) {
+      break;
+    }
+
+    key = contentState.getKeyAfter(key);
+  }
+
+  return contentBlock;
 }

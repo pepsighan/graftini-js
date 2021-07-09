@@ -137,13 +137,14 @@ export function removeExistingStyle(
  * https://github.com/facebook/draft-js/issues/602#issuecomment-584676405.
  */
 export function stylesInSelection(editor: EditorState, selection: SelectionState): string[] {
-  const contentState = editor.getCurrentContent();
   const styles = new Set<string>();
 
   if (selection.isCollapsed()) {
     editor.getCurrentInlineStyle().forEach((style) => style && styles.add(style));
     return Array.from(styles);
   }
+
+  const contentState = editor.getCurrentContent();
 
   let key = selection.getStartKey();
   let startOffset = selection.getStartOffset();

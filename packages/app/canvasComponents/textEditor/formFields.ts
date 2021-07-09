@@ -1,6 +1,6 @@
 import { TextComponentProps } from 'canvasComponents/Text';
 import { parseColor, parseFontSize } from 'utils/types';
-import { BlockDataOption } from './blocks';
+import { BlockDataOption, blocksInSelection } from './blocks';
 import { dynamicStyleOptions, StyleOption, stylesInSelection } from './styleMap';
 import { getTextEditorState } from './useTextEditorState';
 
@@ -27,7 +27,7 @@ export function formField(option: StyleOption | BlockDataOption): string {
 /**
  * Parses the style to a form field value for the given option.
  */
-export function formFieldValueFromInlineStyle(option: StyleOption, style: string): any {
+function formFieldValueFromInlineStyle(option: StyleOption, style: string): any {
   switch (option) {
     case StyleOption.TextColor:
       return parseColor(style);
@@ -38,6 +38,18 @@ export function formFieldValueFromInlineStyle(option: StyleOption, style: string
     case StyleOption.FontFamily:
     default:
       return style;
+  }
+}
+
+/**
+ * Parses the block data into the form field value.
+ */
+function formFieldValueFromBlockData(dataOption: BlockDataOption, value: string): any {
+  switch (dataOption) {
+    case BlockDataOption.TextAlignment:
+      return value;
+    default:
+      return value;
   }
 }
 
@@ -71,6 +83,17 @@ export function getTextFormValues(props: TextComponentProps): any {
     formValues[formField(split[0] as StyleOption)] = formFieldValueFromInlineStyle(
       split[0] as StyleOption,
       style
+    );
+  });
+
+  // Load the form values from the blocks as well.
+  const blocks = blocksInSelection(editorState, selection);
+  blocks.forEach((block) => {
+    const data = block.getData();
+
+    formValues[formField(BlockDataOption.TextAlignment)] = formFieldValueFromBlockData(
+      BlockDataOption.TextAlignment,
+      data[BlockDataOption.TextAlignment]
     );
   });
 
