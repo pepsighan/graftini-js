@@ -18,7 +18,7 @@ export function formField(option: StyleOption | BlockDataOption): string {
     case StyleOption.TextColor:
       return 'color';
     case BlockDataOption.TextAlignment:
-      return 'textAlignment';
+      return 'textAlign';
     default:
       return '';
   }
@@ -88,14 +88,17 @@ export function getTextFormValues(props: TextComponentProps): any {
 
   // Load the form values from the blocks as well.
   const blocks = blocksInSelection(editorState, selection);
-  blocks.forEach((block) => {
-    const data = block.getData();
+
+  // TODO: We only use the first block for the text alignment field right now. But if there
+  // are multiple values, then use -.
+  if (blocks.length > 0) {
+    const data = blocks[0].getData().toJS();
 
     formValues[formField(BlockDataOption.TextAlignment)] = formFieldValueFromBlockData(
       BlockDataOption.TextAlignment,
       data[BlockDataOption.TextAlignment]
     );
-  });
+  }
 
   return formValues;
 }
