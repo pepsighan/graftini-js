@@ -34,7 +34,7 @@ export default function BorderInput({ name }) {
     <>
       <TextField
         onClick={onOpen}
-        value={border?.style}
+        value={border?.style ? capitalize(border.style) : ''}
         placeholder="Add"
         InputProps={{
           readOnly: true,
