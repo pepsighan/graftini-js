@@ -57,17 +57,18 @@ export default function BorderInput({ name }) {
         }}
       />
 
-      <BorderDialog control={control} open={open} onClose={onClose} />
+      <BorderDialog open={open} onClose={onClose} borderSide={border?.top} />
     </>
   );
 }
 
 const borderStyles = ['solid', 'dashed', 'dotted'];
 
-function BorderDialog({ control, name, open, onClose }) {
-  const borderStyle = useWatch({ control, name: `${name}.top.style` });
-  const borderColor = useWatch({ control, name: `${name}.top.color` });
-  const borderWidth = useWatch({ control, name: `${name}.top.width` });
+function BorderDialog({ open, onClose, borderSide }) {
+  const bs = borderSide ?? defaultBorderSide;
+  const borderStyle = bs.style;
+  const borderColor = bs.color;
+  const borderWidth = bs.width;
 
   return (
     <Popover
@@ -143,6 +144,12 @@ function ColorPickerWrapper({ value, onChange }) {
   );
 }
 
+const defaultBorderSide = {
+  style: 'solid',
+  color: { r: 0, g: 0, b: 0 },
+  width: 1,
+};
+
 function useSetFields({ name }) {
   const { setValue } = useFormContext();
 
@@ -152,17 +159,11 @@ function useSetFields({ name }) {
   );
 
   const onSetDefault = useCallback(() => {
-    const borderSide = {
-      style: 'solid',
-      color: { r: 0, g: 0, b: 0 },
-      width: 1,
-    };
-
     onSetValue(name, {
-      top: borderSide,
-      right: borderSide,
-      bottom: borderSide,
-      left: borderSide,
+      top: defaultBorderSide,
+      right: defaultBorderSide,
+      bottom: defaultBorderSide,
+      left: defaultBorderSide,
     });
   }, [name, onSetValue]);
 
