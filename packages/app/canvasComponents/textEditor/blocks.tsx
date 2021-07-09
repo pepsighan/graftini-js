@@ -5,7 +5,7 @@ import { Global } from '@emotion/react';
 /**
  * The options that can be provided in the block data.
  */
-enum BlockDataOption {
+export enum BlockDataOption {
   TextAlignment = 'TEXT_ALIGNMENT',
 }
 

@@ -12,7 +12,7 @@ import TextAlignInput from './form/TextAlignInput';
 import TextColorPicker from './form/TextColorPicker';
 import TextInput from './form/TextInput';
 import { TextComponentProps } from './Text';
-import { getTextFormValues } from './textEditor/useStyleMap';
+import { getTextFormValues } from './textEditor/formFields';
 
 type TextOptionsFields = {
   name?: string;

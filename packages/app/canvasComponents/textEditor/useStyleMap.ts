@@ -5,8 +5,6 @@ import { useCallback } from 'react';
 import {
   addStyleOption,
   dynamicStyleOptions,
-  formField,
-  formFieldValue,
   styleMap,
   StyleOption,
   stylesInSelection,
@@ -56,37 +54,4 @@ function getCustomStyleMap(props: TextComponentProps): DraftStyleMap {
   });
 
   return defaultMap;
-}
-
-/**
- * Gets the text form values for the dynamic styles. The form values are dependent
- * on the position of the cursor and the styles under than cursor.
- */
-// TODO: Show the form value as `-` if there are multiple values for the same field
-// in a given selection.
-export function getTextFormValues(props: TextComponentProps): any {
-  const editorState = getTextEditorState(props);
-  // The selection may be provided directly as [textSelection] if the text
-  // editor is not in focus. Otherwise if the editor is active it can be fetched
-  // from the editor state itself.
-  const selection = props.textSelection ?? editorState.getSelection();
-  const inlineStyles = stylesInSelection(editorState, selection);
-
-  const formValues = {};
-
-  inlineStyles.forEach((styleOption) => {
-    // Split the style option into its two parts. Left side is the option itself and
-    // right side is the value of the option.
-    const split = styleOption.split('=', 2);
-
-    if (!dynamicStyleOptions.includes(split[0] as any)) {
-      // The style is not dynamic.
-      return;
-    }
-
-    const style = split[1];
-    formValues[formField(split[0] as StyleOption)] = formFieldValue(split[0] as StyleOption, style);
-  });
-
-  return formValues;
 }
