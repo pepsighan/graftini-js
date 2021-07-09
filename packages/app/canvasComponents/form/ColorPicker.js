@@ -1,9 +1,9 @@
 import { rgbaToCss } from '@graftini/bricks';
 import { Box, InputAdornment, Popover, TextField, Typography } from '@material-ui/core';
-import { TransparencyGridIcon } from '@modulz/radix-icons';
 import { useCallback, useState } from 'react';
 import { RgbaColorPicker } from 'react-colorful';
 import { Controller, useFormContext } from 'react-hook-form';
+import ColorBox from './ColorBox';
 
 export default function ColorPicker({ name, label = null, onChange = null }) {
   const { control } = useFormContext();
@@ -106,37 +106,5 @@ function ColorPickerInner({ value, onChange, open, onClose }) {
         <RgbaColorPicker color={value} onChange={onChange} />
       </Box>
     </Popover>
-  );
-}
-
-/**
- * Shows a preview of the color that is selected with a chessboard in the background if
- * there is transparency.
- */
-function ColorBox({ value }) {
-  return (
-    <Box
-      sx={{
-        position: 'relative',
-        width: 16,
-        height: 16,
-        borderRadius: 1,
-        overflow: 'hidden',
-        border: '1px solid',
-        borderColor: 'grey.400',
-      }}
-    >
-      <TransparencyGridIcon width="100%" height="100%" />
-      <Box
-        sx={{
-          width: '100%',
-          height: '100%',
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          backgroundColor: value ? rgbaToCss(value) : null,
-        }}
-      />
-    </Box>
   );
 }

@@ -7,6 +7,7 @@ import { boxTags } from 'utils/constants';
 import { parsePositiveInteger } from 'utils/parser';
 import { BoxComponentProps } from './Box';
 import AlignmentInput from './form/AlignmentInput';
+import BorderInput from './form/BorderInput';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPicker from './form/ColorPicker';
 import DirectionInput from './form/DirectionInput';
@@ -227,6 +228,7 @@ function BorderSection() {
   return (
     <>
       <Typography variant="subtitle2">Border</Typography>
+      <BorderInput name="border" />
       <RadiusInput name="borderRadius" />
     </>
   );
