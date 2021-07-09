@@ -1,9 +1,9 @@
 import { Text } from '@graftini/bricks';
 import { useComponentId } from '@graftini/graft';
-import { textDefaultOptions } from 'canvasComponents/TextOptions';
 import { Editor } from 'draft-js';
 import React, { forwardRef, MouseEventHandler, useRef } from 'react';
-import { blockMap } from './blocks';
+import { blockMap, customBlockStyle } from './blocks';
+import { defaultTextFormValues } from './formFields';
 import useEditingState from './useEditingState';
 import useFocusOnEditingMode from './useFocusOnEditingMode';
 import useRetainFocusOnText from './useRetainFocusOnText';
@@ -37,9 +37,7 @@ const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) =
       onBlur={onBlur}
       onMouseDown={onMouseDown}
       onClick={onClick}
-      // These are the default text style that is used to standardize how
-      // every text looks. The user can override it within the text content below.
-      {...textDefaultOptions}
+      {...defaultTextFormValues}
       cursor={isEditing ? 'text' : 'default'}
     >
       <Editor
@@ -48,6 +46,7 @@ const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) =
         onChange={setEditorState}
         customStyleMap={styleMap}
         blockRenderMap={blockMap}
+        blockStyleFn={customBlockStyle}
         readOnly={!isSelected}
       />
     </Text>
