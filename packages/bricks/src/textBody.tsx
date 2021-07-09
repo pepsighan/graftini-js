@@ -48,7 +48,7 @@ function Block({ block }: BlockProps) {
     // Since the styles are no longer same, add the span to spans & reset
     // newSpan & newSpanStyle for the current.
     spans.push(
-      <Text tag="span" displayInline {...resolveStyle(newSpanStyle)}>
+      <Text key={spans.length} tag="span" displayInline {...resolveStyle(newSpanStyle)}>
         {newSpan}
       </Text>
     );
@@ -61,7 +61,7 @@ function Block({ block }: BlockProps) {
   if (newSpan) {
     // Flush the final bits of text.
     spans.push(
-      <Text tag="span" displayInline {...resolveStyle(newSpanStyle)}>
+      <Text key={spans.length} tag="span" displayInline {...resolveStyle(newSpanStyle)}>
         {newSpan}
       </Text>
     );
@@ -107,7 +107,6 @@ enum StyleOption {
   FontFamily = 'FONT_FAMILY',
   FontWeight = 'FONT_WEIGHT',
   TextColor = 'TEXT_COLOR',
-  TextAlignment = 'TEXT_ALIGNMENT',
 }
 
 /**
@@ -121,8 +120,6 @@ function propForOption(option: StyleOption, style: string): [string, any] {
       return ['fontSize', parseFontSize(style)];
     case StyleOption.FontWeight:
       return ['fontWeight', style];
-    case StyleOption.TextAlignment:
-      return ['textAlign', style];
     case StyleOption.TextColor:
       return ['color', parseColor(style)];
     default:
