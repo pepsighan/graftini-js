@@ -31,7 +31,7 @@ export function customBlockStyle(contentBlock: ContentBlock): string {
   }
 
   const data = contentBlock.getData();
-  const alignment = data[BlockDataOption.TextAlignment];
+  const alignment = data.get(BlockDataOption.TextAlignment);
 
   if (!alignment) {
     return 'text-align-left';
