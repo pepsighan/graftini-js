@@ -1,3 +1,4 @@
+import { rgbaToCss } from '@graftini/bricks';
 import {
   Button,
   InputAdornment,
@@ -11,6 +12,7 @@ import { Cross1Icon } from '@modulz/radix-icons';
 import { capitalize } from 'lodash-es';
 import { useCallback, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { parsePositiveInteger } from 'utils/parser';
 import ColorBox from './ColorBox';
 import ColorPicker from './ColorPicker';
 
@@ -73,18 +75,20 @@ export default function BorderInput({ name }) {
         }}
       />
 
-      <BorderDialog open={open} onClose={onClose} borderSide={border} />
+      <BorderDialog name={name} open={open} onClose={onClose} borderSide={border} />
     </>
   );
 }
 
 const borderStyles = ['solid', 'dashed', 'dotted'];
 
-function BorderDialog({ open, onClose, borderSide }) {
+function BorderDialog({ name, open, onClose, borderSide }) {
   const bs = borderSide ?? defaultBorderSide;
   const borderStyle = bs.style;
   const borderColor = bs.color;
   const borderWidth = bs.width;
+
+  const { onSetStyle, onSetColor, onSetWidth } = useUpdateFields({ name });
 
   return (
     <Popover
@@ -97,12 +101,18 @@ function BorderDialog({ open, onClose, borderSide }) {
       }}
     >
       <Stack spacing={2} p={2}>
-        <ColorPickerWrapper value={borderColor} />
+        <ColorPickerWrapper value={borderColor} onChange={onSetColor} />
 
         <TextField
           value={borderStyle}
           select
           sx={{ width: 200 }}
+          onChange={useCallback(
+            (event) => {
+              onSetStyle(event.target.value);
+            },
+            [onSetStyle]
+          )}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -121,6 +131,12 @@ function BorderDialog({ open, onClose, borderSide }) {
         <TextField
           value={borderWidth}
           sx={{ width: 200 }}
+          onChange={useCallback(
+            (event) => {
+              onSetWidth(parsePositiveInteger(event.target.value) || 0);
+            },
+            [onSetWidth]
+          )}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -139,7 +155,7 @@ function ColorPickerWrapper({ value, onChange }) {
     <>
       <ColorPicker value={value} onChange={onChange} padding={0} />
       <TextField
-        value="#FAFAFA"
+        value={rgbaToCss({ ...value, a: null })}
         InputProps={{
           readOnly: true,
           startAdornment: (
@@ -150,7 +166,7 @@ function ColorPickerWrapper({ value, onChange }) {
           // Show a chessboard bg to signify if there is transparency in the color.
           endAdornment: (
             <InputAdornment position="end">
-              <ColorBox value={{ r: 0, g: 0, b: 0, a: 0.2 }} />
+              <ColorBox value={value} />
             </InputAdornment>
           ),
         }}
@@ -183,6 +199,25 @@ function useSetFields({ name }) {
     });
   }, [name, onSetValue]);
 
+  const onReset = useCallback(
+    (event) => {
+      event.stopPropagation();
+      onSetValue(name, null);
+    },
+    [name, onSetValue]
+  );
+
+  return { onSetDefault, onReset };
+}
+
+function useUpdateFields({ name }) {
+  const { setValue } = useFormContext();
+
+  const onSetValue = useCallback(
+    (key, value) => setValue(key, value, { shouldValidate: true, shouldDirty: true }),
+    [setValue]
+  );
+
   const onSetStyle = useCallback(
     (value) => {
       onSetValue(`${name}.top.style`, value);
@@ -213,13 +248,5 @@ function useSetFields({ name }) {
     [name, onSetValue]
   );
 
-  const onReset = useCallback(
-    (event) => {
-      event.stopPropagation();
-      onSetValue(name, null);
-    },
-    [name, onSetValue]
-  );
-
-  return { onSetDefault, onSetStyle, onSetColor, onSetWidth, onReset };
+  return { onSetStyle, onSetColor, onSetWidth };
 }
