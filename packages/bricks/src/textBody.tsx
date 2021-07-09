@@ -48,7 +48,12 @@ function Block({ block }: BlockProps) {
     // Since the styles are no longer same, add the span to spans & reset
     // newSpan & newSpanStyle for the current.
     spans.push(
-      <Text tag="span" displayInline {...resolveStyle(newSpanStyle)}>
+      <Text
+        key={spans.length}
+        tag="span"
+        displayInline
+        {...resolveStyleForInlineContent(newSpanStyle)}
+      >
         {newSpan}
       </Text>
     );
@@ -61,13 +66,41 @@ function Block({ block }: BlockProps) {
   if (newSpan) {
     // Flush the final bits of text.
     spans.push(
-      <Text tag="span" displayInline {...resolveStyle(newSpanStyle)}>
+      <Text
+        key={spans.length}
+        tag="span"
+        displayInline
+        {...resolveStyleForInlineContent(newSpanStyle)}
+      >
         {newSpan}
       </Text>
     );
   }
 
-  return <Text tag="div">{block.text ? spans : <br />}</Text>;
+  return (
+    <Text tag="div" {...resolveStyleForBlock(block.data ?? {})}>
+      {block.text ? spans : <br />}
+    </Text>
+  );
+}
+
+/**
+ * The options that can be provided in the block data.
+ */
+enum BlockDataOption {
+  TextAlignment = 'TEXT_ALIGNMENT',
+}
+
+/**
+ * Resolve the styles for the block based on the block data.
+ */
+function resolveStyleForBlock(data: any): any {
+  const props: any = {};
+
+  const alignment = data[BlockDataOption.TextAlignment];
+  props.textAlign = alignment ?? 'left';
+
+  return props;
 }
 
 /**
@@ -84,7 +117,7 @@ function isSpanStylesSame(left: Set<string>, right: Set<string>): boolean {
 /**
  * Resolves the set of style strings to actual style props for the Text component.
  */
-function resolveStyle(newSpanStyle: Set<string>): any {
+function resolveStyleForInlineContent(newSpanStyle: Set<string>): any {
   const props: any = {};
 
   newSpanStyle.forEach((styleOption) => {
@@ -107,7 +140,6 @@ enum StyleOption {
   FontFamily = 'FONT_FAMILY',
   FontWeight = 'FONT_WEIGHT',
   TextColor = 'TEXT_COLOR',
-  TextAlignment = 'TEXT_ALIGNMENT',
 }
 
 /**
@@ -121,8 +153,6 @@ function propForOption(option: StyleOption, style: string): [string, any] {
       return ['fontSize', parseFontSize(style)];
     case StyleOption.FontWeight:
       return ['fontWeight', style];
-    case StyleOption.TextAlignment:
-      return ['textAlign', style];
     case StyleOption.TextColor:
       return ['color', parseColor(style)];
     default:
