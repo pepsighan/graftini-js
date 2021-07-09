@@ -12,7 +12,6 @@ export enum StyleOption {
   FontFamily = 'FONT_FAMILY',
   FontWeight = 'FONT_WEIGHT',
   TextColor = 'TEXT_COLOR',
-  TextAlignment = 'TEXT_ALIGNMENT',
 }
 
 /**
@@ -23,7 +22,6 @@ export const dynamicStyleOptions = [
   StyleOption.FontFamily,
   StyleOption.FontWeight,
   StyleOption.TextColor,
-  StyleOption.TextAlignment,
 ];
 
 /**
@@ -54,10 +52,6 @@ function styleForOption(option: StyleOption, style: string): CSSProperties {
       return {
         fontWeight: style as any,
       };
-    case StyleOption.TextAlignment:
-      return {
-        textAlign: style as any,
-      };
     case StyleOption.TextColor:
       return {
         color: style,
@@ -83,7 +77,6 @@ export function dynamicStyleOptionName(option: StyleOption, style: any): string 
       return `${option}=${colorToString(style)}`;
     case StyleOption.FontFamily:
     case StyleOption.FontWeight:
-    case StyleOption.TextAlignment:
     default:
       return `${option}=${style}`;
   }
@@ -107,8 +100,6 @@ export function formField(option: StyleOption): string {
       return 'fontSize';
     case StyleOption.FontWeight:
       return 'fontWeight';
-    case StyleOption.TextAlignment:
-      return 'textAlign';
     case StyleOption.TextColor:
       return 'color';
     default:
@@ -128,7 +119,6 @@ export function formFieldValue(option: StyleOption, style: string): any {
     case StyleOption.FontWeight:
       return parseInt(style, 10);
     case StyleOption.FontFamily:
-    case StyleOption.TextAlignment:
     default:
       return style;
   }
