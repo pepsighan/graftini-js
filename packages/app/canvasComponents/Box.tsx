@@ -66,19 +66,22 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
       ...rest,
     };
 
+    const onSelection = useCallback(
+      (ev) => {
+        ev.stopPropagation();
+        return selectComponent(componentId);
+      },
+      [componentId, selectComponent]
+    );
+
     return (
       <BoxComp
         ref={ref}
         {...boxProps}
         isEditor
         onMouseDown={!isDraggingDisabled ? onMouseDown : null}
-        onClick={useCallback(
-          (ev) => {
-            ev.stopPropagation();
-            return selectComponent(componentId);
-          },
-          [componentId, selectComponent]
-        )}
+        onClick={onSelection}
+        onContextMenu={onSelection}
       >
         {children}
       </BoxComp>

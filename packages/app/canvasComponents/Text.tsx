@@ -24,9 +24,17 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
     (ev: MouseEvent) => {
       ev.stopPropagation();
       onEnableTextEditing();
-      return selectComponent(componentId);
+      selectComponent(componentId);
     },
     [componentId, onEnableTextEditing, selectComponent]
+  );
+
+  const onContextMenu = useCallback(
+    (event: MouseEvent) => {
+      event.stopPropagation();
+      selectComponent(componentId);
+    },
+    [componentId, selectComponent]
   );
 
   return (
@@ -40,10 +48,11 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
               ref={ref}
               onMouseDown={!isDraggingDisabled ? onMouseDown : null}
               onClick={onClick}
+              onContextMenu={onContextMenu}
             />
           </TextSelectionProvider>
         ),
-        [isDraggingDisabled, onClick, onMouseDown, ref]
+        [isDraggingDisabled, onClick, onContextMenu, onMouseDown, ref]
       )}
     </>
   );
