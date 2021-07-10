@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { GraftComponent, useComponentId } from '@graftini/graft';
+import { ComponentContextMenuContext } from 'components/editor/ComponentContextMenu';
 import { EditorState, RawDraftContentState, SelectionState } from 'draft-js';
-import { forwardRef, MouseEvent, useCallback, useEffect, useMemo, useRef } from 'react';
+import { forwardRef, MouseEvent, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
 import { useDesignerState, useDesignerStateApi, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
 import { TextSelectionProvider } from './textEditor/textSelection';
@@ -24,9 +25,19 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
     (ev: MouseEvent) => {
       ev.stopPropagation();
       onEnableTextEditing();
-      return selectComponent(componentId);
+      selectComponent(componentId);
     },
     [componentId, onEnableTextEditing, selectComponent]
+  );
+
+  const { onOpenContextMenu } = useContext(ComponentContextMenuContext);
+  const onContextMenu = useCallback(
+    (event: MouseEvent) => {
+      event.stopPropagation();
+      selectComponent(componentId);
+      onOpenContextMenu(event);
+    },
+    [componentId, onOpenContextMenu, selectComponent]
   );
 
   return (
@@ -40,10 +51,11 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
               ref={ref}
               onMouseDown={!isDraggingDisabled ? onMouseDown : null}
               onClick={onClick}
+              onContextMenu={onContextMenu}
             />
           </TextSelectionProvider>
         ),
-        [isDraggingDisabled, onClick, onMouseDown, ref]
+        [isDraggingDisabled, onClick, onContextMenu, onMouseDown, ref]
       )}
     </>
   );

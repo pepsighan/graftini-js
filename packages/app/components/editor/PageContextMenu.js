@@ -1,7 +1,8 @@
-import { Menu, MenuItem } from '@material-ui/core';
+import { MenuItem } from '@material-ui/core';
 import useBoolean from 'hooks/useBoolean';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
+import ContextMenu from './ContextMenu';
 import DeletePageConfirmation from './DeletePageConfirmation';
 
 export default function PageContextMenu({ context, onClose }) {
@@ -17,23 +18,10 @@ export default function PageContextMenu({ context, onClose }) {
 
   return (
     <>
-      <Menu
-        open
-        onClose={onClose}
-        anchorReference="anchorPosition"
-        anchorPosition={
-          context
-            ? {
-                left: context.x,
-                top: context.y,
-              }
-            : null
-        }
-        MenuListProps={{ sx: { width: 150 } }}
-      >
+      <ContextMenu context={context} onClose={onClose}>
         <MenuItem disabled>Edit</MenuItem>
         {page.route !== '/' && <MenuItem onClick={on}>Delete</MenuItem>}
-      </Menu>
+      </ContextMenu>
 
       <DeletePageConfirmation
         isOpen={isOpen}

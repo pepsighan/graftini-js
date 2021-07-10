@@ -13,9 +13,10 @@ import useTextEditorState from './useTextEditorState';
 type TextEditorProps = {
   onMouseDown?: MouseEventHandler;
   onClick: MouseEventHandler;
+  onContextMenu: MouseEventHandler;
 };
 
-const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) => {
+const TextEditor = forwardRef(({ onMouseDown, onClick, onContextMenu }: TextEditorProps, ref) => {
   const editorRef = useRef<Editor | null>(null);
 
   const componentId = useComponentId();
@@ -37,6 +38,7 @@ const TextEditor = forwardRef(({ onMouseDown, onClick }: TextEditorProps, ref) =
       onBlur={onBlur}
       onMouseDown={onMouseDown}
       onClick={onClick}
+      onContextMenu={onContextMenu}
       {...defaultTextFormValues}
       cursor={isEditing ? 'text' : 'default'}
     >

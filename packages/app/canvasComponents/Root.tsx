@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
 import { RGBA, rgbaToCss } from '@graftini/bricks';
 import { RootComponent, ROOT_NODE_ID, useCreateComponentStore } from '@graftini/graft';
-import { ForwardedRef, forwardRef, useCallback } from 'react';
+import { ComponentContextMenuContext } from 'components/editor/ComponentContextMenu';
+import { ForwardedRef, forwardRef, MouseEvent, useCallback, useContext } from 'react';
 import { useDesignerState } from 'store/designer';
 
 const cursor = {
@@ -20,9 +21,23 @@ const Root: RootComponent<RootProps> = forwardRef(
       useCallback((state) => state.newComponent?.type, [])
     );
 
-    const onSelect = useCallback(() => {
-      selectComponent(ROOT_NODE_ID);
-    }, [selectComponent]);
+    const onSelect = useCallback(
+      (event: MouseEvent) => {
+        event.stopPropagation();
+        selectComponent(ROOT_NODE_ID);
+      },
+      [selectComponent]
+    );
+
+    const { onOpenContextMenu } = useContext(ComponentContextMenuContext);
+    const onContextMenu = useCallback(
+      (event: MouseEvent) => {
+        event.stopPropagation();
+        selectComponent(ROOT_NODE_ID);
+        onOpenContextMenu(event);
+      },
+      [onOpenContextMenu, selectComponent]
+    );
 
     return (
       <div
@@ -34,6 +49,7 @@ const Root: RootComponent<RootProps> = forwardRef(
         }}
         {...rest}
         onClick={onSelect}
+        onContextMenu={onContextMenu}
       >
         <div
           ref={ref as any}

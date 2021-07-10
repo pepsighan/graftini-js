@@ -16,7 +16,8 @@ import {
   Spacing,
 } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
-import { forwardRef, ReactNode, useCallback } from 'react';
+import { ComponentContextMenuContext } from 'components/editor/ComponentContextMenu';
+import { forwardRef, ReactNode, useCallback, useContext, MouseEvent } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import { BoxTag } from 'utils/constants';
 
@@ -66,19 +67,32 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
       ...rest,
     };
 
+    const onSelection = useCallback(
+      (event: MouseEvent) => {
+        event.stopPropagation();
+        selectComponent(componentId);
+      },
+      [componentId, selectComponent]
+    );
+
+    const { onOpenContextMenu } = useContext(ComponentContextMenuContext);
+    const onContextMenu = useCallback(
+      (event: MouseEvent) => {
+        event.stopPropagation();
+        onOpenContextMenu(event);
+        selectComponent(componentId);
+      },
+      [componentId, onOpenContextMenu, selectComponent]
+    );
+
     return (
       <BoxComp
         ref={ref}
         {...boxProps}
         isEditor
         onMouseDown={!isDraggingDisabled ? onMouseDown : null}
-        onClick={useCallback(
-          (ev) => {
-            ev.stopPropagation();
-            return selectComponent(componentId);
-          },
-          [componentId, selectComponent]
-        )}
+        onClick={onSelection}
+        onContextMenu={onContextMenu}
       >
         {children}
       </BoxComp>

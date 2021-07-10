@@ -190,6 +190,7 @@ export type EditorProps = {
 
 export type EditorInteractionProps = {
   onClick?: MouseEventHandler;
+  onContextMenu?: MouseEventHandler;
 };
 
 export type DragProps = {
@@ -419,13 +420,18 @@ export function dragProps({ isEditor, onMouseDown }: EditorProps & DragProps): a
   };
 }
 
-function editorInteractionProps({ isEditor, onClick }: EditorProps & EditorInteractionProps): any {
+function editorInteractionProps({
+  isEditor,
+  onClick,
+  onContextMenu,
+}: EditorProps & EditorInteractionProps): any {
   if (!isEditor) {
     return {};
   }
 
   return {
     onClick,
+    onContextMenu,
   };
 }
 
