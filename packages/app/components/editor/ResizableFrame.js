@@ -357,7 +357,13 @@ function useDimensionUpdate({ componentId }) {
         }
 
         const props = state.componentMap[componentId].props;
+
+        if (typeof props.width === 'string') {
+          // It was `auto`.
+          props.width = {};
+        }
         props.width ??= {};
+
         props.width.size = size;
         props.width.unit = isCtrl ? '%' : 'px';
       });
@@ -382,7 +388,12 @@ function useDimensionUpdate({ componentId }) {
 
         const props = state.componentMap[componentId].props;
 
+        if (typeof props.height === 'string') {
+          // It was `auto`.
+          props.height = {};
+        }
         props.height ??= {};
+
         props.height.size = size;
         props.height.unit = isCtrl ? '%' : 'px';
       });
