@@ -1,6 +1,7 @@
 import { Button, Tooltip } from '@material-ui/core';
+import useContextMenu from 'hooks/useContextMenu';
 import { useRouter } from 'next/router';
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import { encode } from 'utils/url';
 import PageContextMenu from './PageContextMenu';
@@ -24,23 +25,12 @@ export default function PageItem({ id, name, route, slugProjectId, projectId }) 
     setCurrentPage(id);
   }, [id, replace, setCurrentPage, slugProjectId]);
 
-  const [context, setContext] = useState(null);
-
-  const onOpenContextMenu = useCallback(
-    (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-
-      setContext({
-        x: event.clientX,
-        y: event.clientY,
-        projectId,
-        pageId: id,
-      });
+  const { context, onOpenContextMenu, onCloseContextMenu } = useContextMenu({
+    data: {
+      projectId,
+      pageId: id,
     },
-    [id, projectId]
-  );
-  const onCloseContextMenu = useCallback(() => setContext(null), []);
+  });
 
   // TODO: Do not cause history to change. Since the pages are used to change
   // the views in the editor rather than change route for the app.
