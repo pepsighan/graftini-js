@@ -198,7 +198,7 @@ function BorderWidthInput({ name }) {
 
 export const defaultBorderSide = {
   style: 'solid',
-  color: { r: 0, g: 0, b: 0 },
+  color: { r: 0, g: 0, b: 0, a: 1 },
   width: 1,
 };
 
@@ -211,13 +211,17 @@ function useSetFields({ name }) {
   );
 
   const onSetDefault = useCallback(() => {
-    onSetValue(name, defaultBorderSide);
+    onSetValue(`${name}.style`, defaultBorderSide.style);
+    onSetValue(`${name}.color`, defaultBorderSide.color);
+    onSetValue(`${name}.width`, defaultBorderSide.width);
   }, [name, onSetValue]);
 
   const onReset = useCallback(
     (event) => {
       event.stopPropagation();
-      onSetValue(name, { ...defaultBorderSide, width: 0 });
+      onSetValue(`${name}.style`, defaultBorderSide.style);
+      onSetValue(`${name}.color`, defaultBorderSide.color);
+      onSetValue(`${name}.width`, 0);
     },
     [name, onSetValue]
   );
