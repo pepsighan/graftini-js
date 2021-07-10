@@ -6,13 +6,17 @@ import {
   DropMarker,
   useCheckCursorOnIFrame,
 } from '@graftini/graft';
-import { useTheme, Box } from '@material-ui/core';
+import { Box, useTheme } from '@material-ui/core';
 import IFrame from 'components/IFrame';
+import useContextMenu from 'hooks/useContextMenu';
+import ComponentContextMenu from './ComponentContextMenu';
 import HoverOutline from './HoverOutline';
 import Selection from './Selection';
 
 export default function Canvas() {
   const { palette } = useTheme();
+
+  const { context, onOpenContextMenu, onCloseContextMenu } = useContextMenu();
 
   return (
     <Box
@@ -23,6 +27,7 @@ export default function Canvas() {
         overflow: 'hidden',
         backgroundColor: 'white',
       }}
+      onContextMenu={onOpenContextMenu}
     >
       <IFrame
         title="Designer"
@@ -50,6 +55,7 @@ export default function Canvas() {
       </IFrame>
       <HoverOutline />
       <Selection />
+      {context && <ComponentContextMenu context={context} onClose={onCloseContextMenu} />}
     </Box>
   );
 }
