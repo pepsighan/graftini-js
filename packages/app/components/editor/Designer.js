@@ -37,20 +37,34 @@ function Editorial() {
   const { palette } = useTheme();
 
   return (
-    <Editor resolvers={components} initialState={editorState} rootComponentOverride={Root}>
-      <SyncEditorAndDesignerState />
+    <Box onContextMenu={useDisableContextMenu()}>
+      <Editor resolvers={components} initialState={editorState} rootComponentOverride={Root}>
+        <SyncEditorAndDesignerState />
 
-      <GlobalStyles styles={` body { background-color: ${palette.grey[50]}; } `} />
+        <GlobalStyles styles={` body { background-color: ${palette.grey[50]}; } `} />
 
-      <EditorNavigation />
-      {/* The height of the nav is subtracted, so that any of the following does not cause window-wide scroll. 
+        <EditorNavigation />
+        {/* The height of the nav is subtracted, so that any of the following does not cause window-wide scroll. 
           Any scroll they have should be within their boundaries.
       */}
-      <Box sx={{ display: 'flex', height: `calc(100vh - ${navBarHeight}px)` }}>
-        <LeftSidebar />
-        <Canvas />
-        <RightSidebar />
-      </Box>
-    </Editor>
+        <Box sx={{ display: 'flex', height: `calc(100vh - ${navBarHeight}px)` }}>
+          <LeftSidebar />
+          <Canvas />
+          <RightSidebar />
+        </Box>
+      </Editor>
+    </Box>
   );
+}
+
+/**
+ * We only need context menu to be shown when explicitly required by the UI.
+ * We need to disable the rest of the default context menu in the page so that
+ * the user gets a consistent UX.
+ */
+function useDisableContextMenu() {
+  return useCallback((event) => {
+    event.preventDefault();
+    event.stopPropagation();
+  }, []);
 }
