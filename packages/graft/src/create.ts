@@ -145,18 +145,14 @@ export function useDrawComponent(): UseDrawComponent {
         const height = state.draw.end.y - state.draw.start.y;
         const transformedSize = state.newComponent.transformSize?.(width, height) ?? {};
 
-        newComponent = {
-          id: nanoid(),
-          type: state.newComponent.type,
-          isCanvas: state.newComponent.isCanvas,
-          props: {
+        newComponent = newComponentNode({
+          ...state.newComponent,
+          defaultProps: {
             ...(Component.graftOptions?.defaultProps ?? {}),
             ...(state.newComponent.defaultProps ?? {}),
             ...transformedSize,
           },
-          childAppendDirection: state.newComponent.childAppendDirection || 'vertical',
-          childrenNodes: [],
-        };
+        });
 
         state.draw = null;
         state.newComponent = null;
@@ -178,5 +174,19 @@ export function useDrawComponent(): UseDrawComponent {
     onMouseDown,
     onMouseMove,
     onMouseUp,
+  };
+}
+
+/**
+ * Creates a new component node with the given config options.
+ */
+export function newComponentNode(config: NewComponent): ComponentNode {
+  return {
+    id: nanoid(),
+    type: config.type,
+    isCanvas: config.isCanvas,
+    props: config.defaultProps ?? {},
+    childAppendDirection: config.childAppendDirection || 'vertical',
+    childrenNodes: [],
   };
 }

@@ -6,7 +6,7 @@ export {
   RootComponent,
 } from './componentTypes';
 export { useCanvasId, useComponentId } from './context';
-export { useCreateComponent, useForgetCreateComponent } from './create';
+export { newComponentNode, useCreateComponent, useForgetCreateComponent } from './create';
 export { useOnDelete } from './delete';
 export { DrawMarker, DrawMarkerProps } from './drawMarker';
 export { DropMarker, DropMarkerProps } from './dropMarker';
