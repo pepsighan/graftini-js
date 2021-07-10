@@ -6,7 +6,7 @@ import { parseInteger } from 'utils/parser';
 // TODO: Typing negative numbers is kind of weird. Cannot start typing with - right now.
 // Has to be some non-zero positive number written first and then - prepended. Which is
 // not good experience.
-export default function MarginField({ name }) {
+export default function MarginInput({ name }) {
   return (
     <Box>
       <Typography variant="body2" sx={{ mb: 1 }}>

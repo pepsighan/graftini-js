@@ -1,4 +1,4 @@
-import { BorderRadius } from '@graftini/bricks';
+import { BorderRadius, BorderSide } from '@graftini/bricks';
 import { useEditorStore } from '@graftini/graft';
 import { Divider, MenuItem, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
@@ -7,14 +7,15 @@ import { boxTags } from 'utils/constants';
 import { parsePositiveInteger } from 'utils/parser';
 import { BoxComponentProps } from './Box';
 import AlignmentInput from './form/AlignmentInput';
+import BorderInput, { defaultBorderSide } from './form/BorderInput';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
-import ColorPicker from './form/ColorPicker';
+import ColorPickerInput from './form/ColorPickerInput';
 import DirectionInput from './form/DirectionInput';
-import FlexProperties from './form/FlexProperties';
-import MarginField from './form/MarginField';
+import FlexPropertiesInput from './form/FlexPropertiesInput';
+import MarginInput from './form/MarginInput';
 import OpacityInput from './form/OpacityInput';
 import OverflowInput from './form/OverflowInput';
-import PaddingField from './form/PaddingField';
+import PaddingInput from './form/PaddingInput';
 import RadiusInput from './form/RadiusInput';
 import SegmentedInput from './form/SegmentedInput';
 import SelectInput from './form/SelectInput';
@@ -36,6 +37,7 @@ type RawDimensionLimit = {
 
 type BoxOptionsFields = BoxComponentProps & {
   borderRadius: BorderRadius & { toggle: 'all' | 'each' };
+  borderSide: BorderSide;
   widthRaw: RawDimension;
   heightRaw: RawDimension;
   minWidthRaw: RawDimensionLimit;
@@ -76,6 +78,11 @@ export default function BoxOptions({ componentId }: OptionsProps) {
             ...initialState.borderRadius,
             toggle: hasBorderRadiusAllOrEachToggle(initialState.borderRadius),
           },
+          borderSide: initialState.border?.top ?? {
+            ...(defaultBorderSide as BorderSide),
+            // If the border is not defined, then it has zero width.
+            width: 0,
+          },
         }),
         []
       )}
@@ -84,6 +91,7 @@ export default function BoxOptions({ componentId }: OptionsProps) {
           props: BoxComponentProps,
           {
             borderRadius,
+            borderSide,
             widthRaw,
             heightRaw,
             minWidthRaw,
@@ -116,6 +124,17 @@ export default function BoxOptions({ componentId }: OptionsProps) {
           props.borderRadius.topRight = borderRadius.topRight;
           props.borderRadius.bottomRight = borderRadius.bottomRight;
           props.borderRadius.bottomLeft = borderRadius.bottomLeft;
+
+          if (borderSide.width) {
+            props.border = {
+              top: borderSide,
+              right: borderSide,
+              bottom: borderSide,
+              left: borderSide,
+            };
+          } else {
+            props.border = null;
+          }
 
           assignDimension(props, 'width', widthRaw);
           assignDimension(props, 'height', heightRaw);
@@ -176,7 +195,7 @@ function FlexSection() {
   return (
     <>
       <Typography variant="subtitle2">Flex</Typography>
-      <FlexProperties />
+      <FlexPropertiesInput />
       <SegmentedInput
         name="flexWrap"
         options={[
@@ -198,8 +217,8 @@ function LayoutSection() {
       <SizeLimitInput name="maxWidthRaw" label="Max W" />
       <SizeLimitInput name="minHeightRaw" label="Min H" />
       <SizeLimitInput name="maxHeightRaw" label="Max W" />
-      <PaddingField name="padding" />
-      <MarginField name="margin" />
+      <PaddingInput name="padding" />
+      <MarginInput name="margin" />
     </>
   );
 }
@@ -217,7 +236,7 @@ function AppearanceSection() {
   return (
     <>
       <Typography variant="subtitle2">Appearance</Typography>
-      <ColorPicker name="color" label="Fill" />
+      <ColorPickerInput name="color" label="Fill" />
       <OpacityInput name="opacity" />
     </>
   );
@@ -227,6 +246,7 @@ function BorderSection() {
   return (
     <>
       <Typography variant="subtitle2">Border</Typography>
+      <BorderInput name="borderSide" />
       <RadiusInput name="borderRadius" />
     </>
   );
