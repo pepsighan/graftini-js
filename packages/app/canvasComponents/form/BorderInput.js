@@ -11,7 +11,7 @@ import {
 import { Cross1Icon } from '@modulz/radix-icons';
 import { capitalize } from 'lodash-es';
 import { useCallback, useState } from 'react';
-import { useFormContext, useWatch } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
 import ColorBox from './ColorBox';
 import ColorPicker from './ColorPicker';
@@ -77,14 +77,7 @@ export default function BorderInput({ name }) {
   );
 }
 
-const borderStyles = ['solid', 'dashed', 'dotted'];
-
-function BorderDialog({ name, open, onClose, borderSide }) {
-  const { setValue } = useFormContext();
-  const onSetStyle = useCallback((value) => setValue(`${name}.style`, value), [name, setValue]);
-  const onSetColor = useCallback((value) => setValue(`${name}.color`, value), [name, setValue]);
-  const onSetWidth = useCallback((value) => setValue(`${name}.width`, value), [name, setValue]);
-
+function BorderDialog({ name, open, onClose }) {
   return (
     <Popover
       open={!!open}
@@ -96,18 +89,64 @@ function BorderDialog({ name, open, onClose, borderSide }) {
       }}
     >
       <Stack spacing={2} p={2}>
-        <ColorPickerWrapper value={borderSide.color} onChange={onSetColor} />
+        <ColorPickerInput name={`${name}.color`} />
+        <BorderStyleInput name={`${name}.style`} />
+        <BorderWidthInput name={`${name}.width`} />
+      </Stack>
+    </Popover>
+  );
+}
 
+function ColorPickerInput({ name }) {
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
+        <>
+          <ColorPicker value={field.value} onChange={field.onChange} padding={0} />
+          <TextField
+            value={rgbaToCss({ ...field.value, a: null })}
+            InputProps={{
+              readOnly: true,
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Typography variant="body2">Color</Typography>
+                </InputAdornment>
+              ),
+              // Show a chessboard bg to signify if there is transparency in the color.
+              endAdornment: (
+                <InputAdornment position="end">
+                  <ColorBox value={field.value} />
+                </InputAdornment>
+              ),
+            }}
+            sx={{ width: 200 }}
+          />
+        </>
+      )}
+    />
+  );
+}
+
+const borderStyles = ['solid', 'dashed', 'dotted'];
+
+function BorderStyleInput({ name }) {
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
         <TextField
-          value={borderSide.style}
+          inputRef={field.ref}
+          name={field.name}
+          value={field.value}
+          onChange={field.onChange}
           select
-          sx={{ width: 200 }}
-          onChange={useCallback(
-            (event) => {
-              onSetStyle(event.target.value);
-            },
-            [onSetStyle]
-          )}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -115,6 +154,7 @@ function BorderDialog({ name, open, onClose, borderSide }) {
               </InputAdornment>
             ),
           }}
+          sx={{ width: 200 }}
         >
           {borderStyles.map((it) => (
             <MenuItem key={it} value={it}>
@@ -122,16 +162,26 @@ function BorderDialog({ name, open, onClose, borderSide }) {
             </MenuItem>
           ))}
         </TextField>
+      )}
+    />
+  );
+}
 
+function BorderWidthInput({ name }) {
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      name={name}
+      control={control}
+      render={({ field }) => (
         <TextField
-          value={borderSide.width}
-          sx={{ width: 200 }}
-          onChange={useCallback(
-            (event) => {
-              onSetWidth(parsePositiveInteger(event.target.value) || 0);
-            },
-            [onSetWidth]
-          )}
+          inputRef={field.ref}
+          name={field.name}
+          value={field.value}
+          onChange={(event) => {
+            field.onChange(parsePositiveInteger(event.target.value) || 0);
+          }}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -139,35 +189,10 @@ function BorderDialog({ name, open, onClose, borderSide }) {
               </InputAdornment>
             ),
           }}
+          sx={{ width: 200 }}
         />
-      </Stack>
-    </Popover>
-  );
-}
-
-function ColorPickerWrapper({ value, onChange }) {
-  return (
-    <>
-      <ColorPicker value={value} onChange={onChange} padding={0} />
-      <TextField
-        value={rgbaToCss({ ...value, a: null })}
-        InputProps={{
-          readOnly: true,
-          startAdornment: (
-            <InputAdornment position="start">
-              <Typography variant="body2">Color</Typography>
-            </InputAdornment>
-          ),
-          // Show a chessboard bg to signify if there is transparency in the color.
-          endAdornment: (
-            <InputAdornment position="end">
-              <ColorBox value={value} />
-            </InputAdornment>
-          ),
-        }}
-        sx={{ width: 200 }}
-      />
-    </>
+      )}
+    />
   );
 }
 
