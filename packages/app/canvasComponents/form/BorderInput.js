@@ -19,17 +19,14 @@ import ColorPicker from './ColorPicker';
 export default function BorderInput({ name }) {
   const { control, getValues } = useFormContext();
 
-  // Since all the borders are going to be same for now. Lets just show the top.
-  const borderAll = useWatch({ control, name });
-  const border = borderAll?.top;
-
+  const borderSide = useWatch({ control, name });
   const { onSetDefault, onReset } = useSetFields({ name });
 
   const [open, setOpen] = useState(null);
   const onOpen = useCallback(
     (event) => {
-      const border = getValues().border;
-      if (!border) {
+      const borderSide = getValues().borderSide;
+      if (!borderSide.width) {
         // If there is no border, on opening the border add a default one.
         onSetDefault();
       }
@@ -45,7 +42,7 @@ export default function BorderInput({ name }) {
     <>
       <TextField
         onClick={onOpen}
-        value={border?.style ? capitalize(border.style) : ''}
+        value={borderSide.width ? capitalize(borderSide.style) : ''}
         placeholder="Add"
         InputProps={{
           readOnly: true,
@@ -55,9 +52,9 @@ export default function BorderInput({ name }) {
             </InputAdornment>
           ),
           // Show a chessboard bg to signify if there is transparency in the color.
-          endAdornment: border ? (
+          endAdornment: borderSide.width ? (
             <InputAdornment position="end">
-              <ColorBox value={border.color} />
+              <ColorBox value={borderSide.color} />
 
               <Button sx={{ ml: 1, width: 32, minWidth: 'auto' }} onClick={onReset}>
                 <Cross1Icon />
@@ -75,7 +72,7 @@ export default function BorderInput({ name }) {
         }}
       />
 
-      <BorderDialog name={name} open={open} onClose={onClose} borderSide={border} />
+      <BorderDialog name={name} open={open} onClose={onClose} borderSide={borderSide} />
     </>
   );
 }
@@ -83,12 +80,10 @@ export default function BorderInput({ name }) {
 const borderStyles = ['solid', 'dashed', 'dotted'];
 
 function BorderDialog({ name, open, onClose, borderSide }) {
-  const bs = borderSide ?? defaultBorderSide;
-  const borderStyle = bs.style;
-  const borderColor = bs.color;
-  const borderWidth = bs.width;
-
-  const { onSetStyle, onSetColor, onSetWidth } = useUpdateFields({ name });
+  const { setValue } = useFormContext();
+  const onSetStyle = useCallback((value) => setValue(`${name}.style`, value), [name, setValue]);
+  const onSetColor = useCallback((value) => setValue(`${name}.color`, value), [name, setValue]);
+  const onSetWidth = useCallback((value) => setValue(`${name}.width`, value), [name, setValue]);
 
   return (
     <Popover
@@ -101,10 +96,10 @@ function BorderDialog({ name, open, onClose, borderSide }) {
       }}
     >
       <Stack spacing={2} p={2}>
-        <ColorPickerWrapper value={borderColor} onChange={onSetColor} />
+        <ColorPickerWrapper value={borderSide.color} onChange={onSetColor} />
 
         <TextField
-          value={borderStyle}
+          value={borderSide.style}
           select
           sx={{ width: 200 }}
           onChange={useCallback(
@@ -129,7 +124,7 @@ function BorderDialog({ name, open, onClose, borderSide }) {
         </TextField>
 
         <TextField
-          value={borderWidth}
+          value={borderSide.width}
           sx={{ width: 200 }}
           onChange={useCallback(
             (event) => {
@@ -176,7 +171,7 @@ function ColorPickerWrapper({ value, onChange }) {
   );
 }
 
-const defaultBorderSide = {
+export const defaultBorderSide = {
   style: 'solid',
   color: { r: 0, g: 0, b: 0 },
   width: 1,
@@ -191,62 +186,16 @@ function useSetFields({ name }) {
   );
 
   const onSetDefault = useCallback(() => {
-    onSetValue(name, {
-      top: defaultBorderSide,
-      right: defaultBorderSide,
-      bottom: defaultBorderSide,
-      left: defaultBorderSide,
-    });
+    onSetValue(name, defaultBorderSide);
   }, [name, onSetValue]);
 
   const onReset = useCallback(
     (event) => {
       event.stopPropagation();
-      onSetValue(name, null);
+      onSetValue(name, { ...defaultBorderSide, width: 0 });
     },
     [name, onSetValue]
   );
 
   return { onSetDefault, onReset };
-}
-
-function useUpdateFields({ name }) {
-  const { setValue } = useFormContext();
-
-  const onSetValue = useCallback(
-    (key, value) => setValue(key, value, { shouldValidate: true, shouldDirty: true }),
-    [setValue]
-  );
-
-  const onSetStyle = useCallback(
-    (value) => {
-      onSetValue(`${name}.top.style`, value);
-      onSetValue(`${name}.right.style`, value);
-      onSetValue(`${name}.bottom.style`, value);
-      onSetValue(`${name}.left.style`, value);
-    },
-    [name, onSetValue]
-  );
-
-  const onSetColor = useCallback(
-    (value) => {
-      onSetValue(`${name}.top.color`, value);
-      onSetValue(`${name}.right.color`, value);
-      onSetValue(`${name}.bottom.color`, value);
-      onSetValue(`${name}.left.color`, value);
-    },
-    [name, onSetValue]
-  );
-
-  const onSetWidth = useCallback(
-    (value) => {
-      onSetValue(`${name}.top.width`, value);
-      onSetValue(`${name}.right.width`, value);
-      onSetValue(`${name}.bottom.width`, value);
-      onSetValue(`${name}.left.width`, value);
-    },
-    [name, onSetValue]
-  );
-
-  return { onSetStyle, onSetColor, onSetWidth };
 }
