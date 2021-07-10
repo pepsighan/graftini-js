@@ -1,4 +1,4 @@
-import { ROOT_NODE_ID, useOnDelete } from '@graftini/graft';
+import { useOnDelete } from '@graftini/graft';
 import { MenuItem } from '@material-ui/core';
 import useContextMenu from 'hooks/useContextMenu';
 import { createContext, PropsWithChildren, useCallback, useContext } from 'react';
@@ -15,12 +15,12 @@ export default function ComponentContextMenu() {
 
   const componentId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
   const onDeleteClick = useOnDeleteClick({ componentId, onClose });
+  const onWrapWithBox = useOnWrapWithBox({ componentId, onClose });
 
   return (
     <ContextMenu context={context} onClose={onClose} isCorrectionNeeded>
-      <MenuItem onClick={onDeleteClick} disabled={componentId === ROOT_NODE_ID}>
-        Delete
-      </MenuItem>
+      <MenuItem onClick={onWrapWithBox}>Wrap with Box</MenuItem>
+      <MenuItem onClick={onDeleteClick}>Delete</MenuItem>
     </ContextMenu>
   );
 }
@@ -46,4 +46,14 @@ function useOnDeleteClick({ componentId, onClose }) {
     deleteComponent(componentId);
     onClose();
   }, [componentId, deleteComponent, onClose, unselectComponent]);
+}
+
+function useOnWrapWithBox({ componentId, onClose }) {
+  return useCallback(() => {
+    if (!componentId) {
+      return;
+    }
+
+    onClose();
+  }, [componentId, onClose]);
 }
