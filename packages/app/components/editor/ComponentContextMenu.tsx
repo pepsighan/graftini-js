@@ -50,12 +50,15 @@ function useOnDeleteClick({ componentId, onClose }) {
 }
 
 function useOnWrapWithBox({ componentId, onClose }) {
+  const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
   const immerSet = useEditorStore(useCallback((state) => state.immerSet, []));
 
   return useCallback(() => {
     if (!componentId) {
       return;
     }
+
+    let wrappedComponentId: string;
 
     immerSet((state) => {
       // Get the component which is to be wrapped.
@@ -73,6 +76,7 @@ function useOnWrapWithBox({ componentId, onClose }) {
           height: 'auto',
         },
       });
+      wrappedComponentId = wrapBoxComponent.id;
 
       // Register the new box component.
       state.componentMap[wrapBoxComponent.id] = wrapBoxComponent;
@@ -91,6 +95,9 @@ function useOnWrapWithBox({ componentId, onClose }) {
       // Its done.
     });
 
+    // Select the newly created component.
+    selectComponent(wrappedComponentId);
+
     onClose();
-  }, [componentId, immerSet, onClose]);
+  }, [componentId, immerSet, onClose, selectComponent]);
 }
