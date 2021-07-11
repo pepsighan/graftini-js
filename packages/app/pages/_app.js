@@ -2,6 +2,7 @@ import { ApolloProvider } from '@apollo/client';
 import { CssBaseline, GlobalStyles } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/system';
 import Head from 'next/head';
+import { SnackbarProvider } from 'notistack';
 import { useMemo } from 'react';
 import 'utils/firebase';
 import { initializeAppApollo } from 'utils/graphqlApp';
@@ -26,7 +27,9 @@ export default function MyApp({ Component, pageProps }) {
 
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Component {...pageProps} />
+        <SnackbarProvider>
+          <Component {...pageProps} />
+        </SnackbarProvider>
 
         <GlobalStyles
           styles={`

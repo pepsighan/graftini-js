@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
+import { useSnackbar } from 'notistack';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { sendSignLinkInToEmail } from 'store/auth';
@@ -18,6 +19,8 @@ export default function EmailLinkForm({ onSend }) {
     resolver: zodResolver(schema),
   });
 
+  const { enqueueSnackbar } = useSnackbar();
+
   const onSubmit = useCallback(
     async ({ email }) => {
       try {
@@ -25,9 +28,12 @@ export default function EmailLinkForm({ onSend }) {
         onSend();
       } catch (err) {
         // Show the sending email link failed.
+        enqueueSnackbar('We could not send you an e-mail link. Please try in a while.', {
+          variant: 'error',
+        });
       }
     },
-    [onSend]
+    [enqueueSnackbar, onSend]
   );
 
   return (
