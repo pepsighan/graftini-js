@@ -170,5 +170,10 @@ export default createTheme({
         },
       },
     },
+    MuiPaper: {
+      defaultProps: {
+        variant: 'outlined',
+      },
+    },
   },
 });

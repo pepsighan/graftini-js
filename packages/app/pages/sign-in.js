@@ -1,25 +1,42 @@
 import {
+  Button,
   Grid,
+  InputAdornment,
   Paper,
+  Stack,
+  Link as MLink,
   TextField,
   Typography,
-  InputAdornment,
-  Button,
-  Stack,
+  GlobalStyles,
 } from '@material-ui/core';
+import logoLight from 'assets/logo-light.png';
 import SEO from 'components/SEO';
+import Image from 'next/image';
+import theme from 'utils/theme';
+import Link from 'next/link';
 
 export default function Home() {
   return (
     <>
       <SEO />
+      <GlobalStyles
+        styles={`
+        body {
+          background-color: ${theme.palette.grey[50]};
+        }
+      `}
+      />
 
       <Grid container justifyContent="center" sx={{ mt: 12 }}>
         <Grid item>
-          <Typography variant="h5" textAlign="center">
-            Sign In
-          </Typography>
-          <Paper sx={{ p: 4, width: 400, mt: 2 }}>
+          <Stack justifyContent="center" alignItems="center">
+            <Link href="/" passHref>
+              <MLink>
+                <Image src={logoLight} width={120} height={120} />
+              </MLink>
+            </Link>
+          </Stack>
+          <Paper sx={{ p: 4, width: 400, mt: 16 }}>
             <Stack spacing={2}>
               <TextField
                 size="medium"
