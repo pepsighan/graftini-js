@@ -22,6 +22,12 @@ export default createTheme({
           textTransform: 'initial',
           fontWeight: 'medium',
         },
+        sizeSmall: {
+          fontSize: typography.subtitle2.fontSize,
+        },
+        sizeMedium: {
+          fontSize: typography.subtitle1.fontSize,
+        },
       },
     },
     MuiToggleButton: {
@@ -84,19 +90,25 @@ export default createTheme({
         autoComplete: 'off',
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        sizeSmall: {
+          fontSize: typography.subtitle2.fontSize,
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
           backgroundColor: 'white',
         },
         input: {
-          paddingTop: 10,
-          paddingBottom: 10,
+          paddingTop: 8,
+          paddingBottom: 8,
         },
         inputSizeSmall: {
           paddingTop: 6,
           paddingBottom: 6,
-          fontSize: typography.subtitle2.fontSize,
         },
       },
     },
