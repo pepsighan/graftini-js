@@ -1,18 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
+  IconButton,
   InputAdornment,
   Snackbar,
   Stack,
   TextField,
   Typography,
-  IconButton,
 } from '@material-ui/core';
+import { Cross1Icon } from '@modulz/radix-icons';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { sendSignLinkInToEmail } from 'store/auth';
+import { SignInErrors, useSendSignLinkInToEmail } from 'store/auth';
 import { z } from 'zod';
-import { Cross1Icon } from '@modulz/radix-icons';
 
 const schema = z.object({
   email: z.string().email(),
@@ -27,55 +27,66 @@ export default function EmailLinkForm({ onSend }) {
     resolver: zodResolver(schema),
   });
 
-  // The error is divided into error and text because this way the transition
-  // is fluid when the snackbar closes.
-  // TODO: Move to notistack once it is updated to MUI5.
-  const [[error, errorText], setError] = useState([false, null]);
+  const sendSignLinkInToEmail = useSendSignLinkInToEmail();
+
+  const [error, setError] = useState(null);
   const onCloseError = useCallback(() => {
-    setError(([_, errorText]) => [false, errorText]);
+    setError(null);
   }, []);
 
   const onSubmit = useCallback(
     async ({ email }) => {
-      try {
-        await sendSignLinkInToEmail(email);
+      const error = await sendSignLinkInToEmail(email);
+      if (!error) {
         onSend();
-      } catch (err) {
-        // Show the sending email link failed.
-        setError([true, 'We could not send you an e-mail link. Please try in a while.']);
+        return;
       }
+
+      setError(error);
     },
-    [onSend]
+    [onSend, sendSignLinkInToEmail]
   );
 
   return (
     <>
-      <Stack component="form" spacing={2} onSubmit={handleSubmit(onSubmit)}>
-        <TextField
-          {...register('email')}
-          size="medium"
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Typography variant="body1">Email</Typography>
-              </InputAdornment>
-            ),
-          }}
-          error={!!errors?.email}
-          helperText={errors?.email?.message}
-        />
+      {error !== SignInErrors.EarlyAccessNotAllowed && (
+        <Stack component="form" spacing={2} onSubmit={handleSubmit(onSubmit)}>
+          <TextField
+            {...register('email')}
+            size="medium"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Typography variant="body1">Email</Typography>
+                </InputAdornment>
+              ),
+            }}
+            error={!!errors?.email}
+            helperText={errors?.email?.message}
+          />
 
-        <Button variant="contained" fullWidth type="submit">
-          Sign In
-        </Button>
-      </Stack>
+          <Button variant="contained" fullWidth type="submit">
+            Sign In
+          </Button>
+        </Stack>
+      )}
 
+      {/* TODO: Add the user to early access list if they were not allowed. */}
+      {error === SignInErrors.EarlyAccessNotAllowed && (
+        <Typography textAlign="center">You are currently not in the early access list.</Typography>
+      )}
+
+      {/* TODO: Move to notistack once it is updated to MUI5. */}
       <Snackbar
-        open={error}
+        open={error === SignInErrors.SendingLinkFailed}
         se="error"
         onClose={onCloseError}
-        message={errorText}
+        message={
+          error === SignInErrors.SendingLinkFailed
+            ? 'We could not send you an e-mail link. Please try in a while.'
+            : null
+        }
         anchorOrigin={{
           horizontal: 'center',
           vertical: 'bottom',

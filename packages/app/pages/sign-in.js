@@ -18,7 +18,7 @@ export default unprotectedOnlyPage(function SignIn() {
 
   return (
     <>
-      <SEO />
+      <SEO title="Sign In" />
       <GlobalStyles
         styles={`
           body {

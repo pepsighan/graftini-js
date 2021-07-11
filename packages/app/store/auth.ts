@@ -1,5 +1,6 @@
-import { gql, useQuery } from '@apollo/client';
+import { gql, useMutation, useQuery } from '@apollo/client';
 import firebase from 'firebase/app';
+import { useCallback } from 'react';
 
 /**
  * A logged in user object.
@@ -13,23 +14,43 @@ type User = {
 
 const signInLinkToEmailKey = 'sign-in-link-to-email';
 
+export enum SignInErrors {
+  EarlyAccessNotAllowed = 'early_access_not_allowed',
+  SendingLinkFailed = 'sending_link_failed',
+  InvalidSignInLink = 'invalid_sign_in_link',
+  InvalidBrowser = 'invalid_browser',
+  ExpiredEmailLink = 'expired_email_link',
+}
+
 /**
  * Sends a sign link to the given email. The user is redirected the confirm
  * sign in link once it clicks on the sent link.
  */
-export async function sendSignLinkInToEmail(email: string): Promise<void> {
-  await firebase.auth().sendSignInLinkToEmail(email, {
-    url: `${window.location.origin}/confirm-sign-in`,
-    handleCodeInApp: true,
-  });
-  // Save the email for confirming later.
-  window.localStorage.setItem(signInLinkToEmailKey, email);
-}
+export function useSendSignLinkInToEmail() {
+  const isEarlyAccessAllowed = useIsEarlyAccessAllowed();
 
-export enum SignInErrors {
-  InvalidSignInLink,
-  InvalidBrowser,
-  ExpiredEmailLink,
+  return useCallback(
+    async (email: string): Promise<SignInErrors | null> => {
+      const isAllowed = await isEarlyAccessAllowed(email);
+      if (!isAllowed) {
+        return SignInErrors.EarlyAccessNotAllowed;
+      }
+
+      try {
+        await firebase.auth().sendSignInLinkToEmail(email, {
+          url: `${window.location.origin}/confirm-sign-in`,
+          handleCodeInApp: true,
+        });
+        // Save the email for confirming later.
+        window.localStorage.setItem(signInLinkToEmailKey, email);
+      } catch (error) {
+        return SignInErrors.SendingLinkFailed;
+      }
+
+      return null;
+    },
+    [isEarlyAccessAllowed]
+  );
 }
 
 /**
@@ -88,8 +109,7 @@ export function useAuthUser() {
 
   return {
     user: data?.me as User | null,
-    // If it is not specified yet, let the status be unspecified as well.
-    isLoggedIn: data?.me === undefined || data?.me === null ? undefined : !!data?.me,
+    isLoggedIn: !rest.loading ? !!data?.me : undefined,
     ...rest,
   };
 }
@@ -104,4 +124,27 @@ export async function getCurrentFirebaseUser(): Promise<firebase.User | null> {
       resolve(user);
     }, reject);
   });
+}
+
+/**
+ * Hook to check if the email is allowed for early access.
+ */
+function useIsEarlyAccessAllowed() {
+  const [isEarlyAccessAllowed] = useMutation(gql`
+    mutation IsEarlyAccessAllowed($email: String!) {
+      isEarlyAccessAllowed(email: $email)
+    }
+  `);
+
+  return useCallback(
+    async (email: string): Promise<boolean> => {
+      const res = await isEarlyAccessAllowed({
+        variables: {
+          email,
+        },
+      });
+      return res.data?.IsEarlyAccessAllowed ?? false;
+    },
+    [isEarlyAccessAllowed]
+  );
 }
