@@ -36,7 +36,7 @@ export default unprotectedOnlyPage(function ConfirmSignIn() {
 
   return (
     <>
-      <SEO />
+      <SEO title="Confirm Sign In" />
       <GlobalStyles
         styles={`
           body {
