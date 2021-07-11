@@ -13,7 +13,7 @@ export function createAppApolloClient() {
 
   const authLink = setContext(async (_, { headers }) => {
     // Get the token from the currently logged in user if present.
-    const token = await (await getCurrentFirebaseUser()).getIdToken();
+    const token = await (await getCurrentFirebaseUser())?.getIdToken();
 
     // Send the authorization header.
     return {
