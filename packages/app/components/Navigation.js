@@ -1,18 +1,9 @@
 import { AppBar, Box, Button, Toolbar } from '@material-ui/core';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
-import { useCallback } from 'react';
-import { loginWithGitHub, logout, useAuthUser } from 'store/auth';
+import { logout, useAuthUser } from 'store/auth';
 import { navBarHeight } from 'utils/constants';
 
 export default function Navigation() {
-  const { push } = useRouter();
-
-  const onLogin = useCallback(async () => {
-    await loginWithGitHub();
-    push('/dashboard/projects');
-  }, [push]);
-
   const { user } = useAuthUser();
 
   return (
@@ -34,9 +25,9 @@ export default function Navigation() {
         </Link>
 
         {!user && (
-          <Button color="inherit" onClick={onLogin}>
-            Login
-          </Button>
+          <Link href="/login">
+            <Button color="inherit">Login</Button>
+          </Link>
         )}
 
         {user && (
