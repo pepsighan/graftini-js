@@ -29,12 +29,9 @@ export default function EmailLinkForm({ onSend }) {
 
   const sendSignLinkInToEmail = useSendSignLinkInToEmail();
 
-  // The error is divided into error and text because this way the transition
-  // is fluid when the snackbar closes.
-  // TODO: Move to notistack once it is updated to MUI5.
-  const [[error, errorText], setError] = useState([false, null]);
+  const [error, setError] = useState(null);
   const onCloseError = useCallback(() => {
-    setError(([_, errorText]) => [false, errorText]);
+    setError(null);
   }, []);
 
   const onSubmit = useCallback(
@@ -45,10 +42,7 @@ export default function EmailLinkForm({ onSend }) {
         return;
       }
 
-      // Show the sending email link failed.
-      if (error === SignInErrors.SendingLinkFailed) {
-        setError([true, 'We could not send you an e-mail link. Please try in a while.']);
-      }
+      setError(error);
     },
     [onSend, sendSignLinkInToEmail]
   );
@@ -76,11 +70,16 @@ export default function EmailLinkForm({ onSend }) {
         </Button>
       </Stack>
 
+      {/* TODO: Move to notistack once it is updated to MUI5. */}
       <Snackbar
-        open={error}
+        open={error === SignInErrors.SendingLinkFailed}
         se="error"
         onClose={onCloseError}
-        message={errorText}
+        message={
+          error === SignInErrors.SendingLinkFailed
+            ? 'We could not send you an e-mail link. Please try in a while.'
+            : null
+        }
         anchorOrigin={{
           horizontal: 'center',
           vertical: 'bottom',
