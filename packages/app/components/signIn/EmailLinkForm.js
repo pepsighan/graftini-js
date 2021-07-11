@@ -1,18 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
+  IconButton,
   InputAdornment,
   Snackbar,
   Stack,
   TextField,
   Typography,
-  IconButton,
 } from '@material-ui/core';
+import { Cross1Icon } from '@modulz/radix-icons';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { SignInErrors, useSendSignLinkInToEmail } from 'store/auth';
 import { z } from 'zod';
-import { Cross1Icon } from '@modulz/radix-icons';
 
 const schema = z.object({
   email: z.string().email(),

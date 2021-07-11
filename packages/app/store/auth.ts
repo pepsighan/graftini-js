@@ -15,11 +15,11 @@ type User = {
 const signInLinkToEmailKey = 'sign-in-link-to-email';
 
 export enum SignInErrors {
-  EarlyAccessNotAllowed,
-  SendingLinkFailed,
-  InvalidSignInLink,
-  InvalidBrowser,
-  ExpiredEmailLink,
+  EarlyAccessNotAllowed = 'early_access_not_allowed',
+  SendingLinkFailed = 'sending_link_failed',
+  InvalidSignInLink = 'invalid_sign_in_link',
+  InvalidBrowser = 'invalid_browser',
+  ExpiredEmailLink = 'expired_email_link',
 }
 
 /**
