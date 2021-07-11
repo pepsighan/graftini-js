@@ -4,16 +4,16 @@ import SEO from 'components/SEO';
 import EmailLinkForm from 'components/signIn/EmailLinkForm';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import theme from 'utils/theme';
-import { z } from 'zod';
-
-const schema = z.object({
-  email: z.string().email(),
-});
+import { LightningBoltIcon } from '@modulz/radix-icons';
 
 export default function Home() {
-  const onSend = useCallback(() => {}, []);
+  const [linkSent, setLinkSent] = useState(false);
+
+  const onSend = useCallback(() => {
+    setLinkSent(true);
+  }, []);
 
   return (
     <>
@@ -36,12 +36,24 @@ export default function Home() {
             </Link>
           </Stack>
           <Paper sx={{ p: 4, mt: 16 }}>
-            <EmailLinkForm onSend={onSend} />
+            {!linkSent && <EmailLinkForm onSend={onSend} />}
+            {linkSent && (
+              <>
+                <Typography textAlign="center">We have sent a link to your e-mail.</Typography>
+                <Typography textAlign="center">Please click on that link to login.</Typography>
+
+                <Stack alignItems="center" sx={{ mt: 4, color: 'grey.500' }}>
+                  <LightningBoltIcon width={24} height={24} />
+                </Stack>
+              </>
+            )}
           </Paper>
 
-          <Typography variant="body2" sx={{ px: 1, display: 'block', mt: 1 }}>
-            We will send a link to your e-mail which you can use to sign in.
-          </Typography>
+          {!linkSent && (
+            <Typography variant="body2" sx={{ px: 1, display: 'block', mt: 1 }}>
+              We will send a link to your e-mail which you can use to sign in.
+            </Typography>
+          )}
         </Grid>
       </Grid>
     </>
