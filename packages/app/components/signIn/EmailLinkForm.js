@@ -49,26 +49,33 @@ export default function EmailLinkForm({ onSend }) {
 
   return (
     <>
-      <Stack component="form" spacing={2} onSubmit={handleSubmit(onSubmit)}>
-        <TextField
-          {...register('email')}
-          size="medium"
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <Typography variant="body1">Email</Typography>
-              </InputAdornment>
-            ),
-          }}
-          error={!!errors?.email}
-          helperText={errors?.email?.message}
-        />
+      {error !== SignInErrors.EarlyAccessNotAllowed && (
+        <Stack component="form" spacing={2} onSubmit={handleSubmit(onSubmit)}>
+          <TextField
+            {...register('email')}
+            size="medium"
+            fullWidth
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Typography variant="body1">Email</Typography>
+                </InputAdornment>
+              ),
+            }}
+            error={!!errors?.email}
+            helperText={errors?.email?.message}
+          />
 
-        <Button variant="contained" fullWidth type="submit">
-          Sign In
-        </Button>
-      </Stack>
+          <Button variant="contained" fullWidth type="submit">
+            Sign In
+          </Button>
+        </Stack>
+      )}
+
+      {/* TODO: Add the user to early access list if they were not allowed. */}
+      {error === SignInErrors.EarlyAccessNotAllowed && (
+        <Typography textAlign="center">You are currently not in the early access list.</Typography>
+      )}
 
       {/* TODO: Move to notistack once it is updated to MUI5. */}
       <Snackbar
