@@ -1,5 +1,6 @@
 import { colors, createTheme } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
+import typography from './typography';
 
 export default createTheme({
   palette: {
@@ -9,10 +10,7 @@ export default createTheme({
       main: grey[500],
     },
   },
-  typography: {
-    fontFamily: 'Inter, Roboto, Helvetica, Arial, sans-serif',
-    fontWeightMedium: 500,
-  },
+  typography,
   components: {
     MuiButton: {
       defaultProps: {
@@ -74,7 +72,7 @@ export default createTheme({
       defaultProps: {},
       styleOverrides: {
         root: {
-          fontSize: '0.875rem',
+          fontSize: typography.subtitle2.fontSize,
           cursor: 'auto',
         },
       },
@@ -90,18 +88,22 @@ export default createTheme({
       styleOverrides: {
         root: {
           backgroundColor: 'white',
-          fontSize: '0.875rem',
         },
         input: {
+          paddingTop: 10,
+          paddingBottom: 10,
+        },
+        inputSizeSmall: {
           paddingTop: 6,
           paddingBottom: 6,
+          fontSize: typography.subtitle2.fontSize,
         },
       },
     },
     MuiSelect: {
       styleOverrides: {
         select: {
-          fontSize: '0.875rem',
+          fontSize: typography.subtitle2.fontSize,
         },
         outlined: {
           paddingTop: 6,
@@ -112,7 +114,7 @@ export default createTheme({
     MuiDialogTitle: {
       styleOverrides: {
         root: {
-          fontSize: '1rem',
+          fontSize: typography.subtitle1.fontSize,
           padding: '8px 16px',
         },
       },
