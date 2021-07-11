@@ -33,7 +33,6 @@
     "micromustache": "^8.0.3",
     "nanoid": "^3.1.22",
     "next": "11.0.0",
-    "notistack": "^2.0.1-alpha.4",
     "react": "17.0.2",
     "react-colorful": "^5.2.0",
     "react-dom": "17.0.2",
