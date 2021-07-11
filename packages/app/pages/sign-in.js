@@ -20,10 +20,10 @@ export default function Home() {
       <SEO />
       <GlobalStyles
         styles={`
-        body {
-          background-color: ${theme.palette.grey[50]};
-        }
-      `}
+          body {
+            background-color: ${theme.palette.grey[50]};
+          }
+        `}
       />
 
       <Grid container justifyContent="center" sx={{ mt: 12 }}>
