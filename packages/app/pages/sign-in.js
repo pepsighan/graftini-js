@@ -28,7 +28,7 @@ export default function Home() {
       />
 
       <Grid container justifyContent="center" sx={{ mt: 12 }}>
-        <Grid item>
+        <Grid item sx={{ width: 400 }}>
           <Stack justifyContent="center" alignItems="center">
             <Link href="/" passHref>
               <MLink>
@@ -36,7 +36,7 @@ export default function Home() {
               </MLink>
             </Link>
           </Stack>
-          <Paper sx={{ p: 4, width: 400, mt: 16 }}>
+          <Paper sx={{ p: 4, mt: 16 }}>
             <Stack spacing={2}>
               <TextField
                 size="medium"
@@ -55,6 +55,10 @@ export default function Home() {
               </Button>
             </Stack>
           </Paper>
+
+          <Typography variant="body2" sx={{ px: 1, display: 'block', mt: 1 }}>
+            We will send a link to your e-mail which you can use to sign in.
+          </Typography>
         </Grid>
       </Grid>
     </>
