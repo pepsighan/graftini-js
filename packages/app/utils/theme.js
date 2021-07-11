@@ -1,5 +1,6 @@
 import { colors, createTheme } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
+import typography from './typography';
 
 export default createTheme({
   palette: {
@@ -9,21 +10,23 @@ export default createTheme({
       main: grey[500],
     },
   },
-  typography: {
-    fontFamily: 'Inter, Roboto, Helvetica, Arial, sans-serif',
-    fontWeightMedium: 500,
-  },
+  typography,
   components: {
     MuiButton: {
       defaultProps: {
         disableElevation: true,
         disableRipple: true,
-        size: 'small',
       },
       styleOverrides: {
         root: {
           textTransform: 'initial',
           fontWeight: 'medium',
+        },
+        sizeSmall: {
+          fontSize: typography.subtitle2.fontSize,
+        },
+        sizeMedium: {
+          fontSize: typography.subtitle1.fontSize,
         },
       },
     },
@@ -75,7 +78,7 @@ export default createTheme({
       defaultProps: {},
       styleOverrides: {
         root: {
-          fontSize: '0.875rem',
+          fontSize: typography.subtitle2.fontSize,
           cursor: 'auto',
         },
       },
@@ -87,13 +90,23 @@ export default createTheme({
         autoComplete: 'off',
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        sizeSmall: {
+          fontSize: typography.subtitle2.fontSize,
+        },
+      },
+    },
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
           backgroundColor: 'white',
-          fontSize: '0.875rem',
         },
         input: {
+          paddingTop: 8,
+          paddingBottom: 8,
+        },
+        inputSizeSmall: {
           paddingTop: 6,
           paddingBottom: 6,
         },
@@ -102,7 +115,7 @@ export default createTheme({
     MuiSelect: {
       styleOverrides: {
         select: {
-          fontSize: '0.875rem',
+          fontSize: typography.subtitle2.fontSize,
         },
         outlined: {
           paddingTop: 6,
@@ -113,7 +126,7 @@ export default createTheme({
     MuiDialogTitle: {
       styleOverrides: {
         root: {
-          fontSize: '1rem',
+          fontSize: typography.subtitle1.fontSize,
           padding: '8px 16px',
         },
       },
@@ -155,6 +168,11 @@ export default createTheme({
           // Do not show the underline unique to Material Design.
           display: 'none',
         },
+      },
+    },
+    MuiPaper: {
+      defaultProps: {
+        variant: 'outlined',
       },
     },
   },

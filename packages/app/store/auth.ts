@@ -11,12 +11,55 @@ type User = {
   email: string;
 };
 
+const signInLinkToEmailKey = 'sign-in-link-to-email';
+
 /**
- * Login using GitHub account.
+ * Sends a sign link to the given email. The user is redirected the confirm
+ * sign in link once it clicks on the sent link.
  */
-export function loginWithGitHub(): Promise<firebase.auth.UserCredential> {
-  const provider = new firebase.auth.GithubAuthProvider();
-  return firebase.auth().signInWithPopup(provider);
+export async function sendSignLinkInToEmail(email: string): Promise<void> {
+  await firebase.auth().sendSignInLinkToEmail(email, {
+    url: `${window.location.origin}/confirm-sign-in`,
+    handleCodeInApp: true,
+  });
+  // Save the email for confirming later.
+  window.localStorage.setItem(signInLinkToEmailKey, email);
+}
+
+export enum SignInErrors {
+  InvalidSignInLink,
+  InvalidBrowser,
+  ExpiredEmailLink,
+}
+
+/**
+ * Attempts to sign in the user with the email link in the browser address bar.
+ */
+export async function verifyAndSignInWithEmailLink(): Promise<SignInErrors | null> {
+  const auth = firebase.auth();
+
+  if (!auth.isSignInWithEmailLink(window.location.href)) {
+    return SignInErrors.InvalidSignInLink;
+  }
+
+  // The link that was used to send the link with.
+  const email = window.localStorage.getItem(signInLinkToEmailKey);
+  if (!email) {
+    // The email does not exist on this browser. So, the link may have
+    // been sent from a different one.
+    return SignInErrors.InvalidBrowser;
+  }
+
+  try {
+    await auth.signInWithEmailLink(email, window.location.href);
+    window.localStorage.removeItem(signInLinkToEmailKey);
+  } catch (error) {
+    // TODO: Log the error that was thrown. We need to better understand
+    // under what scenarios this error is thrown.
+    return SignInErrors.ExpiredEmailLink;
+  }
+
+  return null;
 }
 
 /**
@@ -43,7 +86,12 @@ export function useAuthUser() {
     `
   );
 
-  return { user: data?.me as User | null, isLoggedIn: !!data?.me, ...rest };
+  return {
+    user: data?.me as User | null,
+    // If it is not specified yet, let the status be unspecified as well.
+    isLoggedIn: data?.me === undefined || data?.me === null ? undefined : !!data?.me,
+    ...rest,
+  };
 }
 
 /**
