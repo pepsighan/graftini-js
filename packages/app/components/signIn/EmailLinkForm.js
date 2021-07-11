@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { sendSignLinkInToEmail } from 'store/auth';
+import { SignInErrors, useSendSignLinkInToEmail } from 'store/auth';
 import { z } from 'zod';
 import { Cross1Icon } from '@modulz/radix-icons';
 
@@ -27,6 +27,8 @@ export default function EmailLinkForm({ onSend }) {
     resolver: zodResolver(schema),
   });
 
+  const sendSignLinkInToEmail = useSendSignLinkInToEmail();
+
   // The error is divided into error and text because this way the transition
   // is fluid when the snackbar closes.
   // TODO: Move to notistack once it is updated to MUI5.
@@ -37,15 +39,18 @@ export default function EmailLinkForm({ onSend }) {
 
   const onSubmit = useCallback(
     async ({ email }) => {
-      try {
-        await sendSignLinkInToEmail(email);
+      const error = await sendSignLinkInToEmail(email);
+      if (!error) {
         onSend();
-      } catch (err) {
-        // Show the sending email link failed.
+        return;
+      }
+
+      // Show the sending email link failed.
+      if (error === SignInErrors.SendingLinkFailed) {
         setError([true, 'We could not send you an e-mail link. Please try in a while.']);
       }
     },
-    [onSend]
+    [onSend, sendSignLinkInToEmail]
   );
 
   return (
