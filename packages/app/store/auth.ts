@@ -12,11 +12,15 @@ type User = {
 };
 
 /**
- * Login using GitHub account.
+ * Sends a sign link to the given email. The user is redirected the confirm
+ * sign in link once it clicks on the sent link.
  */
-export function loginWithGitHub(): Promise<firebase.auth.UserCredential> {
-  const provider = new firebase.auth.GithubAuthProvider();
-  return firebase.auth().signInWithPopup(provider);
+export async function sendSignLinkInToEmail(email: string): Promise<void> {
+  await firebase.auth().sendSignInLinkToEmail(email, {
+    url: `${window.location.origin}/confirm-sign-in`,
+  });
+  // Save the email for confirming later.
+  window.localStorage.setItem('sign-in-link-to-email', email);
 }
 
 /**

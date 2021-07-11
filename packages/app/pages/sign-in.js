@@ -1,21 +1,10 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Button,
-  GlobalStyles,
-  Grid,
-  InputAdornment,
-  Link as MLink,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from '@material-ui/core';
+import { GlobalStyles, Grid, Link as MLink, Paper, Stack, Typography } from '@material-ui/core';
 import logoLight from 'assets/logo-light.png';
 import SEO from 'components/SEO';
+import EmailLinkForm from 'components/signIn/EmailLinkForm';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback } from 'react';
-import { useForm } from 'react-hook-form';
 import theme from 'utils/theme';
 import { z } from 'zod';
 
@@ -24,14 +13,7 @@ const schema = z.object({
 });
 
 export default function Home() {
-  const {
-    register,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
-    resolver: zodResolver(schema),
-  });
-  const onSubmit = useCallback(() => {}, []);
+  const onSend = useCallback(() => {}, []);
 
   return (
     <>
@@ -54,26 +36,7 @@ export default function Home() {
             </Link>
           </Stack>
           <Paper sx={{ p: 4, mt: 16 }}>
-            <Stack component="form" spacing={2} onSubmit={handleSubmit(onSubmit)}>
-              <TextField
-                {...register('email')}
-                size="medium"
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Typography variant="body1">Email</Typography>
-                    </InputAdornment>
-                  ),
-                }}
-                error={!!errors?.email}
-                helperText={errors?.email?.message}
-              />
-
-              <Button variant="contained" fullWidth type="submit">
-                Sign In
-              </Button>
-            </Stack>
+            <EmailLinkForm onSend={onSend} />
           </Paper>
 
           <Typography variant="body2" sx={{ px: 1, display: 'block', mt: 1 }}>
