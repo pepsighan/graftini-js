@@ -11,6 +11,8 @@ type User = {
   email: string;
 };
 
+const signInLinkToEmailKey = 'sign-in-link-to-email';
+
 /**
  * Sends a sign link to the given email. The user is redirected the confirm
  * sign in link once it clicks on the sent link.
@@ -20,7 +22,43 @@ export async function sendSignLinkInToEmail(email: string): Promise<void> {
     url: `${window.location.origin}/confirm-sign-in`,
   });
   // Save the email for confirming later.
-  window.localStorage.setItem('sign-in-link-to-email', email);
+  window.localStorage.setItem(signInLinkToEmailKey, email);
+}
+
+export enum SignInErrors {
+  InvalidSignInLink,
+  InvalidBrowser,
+  ExpiredEmailLink,
+}
+
+/**
+ * Attempts to sign in the user with the email link in the browser address bar.
+ */
+export async function verifyAndSignInWithEmailLink(): Promise<SignInErrors | null> {
+  const auth = firebase.auth();
+
+  if (!auth.isSignInWithEmailLink(window.location.href)) {
+    return SignInErrors.InvalidSignInLink;
+  }
+
+  // The link that was used to send the link with.
+  const email = window.localStorage.getItem(signInLinkToEmailKey);
+  if (!email) {
+    // The email does not exist on this browser. So, the link may have
+    // been sent from a different one.
+    return SignInErrors.InvalidBrowser;
+  }
+
+  try {
+    await auth.signInWithEmailLink(email, window.location.href);
+    window.localStorage.removeItem(signInLinkToEmailKey);
+  } catch (error) {
+    // TODO: Log the error that was thrown. We need to better understand
+    // under what scenarios this error is thrown.
+    return SignInErrors.ExpiredEmailLink;
+  }
+
+  return null;
 }
 
 /**
