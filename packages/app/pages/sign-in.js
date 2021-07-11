@@ -8,7 +8,7 @@ export default function Home() {
       <SEO />
       <Navigation />
       <Typography variant="h4" textAlign="center" mt={8}>
-        Login
+        Sign In
       </Typography>
     </>
   );

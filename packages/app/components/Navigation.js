@@ -25,8 +25,8 @@ export default function Navigation() {
         </Link>
 
         {!user && (
-          <Link href="/login">
-            <Button color="inherit">Login</Button>
+          <Link href="/sign-in">
+            <Button variant="contained">Sign In</Button>
           </Link>
         )}
 
