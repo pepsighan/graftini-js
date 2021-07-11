@@ -1,14 +1,15 @@
 import { GlobalStyles, Grid, Link as MLink, Paper, Stack, Typography } from '@material-ui/core';
+import { LightningBoltIcon } from '@modulz/radix-icons';
 import logoLight from 'assets/logo-light.png';
 import SEO from 'components/SEO';
 import EmailLinkForm from 'components/signIn/EmailLinkForm';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useState } from 'react';
+import { unprotectedOnlyPage } from 'utils/auth';
 import theme from 'utils/theme';
-import { LightningBoltIcon } from '@modulz/radix-icons';
 
-export default function Home() {
+export default unprotectedOnlyPage(function SignIn() {
   const [linkSent, setLinkSent] = useState(false);
 
   const onSend = useCallback(() => {
@@ -58,4 +59,4 @@ export default function Home() {
       </Grid>
     </>
   );
-}
+});

@@ -29,3 +29,30 @@ export function protectedPage(Component) {
     return null;
   };
 }
+
+/**
+ * These pages are only visible when not logged in. For example: Sign in page.
+ */
+export function unprotectedOnlyPage(Component) {
+  return function UnprotectedPage() {
+    const { isLoggedIn } = useAuthUser();
+    const { push } = useRouter();
+
+    useEffect(() => {
+      // Firebase is the source that identifies the authenticated user.
+      getCurrentFirebaseUser().then((user) => {
+        if (user) {
+          // Go to home if logged in.
+          push('/');
+        }
+      });
+    }, [push]);
+
+    // The graphql query is the one which loads the actual user from the backend.
+    if (isLoggedIn === false) {
+      return <Component />;
+    }
+
+    return null;
+  };
+}

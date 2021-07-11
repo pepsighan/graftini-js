@@ -86,7 +86,12 @@ export function useAuthUser() {
     `
   );
 
-  return { user: data?.me as User | null, isLoggedIn: !!data?.me, ...rest };
+  return {
+    user: data?.me as User | null,
+    // If it is not specified yet, let the status be unspecified as well.
+    isLoggedIn: data?.me === undefined || data?.me === null ? undefined : !!data?.me,
+    ...rest,
+  };
 }
 
 /**

@@ -16,9 +16,10 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import { SignInErrors, verifyAndSignInWithEmailLink } from 'store/auth';
+import { unprotectedOnlyPage } from 'utils/auth';
 import theme from 'utils/theme';
 
-export default function ConfirmSignIn() {
+export default unprotectedOnlyPage(function ConfirmSignIn() {
   const { push } = useRouter();
   const [error, setError] = useState(null);
 
@@ -83,4 +84,4 @@ export default function ConfirmSignIn() {
       </Grid>
     </>
   );
-}
+});
