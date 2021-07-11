@@ -1,21 +1,38 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Button,
+  GlobalStyles,
   Grid,
   InputAdornment,
+  Link as MLink,
   Paper,
   Stack,
-  Link as MLink,
   TextField,
   Typography,
-  GlobalStyles,
 } from '@material-ui/core';
 import logoLight from 'assets/logo-light.png';
 import SEO from 'components/SEO';
 import Image from 'next/image';
-import theme from 'utils/theme';
 import Link from 'next/link';
+import { useCallback } from 'react';
+import { useForm } from 'react-hook-form';
+import theme from 'utils/theme';
+import { z } from 'zod';
+
+const schema = z.object({
+  email: z.string().email(),
+});
 
 export default function Home() {
+  const {
+    register,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
+  const onSubmit = useCallback(() => {}, []);
+
   return (
     <>
       <SEO />
@@ -37,8 +54,9 @@ export default function Home() {
             </Link>
           </Stack>
           <Paper sx={{ p: 4, mt: 16 }}>
-            <Stack spacing={2}>
+            <Stack component="form" spacing={2} onSubmit={handleSubmit(onSubmit)}>
               <TextField
+                {...register('email')}
                 size="medium"
                 fullWidth
                 InputProps={{
@@ -48,9 +66,11 @@ export default function Home() {
                     </InputAdornment>
                   ),
                 }}
+                error={!!errors?.email}
+                helperText={errors?.email?.message}
               />
 
-              <Button variant="contained" fullWidth>
+              <Button variant="contained" fullWidth type="submit">
                 Sign In
               </Button>
             </Stack>
