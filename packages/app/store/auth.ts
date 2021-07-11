@@ -20,6 +20,7 @@ const signInLinkToEmailKey = 'sign-in-link-to-email';
 export async function sendSignLinkInToEmail(email: string): Promise<void> {
   await firebase.auth().sendSignInLinkToEmail(email, {
     url: `${window.location.origin}/confirm-sign-in`,
+    handleCodeInApp: true,
   });
   // Save the email for confirming later.
   window.localStorage.setItem(signInLinkToEmailKey, email);
