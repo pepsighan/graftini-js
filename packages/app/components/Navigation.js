@@ -1,9 +1,10 @@
 import { AppBar, Box, Button, Toolbar } from '@material-ui/core';
 import Link from 'next/link';
-import { logout, useAuthUser } from 'store/auth';
+import { useAuthUser, useLogout } from 'store/auth';
 
 export default function Navigation() {
   const { user } = useAuthUser();
+  const onLogout = useLogout();
 
   return (
     <AppBar>
@@ -30,7 +31,7 @@ export default function Navigation() {
               </Button>
             </Link>
 
-            <Button color="inherit" onClick={logout} size="medium" sx={{ ml: 2 }}>
+            <Button color="inherit" onClick={onLogout} size="medium" sx={{ ml: 2 }}>
               Logout
             </Button>
           </Box>
