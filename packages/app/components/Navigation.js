@@ -1,22 +1,12 @@
 import { AppBar, Box, Button, Toolbar } from '@material-ui/core';
 import Link from 'next/link';
 import { logout, useAuthUser } from 'store/auth';
-import { navBarHeight } from 'utils/constants';
 
 export default function Navigation() {
   const { user } = useAuthUser();
 
   return (
-    <AppBar
-      position="static"
-      color="transparent"
-      elevation={0}
-      sx={{
-        borderBottom: '1px solid',
-        borderColor: 'grey.400',
-        height: navBarHeight,
-      }}
-    >
+    <AppBar>
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
         <Link href="/" passHref>
           <Button component="a" color="inherit">
