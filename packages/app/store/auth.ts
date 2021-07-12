@@ -143,7 +143,8 @@ function useIsEarlyAccessAllowed() {
           email,
         },
       });
-      return res.data?.IsEarlyAccessAllowed ?? false;
+
+      return res.data?.isEarlyAccessAllowed ?? false;
     },
     [isEarlyAccessAllowed]
   );
