@@ -17,6 +17,7 @@ export default createTheme({
       defaultProps: {
         disableElevation: true,
         disableRipple: true,
+        size: 'small',
       },
       styleOverrides: {
         root: {
