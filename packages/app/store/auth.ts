@@ -133,6 +133,13 @@ export async function getCurrentFirebaseUser(): Promise<firebase.User | null> {
 }
 
 /**
+ * Listen to the current firebase user stream.
+ */
+export function listenToCurrentFirebaseUserStream(onChange: (user: firebase.User | null) => void) {
+  return firebase.auth().onAuthStateChanged((user) => onChange(user));
+}
+
+/**
  * Hook to check if the email is allowed for early access.
  */
 function useIsEarlyAccessAllowed() {
