@@ -23,21 +23,23 @@ export const blockMap = Map({
 /**
  * The custom styles for the blocks based on the metadata.
  */
-export function customBlockStyle(contentBlock: ContentBlock): string {
-  const blockType = contentBlock.getType();
+export function customBlockStyle(isEditing: boolean): (contentBlock: ContentBlock) => string {
+  return (contentBlock) => {
+    const blockType = contentBlock.getType();
 
-  if (blockType !== 'unstyled') {
-    return '';
-  }
+    if (blockType !== 'unstyled') {
+      return '';
+    }
 
-  const data = contentBlock.getData();
-  const alignment = data.get(BlockDataOption.TextAlignment);
+    const data = contentBlock.getData();
+    const alignment = data.get(BlockDataOption.TextAlignment);
 
-  if (!alignment) {
-    return 'text-align-left';
-  }
+    if (!alignment) {
+      return `text-align-left ${!isEditing ? 'user-select-none' : ''}`;
+    }
 
-  return `text-align-${alignment}`;
+    return `text-align-${alignment} ${!isEditing ? 'user-select-none' : ''}`;
+  };
 }
 
 /**
@@ -62,6 +64,10 @@ export function GlobalBlockStyles() {
 
         .text-align-justify {
           text-align: justify;
+        }
+
+        .user-select-none {
+          user-select: none;
         }
       `}
     />

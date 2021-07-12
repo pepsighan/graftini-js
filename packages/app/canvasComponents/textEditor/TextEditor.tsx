@@ -48,7 +48,7 @@ const TextEditor = forwardRef(({ onMouseDown, onClick, onContextMenu }: TextEdit
         onChange={setEditorState}
         customStyleMap={styleMap}
         blockRenderMap={blockMap}
-        blockStyleFn={customBlockStyle}
+        blockStyleFn={customBlockStyle(isEditing)}
         readOnly={!isSelected}
       />
     </Text>
