@@ -5,20 +5,16 @@ import { useDesignerStateApi } from 'store/designer';
 import { useResetTextSelection } from './textSelection';
 import { EditorStateSetter } from './useTextEditorState';
 
-type UseFocusOnEditingModeOptions = {
+type UseResetTextSelectionOnBlur = {
   editorRef: MutableRefObject<Editor | null>;
   setEditorState: EditorStateSetter;
 };
 
-/**
- * Manages focus on the editor whenever it gains or loses editable status.
- */
-export default function useFocusOnEditingMode({
+export default function useResetTextSelectionOnBlur({
   editorRef,
   setEditorState,
-}: UseFocusOnEditingModeOptions) {
+}: UseResetTextSelectionOnBlur) {
   const componentId = useComponentId();
-  // Remove any artificial text selection.
   const resetTextSelection = useResetTextSelection(setEditorState, componentId);
 
   const { subscribe } = useDesignerStateApi();
@@ -29,8 +25,7 @@ export default function useFocusOnEditingMode({
           return;
         }
 
-        // Forcefully focus the editor. Sometimes it does not automatically
-        // give the focus when the editor turns off readOnly mode.
+        // Reset the artificial text selection when it is no longer editable.
         if (!isEditable) {
           editorRef.current.blur();
           resetTextSelection();

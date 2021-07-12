@@ -5,54 +5,59 @@ import React, { forwardRef, MouseEventHandler, useRef } from 'react';
 import { blockMap, customBlockStyle } from './blocks';
 import { defaultTextFormValues } from './formFields';
 import useEditingState from './useEditingState';
-import useFocusOnEditingMode from './useFocusOnEditingMode';
-import useRetainFocusOnText from './useRetainFocusOnText';
+import useResetTextSelectionOnBlur from './useResetTextSelectionOnBlur';
+import useRetainTextSelection from './useRetainTextSelection';
 import useStyleMap from './useStyleMap';
 import useTextEditorState from './useTextEditorState';
 
 type TextEditorProps = {
   onMouseDown?: MouseEventHandler;
   onClick: MouseEventHandler;
+  onDoubleClick: MouseEventHandler;
   onContextMenu: MouseEventHandler;
 };
 
-const TextEditor = forwardRef(({ onMouseDown, onClick, onContextMenu }: TextEditorProps, ref) => {
-  const editorRef = useRef<Editor | null>(null);
+const TextEditor = forwardRef(
+  ({ onMouseDown, onClick, onDoubleClick, onContextMenu }: TextEditorProps, ref) => {
+    const editorRef = useRef<Editor | null>(null);
 
-  const componentId = useComponentId();
-  const [editorState, setEditorState] = useTextEditorState({
-    componentId,
-  });
-  const [onFocus, onBlur] = useRetainFocusOnText(setEditorState);
+    const componentId = useComponentId();
+    const [editorState, setEditorState] = useTextEditorState({
+      componentId,
+    });
+    const styleMap = useStyleMap({ componentId });
 
-  useFocusOnEditingMode({ editorRef, setEditorState });
-  const { isSelected, isEditing } = useEditingState();
+    const [onFocus, onBlur] = useRetainTextSelection(setEditorState);
+    const isEditing = useEditingState(setEditorState);
 
-  const styleMap = useStyleMap({ componentId });
+    useResetTextSelectionOnBlur({ editorRef, setEditorState });
 
-  return (
-    <Text
-      ref={ref}
-      isEditor
-      onFocus={onFocus}
-      onBlur={onBlur}
-      onMouseDown={onMouseDown}
-      onClick={onClick}
-      onContextMenu={onContextMenu}
-      {...defaultTextFormValues}
-      cursor={isEditing ? 'text' : 'default'}
-    >
-      <Editor
-        ref={editorRef}
-        editorState={editorState}
-        onChange={setEditorState}
-        customStyleMap={styleMap}
-        blockRenderMap={blockMap}
-        blockStyleFn={customBlockStyle(isEditing)}
-        readOnly={!isSelected}
-      />
-    </Text>
-  );
-});
+    return (
+      <Text
+        ref={ref}
+        isEditor
+        onFocus={onFocus}
+        onBlur={onBlur}
+        onMouseDown={onMouseDown}
+        onClick={onClick}
+        onDoubleClick={onDoubleClick}
+        onContextMenu={onContextMenu}
+        {...defaultTextFormValues}
+        cursor={isEditing ? 'text' : 'default'}
+      >
+        <Editor
+          key={isEditing.toString()}
+          ref={editorRef}
+          editorState={editorState}
+          onChange={setEditorState}
+          customStyleMap={styleMap}
+          blockRenderMap={blockMap}
+          blockStyleFn={customBlockStyle(isEditing)}
+          readOnly={!isEditing}
+        />
+      </Text>
+    );
+  }
+);
 
 export default TextEditor;

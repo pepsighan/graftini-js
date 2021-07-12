@@ -8,7 +8,7 @@ import { EditorStateSetter } from './useTextEditorState';
  * Hook that retains focus on the selected text within the editor when the user is interacting
  * with the rest of the app.
  */
-export default function useRetainFocusOnText(
+export default function useRetainTextSelection(
   setState: EditorStateSetter
 ): [FocusEventHandler, FocusEventHandler] {
   const componentId = useComponentId();
