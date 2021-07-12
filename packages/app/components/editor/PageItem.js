@@ -40,9 +40,11 @@ export default function PageItem({ id, name, route, slugProjectId, projectId }) 
         <Button
           fullWidth
           color="inherit"
+          size="small"
           sx={{
             justifyContent: 'flex-start',
             backgroundColor: isSelected ? 'grey.200' : null,
+            fontWeight: 'normal',
           }}
           onClick={onPageChange}
           onContextMenu={onOpenContextMenu}

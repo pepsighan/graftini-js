@@ -1,5 +1,6 @@
 import { colors, createTheme } from '@material-ui/core';
 import { grey } from '@material-ui/core/colors';
+import { navBarHeight } from './constants';
 import typography from './typography';
 
 export default createTheme({
@@ -16,6 +17,7 @@ export default createTheme({
       defaultProps: {
         disableElevation: true,
         disableRipple: true,
+        size: 'small',
       },
       styleOverrides: {
         root: {
@@ -173,6 +175,21 @@ export default createTheme({
     MuiPaper: {
       defaultProps: {
         variant: 'outlined',
+      },
+    },
+    MuiAppBar: {
+      defaultProps: {
+        elevation: 0,
+        color: 'transparent',
+        position: 'sticky',
+      },
+      styleOverrides: {
+        colorTransparent: {
+          border: 0,
+          borderBottom: '1px solid',
+          borderColor: grey[400],
+          height: navBarHeight,
+        },
       },
     },
   },

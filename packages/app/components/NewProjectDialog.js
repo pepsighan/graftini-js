@@ -1,6 +1,5 @@
 import { defaultComponentMap } from '@graftini/graft';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -16,6 +15,7 @@ import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useCreateProject } from 'store/projects';
 import { slugify } from 'utils/url';
+import AsyncButton from './AsyncButton';
 
 export default function NewProjectDialog({ isOpen, onClose }) {
   const {
@@ -74,9 +74,9 @@ export default function NewProjectDialog({ isOpen, onClose }) {
         </DialogContent>
 
         <DialogActions>
-          <Button type="submit" variant="contained" disabled={isSubmitting}>
+          <AsyncButton type="submit" variant="contained" size="small" isLoading={isSubmitting}>
             Create
-          </Button>
+          </AsyncButton>
         </DialogActions>
       </form>
     </Dialog>

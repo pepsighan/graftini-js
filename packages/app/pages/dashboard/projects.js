@@ -19,9 +19,11 @@ export default protectedPage(function Projects() {
       <SEO title="All Projects" />
       <Navigation />
 
-      <Container sx={{ mt: 4 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
-          <Typography variant="subtitle2">All Projects</Typography>
+      <Container sx={{ mt: 3 }}>
+        <Box
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1.5 }}
+        >
+          <Typography variant="subtitle1">All Projects</Typography>
           <Button variant="contained" size="small" onClick={on}>
             <PlusIcon /> <Box sx={{ ml: 0.5 }}>New</Box>
           </Button>

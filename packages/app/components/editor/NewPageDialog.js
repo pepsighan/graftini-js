@@ -1,17 +1,17 @@
 import { defaultComponentMap } from '@graftini/graft';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
+  InputAdornment,
   Stack,
   TextField,
-  InputAdornment,
   Typography,
 } from '@material-ui/core';
 import Root from 'canvasComponents/Root';
+import AsyncButton from 'components/AsyncButton';
 import { materialRegister } from 'hooks/useMaterialFormRegister';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
@@ -88,9 +88,9 @@ export default function NewPageDialog({ isOpen, onClose }) {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Button type="submit" variant="contained" disabled={isSubmitting}>
+          <AsyncButton type="submit" variant="contained" isLoading={isSubmitting}>
             Create
-          </Button>
+          </AsyncButton>
         </DialogActions>
       </form>
     </Dialog>

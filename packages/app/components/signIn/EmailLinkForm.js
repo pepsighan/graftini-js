@@ -66,7 +66,13 @@ export default function EmailLinkForm({ onSend }) {
             helperText={errors?.email?.message}
           />
 
-          <AsyncButton variant="contained" fullWidth type="submit" isLoading={isSubmitting}>
+          <AsyncButton
+            variant="contained"
+            fullWidth
+            type="submit"
+            size="medium"
+            isLoading={isSubmitting}
+          >
             Sign In
           </AsyncButton>
         </Stack>
