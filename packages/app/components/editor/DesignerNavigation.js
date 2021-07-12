@@ -106,7 +106,11 @@ function DrawButton({ label, icon, component, isCanvas, childAppendDirection }) 
     },
     // Select the component which was just created.
     onCreate: (componentId) => {
-      selectComponent(componentId);
+      // The component is not selected if done immediately. The parent was
+      // getting selected.
+      setTimeout(() => {
+        selectComponent(componentId);
+      });
     },
   });
 

@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Button,
   IconButton,
   InputAdornment,
   Snackbar,
@@ -8,8 +7,8 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import AsyncButton from 'components/AsyncButton';
 import { Cross1Icon } from '@modulz/radix-icons';
+import AsyncButton from 'components/AsyncButton';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { SignInErrors, useSendSignLinkInToEmail } from 'store/auth';
