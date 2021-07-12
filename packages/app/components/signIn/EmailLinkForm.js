@@ -8,6 +8,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import AsyncButton from 'components/AsyncButton';
 import { Cross1Icon } from '@modulz/radix-icons';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,7 +22,7 @@ const schema = z.object({
 export default function EmailLinkForm({ onSend }) {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm({
     resolver: zodResolver(schema),
@@ -66,9 +67,9 @@ export default function EmailLinkForm({ onSend }) {
             helperText={errors?.email?.message}
           />
 
-          <Button variant="contained" fullWidth type="submit">
+          <AsyncButton variant="contained" fullWidth type="submit" isLoading={isSubmitting}>
             Sign In
-          </Button>
+          </AsyncButton>
         </Stack>
       )}
 
