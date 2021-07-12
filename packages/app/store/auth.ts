@@ -1,6 +1,6 @@
 import { gql, useMutation, useQuery } from '@apollo/client';
 import firebase from 'firebase/app';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 /**
  * A logged in user object.
@@ -86,8 +86,8 @@ export async function verifyAndSignInWithEmailLink(): Promise<SignInErrors | nul
 /**
  * Logout the current user.
  */
-export function logout(): Promise<void> {
-  return firebase.auth().signOut();
+export async function logout(): Promise<void> {
+  await firebase.auth().signOut();
 }
 
 /**
@@ -124,6 +124,24 @@ export async function getCurrentFirebaseUser(): Promise<firebase.User | null> {
       resolve(user);
     }, reject);
   });
+}
+
+/**
+ * Listen to the current firebase user stream.
+ */
+export function useListenToCurrentFirebaseUserStream(
+  onChange: (user: firebase.User | null) => void
+) {
+  const { refetch } = useAuthUser();
+
+  useEffect(() => {
+    return firebase.auth().onAuthStateChanged((user) => {
+      // Refetch the user from the backend as the user may or may not
+      // be logged in.
+      refetch();
+      return onChange(user);
+    });
+  }, [onChange, refetch]);
 }
 
 /**
