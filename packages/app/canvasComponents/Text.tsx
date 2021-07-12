@@ -2,8 +2,8 @@
 import { GraftComponent, useComponentId } from '@graftini/graft';
 import { ComponentContextMenuContext } from 'components/editor/ComponentContextMenu';
 import { EditorState, RawDraftContentState, SelectionState } from 'draft-js';
-import { forwardRef, MouseEvent, useCallback, useContext, useEffect, useMemo, useRef } from 'react';
-import { useDesignerState, useDesignerStateApi, useIsDraggingDisabled } from 'store/designer';
+import { forwardRef, MouseEvent, useCallback, useContext, useMemo } from 'react';
+import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
 import { TextSelectionProvider } from './textEditor/textSelection';
 
@@ -19,16 +19,15 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
   const isDraggingDisabled = useIsDraggingDisabled();
 
-  const onEnableTextEditing = useEnableTextEditing({ componentId });
-
   const onClick = useCallback(
     (ev: MouseEvent) => {
       ev.stopPropagation();
-      onEnableTextEditing();
       selectComponent(componentId);
     },
-    [componentId, onEnableTextEditing, selectComponent]
+    [componentId, selectComponent]
   );
+
+  const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
 
   const { onOpenContextMenu } = useContext(ComponentContextMenuContext);
   const onContextMenu = useCallback(
@@ -51,45 +50,16 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
               ref={ref}
               onMouseDown={!isDraggingDisabled ? onMouseDown : null}
               onClick={onClick}
+              onDoubleClick={startEditingText}
               onContextMenu={onContextMenu}
             />
           </TextSelectionProvider>
         ),
-        [isDraggingDisabled, onClick, onContextMenu, onMouseDown, ref]
+        [isDraggingDisabled, onClick, onContextMenu, onMouseDown, ref, startEditingText]
       )}
     </>
   );
 });
-
-/**
- * Enables editing text only if the same component is clicked twice.
- */
-function useEnableTextEditing({ componentId }) {
-  const clickCount = useRef(0);
-  const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
-
-  const { subscribe } = useDesignerStateApi();
-
-  useEffect(() => {
-    return subscribe(
-      (isSelected) => {
-        if (!isSelected) {
-          // Reset the counter once its no longer selected.
-          clickCount.current = 0;
-        }
-      },
-      (state) => state.selectedComponentId === componentId
-    );
-  }, [componentId, subscribe]);
-
-  return useCallback(() => {
-    clickCount.current += 1;
-    if (clickCount.current >= 2) {
-      // If the same component is clicked twice, start editing text.
-      startEditingText();
-    }
-  }, [startEditingText]);
-}
 
 Text.graftOptions = {
   defaultProps: {

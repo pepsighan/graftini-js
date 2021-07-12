@@ -5,9 +5,6 @@ import { useDesignerState } from 'store/designer';
 export default function useEditingState() {
   const componentId = useComponentId();
 
-  const isSelected = useDesignerState(
-    useCallback((state) => state.selectedComponentId === componentId, [componentId])
-  );
   const isEditing = useDesignerState(
     useCallback(
       (state) => state.selectedComponentId === componentId && state.isTextEditingEnabled,
@@ -15,5 +12,5 @@ export default function useEditingState() {
     )
   );
 
-  return { isSelected, isEditing };
+  return isEditing;
 }
