@@ -5,8 +5,8 @@ import React, { forwardRef, MouseEventHandler, useRef } from 'react';
 import { blockMap, customBlockStyle } from './blocks';
 import { defaultTextFormValues } from './formFields';
 import useEditingState from './useEditingState';
-import useFocusOnEditingMode from './useFocusOnEditingMode';
-import useRetainFocusOnText from './useRetainFocusOnText';
+import useResetTextSelectionOnBlur from './useResetTextSelectionOnBlur';
+import useRetainTextSelection from './useRetainTextSelection';
 import useStyleMap from './useStyleMap';
 import useTextEditorState from './useTextEditorState';
 
@@ -25,12 +25,12 @@ const TextEditor = forwardRef(
     const [editorState, setEditorState] = useTextEditorState({
       componentId,
     });
-    const [onFocus, onBlur] = useRetainFocusOnText(setEditorState);
+    const styleMap = useStyleMap({ componentId });
 
-    useFocusOnEditingMode({ editorRef, setEditorState });
+    const [onFocus, onBlur] = useRetainTextSelection(setEditorState);
     const isEditing = useEditingState(setEditorState);
 
-    const styleMap = useStyleMap({ componentId });
+    useResetTextSelectionOnBlur({ editorRef, setEditorState });
 
     return (
       <Text
@@ -46,6 +46,7 @@ const TextEditor = forwardRef(
         cursor={isEditing ? 'text' : 'default'}
       >
         <Editor
+          key={isEditing.toString()}
           ref={editorRef}
           editorState={editorState}
           onChange={setEditorState}
