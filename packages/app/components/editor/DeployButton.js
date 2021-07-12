@@ -1,11 +1,11 @@
 import {
   Box,
   Button,
+  CircularProgress,
   IconButton,
   Popover,
   Tooltip,
   Typography,
-  CircularProgress,
 } from '@material-ui/core';
 import { RocketIcon } from '@modulz/radix-icons';
 import AsyncButton from 'components/AsyncButton';
@@ -85,19 +85,20 @@ function DeployPopoverContent({ deployment, onDeploy, isDeploying }) {
         </Typography>
       )}
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={{ display: 'flex', justifyContent: project.appUrl ? 'space-between' : 'flex-end' }}>
         {project.appUrl && (
           <Button
             component="a"
             href={`https://${project.appUrl}`}
             target="_blank"
             rel="noopener noreferrer"
+            size="small"
           >
             Open App
           </Button>
         )}
 
-        <AsyncButton variant="contained" isLoading={isDeploying} onClick={onDeploy}>
+        <AsyncButton variant="contained" isLoading={isDeploying} onClick={onDeploy} size="small">
           Deploy Now
         </AsyncButton>
       </Box>
