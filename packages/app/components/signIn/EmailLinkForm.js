@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
-  Button,
   IconButton,
   InputAdornment,
   Snackbar,
@@ -9,6 +8,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Cross1Icon } from '@modulz/radix-icons';
+import AsyncButton from 'components/AsyncButton';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { SignInErrors, useSendSignLinkInToEmail } from 'store/auth';
@@ -21,7 +21,7 @@ const schema = z.object({
 export default function EmailLinkForm({ onSend }) {
   const {
     register,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
   } = useForm({
     resolver: zodResolver(schema),
@@ -66,9 +66,9 @@ export default function EmailLinkForm({ onSend }) {
             helperText={errors?.email?.message}
           />
 
-          <Button variant="contained" fullWidth type="submit">
+          <AsyncButton variant="contained" fullWidth type="submit" isLoading={isSubmitting}>
             Sign In
-          </Button>
+          </AsyncButton>
         </Stack>
       )}
 

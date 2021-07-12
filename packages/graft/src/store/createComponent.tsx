@@ -32,6 +32,10 @@ export type NewComponent = {
    * The sizes will be ignored if this function is not specified.
    */
   transformSize?(width: number, height: number): ComponentProps;
+  /**
+   * A callback that is run after a new component is created.
+   */
+  onCreate?(componentId: string): void;
 };
 
 /**
