@@ -79,25 +79,35 @@ function CursorButton() {
 function DrawButton({ label, icon, component, isCanvas, childAppendDirection }) {
   const activeType = useCreateComponentStore(useCallback((state) => state.newComponent?.type, []));
 
+  const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
+
   const onCreate = useCreateComponent({
     type: component,
     isCanvas,
     childAppendDirection,
     // Transform the drawn size to the one usable by the box.
-    transformSize: (width, height) =>
-      component === 'Box'
-        ? {
-            width: {
-              size: width,
-              unit: 'px',
-            },
-            height: {
-              size: height,
-              unit: 'px',
-            },
-          }
-        : {}, // No need to add width and height for Text.
+    transformSize: (width, height) => {
+      if (component === 'Box') {
+        return {
+          width: {
+            size: width,
+            unit: 'px',
+          },
+          height: {
+            size: height,
+            unit: 'px',
+          },
+        };
+      }
+
+      // No need to add width and height for Text.
+      return {};
+    },
+    // Select the component which was just created.
+    onCreate: (componentId) => {
+      selectComponent(componentId);
+    },
   });
 
   const onClick = useCallback(

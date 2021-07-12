@@ -116,6 +116,7 @@ export function useDrawComponent(): UseDrawComponent {
     (event: MouseEvent) => {
       let dropRegion: DropRegion | null = null;
       let newComponent: ComponentNode | null = null;
+      let afterCreate: any = null;
 
       // Insert the new component.
       immerSetCreateComponent((state) => {
@@ -141,15 +142,21 @@ export function useDrawComponent(): UseDrawComponent {
           state.draw!.start
         );
 
+        const { onCreate, transformSize, defaultProps, isCanvas, type, childAppendDirection } =
+          state.newComponent;
+        afterCreate = onCreate;
+
         const width = state.draw.end.x - state.draw.start.x;
         const height = state.draw.end.y - state.draw.start.y;
-        const transformedSize = state.newComponent.transformSize?.(width, height) ?? {};
+        const transformedSize = transformSize?.(width, height) ?? {};
 
         newComponent = newComponentNode({
-          ...state.newComponent,
+          isCanvas,
+          type,
+          childAppendDirection,
           defaultProps: {
             ...(Component.graftOptions?.defaultProps ?? {}),
-            ...(state.newComponent.defaultProps ?? {}),
+            ...(defaultProps ?? {}),
             ...transformedSize,
           },
         });
@@ -166,6 +173,10 @@ export function useDrawComponent(): UseDrawComponent {
         state.componentMap[newComponent!.id] = newComponent!;
         addComponentToDropRegion(newComponent!.id, dropRegion, state.componentMap);
       });
+
+      if (dropRegion && afterCreate) {
+        afterCreate(newComponent!.id);
+      }
     },
     [getEditorState, getRegionState, immerSetCreateComponent, immerSetEditor, resolverMap]
   );
@@ -180,7 +191,9 @@ export function useDrawComponent(): UseDrawComponent {
 /**
  * Creates a new component node with the given config options.
  */
-export function newComponentNode(config: NewComponent): ComponentNode {
+export function newComponentNode(
+  config: Omit<NewComponent, 'onCreate' | 'transformSize'>
+): ComponentNode {
   return {
     id: nanoid(),
     type: config.type,
