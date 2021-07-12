@@ -4,6 +4,7 @@ import { useCallback, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import ColorBox from './ColorBox';
 import ColorPicker from './ColorPicker';
+import { wideLabelAlignmentStyle } from './formLabels';
 
 export default function ColorPickerInput({ name, label = null, onChange = null }) {
   const { control } = useFormContext();
@@ -26,7 +27,7 @@ export default function ColorPickerInput({ name, label = null, onChange = null }
             InputProps={{
               readOnly: true,
               startAdornment: (
-                <InputAdornment position="start">
+                <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
                   <Typography variant="body2">{label}</Typography>
                 </InputAdornment>
               ),

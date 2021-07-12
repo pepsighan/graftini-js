@@ -10,6 +10,7 @@ import { BoxIcon, CornersIcon } from '@modulz/radix-icons';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
+import { wideLabelAlignmentStyle } from './formLabels';
 
 export default function RadiusInput({ name }) {
   const { control, setValue } = useFormContext();
@@ -39,7 +40,7 @@ export default function RadiusInput({ name }) {
         )}
         InputProps={{
           startAdornment: (
-            <InputAdornment position="start">
+            <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
               <Typography variant="body2">Radius</Typography>
             </InputAdornment>
           ),

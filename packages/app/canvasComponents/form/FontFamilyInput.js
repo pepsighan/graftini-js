@@ -3,6 +3,7 @@ import { applyStyleOption, StyleOption } from 'canvasComponents/textEditor/style
 import { useResolveCurrentSelection } from 'canvasComponents/textEditor/textSelection';
 import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
 import { Controller, useFormContext } from 'react-hook-form';
+import { wideLabelAlignmentStyle } from './formLabels';
 
 export default function FontFamilyInput({ componentId }) {
   const { control } = useFormContext();
@@ -34,7 +35,7 @@ export default function FontFamilyInput({ componentId }) {
           select
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
                 <Typography variant="body2">Font</Typography>
               </InputAdornment>
             ),

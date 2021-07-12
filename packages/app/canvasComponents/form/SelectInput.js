@@ -1,5 +1,6 @@
 import { InputAdornment, TextField, Typography } from '@material-ui/core';
 import { useFormContext, Controller } from 'react-hook-form';
+import { wideLabelAlignmentStyle } from './formLabels';
 
 export default function SelectInput({ name, children, label }) {
   const { control } = useFormContext();
@@ -15,7 +16,7 @@ export default function SelectInput({ name, children, label }) {
           select
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
                 <Typography variant="body2">{label}</Typography>
               </InputAdornment>
             ),

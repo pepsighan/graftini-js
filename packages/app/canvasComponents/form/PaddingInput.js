@@ -1,7 +1,8 @@
-import { Box, Stack, Typography, TextField, InputAdornment } from '@material-ui/core';
+import { Box, InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
+import { thinLabelAlignmentStyle } from './formLabels';
 
 export default function PaddingInput({ name }) {
   return (
@@ -36,7 +37,7 @@ function NumberInputWithLabel({ name, label }) {
       )}
       InputProps={{
         startAdornment: (
-          <InputAdornment position="start">
+          <InputAdornment position="start" sx={thinLabelAlignmentStyle}>
             <Typography variant="body2">{label}</Typography>
           </InputAdornment>
         ),
