@@ -28,7 +28,7 @@ const TextEditor = forwardRef(
     const [onFocus, onBlur] = useRetainFocusOnText(setEditorState);
 
     useFocusOnEditingMode({ editorRef, setEditorState });
-    const isEditing = useEditingState();
+    const isEditing = useEditingState(setEditorState);
 
     const styleMap = useStyleMap({ componentId });
 
