@@ -2,6 +2,7 @@ import { Button, InputAdornment, MenuItem, Select, TextField, Typography } from 
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
+import { wideLabelAlignmentStyle } from './formLabels';
 
 const units = ['px', '%'];
 
@@ -43,7 +44,7 @@ export default function SizeInput({ name, label }) {
       onChange={onSizeChange}
       InputProps={{
         startAdornment: (
-          <InputAdornment position="start">
+          <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
             <Typography variant="body2">{label}</Typography>
           </InputAdornment>
         ),

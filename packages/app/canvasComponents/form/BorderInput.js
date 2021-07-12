@@ -15,6 +15,7 @@ import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
 import ColorBox from './ColorBox';
 import ColorPicker from './ColorPicker';
+import { wideLabelAlignmentStyle } from './formLabels';
 
 export default function BorderInput({ name }) {
   const { control, getValues } = useFormContext();
@@ -47,7 +48,7 @@ export default function BorderInput({ name }) {
         InputProps={{
           readOnly: true,
           startAdornment: (
-            <InputAdornment position="start">
+            <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
               <Typography variant="body2">Border</Typography>
             </InputAdornment>
           ),

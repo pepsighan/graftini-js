@@ -2,6 +2,7 @@ import { Box, InputAdornment, Stack, TextField, Typography } from '@material-ui/
 import { useCallback } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { parseInteger } from 'utils/parser';
+import { thinLabelAlignmentStyle } from './formLabels';
 
 // TODO: Typing negative numbers is kind of weird. Cannot start typing with - right now.
 // Has to be some non-zero positive number written first and then - prepended. Which is
@@ -42,7 +43,7 @@ function NumberInputWithLabel({ name, label }) {
       )}
       InputProps={{
         startAdornment: (
-          <InputAdornment position="start">
+          <InputAdornment position="start" sx={thinLabelAlignmentStyle}>
             <Typography variant="body2">{label}</Typography>
           </InputAdornment>
         ),

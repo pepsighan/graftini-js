@@ -2,6 +2,7 @@ import { InputAdornment, Stack, TextField, Typography } from '@material-ui/core'
 import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
+import { wideLabelAlignmentStyle } from './formLabels';
 
 export default function FlexPropertiesInput() {
   return (
@@ -29,7 +30,7 @@ function FlexNumericInput({ name, label }) {
       )}
       InputProps={{
         startAdornment: (
-          <InputAdornment position="start">
+          <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
             <Typography variant="body2">{label}</Typography>
           </InputAdornment>
         ),

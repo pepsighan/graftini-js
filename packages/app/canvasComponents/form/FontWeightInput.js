@@ -3,6 +3,7 @@ import { applyStyleOption, StyleOption } from 'canvasComponents/textEditor/style
 import { useResolveCurrentSelection } from 'canvasComponents/textEditor/textSelection';
 import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
 import { Controller, useFormContext } from 'react-hook-form';
+import { wideLabelAlignmentStyle } from './formLabels';
 
 const fontWeights = [
   { value: 100, label: 'Extra Thin' },
@@ -46,7 +47,7 @@ export default function FontWeightInput({ componentId }) {
           select
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
                 <Typography variant="body2">Weight</Typography>
               </InputAdornment>
             ),
