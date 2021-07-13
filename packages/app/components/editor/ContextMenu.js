@@ -49,6 +49,7 @@ export function ContextMenu({ id, isCorrectionNeeded = false, children }) {
 
   // Only show the context menu if it matches the id.
   return context?.id === id ? (
+    // Clickaway does not handle cases within the iframe which are manually handled.
     <ClickAwayListener onClickAway={onClose}>
       <Paper
         sx={{
