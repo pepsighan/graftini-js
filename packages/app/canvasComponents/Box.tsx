@@ -18,6 +18,7 @@ import {
 import { GraftComponent, useComponentId } from '@graftini/graft';
 import { componentContextMenuId } from 'components/editor/ComponentContextMenu';
 import { useContextMenu } from 'components/editor/ContextMenu';
+import useSelectOnRightClick from 'hooks/useSelectOnRightClick';
 import { forwardRef, MouseEvent, ReactNode, useCallback } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import { BoxTag } from 'utils/constants';
@@ -58,6 +59,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
   ({ children, onMouseDown, link, ...rest }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+    const selectComponentOnRightClick = useSelectOnRightClick();
 
     const isDraggingDisabled = useIsDraggingDisabled();
 
@@ -82,10 +84,10 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
     const onContextMenu = useCallback(
       (event: MouseEvent) => {
         event.stopPropagation();
-        selectComponent(componentId);
+        selectComponentOnRightClick(componentId);
         onOpenContextMenu(event, componentContextMenuId);
       },
-      [componentId, onOpenContextMenu, selectComponent]
+      [componentId, onOpenContextMenu, selectComponentOnRightClick]
     );
 
     return (

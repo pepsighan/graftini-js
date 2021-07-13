@@ -26,6 +26,7 @@ export {
   ComponentProps,
   defaultComponentMap,
   EditorStore,
+  isComponentWithinSubTree,
   ROOT_NODE_ID,
   useEditorStore,
   useEditorStoreApi,
