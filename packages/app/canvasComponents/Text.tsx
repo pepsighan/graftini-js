@@ -3,6 +3,7 @@ import { GraftComponent, useComponentId } from '@graftini/graft';
 import { componentContextMenuId } from 'components/editor/ComponentContextMenu';
 import { useContextMenu } from 'components/editor/ContextMenu';
 import { EditorState, RawDraftContentState, SelectionState } from 'draft-js';
+import useSelectOnRightClick from 'hooks/useSelectOnRightClick';
 import { forwardRef, MouseEvent, useCallback, useMemo } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
@@ -18,6 +19,7 @@ export type TextComponentProps = {
 const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, ref) => {
   const componentId = useComponentId();
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+  const selectComponentOnRightClick = useSelectOnRightClick();
   const isDraggingDisabled = useIsDraggingDisabled();
 
   const { onOpen: onOpenContextMenu, onClose: onCloseContextMenu } = useContextMenu();
@@ -36,10 +38,10 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
   const onContextMenu = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
-      selectComponent(componentId);
+      selectComponentOnRightClick(componentId);
       onOpenContextMenu(event, componentContextMenuId);
     },
-    [componentId, onOpenContextMenu, selectComponent]
+    [componentId, onOpenContextMenu, selectComponentOnRightClick]
   );
 
   return (

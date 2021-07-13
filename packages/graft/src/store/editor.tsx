@@ -163,7 +163,6 @@ export function EditorStateProvider({ elementMap, children }: EditorStateProvide
  * Checks whether a component is within the tree of another component. If both the components are same,
  * then also it holds true.
  */
-/** @internal */
 export function isComponentWithinSubTree(
   subtreeComponentId: string,
   componentId: string,
