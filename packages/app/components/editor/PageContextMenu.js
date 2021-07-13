@@ -2,31 +2,34 @@ import { MenuItem } from '@material-ui/core';
 import useBoolean from 'hooks/useBoolean';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
-import ContextMenu from './ContextMenu';
+import { ContextMenu, useContextMenu } from './ContextMenu';
 import DeletePageConfirmation from './DeletePageConfirmation';
 
-export default function PageContextMenu({ context, onClose }) {
+export const pageContextMenuIdPrefix = 'page-context-menu-';
+
+export default function PageContextMenu({ pageId, projectId }) {
+  const { onCloseContextMenu } = useContextMenu();
   const [isOpen, { on, off }] = useBoolean();
 
   const onCloseDeleteConfirmation = useCallback(() => {
     off();
-    onClose();
-  }, [off, onClose]);
+    onCloseContextMenu();
+  }, [off, onCloseContextMenu]);
 
   const { project } = useMyProjectFromRouter();
-  const page = project.pages.find((it) => it.id === context.pageId);
+  const page = project.pages.find((it) => it.id === pageId);
 
   return (
     <>
-      <ContextMenu context={context} onClose={onClose}>
+      <ContextMenu id={`${pageContextMenuIdPrefix}${pageId}`}>
         <MenuItem disabled>Edit</MenuItem>
         {page.route !== '/' && <MenuItem onClick={on}>Delete</MenuItem>}
       </ContextMenu>
 
       <DeletePageConfirmation
         isOpen={isOpen}
-        pageId={context.pageId}
-        projectId={context.projectId}
+        pageId={pageId}
+        projectId={projectId}
         onClose={onCloseDeleteConfirmation}
       />
     </>

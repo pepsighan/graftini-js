@@ -1,8 +1,54 @@
 import { ClickAwayListener, Paper } from '@material-ui/core';
+import { createContext, useCallback, useContext, useState } from 'react';
 import { leftSideBarWidth, navBarHeight } from 'utils/constants';
 
-export default function ContextMenu({ context, onClose, isCorrectionNeeded = false, children }) {
-  return context ? (
+const ContextMenuContext = createContext();
+
+/**
+ * Hook to get the context menu state.
+ */
+export function useContextMenu() {
+  return useContext(ContextMenuContext);
+}
+
+/**
+ * The provide that binds all the context menu within the editor page.
+ */
+export function ContextMenuProvider({ children }) {
+  const state = useContextMenuState();
+  return <ContextMenuContext.Provider value={state}>{children}</ContextMenuContext.Provider>;
+}
+
+/**
+ * The main state which stores all contexts.
+ */
+function useContextMenuState() {
+  const [context, setContext] = useState(null);
+
+  const onOpenContextMenu = useCallback((event, id) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    setContext({
+      id,
+      x: event.clientX,
+      y: event.clientY,
+    });
+  }, []);
+
+  const onCloseContextMenu = useCallback(() => setContext(null), []);
+
+  return { context, onOpenContextMenu, onCloseContextMenu };
+}
+
+/**
+ * The component which defines how a particular context menu looks.
+ */
+export function ContextMenu({ id, isCorrectionNeeded = false, children }) {
+  const { context, onCloseContextMenu: onClose } = useContextMenu();
+
+  // Only show the context menu if it matches the id.
+  return context?.id === id ? (
     <ClickAwayListener onClickAway={onClose}>
       <Paper
         sx={{

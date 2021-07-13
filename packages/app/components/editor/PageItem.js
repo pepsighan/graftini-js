@@ -1,10 +1,10 @@
 import { Button, Tooltip } from '@material-ui/core';
-import useContextMenu from 'hooks/useContextMenu';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import { encode } from 'utils/url';
-import PageContextMenu from './PageContextMenu';
+import { useContextMenu } from './ContextMenu';
+import PageContextMenu, { pageContextMenuIdPrefix } from './PageContextMenu';
 
 export default function PageItem({ id, name, route, slugProjectId, projectId }) {
   const isSelected = useDesignerState(useCallback((state) => state.currentOpenPage === id, [id]));
@@ -25,12 +25,13 @@ export default function PageItem({ id, name, route, slugProjectId, projectId }) 
     setCurrentPage(id);
   }, [id, replace, setCurrentPage, slugProjectId]);
 
-  const { context, onOpenContextMenu, onCloseContextMenu } = useContextMenu({
-    data: {
-      projectId,
-      pageId: id,
+  const { onOpenContextMenu } = useContextMenu();
+  const onOpenMenu = useCallback(
+    (event) => {
+      onOpenContextMenu(event, `${pageContextMenuIdPrefix}${id}`);
     },
-  });
+    [id, onOpenContextMenu]
+  );
 
   // TODO: Do not cause history to change. Since the pages are used to change
   // the views in the editor rather than change route for the app.
@@ -47,13 +48,12 @@ export default function PageItem({ id, name, route, slugProjectId, projectId }) 
             fontWeight: 'normal',
           }}
           onClick={onPageChange}
-          onContextMenu={onOpenContextMenu}
+          onContextMenu={onOpenMenu}
         >
           {name}
         </Button>
       </Tooltip>
-
-      {context && <PageContextMenu context={context} onClose={onCloseContextMenu} />}
+      <PageContextMenu pageId={id} projectId={projectId} />
     </>
   );
 }
