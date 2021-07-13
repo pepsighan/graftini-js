@@ -20,17 +20,19 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
   const isDraggingDisabled = useIsDraggingDisabled();
 
+  const { onOpen: onOpenContextMenu, onClose: onCloseContextMenu } = useContextMenu();
+
   const onClick = useCallback(
     (ev: MouseEvent) => {
       ev.stopPropagation();
       selectComponent(componentId);
+      onCloseContextMenu();
     },
-    [componentId, selectComponent]
+    [componentId, onCloseContextMenu, selectComponent]
   );
 
   const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
 
-  const { onOpen: onOpenContextMenu } = useContextMenu();
   const onContextMenu = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();

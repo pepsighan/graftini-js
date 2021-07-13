@@ -27,8 +27,9 @@ const Root: RootComponent<RootProps> = forwardRef(
       (event: MouseEvent) => {
         event.stopPropagation();
         selectComponent(ROOT_NODE_ID);
+        onClose();
       },
-      [selectComponent]
+      [onClose, selectComponent]
     );
 
     const onContextMenu = useCallback(
