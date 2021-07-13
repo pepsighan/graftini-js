@@ -54,7 +54,7 @@ export function ContextMenu({ id, isCorrectionNeeded = false, children }) {
       <Paper
         sx={{
           position: 'fixed',
-          zIndex: '100',
+          zIndex: 'modal',
           // The correction may be needed if the menu is to be shown on right clicking the
           // components within the canvas. In that case, the position of the context menu is
           // relative to the iframe which needs to be corrected for it to be shown in the
