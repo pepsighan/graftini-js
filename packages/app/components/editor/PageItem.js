@@ -25,12 +25,12 @@ export default function PageItem({ id, name, route, slugProjectId, projectId }) 
     setCurrentPage(id);
   }, [id, replace, setCurrentPage, slugProjectId]);
 
-  const { onOpenContextMenu } = useContextMenu();
+  const { onOpen } = useContextMenu();
   const onOpenMenu = useCallback(
     (event) => {
-      onOpenContextMenu(event, `${pageContextMenuIdPrefix}${id}`);
+      onOpen(event, `${pageContextMenuIdPrefix}${id}`);
     },
-    [id, onOpenContextMenu]
+    [id, onOpen]
   );
 
   // TODO: Do not cause history to change. Since the pages are used to change

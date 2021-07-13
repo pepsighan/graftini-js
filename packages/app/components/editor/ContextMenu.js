@@ -25,7 +25,7 @@ export function ContextMenuProvider({ children }) {
 function useContextMenuState() {
   const [context, setContext] = useState(null);
 
-  const onOpenContextMenu = useCallback((event, id) => {
+  const onOpen = useCallback((event, id) => {
     event.preventDefault();
     event.stopPropagation();
 
@@ -36,16 +36,16 @@ function useContextMenuState() {
     });
   }, []);
 
-  const onCloseContextMenu = useCallback(() => setContext(null), []);
+  const onClose = useCallback(() => setContext(null), []);
 
-  return { context, onOpenContextMenu, onCloseContextMenu };
+  return { context, onOpen, onClose };
 }
 
 /**
  * The component which defines how a particular context menu looks.
  */
 export function ContextMenu({ id, isCorrectionNeeded = false, children }) {
-  const { context, onCloseContextMenu: onClose } = useContextMenu();
+  const { context, onClose } = useContextMenu();
 
   // Only show the context menu if it matches the id.
   return context?.id === id ? (

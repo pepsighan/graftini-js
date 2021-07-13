@@ -76,7 +76,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
       [componentId, selectComponent]
     );
 
-    const { onOpenContextMenu } = useContextMenu();
+    const { onOpen: onOpenContextMenu } = useContextMenu();
     const onContextMenu = useCallback(
       (event: MouseEvent) => {
         event.stopPropagation();

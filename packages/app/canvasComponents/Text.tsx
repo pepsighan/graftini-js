@@ -30,7 +30,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
 
   const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
 
-  const { onOpenContextMenu } = useContextMenu();
+  const { onOpen: onOpenContextMenu } = useContextMenu();
   const onContextMenu = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
