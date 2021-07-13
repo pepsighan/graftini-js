@@ -11,6 +11,7 @@ import { useCallback, useMemo } from 'react';
 import { useDesignerState } from 'store/designer';
 import { navBarHeight } from 'utils/constants';
 import { initializeUserApollo, UserApolloProvider } from 'utils/graphqlUser';
+import { ContextMenuProvider } from './ContextMenu';
 import SyncEditorAndDesignerState from './SyncEditorAndDesignerState';
 
 export default function Designer({ projectId }) {
@@ -38,21 +39,23 @@ function Editorial() {
 
   return (
     <Box onContextMenu={useDisableContextMenu()}>
-      <Editor resolvers={components} initialState={editorState} rootComponentOverride={Root}>
-        <SyncEditorAndDesignerState />
+      <ContextMenuProvider>
+        <Editor resolvers={components} initialState={editorState} rootComponentOverride={Root}>
+          <SyncEditorAndDesignerState />
 
-        <GlobalStyles styles={` body { background-color: ${palette.grey[50]}; } `} />
+          <GlobalStyles styles={` body { background-color: ${palette.grey[50]}; } `} />
 
-        <EditorNavigation />
-        {/* The height of the nav is subtracted, so that any of the following does not cause window-wide scroll. 
+          <EditorNavigation />
+          {/* The height of the nav is subtracted, so that any of the following does not cause window-wide scroll. 
           Any scroll they have should be within their boundaries.
       */}
-        <Box sx={{ display: 'flex', height: `calc(100vh - ${navBarHeight}px)` }}>
-          <LeftSidebar />
-          <Canvas />
-          <RightSidebar />
-        </Box>
-      </Editor>
+          <Box sx={{ display: 'flex', height: `calc(100vh - ${navBarHeight}px)` }}>
+            <LeftSidebar />
+            <Canvas />
+            <RightSidebar />
+          </Box>
+        </Editor>
+      </ContextMenuProvider>
     </Box>
   );
 }

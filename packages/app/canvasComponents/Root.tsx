@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { RGBA, rgbaToCss } from '@graftini/bricks';
 import { RootComponent, ROOT_NODE_ID, useCreateComponentStore } from '@graftini/graft';
+import { useContextMenu } from 'components/editor/ContextMenu';
 import { ForwardedRef, forwardRef, MouseEvent, useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 
@@ -20,12 +21,15 @@ const Root: RootComponent<RootProps> = forwardRef(
       useCallback((state) => state.newComponent?.type, [])
     );
 
+    const { onClose } = useContextMenu();
+
     const onSelect = useCallback(
       (event: MouseEvent) => {
         event.stopPropagation();
         selectComponent(ROOT_NODE_ID);
+        onClose();
       },
-      [selectComponent]
+      [onClose, selectComponent]
     );
 
     const onContextMenu = useCallback(
@@ -33,8 +37,9 @@ const Root: RootComponent<RootProps> = forwardRef(
         event.preventDefault();
         event.stopPropagation();
         selectComponent(ROOT_NODE_ID);
+        onClose();
       },
-      [selectComponent]
+      [onClose, selectComponent]
     );
 
     return (

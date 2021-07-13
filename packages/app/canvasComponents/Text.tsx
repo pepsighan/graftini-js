@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { GraftComponent, useComponentId } from '@graftini/graft';
-import { ComponentContextMenuContext } from 'components/editor/ComponentContextMenu';
+import { componentContextMenuId } from 'components/editor/ComponentContextMenu';
+import { useContextMenu } from 'components/editor/ContextMenu';
 import { EditorState, RawDraftContentState, SelectionState } from 'draft-js';
-import { forwardRef, MouseEvent, useCallback, useContext, useMemo } from 'react';
+import { forwardRef, MouseEvent, useCallback, useMemo } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import TextEditor from './textEditor/TextEditor';
 import { TextSelectionProvider } from './textEditor/textSelection';
@@ -19,22 +20,24 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
   const isDraggingDisabled = useIsDraggingDisabled();
 
+  const { onOpen: onOpenContextMenu, onClose: onCloseContextMenu } = useContextMenu();
+
   const onClick = useCallback(
     (ev: MouseEvent) => {
       ev.stopPropagation();
       selectComponent(componentId);
+      onCloseContextMenu();
     },
-    [componentId, selectComponent]
+    [componentId, onCloseContextMenu, selectComponent]
   );
 
   const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
 
-  const { onOpenContextMenu } = useContext(ComponentContextMenuContext);
   const onContextMenu = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
       selectComponent(componentId);
-      onOpenContextMenu(event);
+      onOpenContextMenu(event, componentContextMenuId);
     },
     [componentId, onOpenContextMenu, selectComponent]
   );
