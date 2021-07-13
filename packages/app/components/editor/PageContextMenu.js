@@ -22,8 +22,10 @@ export default function PageContextMenu({ pageId, projectId }) {
   return (
     <>
       <ContextMenu id={`${pageContextMenuIdPrefix}${pageId}`}>
-        <MenuItem disabled>Edit</MenuItem>
-        {page.route !== '/' && <MenuItem onClick={on}>Delete</MenuItem>}
+        {page.route !== '/' && <MenuItem>Edit</MenuItem>}
+        <MenuItem disabled={page.route === '/'} onClick={on}>
+          Delete
+        </MenuItem>
       </ContextMenu>
 
       <DeletePageConfirmation
