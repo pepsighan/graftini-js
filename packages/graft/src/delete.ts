@@ -34,10 +34,26 @@ export function useOnDelete() {
       // because it has not yet removed the component from the tree.
       setTimeout(() => {
         immerSetEditor((state) => {
-          delete state.componentMap[componentId];
+          recursivelyDeleteTree(componentId, state);
         });
       });
     },
     [immerSetEditor, immerSetRegion]
   );
+}
+
+/**
+ * Recursively delete the tree where the root of the tree is [componentId].
+ */
+function recursivelyDeleteTree(componentId: string, state: EditorStore) {
+  const component = state.componentMap[componentId];
+  const children = component.childrenNodes;
+
+  // Remove self from the map.
+  delete state.componentMap[componentId];
+
+  // Remove the children from the map as well.
+  children.forEach((id) => {
+    recursivelyDeleteTree(id, state);
+  });
 }
