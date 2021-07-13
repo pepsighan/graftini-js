@@ -8,7 +8,7 @@ import { ContextMenu, useContextMenu } from './ContextMenu';
 export const componentContextMenuId = 'component-context-menu';
 
 export default function ComponentContextMenu() {
-  const { onCloseContextMenu: onClose } = useContextMenu();
+  const { onClose } = useContextMenu();
 
   const componentId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
   const onDeleteClick = useOnDeleteClick({ componentId, onClose });
