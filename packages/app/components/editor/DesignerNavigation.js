@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import DeployButton from './DeployButton';
+import SavingStatus from './SavingStatus';
 
 export default function EditorNavigation() {
   const { query } = useRouter();
@@ -34,6 +35,8 @@ export default function EditorNavigation() {
         </Stack>
 
         <Stack direction="row" spacing={2}>
+          <SavingStatus />
+
           <Link href={`/dashboard/project/${query.projectId}/preview`}>
             <Tooltip title="Preview">
               <IconButton>

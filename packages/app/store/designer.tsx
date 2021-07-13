@@ -13,6 +13,7 @@ type UseDesignerState = {
   pages: {
     [id: string]: ComponentMap;
   };
+  isSaving: boolean; // Whether the design is currently being saved.
 
   selectComponent(componentId: string): void;
   unselectComponent(): void;
@@ -21,6 +22,7 @@ type UseDesignerState = {
   setCurrentPage(pageId: string): void;
   updatePageDesign(pageId: string, componentMap: ComponentMap): void;
   deletePage(pageId: string): void;
+  setIsSaving(isSaving: boolean): void;
 };
 
 const createDesignerState = (pages: ProjectPage[]) =>
@@ -32,6 +34,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
       selectedComponentId: null,
       isTextEditingEnabled: false,
       isBoxResizing: false,
+      isSaving: false,
       pages: pages.reduce((acc, cur) => {
         acc[cur.id] = parseComponentMap(cur.componentMap);
         return acc;
@@ -43,6 +46,11 @@ const createDesignerState = (pages: ProjectPage[]) =>
           state.isTextEditingEnabled =
             state.selectedComponentId === componentId ? state.isTextEditingEnabled : false;
           state.selectedComponentId = componentId;
+        });
+      },
+      setIsSaving(isSaving: boolean) {
+        immerSet((state) => {
+          state.isSaving = isSaving;
         });
       },
       unselectComponent() {
