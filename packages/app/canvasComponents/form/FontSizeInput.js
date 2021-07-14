@@ -40,21 +40,21 @@ export default function FontSizeInput({ name, componentId }) {
       value={sizeLocal}
       onChange={useCallback(
         (event) => {
+          // Remove any non numerical character.
           const sanitized = event.target.value.replaceAll(nonNumberChars, '');
           let size;
 
           // Allow setting floating values to `rem` units and integer values to `px` units.
           if (unit === 'rem') {
-            size = parsePositiveFloat(sanitized);
-            if (isNaN(size)) {
-              size = 0;
-              setSizeLocal(toTwoDecimalPlaces(size));
+            const parsed = parsePositiveFloat(sanitized);
+            size = toTwoDecimalPlaces(parsed || 0);
+
+            if (parsed === toTwoDecimalPlaces(parsed)) {
+              // This path only has two decimal places in the input text.
+              setSizeLocal(sanitized);
             } else {
-              if (size === toTwoDecimalPlaces(size)) {
-                setSizeLocal(sanitized);
-              } else {
-                setSizeLocal(`${toTwoDecimalPlaces(size)}`);
-              }
+              // Do not allow a number more than two decimal places in the input.
+              setSizeLocal(`${toTwoDecimalPlaces(parsed)}`);
             }
           } else {
             size = parsePositiveInteger(sanitized) || 0;
