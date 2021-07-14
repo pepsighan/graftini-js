@@ -2,15 +2,20 @@ import { InputAdornment, MenuItem, Select, TextField, Typography } from '@materi
 import { applyStyleOption, StyleOption } from 'canvasComponents/textEditor/styleMap';
 import { useResolveCurrentSelection } from 'canvasComponents/textEditor/textSelection';
 import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { parsePositiveInteger } from 'utils/parser';
+import { parsePositiveFloat, parsePositiveInteger, toTwoDecimalPlaces } from 'utils/parser';
 import { wideLabelAlignmentStyle } from './formLabels';
+
+const nonNumberChars = /[^0-9.]+/g;
 
 export default function FontSizeInput({ name, componentId }) {
   const { control, setValue } = useFormContext();
   const size = useWatch({ control, name: `${name}.size` });
   const unit = useWatch({ control, name: `${name}.unit` });
+
+  // To support floating values.
+  const [sizeLocal, setSizeLocal] = useState(size);
 
   const setTextEditor = useTextEditorStateSetter({ componentId });
   const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
@@ -32,10 +37,29 @@ export default function FontSizeInput({ name, componentId }) {
   return (
     <TextField
       name={name}
-      value={size}
+      value={sizeLocal}
       onChange={useCallback(
         (event) => {
-          const size = parsePositiveInteger(event.target.value) || 0;
+          const sanitized = event.target.value.replaceAll(nonNumberChars, '');
+          let size;
+
+          // Allow setting floating values to `rem` units and integer values to `px` units.
+          if (unit === 'rem') {
+            size = parsePositiveFloat(sanitized);
+            if (isNaN(size)) {
+              size = 0;
+              setSizeLocal(toTwoDecimalPlaces(size));
+            } else {
+              if (size === toTwoDecimalPlaces(size)) {
+                setSizeLocal(sanitized);
+              } else {
+                setSizeLocal(`${toTwoDecimalPlaces(size)}`);
+              }
+            }
+          } else {
+            size = parsePositiveInteger(sanitized) || 0;
+          }
+
           setValue(`${name}.size`, size);
           onUpdateStyle(size, unit);
         },
