@@ -59,6 +59,7 @@ export default function FontSizeInput({ name, componentId }) {
             }
           } else {
             size = parsePositiveInteger(sanitized) || 0;
+            setSizeLocal(`${size}`);
           }
 
           setValue(`${name}.size`, size);
