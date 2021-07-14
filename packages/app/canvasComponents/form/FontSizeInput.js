@@ -42,26 +42,8 @@ export default function FontSizeInput({ name, componentId }) {
         (event) => {
           // Remove any non numerical character.
           const sanitized = event.target.value.replaceAll(nonNumberChars, '');
-          let size;
 
-          // Allow setting floating values to `rem` units and integer values to `px` units.
-          if (unit === 'rem') {
-            const parsed = parsePositiveFloat(sanitized);
-            size = toTwoDecimalPlaces(parsed || 0);
-
-            if (sanitized === toTwoDecimalPlaces(parsed).toString() || sanitized.endsWith('.')) {
-              // This path only has two decimal places in the input text.
-              setSizeLocal(sanitized);
-            } else {
-              // Do not allow a number more than two decimal places in the input. Also do not
-              // allow prefix 0's. Those have no meaning other than noise.
-              setSizeLocal(`${toTwoDecimalPlaces(parsed)}`);
-            }
-          } else {
-            size = parsePositiveInteger(sanitized) || 0;
-            setSizeLocal(`${size}`);
-          }
-
+          const size = parseFontSize({ value: sanitized, unit, setSizeLocal });
           setValue(`${name}.size`, size);
           onUpdateStyle(size, unit);
         },
@@ -79,8 +61,15 @@ export default function FontSizeInput({ name, componentId }) {
               value={unit}
               onChange={useCallback(
                 (event) => {
-                  setValue(`${name}.unit`, event.target.value);
-                  onUpdateStyle(size, event.target.value);
+                  const unit = event.target.value;
+                  const newSize = parseFontSize({ value: size.toString(), unit, setSizeLocal });
+
+                  // Changing units may also change the type of size. px can only be integer
+                  // and rem can by float.
+                  setValue(`${name}.size`, newSize);
+                  setValue(`${name}.unit`, unit);
+
+                  onUpdateStyle(newSize, unit);
                 },
                 [name, onUpdateStyle, setValue, size]
               )}
@@ -103,4 +92,28 @@ export default function FontSizeInput({ name, componentId }) {
       }}
     />
   );
+}
+
+function parseFontSize({ value, unit, setSizeLocal }) {
+  let size;
+
+  // Allow setting floating values to `rem` units and integer values to `px` units.
+  if (unit === 'rem') {
+    const parsed = parsePositiveFloat(value);
+    size = toTwoDecimalPlaces(parsed || 0);
+
+    if (value === toTwoDecimalPlaces(parsed).toString() || value.endsWith('.')) {
+      // This path only has two decimal places in the input text.
+      setSizeLocal(value);
+    } else {
+      // Do not allow a number more than two decimal places in the input. Also do not
+      // allow prefix 0's. Those have no meaning other than noise.
+      setSizeLocal(`${toTwoDecimalPlaces(parsed)}`);
+    }
+  } else {
+    size = parsePositiveInteger(value) || 0;
+    setSizeLocal(`${size}`);
+  }
+
+  return size;
 }
