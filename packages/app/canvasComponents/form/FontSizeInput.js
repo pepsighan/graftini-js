@@ -49,11 +49,12 @@ export default function FontSizeInput({ name, componentId }) {
             const parsed = parsePositiveFloat(sanitized);
             size = toTwoDecimalPlaces(parsed || 0);
 
-            if (parsed === toTwoDecimalPlaces(parsed)) {
+            if (sanitized === toTwoDecimalPlaces(parsed).toString() || sanitized.endsWith('.')) {
               // This path only has two decimal places in the input text.
               setSizeLocal(sanitized);
             } else {
-              // Do not allow a number more than two decimal places in the input.
+              // Do not allow a number more than two decimal places in the input. Also do not
+              // allow prefix 0's. Those have no meaning other than noise.
               setSizeLocal(`${toTwoDecimalPlaces(parsed)}`);
             }
           } else {
