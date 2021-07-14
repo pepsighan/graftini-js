@@ -11,11 +11,12 @@ export type BoxTag =
   | 'main'
   | 'button'
   | 'section'
-  | 'input'
-  | 'select'
-  | 'checkbox'
   | 'header'
-  | 'footer';
+  | 'footer'
+  | 'nav'
+  | 'aside'
+  | 'article'
+  | 'address';
 
 /**
  * The tags that can be used with a drawn Box.
@@ -24,13 +25,14 @@ export const boxTags: BoxTag[] = [
   'div',
   'span',
   'button',
-  'input',
-  'select',
-  'checkbox',
   'main',
   'section',
   'header',
   'footer',
+  'nav',
+  'aside',
+  'article',
+  'address',
 ];
 
 /**
