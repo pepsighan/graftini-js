@@ -20,15 +20,31 @@ import { useCreatePage } from 'store/projects';
 import { routeRegex } from 'utils/constants';
 import { z } from 'zod';
 
-const schema = z.object({
-  name: z.string().min(1, { message: 'Page name is required.' }),
-  route: z.string().regex(routeRegex, { message: 'Provide a valid route.' }),
-});
-
 export default function NewPageDialog({ isOpen, onClose }) {
   const {
-    project: { id: projectId },
+    project: { id: projectId, pages },
   } = useMyProjectFromRouter();
+
+  const schema = z.object({
+    name: z.string().min(1, { message: 'Page name is required.' }),
+    route: z
+      .string()
+      .regex(routeRegex, { message: 'Provide a valid route.' })
+      .transform((route) => {
+        // Cannot have trailing slashes.
+        if (route.endsWith('/')) {
+          return route.replace(/\/$/, '');
+        }
+        return route;
+      })
+      .refine(
+        (route) => {
+          const exists = pages.some((page) => page.route === route);
+          return !exists;
+        },
+        { message: 'The route already exists.' }
+      ),
+  });
 
   const {
     register,
