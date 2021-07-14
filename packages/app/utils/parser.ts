@@ -45,3 +45,11 @@ export function parsePositiveFloat(value: unknown): number | null {
 
   return null;
 }
+
+/**
+ * Limit the number to two decimal places.
+ */
+export function toTwoDecimalPlaces(num: number): number {
+  // Truncates the number to two decimal places. Using `toFixed` rounds up the number.
+  return Math.floor(num * 100) / 100;
+}

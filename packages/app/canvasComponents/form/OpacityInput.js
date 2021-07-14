@@ -1,6 +1,5 @@
 import { Box, Slider, TextField, Typography } from '@material-ui/core';
 import { Controller, useFormContext } from 'react-hook-form';
-import { wideLabelAlignmentStyle } from './formLabels';
 
 export default function OpacityInput({ name }) {
   const { control } = useFormContext();
