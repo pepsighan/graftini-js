@@ -30,9 +30,16 @@ export default function NewPageDialog({ isOpen, onClose }) {
     route: z
       .string()
       .regex(routeRegex, { message: 'Provide a valid route.' })
+      .transform((route) => {
+        // Cannot have trailing slashes.
+        if (route.endsWith('/')) {
+          return route.replace(/\/$/, '');
+        }
+        return route;
+      })
       .refine(
-        (val) => {
-          const exists = pages.some((page) => page.route === val);
+        (route) => {
+          const exists = pages.some((page) => page.route === route);
           return !exists;
         },
         { message: 'The route already exists.' }
