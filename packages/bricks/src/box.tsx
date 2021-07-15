@@ -63,7 +63,7 @@ export type AppearanceStyles = {
 
 export type BackgroundImageStyles = {
   imageUrl?: string;
-  fit?: BackgroundFit;
+  backgroundFit?: BackgroundFit;
 };
 
 export type BoundaryStyles = {
@@ -275,7 +275,7 @@ function appearanceStyles({ color, opacity, displayNone }: AppearanceStyles): CS
   return styles;
 }
 
-function backgroundImageStyles({ imageUrl, fit }: BackgroundImageStyles): CSSObject {
+function backgroundImageStyles({ imageUrl, backgroundFit: fit }: BackgroundImageStyles): CSSObject {
   return {
     backgroundImage: `url("${imageUrl}")`,
     backgroundSize: imageUrl ? fit : undefined,

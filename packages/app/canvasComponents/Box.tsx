@@ -1,5 +1,6 @@
 import {
   AlignItems,
+  BackgroundFit,
   Border,
   BorderRadius,
   Box as BoxComp,
@@ -53,6 +54,8 @@ export type BoxComponentProps = {
     pageId?: string;
     href?: string;
   };
+  imageUrl?: string;
+  backgroundFit?: BackgroundFit;
 };
 
 const Box: GraftComponent<BoxComponentProps> = forwardRef(
@@ -144,6 +147,9 @@ Box.graftOptions = {
     flexWrap: 'nowrap',
     flexGap: 0,
     link: null,
+    imageUrl: null,
+    // This won't have any effect unless an image url is set.
+    backgroundFit: 'cover',
   },
 };
 
