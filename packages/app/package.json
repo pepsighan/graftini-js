@@ -24,6 +24,7 @@
     "@mdi/react": "^1.5.0",
     "@modulz/radix-icons": "^4.0.0",
     "@next/bundle-analyzer": "^11.0.0",
+    "@sentry/nextjs": "^6.9.0",
     "draft-js": "^0.11.7",
     "firebase": "^8.6.5",
     "framer-motion": "^4.1.11",
