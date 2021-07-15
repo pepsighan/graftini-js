@@ -17,6 +17,7 @@ import { FontSize, FontWeight, TextAlign } from './text';
 export type BoxProps = BaseBoxProps &
   LayoutStyles &
   AppearanceStyles &
+  BackgroundImageStyles &
   BoundaryStyles &
   FlexStyles &
   PositionStyles &
@@ -58,6 +59,11 @@ export type AppearanceStyles = {
   opacity?: number;
   color?: RGBA;
   displayNone?: boolean;
+};
+
+export type BackgroundImageStyles = {
+  imageUrl?: string;
+  backgroundFit?: BackgroundFit;
 };
 
 export type BoundaryStyles = {
@@ -179,6 +185,7 @@ export type Position = 'absolute' | 'fixed' | 'relative' | 'static' | 'sticky';
 export type Cursor = 'pointer'; // Will need to add more as needed.
 export type FlexWrap = 'wrap' | 'nowrap';
 export type PointerEvents = 'auto' | 'none';
+export type BackgroundFit = 'contain' | 'cover';
 
 export type EditorProps = {
   /**
@@ -214,6 +221,7 @@ const Box = forwardRef((props: BoxProps, ref) => {
         display: 'flex',
         ...layoutStyles(props),
         ...appearanceStyles(props),
+        ...backgroundImageStyles(props),
         ...boundaryStyles(props),
         ...flexStyles(props),
         ...interactionStyles(props),
@@ -265,6 +273,13 @@ function appearanceStyles({ color, opacity, displayNone }: AppearanceStyles): CS
   }
 
   return styles;
+}
+
+function backgroundImageStyles({ imageUrl, backgroundFit: fit }: BackgroundImageStyles): CSSObject {
+  return {
+    backgroundImage: `url("${imageUrl}")`,
+    backgroundSize: imageUrl ? fit : undefined,
+  };
 }
 
 function boundaryStyles({ borderRadius, border, shadow, overflow }: BoundaryStyles): CSSObject {
