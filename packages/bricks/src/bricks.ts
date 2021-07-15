@@ -1,6 +1,8 @@
 export {
   AlignItems,
   AppearanceStyles,
+  BackgroundFit,
+  BackgroundImageStyles,
   BaseBoxProps,
   Border,
   BorderRadius,
