@@ -25,6 +25,7 @@
     "@modulz/radix-icons": "^4.0.0",
     "@next/bundle-analyzer": "^11.0.0",
     "@sentry/nextjs": "^6.9.0",
+    "apollo-upload-client": "^16.0.0",
     "draft-js": "^0.11.7",
     "firebase": "^8.6.5",
     "framer-motion": "^4.1.11",
@@ -45,6 +46,7 @@
     "zustand": "^3.5.2"
   },
   "devDependencies": {
+    "@types/apollo-upload-client": "^14.1.0",
     "@types/draft-js": "^0.11.3",
     "@types/lodash-es": "^4.17.4",
     "@types/node": "^15.12.2",
