@@ -1,15 +1,15 @@
 import { useEditorStore } from '@graftini/graft';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, MenuItem, Stack, Typography } from '@material-ui/core';
+import { Box, InputAdornment, MenuItem, Stack, TextField, Typography } from '@material-ui/core';
 import { useProjectId } from 'hooks/useProjectId';
 import useTextSelectionId, { getTextSelectionForComponent } from 'hooks/useTextSelectionId';
 import { useCallback } from 'react';
-import { useFormContext, useFormState, useWatch } from 'react-hook-form';
+import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useMyProject } from 'store/projects';
 import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
+import { wideLabelAlignmentStyle } from './form/formLabels';
 import SelectInput from './form/SelectInput';
-import TextInput from './form/TextInput';
 
 const url = z.string().regex(
   // eslint-disable-next-line no-useless-escape
@@ -68,10 +68,7 @@ function TextInteractionOptionsInner({ componentId }) {
 
 function OnClick() {
   const { control } = useFormContext();
-  const { errors } = useFormState({ control });
   const action = useWatch({ control, name: 'link.action' });
-
-  const { project } = useMyProject({ projectId: useProjectId() });
 
   return (
     <>
@@ -85,25 +82,84 @@ function OnClick() {
         <MenuItem value="href">Open external link</MenuItem>
       </SelectInput>
 
-      {action === 'pageId' && (
-        <SelectInput label="Page" name="link.pageId">
+      {action === 'pageId' && <PageSelection />}
+      {action === 'href' && <HrefInput />}
+    </>
+  );
+}
+
+function PageSelection() {
+  const { project } = useMyProject({ projectId: useProjectId() });
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      name="link.pageId"
+      control={control}
+      render={({ field }) => (
+        <TextField
+          select
+          name={field.name}
+          value={field.value}
+          onChange={(event) => {
+            field.onChange(event);
+
+            const pageId = event.target.value;
+            if (pageId) {
+              // Apply the link entity to the selection.
+            }
+          }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
+                <Typography variant="body2">Page</Typography>
+              </InputAdornment>
+            ),
+          }}
+        >
           {project.pages.map((it) => (
             <MenuItem key={it.id} value={it.id}>
               {it.name}
             </MenuItem>
           ))}
-        </SelectInput>
+        </TextField>
       )}
+    />
+  );
+}
 
-      {action === 'href' && (
-        <TextInput
-          label="Link"
-          name="link.href"
-          error={!!errors.link?.href}
-          helperText={errors.link?.href?.message}
+function HrefInput() {
+  const { control } = useFormContext();
+
+  return (
+    <Controller
+      name="link.href"
+      control={control}
+      render={({ field, fieldState: { error } }) => (
+        <TextField
+          name={field.name}
+          value={field.value}
+          onChange={(event) => {
+            field.onChange(event);
+
+            const href = event.target.value;
+            const { success } = url.safeParse(href);
+            if (success) {
+              // Apply the link entity to the selection.
+            }
+          }}
+          error={!!error}
+          helperText={error?.message}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
+                <Typography variant="body2">Link</Typography>
+              </InputAdornment>
+            ),
+          }}
         />
       )}
-    </>
+    />
   );
 }
 
