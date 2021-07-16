@@ -30,6 +30,5 @@ export default function InteractionOptions() {
   }
 
   const Component = componentInteractionOptions[type];
-
-  return <Component componentId={selectedComponentId} />;
+  return <Component key={selectedComponentId} componentId={selectedComponentId} />;
 }
