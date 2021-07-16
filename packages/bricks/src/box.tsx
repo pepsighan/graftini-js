@@ -341,7 +341,7 @@ function interactionStyles({
   };
 }
 
-function interactionProps({ tag, href, to }: InteractionProps & BaseBoxProps): any {
+export function interactionProps({ tag, href, to }: InteractionProps & BaseBoxProps): any {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const onClick = useCallback(
     (ev: MouseEvent) => {
