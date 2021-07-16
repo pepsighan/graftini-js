@@ -151,6 +151,8 @@ function ImagePicker() {
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
+          border: '1px solid',
+          borderColor: 'grey.200',
         }}
       />
       <AsyncButton fullWidth variant="contained" onClick={onBrowse} isLoading={isUploading}>
