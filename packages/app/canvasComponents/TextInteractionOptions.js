@@ -11,6 +11,9 @@ import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
 import { wideLabelAlignmentStyle } from './form/formLabels';
 import SelectInput from './form/SelectInput';
+import { applyLink } from './textEditor/entities';
+import { useResolveCurrentSelection } from './textEditor/textSelection';
+import { useTextEditorStateSetter } from './textEditor/useTextEditorState';
 
 const url = z.string().regex(urlRegex, { message: 'Not a valid URL. Starts with http or https.' });
 const schema = z.object({
@@ -56,13 +59,13 @@ function TextInteractionOptionsInner({ componentId }) {
       resolver={zodResolver(schema)}
     >
       <Stack spacing={1}>
-        <OnClick />
+        <OnClick componentId={componentId} />
       </Stack>
     </CanvasForm>
   );
 }
 
-function OnClick() {
+function OnClick({ componentId }) {
   const { control } = useFormContext();
   const action = useWatch({ control, name: 'link.action' });
 
@@ -78,15 +81,17 @@ function OnClick() {
         <MenuItem value="href">Open external link</MenuItem>
       </SelectInput>
 
-      {action === 'pageId' && <PageSelection />}
-      {action === 'href' && <HrefInput />}
+      {action === 'pageId' && <PageSelection componentId={componentId} />}
+      {action === 'href' && <HrefInput componentId={componentId} />}
     </>
   );
 }
 
-function PageSelection() {
+function PageSelection({ componentId }) {
   const { project } = useMyProject({ projectId: useProjectId() });
   const { control } = useFormContext();
+  const editorSetter = useTextEditorStateSetter();
+  const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
     <Controller
@@ -102,7 +107,8 @@ function PageSelection() {
 
             const pageId = event.target.value;
             if (pageId) {
-              // Apply the link entity to the selection.
+              const selection = resolveCurrentSelection();
+              editorSetter((state) => applyLink(state, { pageId }, selection));
             }
           }}
           InputProps={{
@@ -124,8 +130,10 @@ function PageSelection() {
   );
 }
 
-function HrefInput() {
+function HrefInput({ componentId }) {
   const { control } = useFormContext();
+  const editorSetter = useTextEditorStateSetter();
+  const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
     <Controller
@@ -141,7 +149,8 @@ function HrefInput() {
             const href = event.target.value;
             const { success } = url.safeParse(href);
             if (success) {
-              // Apply the link entity to the selection.
+              const selection = resolveCurrentSelection();
+              editorSetter((state) => applyLink(state, { href }, selection));
             }
           }}
           error={!!error}
