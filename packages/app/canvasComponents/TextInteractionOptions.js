@@ -1,10 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { InputAdornment, MenuItem, Stack, TextField, Typography } from '@material-ui/core';
-import { useProjectId } from 'hooks/useProjectId';
-import { useForm } from 'react-hook-form';
-import { useMyProject } from 'store/projects';
+import { MenuItem, Stack, Typography } from '@material-ui/core';
+import { useCallback } from 'react';
 import { z } from 'zod';
-import { wideLabelAlignmentStyle } from './form/formLabels';
+import CanvasForm from './form/CanvasForm';
+import SelectInput from './form/SelectInput';
 
 const url = z.string().regex(
   // eslint-disable-next-line no-useless-escape
@@ -19,67 +18,32 @@ const schema = z.object({
 });
 
 export default function TextInteractionOptions({ componentId }) {
-  const {
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-  });
+  const onInitialize = useCallback(
+    () => ({
+      action: '',
+    }),
+    []
+  );
 
-  const action = 'pageId';
-  const { project } = useMyProject({ projectId: useProjectId() });
+  const onSync = useCallback((props, state) => {}, []);
 
   return (
-    <Stack spacing={1}>
-      <Typography variant="subtitle2" mt={2} mb={0.5}>
-        On Click
-      </Typography>
-      <TextField
-        select
-        fullWidth
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
-              <Typography variant="body2">Action</Typography>
-            </InputAdornment>
-          ),
-        }}
-      >
-        <MenuItem value="">Do nothing</MenuItem>
-        <MenuItem value="pageId">Go to page</MenuItem>
-        <MenuItem value="href">Open external link</MenuItem>
-      </TextField>
-      {action === 'pageId' && (
-        <TextField
-          select
-          fullWidth
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
-                <Typography variant="body2">Page</Typography>
-              </InputAdornment>
-            ),
-          }}
-        >
-          {project.pages.map((it) => (
-            <MenuItem key={it.id} value={it.id}>
-              {it.name}
-            </MenuItem>
-          ))}
-        </TextField>
-      )}
-      {action === 'href' && (
-        <TextField
-          error={!!errors.link?.href}
-          helperText={errors.link?.href?.message}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
-                <Typography variant="body2">Link</Typography>
-              </InputAdornment>
-            ),
-          }}
-        />
-      )}
-    </Stack>
+    <CanvasForm
+      componentId={componentId}
+      onInitialize={onInitialize}
+      resolver={zodResolver(schema)}
+      onSync={onSync}
+    >
+      <Stack spacing={1}>
+        <Typography variant="subtitle2" mt={2} mb={0.5}>
+          On Click
+        </Typography>
+        <SelectInput label="Action" name="action">
+          <MenuItem value="">Do nothing</MenuItem>
+          <MenuItem value="pageId">Go to page</MenuItem>
+          <MenuItem value="href">Open external link</MenuItem>
+        </SelectInput>
+      </Stack>
+    </CanvasForm>
   );
 }
