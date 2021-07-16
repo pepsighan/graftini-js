@@ -7,13 +7,10 @@ import { useProjectId } from 'hooks/useProjectId';
 import { useCallback } from 'react';
 import { useFormContext, useFormState, useWatch } from 'react-hook-form';
 import { useMyProject } from 'store/projects';
+import { urlRegex } from 'utils/url';
 import { z } from 'zod';
 
-const url = z.string().regex(
-  // eslint-disable-next-line no-useless-escape
-  /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/,
-  { message: 'Not a valid URL. Starts with http or https.' }
-);
+const url = z.string().regex(urlRegex, { message: 'Not a valid URL. Starts with http or https.' });
 
 const schema = z.object({
   link: z.object({
