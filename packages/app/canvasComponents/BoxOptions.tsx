@@ -7,6 +7,7 @@ import { boxTags } from 'utils/constants';
 import { parsePositiveInteger } from 'utils/parser';
 import { BoxComponentProps } from './Box';
 import AlignmentInput from './form/AlignmentInput';
+import BackgroundImageInput from './form/BackgroundImageInput';
 import BorderInput, { defaultBorderSide } from './form/BorderInput';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import ColorPickerInput from './form/ColorPickerInput';
@@ -237,6 +238,7 @@ function AppearanceSection() {
     <>
       <Typography variant="subtitle2">Appearance</Typography>
       <ColorPickerInput name="color" label="Fill" />
+      <BackgroundImageInput />
       <OpacityInput name="opacity" />
     </>
   );
