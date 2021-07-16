@@ -34,6 +34,8 @@ body {
   border-style: solid;
   box-sizing: border-box;
   background-color: transparent;
+  // Any element can have a background defined. So do not repeat them by default.
+  background-repeat: no-repeat;
 }
 main {
   display: block;
