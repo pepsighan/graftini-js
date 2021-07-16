@@ -92,11 +92,20 @@ function ImagePicker() {
 
   return (
     <>
-      <Box ref={inputRef} component="input" type="file" sx={{ display: 'none' }} />
       <Box sx={{ height: 150, width: 200, bgcolor: 'grey.100', borderRadius: 1 }} />
       <Button fullWidth variant="contained" onClick={onBrowse}>
         Browse
       </Button>
+
+      <Box
+        ref={inputRef}
+        component="input"
+        type="file"
+        sx={{ display: 'none' }}
+        // Only the given mime-types are supported in the backend.
+        // We'll add support for more as required.
+        accept="image/jpeg,image/png,image/webp"
+      />
     </>
   );
 }
