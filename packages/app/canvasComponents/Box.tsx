@@ -23,6 +23,7 @@ import useSelectOnRightClick from 'hooks/useSelectOnRightClick';
 import { forwardRef, MouseEvent, ReactNode, useCallback } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import { BoxTag } from 'utils/constants';
+import { useTransformBoxProps } from './BoxRender';
 
 export type BoxComponentProps = {
   name?: string;
@@ -96,7 +97,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
     return (
       <BoxComp
         ref={ref}
-        {...boxProps}
+        {...useTransformBoxProps(boxProps)}
         isEditor
         onMouseDown={!isDraggingDisabled ? onMouseDown : null}
         onClick={onSelection}

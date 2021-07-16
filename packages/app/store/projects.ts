@@ -249,3 +249,22 @@ export function useUploadImage() {
     }
   `);
 }
+
+/**
+ * Get the uploaded image meta information.
+ */
+export function useUploadedImage(imageId?: string) {
+  const { data, ...rest } = useQuery(
+    gql`
+      query GetImage($fileId: ID!) {
+        file(fileId: $fileId) {
+          id
+          fileUrl
+        }
+      }
+    `,
+    { variables: { fileId: imageId }, skip: !imageId }
+  );
+
+  return { image: data?.file, ...rest };
+}
