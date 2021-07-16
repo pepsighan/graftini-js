@@ -88,9 +88,12 @@ function ImagePickerPopover({ open, onClose }) {
 }
 
 function ImagePicker() {
-  const { setValue } = useFormContext();
+  const { control, setValue } = useFormContext();
   const inputRef = useRef();
   const [uploadImage, { loading: isUploading }] = useUploadImage();
+
+  const imageId = useWatch({ control, name: 'imageId' });
+  const { image } = useUploadedImage(imageId);
 
   const onBrowse = useCallback(() => {
     // Open the file explorer.
@@ -120,7 +123,18 @@ function ImagePicker() {
 
   return (
     <>
-      <Box sx={{ height: 150, width: 200, bgcolor: 'grey.100', borderRadius: 1 }} />
+      <Box
+        sx={{
+          height: 150,
+          width: 200,
+          bgcolor: !image?.fileUrl ? 'grey.100' : null,
+          borderRadius: 1,
+          backgroundImage: image?.fileUrl ? `url("${image.fileUrl}")` : null,
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+        }}
+      />
       <AsyncButton fullWidth variant="contained" onClick={onBrowse} isLoading={isUploading}>
         Browse
       </AsyncButton>
