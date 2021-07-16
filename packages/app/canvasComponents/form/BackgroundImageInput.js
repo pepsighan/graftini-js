@@ -1,4 +1,13 @@
-import { Box, InputAdornment, Popover, TextField, Typography } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  InputAdornment,
+  MenuItem,
+  Popover,
+  Stack,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 import { useCallback, useState } from 'react';
 import { wideLabelAlignmentStyle } from './formLabels';
 
@@ -58,7 +67,26 @@ function ImagePickerPopover({ value, onChange, open, onClose }) {
         horizontal: 'right',
       }}
     >
-      <Box sx={{ p: 1 }}>Hello World</Box>
+      <Stack sx={{ p: 1.2 }} spacing={1}>
+        <Box sx={{ height: 150, width: 200, bgcolor: 'grey.100', borderRadius: 1 }} />
+        <Button fullWidth variant="contained">
+          Browse
+        </Button>
+
+        <TextField
+          select
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
+                <Typography variant="body2">Fit</Typography>
+              </InputAdornment>
+            ),
+          }}
+        >
+          <MenuItem value="contain">Contain</MenuItem>
+          <MenuItem value="cover">Cover</MenuItem>
+        </TextField>
+      </Stack>
     </Popover>
   );
 }
