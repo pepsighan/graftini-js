@@ -78,8 +78,10 @@ function LinkRender({ children, entityKey, contentState }) {
     to = `${route.replace('[projectId]', query.projectId as string)}?page=${link.pageId}`;
   }
 
+  // Though this is a link, in the editor we do not want any interaction so tag has to be
+  // span.
   return (
-    <Text tag="a" to={to} href={link?.href}>
+    <Text tag="span" to={to} href={link?.href} displayInline isEditor>
       {children}
     </Text>
   );
