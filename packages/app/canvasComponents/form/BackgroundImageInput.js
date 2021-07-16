@@ -9,15 +9,17 @@ import {
   Typography,
 } from '@material-ui/core';
 import { useCallback, useState } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { wideLabelAlignmentStyle } from './formLabels';
 import SelectInput from './SelectInput';
 
 export default function BackgroundImageInput() {
-  const imageUrl = null;
-
   const [open, setOpen] = useState(null);
   const onOpen = useCallback((event) => setOpen(event.currentTarget), []);
   const onClose = useCallback(() => setOpen(null), []);
+
+  const { control } = useFormContext();
+  const imageUrl = useWatch({ control, name: 'imageUrl' });
 
   return (
     <>
