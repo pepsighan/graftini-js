@@ -53,14 +53,11 @@ function TextInteractionOptionsInner({ componentId }) {
     };
   }, []);
 
-  const onSync = useCallback((props, state) => {}, []);
-
   return (
     <CanvasForm
       componentId={componentId}
       onInitialize={onInitialize}
       resolver={zodResolver(schema)}
-      onSync={onSync}
     >
       <Stack spacing={1}>
         <OnClick />
