@@ -10,9 +10,10 @@ import {
 import AsyncButton from 'components/AsyncButton';
 import { useCallback, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { useUploadImage } from 'store/projects';
+import { useUploadedImage, useUploadImage } from 'store/projects';
 import { wideLabelAlignmentStyle } from './formLabels';
 import SelectInput from './SelectInput';
+import { capitalize } from 'lodash-es';
 
 export default function BackgroundImageInput() {
   const [open, setOpen] = useState(null);
@@ -20,13 +21,16 @@ export default function BackgroundImageInput() {
   const onClose = useCallback(() => setOpen(null), []);
 
   const { control } = useFormContext();
-  const imageUrl = useWatch({ control, name: 'imageUrl' });
+  const imageId = useWatch({ control, name: 'imageId' });
+  const backgroundFit = useWatch({ control, name: 'backgroundFit' });
+  const { image } = useUploadedImage(imageId);
 
   return (
     <>
       <TextField
         placeholder="Add"
         onClick={onOpen}
+        value={imageId ? capitalize(backgroundFit) : ''}
         InputProps={{
           readOnly: true,
           startAdornment: (
@@ -34,15 +38,15 @@ export default function BackgroundImageInput() {
               <Typography variant="body2">Image</Typography>
             </InputAdornment>
           ),
-          endAdornment: imageUrl ? (
+          endAdornment: image?.fileUrl ? (
             <InputAdornment position="end">
               <Box
                 sx={{
                   width: 16,
                   height: 16,
-                  bgcolor: 'grey.200',
                   borderRadius: 1,
-                  backgroundImage: `url(${imageUrl})`,
+                  backgroundImage: `url(${image.fileUrl})`,
+                  backgroundSize: 'cover',
                 }}
               />
             </InputAdornment>
