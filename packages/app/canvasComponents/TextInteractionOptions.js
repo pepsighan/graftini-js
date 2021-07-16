@@ -1,6 +1,7 @@
+import { useEditorStore } from '@graftini/graft';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MenuItem, Stack, Typography } from '@material-ui/core';
-import useTextSelectionId from 'hooks/useTextSelectionId';
+import { Box, MenuItem, Stack, Typography } from '@material-ui/core';
+import useTextSelectionId, { getTextEditorStateForComponent } from 'hooks/useTextSelectionId';
 import { useCallback } from 'react';
 import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
@@ -22,6 +23,17 @@ export default function TextInteractionOptions({ componentId }) {
   // Using the selection id for keying the form will refresh the form values that
   // reflect the current selection.
   const textSelectionId = useTextSelectionId(componentId);
+  const isTextSelected = useIsTextSelected(componentId);
+
+  if (!isTextSelected) {
+    return (
+      <Box mt={2}>
+        <Typography variant="body2">
+          Select a portion of a text to configure interactions.
+        </Typography>
+      </Box>
+    );
+  }
 
   return <TextInteractionOptionsInner key={textSelectionId} componentId={componentId} />;
 }
@@ -54,5 +66,20 @@ function TextInteractionOptionsInner({ componentId }) {
         </SelectInput>
       </Stack>
     </CanvasForm>
+  );
+}
+
+function useIsTextSelected(componentId) {
+  return useEditorStore(
+    useCallback(
+      (state) => {
+        const selection = getTextEditorStateForComponent(
+          state.componentMap,
+          componentId
+        ).getSelection();
+        return !selection.isCollapsed();
+      },
+      [componentId]
+    )
   );
 }

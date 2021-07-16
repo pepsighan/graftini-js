@@ -6,7 +6,10 @@ export default function useTextSelectionId(componentId: string): string {
   return useEditorStore(
     useCallback(
       (state) => {
-        const selection = getEditorState(state.componentMap, componentId).getSelection();
+        const selection = getTextEditorStateForComponent(
+          state.componentMap,
+          componentId
+        ).getSelection();
         return (
           `${selection.getAnchorKey()}-${selection.getAnchorOffset()}-` +
           `${selection.getFocusKey()}-${selection.getFocusOffset()}`
@@ -17,7 +20,10 @@ export default function useTextSelectionId(componentId: string): string {
   );
 }
 
-function getEditorState(componentMap: ComponentMap, componentId: string): EditorState {
+export function getTextEditorStateForComponent(
+  componentMap: ComponentMap,
+  componentId: string
+): EditorState {
   return (
     componentMap[componentId].props.editor ??
     // If the editor is yet not created, create it from raw.
