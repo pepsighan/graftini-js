@@ -23,6 +23,7 @@ import useSelectOnRightClick from 'hooks/useSelectOnRightClick';
 import { forwardRef, MouseEvent, ReactNode, useCallback } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import { BoxTag } from 'utils/constants';
+import { useTransformBoxProps } from './BoxRender';
 
 export type BoxComponentProps = {
   name?: string;
@@ -54,7 +55,7 @@ export type BoxComponentProps = {
     pageId?: string;
     href?: string;
   };
-  imageUrl?: string;
+  imageId?: string;
   backgroundFit?: BackgroundFit;
 };
 
@@ -96,7 +97,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
     return (
       <BoxComp
         ref={ref}
-        {...boxProps}
+        {...useTransformBoxProps(boxProps)}
         isEditor
         onMouseDown={!isDraggingDisabled ? onMouseDown : null}
         onClick={onSelection}
@@ -147,7 +148,7 @@ Box.graftOptions = {
     flexWrap: 'nowrap',
     flexGap: 0,
     link: null,
-    imageUrl: null,
+    imageId: null,
     // This won't have any effect unless an image url is set.
     backgroundFit: 'cover',
   },

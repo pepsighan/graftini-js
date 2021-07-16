@@ -277,7 +277,7 @@ function appearanceStyles({ color, opacity, displayNone }: AppearanceStyles): CS
 
 function backgroundImageStyles({ imageUrl, backgroundFit: fit }: BackgroundImageStyles): CSSObject {
   return {
-    backgroundImage: `url("${imageUrl}")`,
+    backgroundImage: imageUrl ? `url("${imageUrl}")` : undefined,
     backgroundSize: imageUrl ? fit : undefined,
   };
 }
