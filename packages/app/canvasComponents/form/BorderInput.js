@@ -57,7 +57,11 @@ export default function BorderInput({ name }) {
             <InputAdornment position="end">
               <ColorBox value={borderSide.color} />
 
-              <Button sx={{ ml: 1, width: 32, minWidth: 'auto' }} onClick={onReset}>
+              <Button
+                sx={{ ml: 1, width: 32, minWidth: 'auto' }}
+                color="secondary"
+                onClick={onReset}
+              >
                 <Cross1Icon />
               </Button>
             </InputAdornment>

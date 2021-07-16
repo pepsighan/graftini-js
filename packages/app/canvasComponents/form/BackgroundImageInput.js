@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   InputAdornment,
   MenuItem,
   Popover,
@@ -7,23 +8,29 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import { Cross1Icon } from '@modulz/radix-icons';
 import AsyncButton from 'components/AsyncButton';
+import { capitalize } from 'lodash-es';
 import { useCallback, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useUploadedImage, useUploadImage } from 'store/projects';
 import { wideLabelAlignmentStyle } from './formLabels';
 import SelectInput from './SelectInput';
-import { capitalize } from 'lodash-es';
 
 export default function BackgroundImageInput() {
   const [open, setOpen] = useState(null);
   const onOpen = useCallback((event) => setOpen(event.currentTarget), []);
   const onClose = useCallback(() => setOpen(null), []);
 
-  const { control } = useFormContext();
+  const { control, setValue } = useFormContext();
   const imageId = useWatch({ control, name: 'imageId' });
   const backgroundFit = useWatch({ control, name: 'backgroundFit' });
   const { image } = useUploadedImage(imageId);
+
+  // Remove the image.
+  const onReset = useCallback(() => {
+    setValue('imageId', null);
+  }, [setValue]);
 
   return (
     <>
@@ -49,12 +56,23 @@ export default function BackgroundImageInput() {
                   backgroundSize: 'cover',
                 }}
               />
+
+              <Button
+                sx={{ ml: 1, width: 32, minWidth: 'auto' }}
+                color="secondary"
+                onClick={onReset}
+              >
+                <Cross1Icon />
+              </Button>
             </InputAdornment>
           ) : null,
         }}
         sx={{
           '& .MuiOutlinedInput-root, & .MuiOutlinedInput-input': {
             cursor: 'pointer',
+          },
+          '& .MuiOutlinedInput-root': {
+            paddingRight: 0,
           },
         }}
       />
