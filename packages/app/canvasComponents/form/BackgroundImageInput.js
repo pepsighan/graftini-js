@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { useCallback, useState } from 'react';
 import { wideLabelAlignmentStyle } from './formLabels';
+import SelectInput from './SelectInput';
 
 export default function BackgroundImageInput() {
   const imageUrl = null;
@@ -56,7 +57,7 @@ export default function BackgroundImageInput() {
   );
 }
 
-function ImagePickerPopover({ value, onChange, open, onClose }) {
+function ImagePickerPopover({ open, onClose }) {
   return (
     <Popover
       open={!!open}
@@ -73,19 +74,10 @@ function ImagePickerPopover({ value, onChange, open, onClose }) {
           Browse
         </Button>
 
-        <TextField
-          select
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start" sx={wideLabelAlignmentStyle}>
-                <Typography variant="body2">Fit</Typography>
-              </InputAdornment>
-            ),
-          }}
-        >
+        <SelectInput name="backgroundFit" label="Fit">
           <MenuItem value="contain">Contain</MenuItem>
           <MenuItem value="cover">Cover</MenuItem>
-        </TextField>
+        </SelectInput>
       </Stack>
     </Popover>
   );
