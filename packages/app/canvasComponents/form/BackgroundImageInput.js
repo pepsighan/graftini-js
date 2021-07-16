@@ -147,8 +147,8 @@ function ImagePicker() {
           width: 200,
           bgcolor: !image?.fileUrl ? 'grey.100' : null,
           borderRadius: 1,
-          backgroundImage: image?.fileUrl ? `url("${image.fileUrl}")` : null,
-          backgroundSize: 'cover',
+          backgroundImage: image?.fileUrl ? `url("${image.fileUrl}")` : undefined,
+          backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
         }}
