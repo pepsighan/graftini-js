@@ -1,6 +1,5 @@
 import {
   Box,
-  Button,
   InputAdornment,
   MenuItem,
   Popover,
@@ -8,8 +7,10 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import AsyncButton from 'components/AsyncButton';
 import { useCallback, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
+import { useUploadImage } from 'store/projects';
 import { wideLabelAlignmentStyle } from './formLabels';
 import SelectInput from './SelectInput';
 
@@ -84,18 +85,35 @@ function ImagePickerPopover({ open, onClose }) {
 
 function ImagePicker() {
   const inputRef = useRef();
+  const [uploadImage, { loading: isUploading }] = useUploadImage();
 
   const onBrowse = useCallback(() => {
     // Open the file explorer.
     inputRef.current.click();
   }, []);
 
+  const onImageUpload = useCallback(
+    async (event) => {
+      if (event.target.files.length !== 1) {
+        return;
+      }
+
+      const file = event.target.files[0];
+      await uploadImage({
+        variables: {
+          file,
+        },
+      });
+    },
+    [uploadImage]
+  );
+
   return (
     <>
       <Box sx={{ height: 150, width: 200, bgcolor: 'grey.100', borderRadius: 1 }} />
-      <Button fullWidth variant="contained" onClick={onBrowse}>
+      <AsyncButton fullWidth variant="contained" onClick={onBrowse} isLoading={isUploading}>
         Browse
-      </Button>
+      </AsyncButton>
 
       <Box
         ref={inputRef}
@@ -105,6 +123,7 @@ function ImagePicker() {
         // Only the given mime-types are supported in the backend.
         // We'll add support for more as required.
         accept="image/jpeg,image/png,image/webp"
+        onChange={onImageUpload}
       />
     </>
   );
