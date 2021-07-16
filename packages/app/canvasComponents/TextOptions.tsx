@@ -1,8 +1,8 @@
 import { FontSize as FontSizeType, FontWeight, RGBA, TextAlign } from '@graftini/bricks';
-import { ComponentMap, useEditorStore, useEditorStoreApi } from '@graftini/graft';
+import { useEditorStoreApi } from '@graftini/graft';
 import { Divider, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
-import { convertFromRaw, EditorState } from 'draft-js';
+import useTextSelectionId from 'hooks/useTextSelectionId';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import FontFamilyInput from './form/FontFamilyInput';
@@ -76,28 +76,5 @@ function FormInner({ componentId }: OptionsProps) {
         <TextColorPickerInput componentId={componentId} />
       </Stack>
     </CF>
-  );
-}
-
-function useTextSelectionId(componentId: string): string {
-  return useEditorStore(
-    useCallback(
-      (state) => {
-        const selection = getEditorState(state.componentMap, componentId).getSelection();
-        return (
-          `${selection.getAnchorKey()}-${selection.getAnchorOffset()}-` +
-          `${selection.getFocusKey()}-${selection.getFocusOffset()}`
-        );
-      },
-      [componentId]
-    )
-  );
-}
-
-function getEditorState(componentMap: ComponentMap, componentId: string): EditorState {
-  return (
-    componentMap[componentId].props.editor ??
-    // If the editor is yet not created, create it from raw.
-    EditorState.createWithContent(convertFromRaw(componentMap[componentId].props.content))
   );
 }

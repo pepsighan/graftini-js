@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { MenuItem, Stack, Typography } from '@material-ui/core';
+import useTextSelectionId from 'hooks/useTextSelectionId';
 import { useCallback } from 'react';
 import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
@@ -18,6 +19,14 @@ const schema = z.object({
 });
 
 export default function TextInteractionOptions({ componentId }) {
+  // Using the selection id for keying the form will refresh the form values that
+  // reflect the current selection.
+  const textSelectionId = useTextSelectionId(componentId);
+
+  return <TextInteractionOptionsInner key={textSelectionId} componentId={componentId} />;
+}
+
+function TextInteractionOptionsInner({ componentId }) {
   const onInitialize = useCallback(
     () => ({
       action: '',
