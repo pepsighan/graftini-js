@@ -235,3 +235,17 @@ export function useDeletePage({ projectId }) {
     }
   );
 }
+
+/**
+ * Hook to upload image.
+ */
+export function useUploadImage() {
+  return useMutation(gql`
+    mutation UploadImage($file: Upload!) {
+      uploadFile(file: $file) {
+        id
+        fileUrl
+      }
+    }
+  `);
+}
