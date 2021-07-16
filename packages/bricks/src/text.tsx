@@ -88,9 +88,15 @@ function baseStyles({
   };
 }
 
-function textInteractionStyles({ cursor }: TextInteractionStyles): CSSObject {
+function textInteractionStyles({
+  cursor,
+  to,
+  href,
+}: TextInteractionStyles & InteractionProps): CSSObject {
   return {
     cursor,
+    // TODO: Let the theme define the style for links.
+    textDecoration: to || href ? 'underline' : undefined,
   };
 }
 
