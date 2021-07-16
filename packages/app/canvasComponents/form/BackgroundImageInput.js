@@ -28,9 +28,14 @@ export default function BackgroundImageInput() {
   const { image } = useUploadedImage(imageId);
 
   // Remove the image.
-  const onReset = useCallback(() => {
-    setValue('imageId', null);
-  }, [setValue]);
+  const onReset = useCallback(
+    (event) => {
+      // Do not open the popover.
+      event.stopPropagation();
+      setValue('imageId', null);
+    },
+    [setValue]
+  );
 
   return (
     <>
