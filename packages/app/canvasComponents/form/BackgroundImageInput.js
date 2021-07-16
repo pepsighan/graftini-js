@@ -8,7 +8,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import { useCallback, useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { wideLabelAlignmentStyle } from './formLabels';
 import SelectInput from './SelectInput';
@@ -71,10 +71,7 @@ function ImagePickerPopover({ open, onClose }) {
       }}
     >
       <Stack sx={{ p: 1.2 }} spacing={1}>
-        <Box sx={{ height: 150, width: 200, bgcolor: 'grey.100', borderRadius: 1 }} />
-        <Button fullWidth variant="contained">
-          Browse
-        </Button>
+        <ImagePicker />
 
         <SelectInput name="backgroundFit" label="Fit">
           <MenuItem value="contain">Contain</MenuItem>
@@ -82,5 +79,24 @@ function ImagePickerPopover({ open, onClose }) {
         </SelectInput>
       </Stack>
     </Popover>
+  );
+}
+
+function ImagePicker() {
+  const inputRef = useRef();
+
+  const onBrowse = useCallback(() => {
+    // Open the file explorer.
+    inputRef.current.click();
+  }, []);
+
+  return (
+    <>
+      <Box ref={inputRef} component="input" type="file" sx={{ display: 'none' }} />
+      <Box sx={{ height: 150, width: 200, bgcolor: 'grey.100', borderRadius: 1 }} />
+      <Button fullWidth variant="contained" onClick={onBrowse}>
+        Browse
+      </Button>
+    </>
   );
 }
