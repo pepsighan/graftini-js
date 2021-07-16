@@ -90,7 +90,7 @@ function OnClick({ componentId }) {
 function PageSelection({ componentId }) {
   const { project } = useMyProject({ projectId: useProjectId() });
   const { control } = useFormContext();
-  const editorSetter = useTextEditorStateSetter();
+  const editorSetter = useTextEditorStateSetter({ componentId });
   const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
@@ -132,7 +132,7 @@ function PageSelection({ componentId }) {
 
 function HrefInput({ componentId }) {
   const { control } = useFormContext();
-  const editorSetter = useTextEditorStateSetter();
+  const editorSetter = useTextEditorStateSetter({ componentId });
   const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
