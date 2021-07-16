@@ -1,11 +1,15 @@
 import { useEditorStore } from '@graftini/graft';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, MenuItem, Stack, Typography } from '@material-ui/core';
-import useTextSelectionId, { getTextEditorStateForComponent } from 'hooks/useTextSelectionId';
+import { useProjectId } from 'hooks/useProjectId';
+import useTextSelectionId, { getTextSelectionForComponent } from 'hooks/useTextSelectionId';
 import { useCallback } from 'react';
+import { useFormContext, useFormState, useWatch } from 'react-hook-form';
+import { useMyProject } from 'store/projects';
 import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
 import SelectInput from './form/SelectInput';
+import TextInput from './form/TextInput';
 
 const url = z.string().regex(
   // eslint-disable-next-line no-useless-escape
@@ -39,12 +43,15 @@ export default function TextInteractionOptions({ componentId }) {
 }
 
 function TextInteractionOptionsInner({ componentId }) {
-  const onInitialize = useCallback(
-    () => ({
-      action: '',
-    }),
-    []
-  );
+  const onInitialize = useCallback(() => {
+    return {
+      link: {
+        action: '',
+        pageId: '',
+        href: '',
+      },
+    };
+  }, []);
 
   const onSync = useCallback((props, state) => {}, []);
 
@@ -56,16 +63,50 @@ function TextInteractionOptionsInner({ componentId }) {
       onSync={onSync}
     >
       <Stack spacing={1}>
-        <Typography variant="subtitle2" mt={2} mb={0.5}>
-          On Click
-        </Typography>
-        <SelectInput label="Action" name="action">
-          <MenuItem value="">Do nothing</MenuItem>
-          <MenuItem value="pageId">Go to page</MenuItem>
-          <MenuItem value="href">Open external link</MenuItem>
-        </SelectInput>
+        <OnClick />
       </Stack>
     </CanvasForm>
+  );
+}
+
+function OnClick() {
+  const { control } = useFormContext();
+  const { errors } = useFormState({ control });
+  const action = useWatch({ control, name: 'link.action' });
+
+  const { project } = useMyProject({ projectId: useProjectId() });
+
+  return (
+    <>
+      <Typography variant="subtitle2" mt={2} mb={0.5}>
+        On Click
+      </Typography>
+
+      <SelectInput label="Action" name="link.action">
+        <MenuItem value="">Do nothing</MenuItem>
+        <MenuItem value="pageId">Go to page</MenuItem>
+        <MenuItem value="href">Open external link</MenuItem>
+      </SelectInput>
+
+      {action === 'pageId' && (
+        <SelectInput label="Page" name="link.pageId">
+          {project.pages.map((it) => (
+            <MenuItem key={it.id} value={it.id}>
+              {it.name}
+            </MenuItem>
+          ))}
+        </SelectInput>
+      )}
+
+      {action === 'href' && (
+        <TextInput
+          label="Link"
+          name="link.href"
+          error={!!errors.link?.href}
+          helperText={errors.link?.href?.message}
+        />
+      )}
+    </>
   );
 }
 
@@ -73,10 +114,7 @@ function useIsTextSelected(componentId) {
   return useEditorStore(
     useCallback(
       (state) => {
-        const selection = getTextEditorStateForComponent(
-          state.componentMap,
-          componentId
-        ).getSelection();
+        const selection = getTextSelectionForComponent(state.componentMap, componentId);
         return !selection.isCollapsed();
       },
       [componentId]
