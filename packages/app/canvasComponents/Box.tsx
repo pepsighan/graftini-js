@@ -54,7 +54,7 @@ export type BoxComponentProps = {
     pageId?: string;
     href?: string;
   };
-  imageUrl?: string;
+  imageId?: string;
   backgroundFit?: BackgroundFit;
 };
 
@@ -147,7 +147,7 @@ Box.graftOptions = {
     flexWrap: 'nowrap',
     flexGap: 0,
     link: null,
-    imageUrl: null,
+    imageId: null,
     // This won't have any effect unless an image url is set.
     backgroundFit: 'cover',
   },

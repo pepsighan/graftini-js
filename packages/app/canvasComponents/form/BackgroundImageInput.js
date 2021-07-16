@@ -84,6 +84,7 @@ function ImagePickerPopover({ open, onClose }) {
 }
 
 function ImagePicker() {
+  const { setValue } = useFormContext();
   const inputRef = useRef();
   const [uploadImage, { loading: isUploading }] = useUploadImage();
 
@@ -99,13 +100,18 @@ function ImagePicker() {
       }
 
       const file = event.target.files[0];
-      await uploadImage({
+      const response = await uploadImage({
         variables: {
           file,
         },
       });
+
+      if (response.data?.uploadFile) {
+        // Store the file in the form.
+        setValue('imageId', response.data.uploadFile.id);
+      }
     },
-    [uploadImage]
+    [setValue, uploadImage]
   );
 
   return (
