@@ -44,17 +44,23 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
     [componentId, onOpenContextMenu, selectComponentOnRightClick]
   );
 
+  // The text component keeps on changing with changing props.
+  // The text editor does not need to update to those extra props.
   return (
-    // The text component keeps on changing with changing props.
-    // The text editor does not need to update to those extra props.
     <>
       {useMemo(
         () => (
           <TextSelectionProvider>
-            <ProseEditor ref={ref} />
+            <ProseEditor
+              ref={ref}
+              onMouseDown={!isDraggingDisabled ? onMouseDown : null}
+              onClick={onClick}
+              onDoubleClick={startEditingText}
+              onContextMenu={onContextMenu}
+            />
           </TextSelectionProvider>
         ),
-        [ref]
+        [isDraggingDisabled, onClick, onContextMenu, onMouseDown, ref, startEditingText]
       )}
     </>
   );
