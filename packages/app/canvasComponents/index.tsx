@@ -1,4 +1,3 @@
-import { Text as TextRender } from '@graftini/bricks';
 import Box from './Box';
 import BoxInteractionOptions from './BoxInteractionOptions';
 import BoxOptions from './BoxOptions';
@@ -7,6 +6,7 @@ import RootOptions from './RootOptions';
 import Text from './Text';
 import TextInteractionOptions from './TextInteractionOptions';
 import TextOptions from './TextOptions';
+import TextRender from './TextRender';
 
 const components = {
   Box,
