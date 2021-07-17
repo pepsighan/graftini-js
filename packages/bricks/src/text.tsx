@@ -2,12 +2,13 @@
 import { CSSObject } from '@emotion/react';
 import { RawDraftContentState } from 'draft-js';
 import { ElementType, FocusEventHandler, forwardRef, MouseEventHandler, ReactNode } from 'react';
-import { DragProps, dragProps, EditorProps } from './box';
+import { DragProps, dragProps, EditorProps, interactionProps, InteractionProps } from './box';
 import { RGBA, rgbaToCss } from './colors';
 import TextBody from './textBody';
 
 export type TextProps = BaseTextProps &
   DragProps &
+  InteractionProps &
   TextInteractionStyles &
   EditorTextInteractionProps &
   EditorProps;
@@ -54,6 +55,7 @@ const Text = forwardRef(({ content, children, ...rest }: TextProps, ref) => {
       ref={ref}
       {...editorTextInteractionProps(rest)}
       {...dragProps(rest)}
+      {...interactionProps(rest)}
       css={{
         // Append -gr in class names rather than -Text.
         label: 'gr',
@@ -86,9 +88,15 @@ function baseStyles({
   };
 }
 
-function textInteractionStyles({ cursor }: TextInteractionStyles): CSSObject {
+function textInteractionStyles({
+  cursor,
+  to,
+  href,
+}: TextInteractionStyles & InteractionProps): CSSObject {
   return {
     cursor,
+    // TODO: Let the theme define the style for links.
+    textDecoration: to || href ? 'underline' : undefined,
   };
 }
 

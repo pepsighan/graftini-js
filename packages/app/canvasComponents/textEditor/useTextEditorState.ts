@@ -3,6 +3,7 @@ import { TextComponentProps } from 'canvasComponents/Text';
 import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 import { useCallback } from 'react';
 import { useDesignerStateApi } from 'store/designer';
+import { compositeDecorator } from './entities';
 import { removeExistingStyle, StyleOption } from './styleMap';
 import { selectAll } from './textSelection';
 
@@ -80,7 +81,7 @@ export function getTextEditorState(props: TextComponentProps): EditorState {
   return (
     props.editor ??
     // If the editor is yet not created, create it from raw.
-    EditorState.createWithContent(convertFromRaw(props.content))
+    EditorState.createWithContent(convertFromRaw(props.content), compositeDecorator)
   );
 }
 

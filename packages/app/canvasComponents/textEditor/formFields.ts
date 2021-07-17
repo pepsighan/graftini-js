@@ -124,3 +124,10 @@ export function getTextFormValues(props: TextComponentProps): any {
 
   return formValues;
 }
+
+/**
+ * Gets the form values for interaction options.
+ */
+export function getTextFormInteractionValues(props: TextComponentProps): any {
+  return {};
+}

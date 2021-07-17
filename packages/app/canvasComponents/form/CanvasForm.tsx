@@ -11,7 +11,7 @@ type CanvasFormProps<T, S> = {
   /**
    * Sync the form state to the component props.
    */
-  onSync(props: T, formState: S): void;
+  onSync?(props: T, formState: S): void;
   resolver?: Resolver;
   children?: ReactNode;
 };
@@ -50,6 +50,10 @@ function useSyncFormState({ watch, componentId, onSync }) {
 
   // Sync the form state to the component props.
   useEffect(() => {
+    if (!onSync) {
+      return;
+    }
+
     const subscription = watch((formState: any) => {
       immerSetEditor((state) => {
         onSync(state.componentMap[componentId].props, formState);
