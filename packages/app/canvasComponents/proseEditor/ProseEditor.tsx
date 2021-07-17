@@ -5,6 +5,7 @@ import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { MouseEventHandler } from 'react';
 import { forwardRef, useEffect, useRef, useState } from 'react';
+import useDisableEditorWhenNotInUse from './useDisableEditorWhenNotInUse';
 
 const schema = new Schema({
   nodes: {
@@ -39,6 +40,7 @@ type ProseEditorProps = {
 const ProseEditor = forwardRef(
   ({ onClick, onContextMenu, onMouseDown, onDoubleClick }: ProseEditorProps, forwardedRef) => {
     const [ref, setState] = useState<HTMLElement>();
+
     const view = useRef<EditorView>(null);
 
     // Initialize the editor once the ref is initialized.
@@ -53,14 +55,18 @@ const ProseEditor = forwardRef(
       });
       view.current = new EditorView(ref, {
         state,
+        editable: () => false,
       });
 
       return () => view.current.destroy();
     }, [ref]);
 
+    useDisableEditorWhenNotInUse(view);
+
     return (
       <Text
         ref={forwardedRef}
+        isEditor
         onMouseDown={onMouseDown}
         onClick={onClick}
         onDoubleClick={onDoubleClick}
