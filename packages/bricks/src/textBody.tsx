@@ -25,22 +25,32 @@ type BlockProps = {
   block: RawDraftContentBlock;
 };
 
+type SpanType = 'inline-style' | 'entity';
+type SpanValue = string | number; // This is the value for the kind of span.
+
 function Block({ block }: BlockProps) {
   const spans: ReactNode[] = [];
-  let newSpanStyle = new Set<string>();
+  let newSpanSection = new Map<SpanType, SpanValue>();
   let newSpan = '';
 
   for (let index = 0; index < block.text.length; index += 1) {
-    const applicableStyles = new Set<string>();
+    const section = new Map<SpanType, SpanValue>();
 
     block.inlineStyleRanges.forEach((range) => {
       if (index >= range.offset && index < range.offset + range.length) {
         // The style applies.
-        applicableStyles.add(range.style);
+        section.set('inline-style', range.style);
       }
     });
 
-    if (isSpanStylesSame(newSpanStyle, applicableStyles)) {
+    block.entityRanges.forEach((entityRange) => {
+      if (index >= entityRange.offset && index < entityRange.offset + entityRange.length) {
+        // The entity is applicable.
+        section.set('entity', entityRange.key);
+      }
+    });
+
+    if (isSpanStylesSame(newSpanSection, section)) {
       newSpan += block.text[index];
       continue;
     }
@@ -52,14 +62,14 @@ function Block({ block }: BlockProps) {
         key={spans.length}
         tag="span"
         displayInline
-        {...resolveStyleForInlineContent(newSpanStyle)}
+        {...resolveStyleForInlineContent(newSpanSection)}
       >
         {newSpan}
       </Text>
     );
 
     // Adding the new text and style.
-    newSpanStyle = new Set<string>(applicableStyles);
+    newSpanSection = section;
     newSpan = block.text[index];
   }
 
@@ -70,7 +80,7 @@ function Block({ block }: BlockProps) {
         key={spans.length}
         tag="span"
         displayInline
-        {...resolveStyleForInlineContent(newSpanStyle)}
+        {...resolveStyleForInlineContent(newSpanSection)}
       >
         {newSpan}
       </Text>
@@ -106,22 +116,29 @@ function resolveStyleForBlock(data: any): any {
 /**
  * Whether the two styles set are the same.
  */
-function isSpanStylesSame(left: Set<string>, right: Set<string>): boolean {
+function isSpanStylesSame(
+  left: Map<SpanType, SpanValue>,
+  right: Map<SpanType, SpanValue>
+): boolean {
   if (left.size !== right.size) {
     return false;
   }
 
-  return Array.from(left).every((style) => right.has(style));
+  return Object.keys(left).every((key) => right.get(key as SpanType) === left.get(key as SpanType));
 }
 
 /**
  * Resolves the set of style strings to actual style props for the Text component.
  */
-function resolveStyleForInlineContent(newSpanStyle: Set<string>): any {
+function resolveStyleForInlineContent(newSpanStyle: Map<SpanType, SpanValue>): any {
   const props: any = {};
 
-  newSpanStyle.forEach((styleOption) => {
-    const splits = styleOption.split('=');
+  newSpanStyle.forEach((kind, type) => {
+    if (type !== 'inline-style') {
+      return;
+    }
+
+    const splits = (kind as string).split('=');
     const [key, value] = propForOption(splits[0] as StyleOption, splits[1]);
     if (key) {
       props[key] = value;
