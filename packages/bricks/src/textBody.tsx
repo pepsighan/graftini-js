@@ -64,6 +64,7 @@ function Block({ block, entityMap }: BlockProps) {
         tag="span"
         displayInline
         {...resolveStyleForInlineContent(newSpanSection)}
+        {...resolveEntityPropsForInlineContent(newSpanSection, entityMap)}
       >
         {newSpan}
       </Text>
@@ -247,11 +248,11 @@ function resolveEntityPropsForInlineContent(
       return;
     }
 
-    const data = entity.data as Link;
+    const link = entity.data.link as Link;
 
     props.tag = 'a';
-    props.to = data.to ? data.to : undefined;
-    props.href = !data.to ? data.href : undefined;
+    props.to = link.to ? link.to : undefined;
+    props.href = !link.to ? link.href : undefined;
   });
 
   return props;

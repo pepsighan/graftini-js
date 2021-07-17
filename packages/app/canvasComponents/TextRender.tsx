@@ -39,7 +39,5 @@ export default function TextRender({ content }: TextComponentProps) {
     return modified;
   }, [content.blocks, content.entityMap, query.projectId, route]);
 
-  console.log(transformedContent);
-
   return <Text content={transformedContent} />;
 }
