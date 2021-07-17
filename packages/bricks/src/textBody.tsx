@@ -1,4 +1,4 @@
-import { RawDraftContentBlock, RawDraftContentState } from 'draft-js';
+import { RawDraftContentBlock, RawDraftContentState, RawDraftEntity } from 'draft-js';
 import React, { ReactNode } from 'react';
 import { RGBA } from './colors';
 import Text, { FontSize } from './text';
@@ -15,7 +15,7 @@ export default function TextBody({ content }: TextBodyProps) {
   return (
     <>
       {content.blocks.map((block) => (
-        <Block key={block.key} block={block} />
+        <Block key={block.key} block={block} entityMap={content.entityMap} />
       ))}
     </>
   );
@@ -23,12 +23,13 @@ export default function TextBody({ content }: TextBodyProps) {
 
 type BlockProps = {
   block: RawDraftContentBlock;
+  entityMap: EntityMap;
 };
 
 type SpanType = 'inline-style' | 'entity';
 type SpanValue = string | number; // This is the value for the kind of span.
 
-function Block({ block }: BlockProps) {
+function Block({ block, entityMap }: BlockProps) {
   const spans: ReactNode[] = [];
   let newSpanSection = new Map<SpanType, SpanValue>();
   let newSpan = '';
@@ -81,6 +82,7 @@ function Block({ block }: BlockProps) {
         tag="span"
         displayInline
         {...resolveStyleForInlineContent(newSpanSection)}
+        {...resolveEntityPropsForInlineContent(newSpanSection, entityMap)}
       >
         {newSpan}
       </Text>
@@ -212,4 +214,45 @@ function parseColor(color: string): RGBA {
     b: parseInt(splits[2], 10),
     a: parseFloat(splits[3]),
   };
+}
+
+type EntityMap = { [key: string]: RawDraftEntity };
+
+enum EntityKind {
+  Link = 'LINK',
+}
+
+type Link = {
+  to?: string;
+  href?: string;
+};
+
+/**
+ * Resolves the props of the Text component for an entity.
+ */
+function resolveEntityPropsForInlineContent(
+  spanProps: Map<SpanType, SpanValue>,
+  entityMap: EntityMap
+): any {
+  const props: any = {};
+
+  spanProps.forEach((kind, type) => {
+    if (type !== 'entity') {
+      return;
+    }
+
+    const entity = entityMap[kind as number];
+    const entityKind = entity.type;
+    if (entityKind !== EntityKind.Link) {
+      return;
+    }
+
+    const data = entity.data as Link;
+
+    props.tag = 'a';
+    props.to = data.to ? data.to : undefined;
+    props.href = !data.to ? data.href : undefined;
+  });
+
+  return props;
 }
