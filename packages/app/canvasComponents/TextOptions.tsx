@@ -1,8 +1,6 @@
 import { FontSize as FontSizeType, FontWeight, RGBA, TextAlign } from '@graftini/bricks';
-import { useEditorStoreApi } from '@graftini/graft';
 import { Divider, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
-import useTextSelectionId from 'hooks/useTextSelectionId';
 import { useCallback } from 'react';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import FontFamilyInput from './form/FontFamilyInput';
@@ -11,8 +9,8 @@ import FontWeightInput from './form/FontWeightInput';
 import TextAlignInput from './form/TextAlignInput';
 import TextColorPickerInput from './form/TextColorPickerInput';
 import TextInput from './form/TextInput';
+import { defaultTextFormValues } from './proseEditor/formFields';
 import { TextComponentProps } from './Text';
-import { defaultTextFormValues, getTextFormValues } from './textEditor/formFields';
 
 type TextOptionsFields = {
   name?: string;
@@ -24,35 +22,25 @@ type TextOptionsFields = {
 };
 
 export default function TextOptions({ componentId }: OptionsProps) {
-  // Using the selection id for keying the form will refresh the form values that
+  // TODO: Using the selection id for keying the form will refresh the form values that
   // reflect the current selection.
-  const textSelectionId = useTextSelectionId(componentId);
 
-  return <FormInner key={textSelectionId} componentId={componentId} />;
+  return <FormInner componentId={componentId} />;
 }
 
 function FormInner({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
-  const { getState } = useEditorStoreApi();
 
   // Update the form when the text selection changes.
   return (
     <CF
       componentId={componentId}
-      onInitialize={useCallback(
-        (state) => {
-          const formFields = getTextFormValues(
-            getState().componentMap[componentId].props as TextComponentProps
-          );
-
-          return {
-            ...defaultTextFormValues,
-            name: state.name,
-            ...formFields,
-          };
-        },
-        [componentId, getState]
-      )}
+      onInitialize={useCallback((state) => {
+        return {
+          ...defaultTextFormValues,
+          name: state.name,
+        };
+      }, [])}
       onSync={useCallback((props, state) => {
         // Only name is to be paste as is to the component prop.
         props.name = state.name;

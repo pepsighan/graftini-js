@@ -1,7 +1,4 @@
 import { InputAdornment, MenuItem, Select, TextField, Typography } from '@material-ui/core';
-import { applyStyleOption, StyleOption } from 'canvasComponents/textEditor/styleMap';
-import { useResolveCurrentSelection } from 'canvasComponents/textEditor/textSelection';
-import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
 import { useCallback, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveFloat, parsePositiveInteger, toTwoDecimalPlaces } from 'utils/parser';
@@ -17,22 +14,7 @@ export default function FontSizeInput({ name, componentId }) {
   // To support floating values.
   const [sizeLocal, setSizeLocal] = useState(size);
 
-  const setTextEditor = useTextEditorStateSetter({ componentId });
-  const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
-
-  const onUpdateStyle = useCallback(
-    (size, unit) => {
-      setTextEditor((editor) => {
-        const selection = resolveCurrentSelection();
-
-        return applyStyleOption(editor, selection, StyleOption.FontSize, {
-          size,
-          unit,
-        });
-      });
-    },
-    [resolveCurrentSelection, setTextEditor]
-  );
+  const onUpdateStyle = useCallback((size, unit) => {}, []);
 
   return (
     <TextField

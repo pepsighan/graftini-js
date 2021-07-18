@@ -1,8 +1,6 @@
-import { useEditorStore } from '@graftini/graft';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, InputAdornment, MenuItem, Stack, TextField, Typography } from '@material-ui/core';
 import { useProjectId } from 'hooks/useProjectId';
-import useTextSelectionId, { getTextSelectionForComponent } from 'hooks/useTextSelectionId';
 import { useCallback } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
 import { useMyProject } from 'store/projects';
@@ -11,9 +9,6 @@ import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
 import { wideLabelAlignmentStyle } from './form/formLabels';
 import SelectInput from './form/SelectInput';
-import { applyLink } from './textEditor/entities';
-import { useResolveCurrentSelection } from './textEditor/textSelection';
-import { useTextEditorStateSetter } from './textEditor/useTextEditorState';
 
 const url = z.string().regex(urlRegex, { message: 'Not a valid URL. Starts with http or https.' });
 const schema = z.object({
@@ -23,10 +18,9 @@ const schema = z.object({
 });
 
 export default function TextInteractionOptions({ componentId }) {
-  // Using the selection id for keying the form will refresh the form values that
+  // TODO: Using the selection id for keying the form will refresh the form values that
   // reflect the current selection.
-  const textSelectionId = useTextSelectionId(componentId);
-  const isTextSelected = useIsTextSelected(componentId);
+  const isTextSelected = false;
 
   if (!isTextSelected) {
     return (
@@ -38,7 +32,7 @@ export default function TextInteractionOptions({ componentId }) {
     );
   }
 
-  return <TextInteractionOptionsInner key={textSelectionId} componentId={componentId} />;
+  return <TextInteractionOptionsInner componentId={componentId} />;
 }
 
 function TextInteractionOptionsInner({ componentId }) {
@@ -90,8 +84,6 @@ function OnClick({ componentId }) {
 function PageSelection({ componentId }) {
   const { project } = useMyProject({ projectId: useProjectId() });
   const { control } = useFormContext();
-  const editorSetter = useTextEditorStateSetter({ componentId });
-  const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
     <Controller
@@ -104,12 +96,6 @@ function PageSelection({ componentId }) {
           value={field.value}
           onChange={(event) => {
             field.onChange(event);
-
-            const pageId = event.target.value;
-            if (pageId) {
-              const selection = resolveCurrentSelection();
-              editorSetter((state) => applyLink(state, { pageId }, selection));
-            }
           }}
           InputProps={{
             startAdornment: (
@@ -132,8 +118,6 @@ function PageSelection({ componentId }) {
 
 function HrefInput({ componentId }) {
   const { control } = useFormContext();
-  const editorSetter = useTextEditorStateSetter({ componentId });
-  const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
     <Controller
@@ -145,13 +129,6 @@ function HrefInput({ componentId }) {
           value={field.value}
           onChange={(event) => {
             field.onChange(event);
-
-            const href = event.target.value;
-            const { success } = url.safeParse(href);
-            if (success) {
-              const selection = resolveCurrentSelection();
-              editorSetter((state) => applyLink(state, { href }, selection));
-            }
           }}
           error={!!error}
           helperText={error?.message}
@@ -165,17 +142,5 @@ function HrefInput({ componentId }) {
         />
       )}
     />
-  );
-}
-
-function useIsTextSelected(componentId) {
-  return useEditorStore(
-    useCallback(
-      (state) => {
-        const selection = getTextSelectionForComponent(state.componentMap, componentId);
-        return !selection.isCollapsed();
-      },
-      [componentId]
-    )
   );
 }

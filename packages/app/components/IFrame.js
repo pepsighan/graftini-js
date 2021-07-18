@@ -2,7 +2,6 @@ import createCache from '@emotion/cache';
 import { CacheProvider } from '@emotion/react';
 import weakMemoize from '@emotion/weak-memoize';
 import { Reset } from '@graftini/bricks';
-import { GlobalBlockStyles } from 'canvasComponents/textEditor/blocks';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
 
 const cacheKey = 'app';
@@ -30,7 +29,6 @@ export default function IFrame({ title, style, children, ...rest }) {
         {({ document }) => (
           <CacheProvider value={memoizedCreateCache(document.head)}>
             <Reset />
-            <GlobalBlockStyles />
             {children()}
           </CacheProvider>
         )}

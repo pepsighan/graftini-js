@@ -1,14 +1,9 @@
 import { InputAdornment, MenuItem, TextField, Typography } from '@material-ui/core';
-import { applyStyleOption, StyleOption } from 'canvasComponents/textEditor/styleMap';
-import { useResolveCurrentSelection } from 'canvasComponents/textEditor/textSelection';
-import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
 import { Controller, useFormContext } from 'react-hook-form';
 import { wideLabelAlignmentStyle } from './formLabels';
 
 export default function FontFamilyInput({ componentId }) {
   const { control } = useFormContext();
-  const setTextEditor = useTextEditorStateSetter({ componentId });
-  const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
     <Controller
@@ -19,17 +14,6 @@ export default function FontFamilyInput({ componentId }) {
           ref={ref}
           onChange={(event) => {
             onChange(event);
-
-            setTextEditor((editor) => {
-              const selection = resolveCurrentSelection();
-
-              return applyStyleOption(
-                editor,
-                selection,
-                StyleOption.FontFamily,
-                event.target.value
-              );
-            });
           }}
           value={value ?? ''}
           select
