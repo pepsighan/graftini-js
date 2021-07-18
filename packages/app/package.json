@@ -52,6 +52,7 @@
     "@types/apollo-upload-client": "^14.1.0",
     "@types/lodash-es": "^4.17.4",
     "@types/node": "^15.12.2",
+    "@types/prosemirror-commands": "^1.0.4",
     "@types/prosemirror-model": "^1.13.1",
     "@types/prosemirror-state": "^1.2.7",
     "@types/prosemirror-view": "^1.17.2",
