@@ -1,24 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { Text } from '@graftini/bricks';
-import { useComponentId, useEditorStore } from '@graftini/graft';
-import { Schema } from 'prosemirror-model';
-import { EditorState } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
-import { forwardRef, MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { useComponentId } from '@graftini/graft';
+import { forwardRef, MouseEventHandler, useCallback } from 'react';
 import { defaultTextFormValues } from './formFields';
-import trackPlugin from './trackPlugin';
-import useDisableEditorWhenNotInUse from './useDisableEditorWhenNotInUse';
-
-const schema = new Schema({
-  nodes: {
-    doc: { content: 'paragraph+' },
-    paragraph: { content: 'text*', toDOM: () => ['div', 0] },
-    text: { inline: true },
-  },
-});
+import { useProseEditor } from './ProseEditorContext';
 
 type ProseEditorProps = {
-  onInitialize: () => any;
+  isEditing: boolean;
+  onInitialState: () => any;
   onMouseDown?: MouseEventHandler;
   onClick: MouseEventHandler;
   onDoubleClick: MouseEventHandler;
@@ -27,35 +16,30 @@ type ProseEditorProps = {
 
 const ProseEditor = forwardRef(
   (
-    { onClick, onContextMenu, onMouseDown, onDoubleClick, onInitialize }: ProseEditorProps,
+    {
+      isEditing,
+      onClick,
+      onContextMenu,
+      onMouseDown,
+      onDoubleClick,
+      onInitialState,
+    }: ProseEditorProps,
     forwardedRef
   ) => {
-    const [ref, setRef] = useState<HTMLElement>();
-    const view = useRef<EditorView>(null);
-
-    const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
     const componentId = useComponentId();
+    const { onInitialize } = useProseEditor();
 
-    // Initialize the editor once the ref is initialized.
-    useEffect(() => {
-      if (!ref) {
-        return;
-      }
-
-      const state = EditorState.create({
-        schema,
-        doc: schema.nodeFromJSON(onInitialize()),
-        plugins: [trackPlugin(componentId, immerSetEditor)],
-      });
-      view.current = new EditorView(ref, {
-        state,
-        editable: () => false,
-      });
-
-      return () => view.current.destroy();
-    }, [componentId, immerSetEditor, onInitialize, ref]);
-
-    useDisableEditorWhenNotInUse(view);
+    // When editing starts, register the ref to start the prose editor.
+    const onEdit = useCallback(
+      (ref) => {
+        onInitialize({
+          ref,
+          componentId,
+          initialState: onInitialState(),
+        });
+      },
+      [componentId, onInitialState, onInitialize]
+    );
 
     return (
       <Text
@@ -66,8 +50,18 @@ const ProseEditor = forwardRef(
         onDoubleClick={onDoubleClick}
         onContextMenu={onContextMenu}
         {...defaultTextFormValues}
+        content={onInitialState()}
+        cursor={isEditing ? 'text' : 'default'}
       >
-        <div ref={setRef} />
+        {isEditing ? (
+          <div
+            ref={onEdit}
+            css={{
+              // This otherwise the cursor does not show on Safari.
+              userSelect: 'auto',
+            }}
+          />
+        ) : null}
       </Text>
     );
   }

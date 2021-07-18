@@ -12,9 +12,9 @@ export default function trackPlugin(
   return new Plugin({
     view: () => {
       return {
-        update: (_, prevState) => {
+        update: (view) => {
           immerSet((state) => {
-            state.componentMap[componentId].props.content = prevState.toJSON().doc;
+            state.componentMap[componentId].props.content = view.state.toJSON().doc;
           });
         },
       };

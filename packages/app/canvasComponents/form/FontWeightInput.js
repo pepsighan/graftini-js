@@ -1,4 +1,6 @@
 import { InputAdornment, MenuItem, TextField, Typography } from '@material-ui/core';
+import { setFontWeight } from 'canvasComponents/proseEditor/commands';
+import { useProseEditor } from 'canvasComponents/proseEditor/ProseEditorContext';
 import { Controller, useFormContext } from 'react-hook-form';
 import { wideLabelAlignmentStyle } from './formLabels';
 
@@ -14,8 +16,9 @@ const fontWeights = [
   { value: 900, label: 'Extra Extra Bold' },
 ];
 
-export default function FontWeightInput({ componentId }) {
+export default function FontWeightInput() {
   const { control } = useFormContext();
+  const { getEditorView } = useProseEditor();
 
   return (
     <Controller
@@ -26,6 +29,9 @@ export default function FontWeightInput({ componentId }) {
           ref={ref}
           onChange={(event) => {
             onChange(event);
+
+            const view = getEditorView();
+            setFontWeight(event.target.value, view);
           }}
           value={value ?? ''}
           select
