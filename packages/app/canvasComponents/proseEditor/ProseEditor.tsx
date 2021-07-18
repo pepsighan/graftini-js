@@ -4,7 +4,7 @@ import { useComponentId } from '@graftini/graft';
 import { forwardRef, MouseEventHandler, useCallback } from 'react';
 import { defaultTextFormValues } from './formFields';
 import { useProseEditor } from './ProseEditorContext';
-import useDisableEditorWhenNotInUse from './useDisableEditorWhenNotInUse';
+import useIsEditing from './useIsEditing';
 
 type ProseEditorProps = {
   onInitialState: () => any;
@@ -21,8 +21,20 @@ const ProseEditor = forwardRef(
   ) => {
     const componentId = useComponentId();
 
-    const { onInitialize, editorView } = useProseEditor();
-    useDisableEditorWhenNotInUse(editorView);
+    const { onInitialize } = useProseEditor();
+    const isEditing = useIsEditing();
+
+    // When editing starts, register the ref to start the prose editor.
+    const onEdit = useCallback(
+      (ref) => {
+        onInitialize({
+          ref,
+          componentId,
+          initialState: onInitialState(),
+        });
+      },
+      [componentId, onInitialState, onInitialize]
+    );
 
     return (
       <Text
@@ -34,18 +46,7 @@ const ProseEditor = forwardRef(
         onContextMenu={onContextMenu}
         {...defaultTextFormValues}
       >
-        <div
-          ref={useCallback(
-            (ref) => {
-              onInitialize({
-                ref,
-                componentId,
-                initialState: onInitialState(),
-              });
-            },
-            [componentId, onInitialState, onInitialize]
-          )}
-        />
+        {isEditing ? <div ref={onEdit} /> : null}
       </Text>
     );
   }
