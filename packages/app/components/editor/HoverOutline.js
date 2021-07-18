@@ -23,10 +23,13 @@ export default function HoverOutline() {
       (state) => {
         // Do not show the outline when on root.
         if (state && state.componentId !== ROOT_NODE_ID) {
-          posX.set(state.region.x);
-          posY.set(state.region.y);
-          width.set(state.region.width);
-          height.set(state.region.height);
+          // The position of the outline is put 1px outside on all sides
+          // so that the content (border or text caret) is not hidden under
+          // outline.
+          posX.set(state.region.x - 1);
+          posY.set(state.region.y - 1);
+          width.set(state.region.width + 2);
+          height.set(state.region.height + 2);
           setIsVisible(true);
           return;
         }

@@ -53,10 +53,13 @@ function useSelection({ componentId, posX, posY, width, height }) {
   useEffect(() => {
     const updateMotion = (state) => {
       if (state) {
-        posX.set(state.x);
-        posY.set(state.y);
-        width.set(state.width);
-        height.set(state.height);
+        // The position of the selection is put 1px outside on all sides
+        // so that the content (border or text caret) is not hidden under
+        // selection.
+        posX.set(state.x - 1);
+        posY.set(state.y - 1);
+        width.set(state.width + 2);
+        height.set(state.height + 2);
         setIsShown(true);
         return;
       }
