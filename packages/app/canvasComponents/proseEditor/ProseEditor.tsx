@@ -39,7 +39,7 @@ type ProseEditorProps = {
 
 const ProseEditor = forwardRef(
   ({ onClick, onContextMenu, onMouseDown, onDoubleClick }: ProseEditorProps, forwardedRef) => {
-    const [ref, setState] = useState<HTMLElement>();
+    const [ref, setRef] = useState<HTMLElement>();
 
     const view = useRef<EditorView>(null);
 
@@ -73,7 +73,7 @@ const ProseEditor = forwardRef(
         onContextMenu={onContextMenu}
         {...defaultTextFormValues}
       >
-        <div ref={setState} />
+        <div ref={setRef} />
       </Text>
     );
   }
