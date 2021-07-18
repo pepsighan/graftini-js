@@ -1,9 +1,8 @@
 import { useEditorStore } from '@graftini/graft';
-import { Schema } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { useContext } from 'react';
-import { createContext, PropsWithChildren, useCallback, useState } from 'react';
+import { createContext, PropsWithChildren, useCallback, useContext, useState } from 'react';
+import schema from './schema';
 import trackPlugin from './trackPlugin';
 
 type OnInitializeFn = (props: { ref: HTMLElement; initialState: any; componentId: string }) => void;
@@ -14,14 +13,6 @@ type ProseEditorProviderState = {
 };
 
 const ProseEditorContext = createContext<ProseEditorProviderState>(null);
-
-const schema = new Schema({
-  nodes: {
-    doc: { content: 'paragraph+' },
-    paragraph: { content: 'text*', toDOM: () => ['div', 0] },
-    text: { inline: true },
-  },
-});
 
 export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
   const [editorView, setEditorView] = useState<EditorView | null>(null);
