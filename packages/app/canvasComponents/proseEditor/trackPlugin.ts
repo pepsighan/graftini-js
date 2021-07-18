@@ -14,7 +14,7 @@ export default function trackPlugin(
       return {
         update: (_, prevState) => {
           immerSet((state) => {
-            state.componentMap[componentId].props.content = prevState.toJSON();
+            state.componentMap[componentId].props.content = prevState.toJSON().doc;
           });
         },
       };
