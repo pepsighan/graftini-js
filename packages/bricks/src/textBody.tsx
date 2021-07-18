@@ -1,6 +1,7 @@
 import React from 'react';
 import Box from './box';
-import Text from './text';
+import { RGBA } from './colors';
+import Text, { FontSize, FontWeight, TextAlign } from './text';
 
 type TextBodyProps = {
   content: ProseMirrorDocument;
@@ -13,12 +14,42 @@ export type ProseMirrorDocument = {
 
 type ProseMirrorParagraph = {
   type: 'paragraph';
+  attrs: {
+    textAlign: TextAlign;
+  };
   content?: ProseMirrorText[];
 };
 
 type ProseMirrorText = {
   type: 'text';
+  marks: Mark[];
   text: string;
+};
+
+type Mark = FontSizeMark | FontFamilyMark | FontWeightMark | ColorMark;
+
+type FontSizeMark = {
+  type: 'fontSize';
+  attrs: FontSize;
+};
+
+type FontFamilyMark = {
+  type: 'fontFamily';
+  attrs: {
+    fontFamily: string;
+  };
+};
+
+type FontWeightMark = {
+  type: 'fontWeight';
+  attrs: {
+    fontWeight: FontWeight;
+  };
+};
+
+type ColorMark = {
+  type: 'color';
+  attrs: RGBA;
 };
 
 /**
@@ -50,7 +81,7 @@ function Paragraph({ paragraph }: ParagraphProps) {
   }
 
   return (
-    <Text tag="div">
+    <Text tag="div" textAlign={paragraph.attrs.textAlign}>
       {(paragraph.content ?? []).map((text, index) => (
         <TextItem key={index} text={text} />
       ))}
@@ -72,8 +103,36 @@ function TextItem({ text }: TextItemProps) {
     throw new Error('this is not a text. type is invalid.');
   }
 
+  let color: RGBA | undefined;
+  let fontFamily: string | undefined;
+  let fontSize: FontSize | undefined;
+  let fontWeight: FontWeight | undefined;
+
+  (text.marks ?? []).forEach((it) => {
+    switch (it.type) {
+      case 'color':
+        color = it.attrs;
+        break;
+      case 'fontFamily':
+        fontFamily = it.attrs.fontFamily;
+        break;
+      case 'fontSize':
+        fontSize = it.attrs;
+        break;
+      case 'fontWeight':
+        fontWeight = it.attrs.fontWeight;
+    }
+  });
+
   return (
-    <Text tag="span" displayInline>
+    <Text
+      tag="span"
+      fontSize={fontSize}
+      color={color}
+      fontFamily={fontFamily}
+      fontWeight={fontWeight}
+      displayInline
+    >
       {text.text}
     </Text>
   );
