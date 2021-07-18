@@ -30,10 +30,7 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
   // Initialize the editor once the ref is initialized.
   const onInitialize: OnInitializeFn = useCallback(
     ({ ref, initialState, componentId }) => {
-      console.log({ initialState, ref });
-
       if (!ref) {
-        setEditorView(null);
         return;
       }
 
@@ -44,7 +41,14 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
       });
 
       const editorView = new EditorView(ref, { state });
-      setEditorView(editorView);
+      setEditorView((view) => {
+        if (view) {
+          // Remove the older view.
+          view.destroy();
+        }
+
+        return editorView;
+      });
     },
     [immerSetEditor]
   );
