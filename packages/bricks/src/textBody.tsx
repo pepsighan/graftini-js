@@ -1,4 +1,5 @@
 import React from 'react';
+import Box from './box';
 import Text from './text';
 
 type TextBodyProps = {
@@ -53,6 +54,11 @@ function Paragraph({ paragraph }: ParagraphProps) {
       {(paragraph.content ?? []).map((text, index) => (
         <TextItem key={index} text={text} />
       ))}
+
+      {/* When there is no content, we show an empty box to signify there is a text component.
+      And to mimic as if there is a content, we give it the height equal to the default font
+      size. */}
+      {!paragraph.content && <Box tag="br" height={{ size: 16, unit: 'px' }} />}
     </Text>
   );
 }
