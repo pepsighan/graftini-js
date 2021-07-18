@@ -59,9 +59,9 @@ function FormInner({ componentId }: OptionsProps) {
 
         <Typography variant="subtitle2">Appearance</Typography>
         <FontSizeInput name="fontSize" />
-        <FontFamilyInput componentId={componentId} />
-        <FontWeightInput componentId={componentId} />
-        <TextColorPickerInput componentId={componentId} />
+        <FontFamilyInput />
+        <FontWeightInput />
+        <TextColorPickerInput />
       </Stack>
     </CF>
   );
