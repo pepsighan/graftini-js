@@ -25,8 +25,6 @@ type ProseMirrorText = {
  */
 /** @internal */
 export default function TextBody({ content }: TextBodyProps) {
-  console.log(content);
-
   // TODO: Only check them during development. Remove these assertions when deployed.
   if (content.type !== 'doc') {
     throw new Error('content must have a doc type.');

@@ -30,6 +30,8 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
   // Initialize the editor once the ref is initialized.
   const onInitialize: OnInitializeFn = useCallback(
     ({ ref, initialState, componentId }) => {
+      console.log({ initialState, ref });
+
       if (!ref) {
         setEditorView(null);
         return;
@@ -41,10 +43,7 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
         plugins: [trackPlugin(componentId, immerSetEditor)],
       });
 
-      const editorView = new EditorView(ref, {
-        state,
-        editable: () => false,
-      });
+      const editorView = new EditorView(ref, { state });
       setEditorView(editorView);
     },
     [immerSetEditor]
