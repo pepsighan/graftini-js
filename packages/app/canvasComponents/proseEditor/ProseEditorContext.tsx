@@ -23,6 +23,15 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
   const onInitialize: OnInitializeFn = useCallback(
     ({ ref, initialState, componentId }) => {
       if (!ref) {
+        setEditorView((view) => {
+          if (view) {
+            // Remove the older view.
+            view.destroy();
+          }
+
+          return null;
+        });
+
         return;
       }
 
@@ -33,14 +42,7 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
       });
 
       const editorView = new EditorView(ref, { state });
-      setEditorView((view) => {
-        if (view) {
-          // Remove the older view.
-          view.destroy();
-        }
-
-        return editorView;
-      });
+      setEditorView(editorView);
     },
     [immerSetEditor, setEditorView]
   );
