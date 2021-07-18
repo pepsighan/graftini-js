@@ -16,22 +16,8 @@ const schema = new Schema({
   },
 });
 
-const emptyDoc = {
-  type: 'doc',
-  content: [
-    {
-      type: 'paragraph',
-      content: [
-        {
-          type: 'text',
-          text: 'This is awesome.',
-        },
-      ],
-    },
-  ],
-};
-
 type ProseEditorProps = {
+  onInitialize: () => any;
   onMouseDown?: MouseEventHandler;
   onClick: MouseEventHandler;
   onDoubleClick: MouseEventHandler;
@@ -39,9 +25,11 @@ type ProseEditorProps = {
 };
 
 const ProseEditor = forwardRef(
-  ({ onClick, onContextMenu, onMouseDown, onDoubleClick }: ProseEditorProps, forwardedRef) => {
+  (
+    { onClick, onContextMenu, onMouseDown, onDoubleClick, onInitialize }: ProseEditorProps,
+    forwardedRef
+  ) => {
     const [ref, setRef] = useState<HTMLElement>();
-
     const view = useRef<EditorView>(null);
 
     // Initialize the editor once the ref is initialized.
@@ -52,7 +40,7 @@ const ProseEditor = forwardRef(
 
       const state = EditorState.create({
         schema,
-        doc: schema.nodeFromJSON(emptyDoc),
+        doc: schema.nodeFromJSON(onInitialize()),
         plugins: [trackPlugin],
       });
       view.current = new EditorView(ref, {
@@ -61,7 +49,7 @@ const ProseEditor = forwardRef(
       });
 
       return () => view.current.destroy();
-    }, [ref]);
+    }, [onInitialize, ref]);
 
     useDisableEditorWhenNotInUse(view);
 

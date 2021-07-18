@@ -2,7 +2,6 @@
 import { GraftComponent, useComponentId } from '@graftini/graft';
 import { componentContextMenuId } from 'components/editor/ComponentContextMenu';
 import { useContextMenu } from 'components/editor/ContextMenu';
-import { EditorState, RawDraftContentState, SelectionState } from 'draft-js';
 import useSelectOnRightClick from 'hooks/useSelectOnRightClick';
 import { forwardRef, MouseEvent, useCallback, useMemo } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
@@ -11,12 +10,10 @@ import { TextSelectionProvider } from './textEditor/textSelection';
 
 export type TextComponentProps = {
   name?: string;
-  content: RawDraftContentState;
-  editor?: EditorState;
-  textSelection?: SelectionState;
+  content: any;
 };
 
-const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, ref) => {
+const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown, content }, ref) => {
   const componentId = useComponentId();
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
   const selectComponentOnRightClick = useSelectOnRightClick();
@@ -44,6 +41,14 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
     [componentId, onOpenContextMenu, selectComponentOnRightClick]
   );
 
+  const onInitializeContent = useCallback(
+    () => content ?? Text.graftOptions.defaultProps.content,
+    // We only initialize the content once. The state of the editor is
+    // controlled by the editor itself.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
   // The text component keeps on changing with changing props.
   // The text editor does not need to update to those extra props.
   return (
@@ -53,6 +58,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
           <TextSelectionProvider>
             <ProseEditor
               ref={ref}
+              onInitialize={onInitializeContent}
               onMouseDown={!isDraggingDisabled ? onMouseDown : null}
               onClick={onClick}
               onDoubleClick={startEditingText}
@@ -60,7 +66,15 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
             />
           </TextSelectionProvider>
         ),
-        [isDraggingDisabled, onClick, onContextMenu, onMouseDown, ref, startEditingText]
+        [
+          isDraggingDisabled,
+          onClick,
+          onContextMenu,
+          onInitializeContent,
+          onMouseDown,
+          ref,
+          startEditingText,
+        ]
       )}
     </>
   );
@@ -69,23 +83,22 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown }, re
 Text.graftOptions = {
   defaultProps: {
     name: 'Text',
-    // The standard format for DraftJS.
+    // The serialized format of the document with empty text.
+    // This format is defined by us in the ProseEditor.
     content: {
-      blocks: [],
-      entityMap: {},
+      type: 'doc',
+      content: [
+        {
+          type: 'paragraph',
+          content: [
+            {
+              type: 'text',
+              text: 'Write some text here.',
+            },
+          ],
+        },
+      ],
     },
-    // This is the actual editor state that is used on the browser.
-    // This is not synced to the backend. On the first run, it is derived
-    // from the [content] field. After that, it is self sufficient.
-    // We needed a separate editor state because it also captures other
-    // runtime metadata such as selection. Also, keeping it here is helpful
-    // to manipulate it anywhere within the Editor context (for example
-    // from the sidebar).
-    editor: null,
-    // Normally the above editor stores the current editor selection. But when
-    // the editor loses focus, it is reset. So using this prop to store the
-    // last text selection position before the editor loses focus.
-    textSelection: null,
   },
 };
 
