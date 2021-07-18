@@ -1,5 +1,5 @@
-import { FontSize, RGBA } from '@graftini/bricks';
-import { toggleMark } from 'prosemirror-commands';
+import { FontSize, RGBA, TextAlign } from '@graftini/bricks';
+import { toggleMark, setBlockType } from 'prosemirror-commands';
 import { EditorView } from 'prosemirror-view';
 import schema from './schema';
 
@@ -29,4 +29,11 @@ export function setFontWeight(fontWeight: number, view: EditorView) {
  */
 export function setTextColor(color: RGBA, view: EditorView) {
   toggleMark(schema.marks.color, { ...color, a: color.a ?? 1 })(view.state, view.dispatch);
+}
+
+/**
+ * Set the text alignment for the paragraph that is selected in the editor view.
+ */
+export function setTextAlign(textAlign: TextAlign, view: EditorView) {
+  setBlockType(schema.nodes.paragraph, { textAlign })(view.state, view.dispatch);
 }
