@@ -3,8 +3,8 @@ import { Text } from '@graftini/bricks';
 import { Schema } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { MouseEventHandler } from 'react';
-import { forwardRef, useEffect, useRef, useState } from 'react';
+import { forwardRef, MouseEventHandler, useEffect, useRef, useState } from 'react';
+import { defaultTextFormValues } from './formFields';
 import useDisableEditorWhenNotInUse from './useDisableEditorWhenNotInUse';
 
 const schema = new Schema({
@@ -71,6 +71,7 @@ const ProseEditor = forwardRef(
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         onContextMenu={onContextMenu}
+        {...defaultTextFormValues}
       >
         <div ref={setState} />
       </Text>
