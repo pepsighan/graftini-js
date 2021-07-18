@@ -5,6 +5,7 @@ import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { forwardRef, MouseEventHandler, useEffect, useRef, useState } from 'react';
 import { defaultTextFormValues } from './formFields';
+import { trackPlugin } from './trackPlugin';
 import useDisableEditorWhenNotInUse from './useDisableEditorWhenNotInUse';
 
 const schema = new Schema({
@@ -52,6 +53,7 @@ const ProseEditor = forwardRef(
       const state = EditorState.create({
         schema,
         doc: schema.nodeFromJSON(emptyDoc),
+        plugins: [trackPlugin],
       });
       view.current = new EditorView(ref, {
         state,
