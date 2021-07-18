@@ -49,3 +49,4 @@ export {
   TextInteractionStyles,
   TextProps,
 } from './text';
+export { ProseMirrorDocument } from './textBody';

@@ -45,6 +45,7 @@ const ProseEditor = forwardRef(
         onDoubleClick={onDoubleClick}
         onContextMenu={onContextMenu}
         {...defaultTextFormValues}
+        content={onInitialState()}
       >
         {isEditing ? <div ref={onEdit} /> : null}
       </Text>

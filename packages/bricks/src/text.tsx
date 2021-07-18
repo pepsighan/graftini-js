@@ -1,10 +1,9 @@
 /** @jsxImportSource @emotion/react */
 import { CSSObject } from '@emotion/react';
-import { RawDraftContentState } from 'draft-js';
 import { ElementType, FocusEventHandler, forwardRef, MouseEventHandler, ReactNode } from 'react';
 import { DragProps, dragProps, EditorProps, interactionProps, InteractionProps } from './box';
 import { RGBA, rgbaToCss } from './colors';
-import TextBody from './textBody';
+import TextBody, { ProseMirrorDocument } from './textBody';
 
 export type TextProps = BaseTextProps &
   DragProps &
@@ -22,7 +21,7 @@ export type BaseTextProps = {
   textAlign?: TextAlign;
   displayNone?: boolean;
   displayInline?: boolean;
-  content?: RawDraftContentState;
+  content?: ProseMirrorDocument;
   children?: ReactNode;
 };
 
