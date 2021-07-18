@@ -51,8 +51,17 @@ const ProseEditor = forwardRef(
         onContextMenu={onContextMenu}
         {...defaultTextFormValues}
         content={onInitialState()}
+        cursor={isEditing ? 'text' : 'default'}
       >
-        {isEditing ? <div ref={onEdit} /> : null}
+        {isEditing ? (
+          <div
+            ref={onEdit}
+            css={{
+              // This otherwise the cursor does not show on Safari.
+              userSelect: 'auto',
+            }}
+          />
+        ) : null}
       </Text>
     );
   }
