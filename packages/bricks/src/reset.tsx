@@ -36,6 +36,7 @@ body {
   background-color: transparent;
   // Any element can have a background defined. So do not repeat them by default.
   background-repeat: no-repeat;
+  outline: none;
 }
 main {
   display: block;
@@ -234,10 +235,6 @@ img,
 video {
   max-width: 100%;
   height: auto;
-}
-[data-js-focus-visible] :focus:not([data-focus-visible-added]) {
-  outline: none;
-  box-shadow: none;
 }
 select::-ms-expand {
   display: none;
