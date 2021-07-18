@@ -1,4 +1,6 @@
 import { InputAdornment, MenuItem, Select, TextField, Typography } from '@material-ui/core';
+import { setFontSize } from 'canvasComponents/proseEditor/commands';
+import { useProseEditor } from 'canvasComponents/proseEditor/ProseEditorContext';
 import { useCallback, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveFloat, parsePositiveInteger, toTwoDecimalPlaces } from 'utils/parser';
@@ -6,7 +8,7 @@ import { wideLabelAlignmentStyle } from './formLabels';
 
 const nonNumberChars = /[^0-9.]+/g;
 
-export default function FontSizeInput({ name, componentId }) {
+export default function FontSizeInput({ name }) {
   const { control, setValue } = useFormContext();
   const size = useWatch({ control, name: `${name}.size` });
   const unit = useWatch({ control, name: `${name}.unit` });
@@ -14,7 +16,14 @@ export default function FontSizeInput({ name, componentId }) {
   // To support floating values.
   const [sizeLocal, setSizeLocal] = useState(size);
 
-  const onUpdateStyle = useCallback((size, unit) => {}, []);
+  const { getEditorView } = useProseEditor();
+  const onUpdateStyle = useCallback(
+    (size, unit) => {
+      const view = getEditorView();
+      setFontSize({ size, unit }, view);
+    },
+    [getEditorView]
+  );
 
   return (
     <TextField

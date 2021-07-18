@@ -58,7 +58,7 @@ function FormInner({ componentId }: OptionsProps) {
         <Divider />
 
         <Typography variant="subtitle2">Appearance</Typography>
-        <FontSizeInput name="fontSize" componentId={componentId} />
+        <FontSizeInput name="fontSize" />
         <FontFamilyInput componentId={componentId} />
         <FontWeightInput componentId={componentId} />
         <TextColorPickerInput componentId={componentId} />
