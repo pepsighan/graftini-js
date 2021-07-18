@@ -1,6 +1,8 @@
 import { useEditorStore } from '@graftini/graft';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
+import { baseKeymap } from 'prosemirror-commands';
+import { keymap } from 'prosemirror-keymap';
 import { createContext, PropsWithChildren, useCallback, useContext } from 'react';
 import { useGetSet } from 'react-use';
 import schema from './schema';
@@ -38,7 +40,7 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
       const state = EditorState.create({
         schema,
         doc: schema.nodeFromJSON(initialState),
-        plugins: [trackPlugin(componentId, immerSetEditor)],
+        plugins: [trackPlugin(componentId, immerSetEditor), keymap(baseKeymap)],
       });
 
       const editorView = new EditorView(ref, { state });
