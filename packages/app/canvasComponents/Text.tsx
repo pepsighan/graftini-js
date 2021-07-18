@@ -56,7 +56,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown, cont
         () => (
           <ProseEditor
             ref={ref}
-            onInitialize={onInitializeContent}
+            onInitialState={onInitializeContent}
             onMouseDown={!isDraggingDisabled ? onMouseDown : null}
             onClick={onClick}
             onDoubleClick={startEditingText}

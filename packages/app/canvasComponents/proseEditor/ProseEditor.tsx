@@ -1,24 +1,13 @@
 /** @jsxImportSource @emotion/react */
 import { Text } from '@graftini/bricks';
-import { useComponentId, useEditorStore } from '@graftini/graft';
-import { Schema } from 'prosemirror-model';
-import { EditorState } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
-import { forwardRef, MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { useComponentId } from '@graftini/graft';
+import { forwardRef, MouseEventHandler, useCallback } from 'react';
 import { defaultTextFormValues } from './formFields';
-import trackPlugin from './trackPlugin';
+import { useProseEditor } from './ProseEditorContext';
 import useDisableEditorWhenNotInUse from './useDisableEditorWhenNotInUse';
 
-const schema = new Schema({
-  nodes: {
-    doc: { content: 'paragraph+' },
-    paragraph: { content: 'text*', toDOM: () => ['div', 0] },
-    text: { inline: true },
-  },
-});
-
 type ProseEditorProps = {
-  onInitialize: () => any;
+  onInitialState: () => any;
   onMouseDown?: MouseEventHandler;
   onClick: MouseEventHandler;
   onDoubleClick: MouseEventHandler;
@@ -27,35 +16,13 @@ type ProseEditorProps = {
 
 const ProseEditor = forwardRef(
   (
-    { onClick, onContextMenu, onMouseDown, onDoubleClick, onInitialize }: ProseEditorProps,
+    { onClick, onContextMenu, onMouseDown, onDoubleClick, onInitialState }: ProseEditorProps,
     forwardedRef
   ) => {
-    const [ref, setRef] = useState<HTMLElement>();
-    const view = useRef<EditorView>(null);
-
-    const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
     const componentId = useComponentId();
 
-    // Initialize the editor once the ref is initialized.
-    useEffect(() => {
-      if (!ref) {
-        return;
-      }
-
-      const state = EditorState.create({
-        schema,
-        doc: schema.nodeFromJSON(onInitialize()),
-        plugins: [trackPlugin(componentId, immerSetEditor)],
-      });
-      view.current = new EditorView(ref, {
-        state,
-        editable: () => false,
-      });
-
-      return () => view.current.destroy();
-    }, [componentId, immerSetEditor, onInitialize, ref]);
-
-    useDisableEditorWhenNotInUse(view);
+    const { onInitialize, editorView } = useProseEditor();
+    useDisableEditorWhenNotInUse(editorView);
 
     return (
       <Text
@@ -67,7 +34,18 @@ const ProseEditor = forwardRef(
         onContextMenu={onContextMenu}
         {...defaultTextFormValues}
       >
-        <div ref={setRef} />
+        <div
+          ref={useCallback(
+            (ref) => {
+              onInitialize({
+                ref,
+                componentId,
+                initialState: onInitialState(),
+              });
+            },
+            [componentId, onInitialState, onInitialize]
+          )}
+        />
       </Text>
     );
   }

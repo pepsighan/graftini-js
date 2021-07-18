@@ -1,20 +1,20 @@
 import { useComponentId } from '@graftini/graft';
 import { EditorView } from 'prosemirror-view';
-import { MutableRefObject, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDesignerStateApi } from 'store/designer';
 
 /**
  * Disabled the editor when it is not in use. To start editing, the text component
  * must be double clicked.
  */
-export default function useDisableEditorWhenNotInUse(editorView: MutableRefObject<EditorView>) {
+export default function useDisableEditorWhenNotInUse(editorView: EditorView) {
   const componentId = useComponentId();
   const { subscribe } = useDesignerStateApi();
 
   useEffect(() => {
     return subscribe(
       (isEditing: boolean) => {
-        editorView.current.setProps({
+        editorView.setProps({
           editable: () => isEditing,
         });
       },

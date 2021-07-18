@@ -1,6 +1,7 @@
 import { Editor } from '@graftini/graft';
 import { Box, GlobalStyles, useTheme } from '@material-ui/core';
 import components from 'canvasComponents';
+import { ProseEditorProvider } from 'canvasComponents/proseEditor/ProseEditorContext';
 import Root from 'canvasComponents/Root';
 import Canvas from 'components/editor/Canvas';
 import EditorNavigation from 'components/editor/DesignerNavigation';
@@ -41,19 +42,21 @@ function Editorial() {
     <Box onContextMenu={useDisableContextMenu()}>
       <ContextMenuProvider>
         <Editor resolvers={components} initialState={editorState} rootComponentOverride={Root}>
-          <SyncEditorAndDesignerState />
+          <ProseEditorProvider>
+            <SyncEditorAndDesignerState />
 
-          <GlobalStyles styles={` body { background-color: ${palette.grey[50]}; } `} />
+            <GlobalStyles styles={` body { background-color: ${palette.grey[50]}; } `} />
 
-          <EditorNavigation />
-          {/* The height of the nav is subtracted, so that any of the following does not cause window-wide scroll. 
-          Any scroll they have should be within their boundaries.
-      */}
-          <Box sx={{ display: 'flex', height: `calc(100vh - ${navBarHeight}px)` }}>
-            <LeftSidebar />
-            <Canvas />
-            <RightSidebar />
-          </Box>
+            <EditorNavigation />
+            {/* The height of the nav is subtracted, so that any of the following does not cause window-wide scroll. 
+                Any scroll they have should be within their boundaries.
+            */}
+            <Box sx={{ display: 'flex', height: `calc(100vh - ${navBarHeight}px)` }}>
+              <LeftSidebar />
+              <Canvas />
+              <RightSidebar />
+            </Box>
+          </ProseEditorProvider>
         </Editor>
       </ContextMenuProvider>
     </Box>
