@@ -1,7 +1,4 @@
 import { InputAdornment, MenuItem, TextField, Typography } from '@material-ui/core';
-import { applyStyleOption, StyleOption } from 'canvasComponents/textEditor/styleMap';
-import { useResolveCurrentSelection } from 'canvasComponents/textEditor/textSelection';
-import { useTextEditorStateSetter } from 'canvasComponents/textEditor/useTextEditorState';
 import { Controller, useFormContext } from 'react-hook-form';
 import { wideLabelAlignmentStyle } from './formLabels';
 
@@ -19,8 +16,6 @@ const fontWeights = [
 
 export default function FontWeightInput({ componentId }) {
   const { control } = useFormContext();
-  const setTextEditor = useTextEditorStateSetter({ componentId });
-  const resolveCurrentSelection = useResolveCurrentSelection({ componentId });
 
   return (
     <Controller
@@ -31,17 +26,6 @@ export default function FontWeightInput({ componentId }) {
           ref={ref}
           onChange={(event) => {
             onChange(event);
-
-            setTextEditor((editor) => {
-              const selection = resolveCurrentSelection();
-
-              return applyStyleOption(
-                editor,
-                selection,
-                StyleOption.FontWeight,
-                event.target.value
-              );
-            });
           }}
           value={value ?? ''}
           select

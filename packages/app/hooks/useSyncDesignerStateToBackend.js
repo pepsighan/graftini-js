@@ -23,11 +23,7 @@ export default function useSyncDesignerStateToBackend({ projectId }) {
               projectId,
               pages: Object.keys(pages).map((pageId) => ({
                 pageId,
-                componentMap: pages[pageId]
-                  ? // Cleanup any deleted component nodes before saving them to
-                    // backend.
-                    JSON.stringify({ ...pages[pageId] })
-                  : null,
+                componentMap: pages[pageId] ? JSON.stringify({ ...pages[pageId] }) : null,
               })),
             },
           },
