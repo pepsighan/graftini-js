@@ -4,7 +4,16 @@ import { Schema } from 'prosemirror-model';
 const schema = new Schema({
   nodes: {
     doc: { content: 'paragraph+' },
-    paragraph: { content: 'text*', toDOM: () => ['div', 0] },
+    paragraph: {
+      attrs: {
+        textAlign: { default: 'left' },
+      },
+      content: 'text*',
+      toDOM: (node) => {
+        const { textAlign } = node.attrs;
+        return ['div', { style: `text-align: ${textAlign};` }, 0];
+      },
+    },
     text: { inline: true },
   },
   marks: {
