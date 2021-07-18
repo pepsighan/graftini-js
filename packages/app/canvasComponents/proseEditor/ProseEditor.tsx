@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { Text } from '@graftini/bricks';
+import { useComponentId, useEditorStore } from '@graftini/graft';
 import { Schema } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { forwardRef, MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
-import { useComponentId, useEditorStore } from '../../../graft/dist/types/graft';
 import { defaultTextFormValues } from './formFields';
 import trackPlugin from './trackPlugin';
 import useDisableEditorWhenNotInUse from './useDisableEditorWhenNotInUse';
