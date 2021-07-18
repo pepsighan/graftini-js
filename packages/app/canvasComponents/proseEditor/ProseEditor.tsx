@@ -3,9 +3,10 @@ import { Text } from '@graftini/bricks';
 import { Schema } from 'prosemirror-model';
 import { EditorState } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
-import { forwardRef, MouseEventHandler, useEffect, useRef, useState } from 'react';
+import { forwardRef, MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { useComponentId, useEditorStore } from '../../../graft/dist/types/graft';
 import { defaultTextFormValues } from './formFields';
-import { trackPlugin } from './trackPlugin';
+import trackPlugin from './trackPlugin';
 import useDisableEditorWhenNotInUse from './useDisableEditorWhenNotInUse';
 
 const schema = new Schema({
@@ -32,6 +33,9 @@ const ProseEditor = forwardRef(
     const [ref, setRef] = useState<HTMLElement>();
     const view = useRef<EditorView>(null);
 
+    const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
+    const componentId = useComponentId();
+
     // Initialize the editor once the ref is initialized.
     useEffect(() => {
       if (!ref) {
@@ -41,7 +45,7 @@ const ProseEditor = forwardRef(
       const state = EditorState.create({
         schema,
         doc: schema.nodeFromJSON(onInitialize()),
-        plugins: [trackPlugin],
+        plugins: [trackPlugin(componentId, immerSetEditor)],
       });
       view.current = new EditorView(ref, {
         state,
@@ -49,7 +53,7 @@ const ProseEditor = forwardRef(
       });
 
       return () => view.current.destroy();
-    }, [onInitialize, ref]);
+    }, [componentId, immerSetEditor, onInitialize, ref]);
 
     useDisableEditorWhenNotInUse(view);
 

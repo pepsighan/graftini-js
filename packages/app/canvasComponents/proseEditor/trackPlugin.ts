@@ -1,11 +1,23 @@
 import { Plugin } from 'prosemirror-state';
+import { EditorStore } from '@graftini/graft';
 
-export const trackPlugin = new Plugin({
-  view: () => {
-    return {
-      update: (_, prevState) => {
-        console.log(prevState.toJSON());
-      },
-    };
-  },
-});
+/**
+ * Tracks the current state of the prose editor and syncs it to the component's
+ * content prop.
+ */
+export default function trackPlugin(
+  componentId: string,
+  immerSet: (fn: (state: EditorStore) => void) => void
+) {
+  return new Plugin({
+    view: () => {
+      return {
+        update: (_, prevState) => {
+          immerSet((state) => {
+            state.componentMap[componentId].props.content = prevState.toJSON();
+          });
+        },
+      };
+    },
+  });
+}
