@@ -24,7 +24,7 @@ const schema = new Schema({
       },
       toDOM: (node) => {
         const { size, unit } = node.attrs;
-        return ['span', { style: `font-size: ${size}${unit};` }, 0];
+        return ['span', { style: `display: inline; font-size: ${size}${unit};` }, 0];
       },
     },
     fontFamily: {
@@ -33,7 +33,7 @@ const schema = new Schema({
       },
       toDOM: (node) => {
         const { fontFamily } = node.attrs;
-        return ['span', { style: `font-family: ${fontFamily};` }, 0];
+        return ['span', { style: `display: inline; font-family: ${fontFamily};` }, 0];
       },
     },
     fontWeight: {
@@ -42,7 +42,7 @@ const schema = new Schema({
       },
       toDOM: (node) => {
         const { fontWeight } = node.attrs;
-        return ['span', { style: `font-weight: ${fontWeight};` }, 0];
+        return ['span', { style: `display: inline; font-weight: ${fontWeight};` }, 0];
       },
     },
     color: {
@@ -54,7 +54,7 @@ const schema = new Schema({
       },
       toDOM: (node) => {
         const { r, g, b, a } = node.attrs;
-        return ['span', { style: `color: ${rgbaToCss({ r, g, b, a })};` }, 0];
+        return ['span', { style: `display: inline; color: ${rgbaToCss({ r, g, b, a })};` }, 0];
       },
     },
   },
