@@ -51,7 +51,7 @@ function FormInner({ componentId }: OptionsProps) {
       }, [])}
     >
       <Stack spacing={2} mt={2}>
-        <TextAlignInput name="textAlign" componentId={componentId} />
+        <TextAlignInput name="textAlign" />
         <Divider />
 
         <TextInput name="name" label="Label" />
