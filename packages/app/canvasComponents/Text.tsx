@@ -6,6 +6,7 @@ import useSelectOnRightClick from 'hooks/useSelectOnRightClick';
 import { forwardRef, MouseEvent, useCallback, useMemo } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import ProseEditor from './proseEditor/ProseEditor';
+import useIsEditing from './proseEditor/useIsEditing';
 
 export type TextComponentProps = {
   name?: string;
@@ -40,12 +41,13 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown, cont
     [componentId, onOpenContextMenu, selectComponentOnRightClick]
   );
 
+  const isEditing = useIsEditing();
   const onInitializeContent = useCallback(
     () => content ?? Text.graftOptions.defaultProps.content,
-    // We only initialize the content once. The state of the editor is
-    // controlled by the editor itself.
+    // We only initialize the content once or when the editing state
+    // changes. The state of the editor is controlled by the editor itself.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
+    [isEditing]
   );
 
   // The text component keeps on changing with changing props.
@@ -56,6 +58,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown, cont
         () => (
           <ProseEditor
             ref={ref}
+            isEditing={isEditing}
             onInitialState={onInitializeContent}
             onMouseDown={!isDraggingDisabled ? onMouseDown : null}
             onClick={onClick}
@@ -65,6 +68,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown, cont
         ),
         [
           isDraggingDisabled,
+          isEditing,
           onClick,
           onContextMenu,
           onInitializeContent,
