@@ -65,7 +65,7 @@ const Text = forwardRef(({ content, children, ...rest }: TextProps, ref) => {
       }}
     >
       {/* If children is provided render it. It may be a content editor. */}
-      {children ?? (content ? <TextBody content={content} /> : null)}
+      {children ?? (content ? <TextBody content={content} isEditor={rest.isEditor} /> : null)}
     </Component>
   );
 });

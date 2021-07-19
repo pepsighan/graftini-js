@@ -4,6 +4,7 @@ import { RGBA } from './colors';
 import Text, { FontSize, FontWeight, TextAlign } from './text';
 
 type TextBodyProps = {
+  isEditor?: boolean;
   content: ProseMirrorDocument;
 };
 
@@ -64,7 +65,7 @@ type LinkMark = {
  * A renderer for the text content.
  */
 /** @internal */
-export default function TextBody({ content }: TextBodyProps) {
+export default function TextBody({ isEditor, content }: TextBodyProps) {
   // TODO: Only check them during development. Remove these assertions when deployed.
   if (content.type !== 'doc') {
     throw new Error('content must have a doc type.');
@@ -73,17 +74,18 @@ export default function TextBody({ content }: TextBodyProps) {
   return (
     <>
       {content.content.map((paragraph, index) => (
-        <Paragraph key={index} paragraph={paragraph} />
+        <Paragraph key={index} paragraph={paragraph} isEditor={isEditor} />
       ))}
     </>
   );
 }
 
 type ParagraphProps = {
+  isEditor?: boolean;
   paragraph: ProseMirrorParagraph;
 };
 
-function Paragraph({ paragraph }: ParagraphProps) {
+function Paragraph({ isEditor, paragraph }: ParagraphProps) {
   if (paragraph.type !== 'paragraph') {
     throw new Error('this is not a paragraph. type is invalid.');
   }
@@ -91,7 +93,7 @@ function Paragraph({ paragraph }: ParagraphProps) {
   return (
     <Text tag="div" textAlign={paragraph.attrs.textAlign}>
       {(paragraph.content ?? []).map((text, index) => (
-        <TextItem key={index} text={text} />
+        <TextItem key={index} text={text} isEditor={isEditor} />
       ))}
 
       {/* When there is no content, we show an empty box to signify there is a text component.
@@ -103,10 +105,11 @@ function Paragraph({ paragraph }: ParagraphProps) {
 }
 
 type TextItemProps = {
+  isEditor?: boolean;
   text: ProseMirrorText;
 };
 
-function TextItem({ text }: TextItemProps) {
+function TextItem({ isEditor, text }: TextItemProps) {
   if (text.type !== 'text') {
     throw new Error('this is not a text. type is invalid.');
   }
@@ -141,6 +144,7 @@ function TextItem({ text }: TextItemProps) {
   return (
     <Text
       tag={linkTo || linkHref ? 'a' : 'span'}
+      isEditor={isEditor}
       fontSize={fontSize}
       color={color}
       fontFamily={fontFamily}
