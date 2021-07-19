@@ -33,6 +33,20 @@ export function setTextColor(color: RGBA, view: EditorView, selection: Selection
 }
 
 /**
+ * Set the link using page Id for the selected text.
+ */
+export function setLinkWithPageId(pageId: string, view: EditorView, selection: Selection) {
+  setMark(schema.marks.link, { pageId }, view, selection);
+}
+
+/**
+ * Set the link using href for the selected text.
+ */
+export function setLinkWithHref(href: string, view: EditorView, selection: Selection) {
+  setMark(schema.marks.link, { href }, view, selection);
+}
+
+/**
  * Set the text alignment for the paragraph that is selected in the editor view.
  */
 export function setTextAlign(textAlign: TextAlign, view: EditorView, selection: Selection) {
