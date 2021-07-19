@@ -1,6 +1,6 @@
 import { FontSize, RGBA, TextAlign } from '@graftini/bricks';
-import { setBlockType } from 'prosemirror-commands';
-import { MarkType } from 'prosemirror-model';
+import { MarkType, NodeType } from 'prosemirror-model';
+import { Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import schema from './schema';
 
@@ -36,7 +36,7 @@ export function setTextColor(color: RGBA, view: EditorView, selection: Selection
  * Set the text alignment for the paragraph that is selected in the editor view.
  */
 export function setTextAlign(textAlign: TextAlign, view: EditorView, selection: Selection) {
-  setBlockType(schema.nodes.paragraph, { textAlign })(view.state, view.dispatch);
+  setBlockType(schema.nodes.paragraph, { textAlign }, view, selection);
 }
 
 /**
@@ -119,4 +119,49 @@ function markApplies(doc: any, ranges: any, type: any) {
   }
 
   return false;
+}
+
+/**
+ * Sets the block type of the selected text.
+ * This is adapted from the prosemirror-commands library.
+ */
+function setBlockType(
+  nodeType: NodeType,
+  attrs: { [key: string]: any },
+  view: EditorView,
+  selection: Selection
+) {
+  const { from, to } = selection;
+  const state = view.state;
+  const dispatch = view.dispatch;
+
+  let applicable = false;
+
+  state.doc.nodesBetween(from, to, (node, pos) => {
+    if (applicable) {
+      return false;
+    }
+
+    if (!node.isTextblock || node.hasMarkup(nodeType, attrs)) {
+      return;
+    }
+
+    if (node.type === nodeType) {
+      applicable = true;
+    } else {
+      let $pos = state.doc.resolve(pos),
+        index = $pos.index();
+      applicable = $pos.parent.canReplaceWith(index, index + 1, nodeType);
+    }
+  });
+
+  if (!applicable) {
+    return false;
+  }
+
+  if (dispatch) {
+    dispatch(state.tr.setBlockType(from, to, nodeType, attrs).scrollIntoView());
+  }
+
+  return true;
 }
