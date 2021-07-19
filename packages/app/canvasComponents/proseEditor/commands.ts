@@ -7,35 +7,35 @@ import schema from './schema';
 /**
  * Set the font size to the selected text in editor view.
  */
-export function setFontSize(size: FontSize, view: EditorView) {
-  setMark(schema.marks.fontSize, size, view);
+export function setFontSize(size: FontSize, view: EditorView, selection: Selection) {
+  setMark(schema.marks.fontSize, size, view, selection);
 }
 
 /**
  * Set the font family for the selected text in editor view.
  */
-export function setFontFamily(fontFamily: string, view: EditorView) {
-  setMark(schema.marks.fontFamily, { fontFamily }, view);
+export function setFontFamily(fontFamily: string, view: EditorView, selection: Selection) {
+  setMark(schema.marks.fontFamily, { fontFamily }, view, selection);
 }
 
 /**
  * Set the font weight for the selected text in editor view.
  */
-export function setFontWeight(fontWeight: number, view: EditorView) {
-  setMark(schema.marks.fontWeight, { fontWeight }, view);
+export function setFontWeight(fontWeight: number, view: EditorView, selection: Selection) {
+  setMark(schema.marks.fontWeight, { fontWeight }, view, selection);
 }
 
 /**
  * Set the text color for the selected text in editor view.
  */
-export function setTextColor(color: RGBA, view: EditorView) {
-  setMark(schema.marks.color, { ...color, a: color.a ?? 1 }, view);
+export function setTextColor(color: RGBA, view: EditorView, selection: Selection) {
+  setMark(schema.marks.color, { ...color, a: color.a ?? 1 }, view, selection);
 }
 
 /**
  * Set the text alignment for the paragraph that is selected in the editor view.
  */
-export function setTextAlign(textAlign: TextAlign, view: EditorView) {
+export function setTextAlign(textAlign: TextAlign, view: EditorView, selection: Selection) {
   setBlockType(schema.nodes.paragraph, { textAlign })(view.state, view.dispatch);
 }
 
@@ -46,12 +46,13 @@ export function setTextAlign(textAlign: TextAlign, view: EditorView) {
 function setMark(
   markType: MarkType<any>,
   attrs: { [key: string]: any },
-  view: EditorView
+  view: EditorView,
+  selection: Selection
 ): boolean {
   const state = view.state;
   const dispatch = view.dispatch;
 
-  const { empty, $cursor, ranges } = state.selection as any;
+  const { empty, $cursor, ranges } = selection as any;
   if ((empty && !$cursor) || !markApplies(state.doc, ranges, markType)) {
     return false;
   }
