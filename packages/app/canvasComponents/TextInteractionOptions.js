@@ -9,6 +9,7 @@ import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
 import { wideLabelAlignmentStyle } from './form/formLabels';
 import SelectInput from './form/SelectInput';
+import { unsetLink, setLinkWithHref, setLinkWithPageId } from './proseEditor/commands';
 import { getInteractionFormFieldValuesFromSelection } from './proseEditor/formFields';
 import { useProseEditor } from './proseEditor/ProseEditorContext';
 import useCurrentSelectionId from './proseEditor/useCurrentSelectionId';
@@ -53,6 +54,14 @@ function OnClick({ componentId }) {
   const { control } = useFormContext();
   const action = useWatch({ control, name: 'link.action' });
 
+  const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
+
+  const onDoNothing = useCallback(() => {
+    const view = getEditorView();
+    unsetLink(view, getSelection());
+  }, [getEditorView, getSelection]);
+
   return (
     <>
       <Typography variant="subtitle2" mt={2} mb={0.5}>
@@ -60,7 +69,9 @@ function OnClick({ componentId }) {
       </Typography>
 
       <SelectInput label="Action" name="link.action">
-        <MenuItem value="">Do nothing</MenuItem>
+        <MenuItem value="" onClick={onDoNothing}>
+          Do nothing
+        </MenuItem>
         <MenuItem value="pageId">Go to page</MenuItem>
         <MenuItem value="href">Open external link</MenuItem>
       </SelectInput>
@@ -75,6 +86,17 @@ function PageSelection({ componentId }) {
   const { project } = useMyProject({ projectId: useProjectId() });
   const { control } = useFormContext();
 
+  const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
+
+  const onSet = useCallback(
+    (value) => {
+      const view = getEditorView();
+      setLinkWithPageId(value, view, getSelection());
+    },
+    [getEditorView, getSelection]
+  );
+
   return (
     <Controller
       name="link.pageId"
@@ -86,6 +108,7 @@ function PageSelection({ componentId }) {
           value={field.value}
           onChange={(event) => {
             field.onChange(event);
+            onSet(event.target.value);
           }}
           InputProps={{
             startAdornment: (
@@ -96,7 +119,12 @@ function PageSelection({ componentId }) {
           }}
         >
           {project.pages.map((it) => (
-            <MenuItem key={it.id} value={it.id}>
+            <MenuItem
+              key={it.id}
+              value={it.id}
+              // If it selects the same apply it.
+              onClick={it.id === field.value ? () => onSet(it.id) : null}
+            >
               {it.name}
             </MenuItem>
           ))}
@@ -109,6 +137,17 @@ function PageSelection({ componentId }) {
 function HrefInput({ componentId }) {
   const { control } = useFormContext();
 
+  const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
+
+  const onSet = useCallback(
+    (value) => {
+      const view = getEditorView();
+      setLinkWithHref(value, view, getSelection());
+    },
+    [getEditorView, getSelection]
+  );
+
   return (
     <Controller
       name="link.href"
@@ -119,6 +158,12 @@ function HrefInput({ componentId }) {
           value={field.value}
           onChange={(event) => {
             field.onChange(event);
+
+            const href = event.target.value;
+            // Only store is if a valid href.
+            if (url.safeParse(href).success) {
+              onSet(href);
+            }
           }}
           error={!!error}
           helperText={error?.message}
