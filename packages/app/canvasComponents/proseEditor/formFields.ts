@@ -88,8 +88,8 @@ type ActionType = '' | 'pageId' | 'href';
 type InteractionOptions = {
   link: {
     action: ActionType;
-    pageId?: string;
-    href?: string;
+    pageId: string;
+    href: string;
   };
 };
 
@@ -104,6 +104,8 @@ export function getInteractionFormFieldValuesFromSelection(
     return {
       link: {
         action: '',
+        href: '',
+        pageId: '',
       },
     };
   }
@@ -145,8 +147,8 @@ export function getInteractionFormFieldValuesFromSelection(
   return {
     link: {
       action,
-      pageId,
-      href: !pageId ? href : undefined,
+      pageId: pageId ?? '',
+      href: !pageId ? href : '',
     },
   };
 }
