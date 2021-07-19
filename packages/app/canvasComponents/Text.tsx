@@ -1,4 +1,5 @@
 /** @jsxImportSource @emotion/react */
+import { ProseMirrorDocument } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
 import { componentContextMenuId } from 'components/editor/ComponentContextMenu';
 import { useContextMenu } from 'components/editor/ContextMenu';
@@ -11,7 +12,7 @@ import useIsSelected from './proseEditor/useIsSelected';
 
 export type TextComponentProps = {
   name?: string;
-  content: any;
+  content: ProseMirrorDocument;
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown, content }, ref) => {
@@ -94,9 +95,13 @@ Text.graftOptions = {
       content: [
         {
           type: 'paragraph',
+          attrs: {
+            textAlign: 'left',
+          },
           content: [
             {
               type: 'text',
+              marks: [],
               text: 'Write some text here.',
             },
           ],
