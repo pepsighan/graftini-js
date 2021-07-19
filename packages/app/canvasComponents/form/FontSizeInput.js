@@ -1,6 +1,7 @@
 import { InputAdornment, MenuItem, Select, TextField, Typography } from '@material-ui/core';
 import { setFontSize } from 'canvasComponents/proseEditor/commands';
 import { useProseEditor } from 'canvasComponents/proseEditor/ProseEditorContext';
+import useGetSelectionForForm from 'canvasComponents/proseEditor/useGetSelectionForForm';
 import { useCallback, useState } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveFloat, parsePositiveInteger, toTwoDecimalPlaces } from 'utils/parser';
@@ -10,7 +11,7 @@ const nonNumberChars = /[^0-9.]+/g;
 
 const units = ['px', 'rem'];
 
-export default function FontSizeInput({ name }) {
+export default function FontSizeInput({ name, componentId }) {
   const { control, setValue } = useFormContext();
   const size = useWatch({ control, name: `${name}.size` });
   const unit = useWatch({ control, name: `${name}.unit` });
@@ -19,12 +20,13 @@ export default function FontSizeInput({ name }) {
   const [sizeLocal, setSizeLocal] = useState(size);
 
   const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
   const onUpdateStyle = useCallback(
     (size, unit) => {
       const view = getEditorView();
-      setFontSize({ size, unit }, view);
+      setFontSize({ size, unit }, view, getSelection());
     },
-    [getEditorView]
+    [getEditorView, getSelection]
   );
 
   return (

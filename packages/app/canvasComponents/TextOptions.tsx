@@ -12,6 +12,7 @@ import TextInput from './form/TextInput';
 import { getFormFieldValuesFromSelection } from './proseEditor/formFields';
 import { useProseEditor } from './proseEditor/ProseEditorContext';
 import useCurrentSelectionId from './proseEditor/useCurrentSelectionId';
+import useGetSelectionForForm from './proseEditor/useGetSelectionForForm';
 import { TextComponentProps } from './Text';
 
 type TextOptionsFields = {
@@ -26,13 +27,14 @@ type TextOptionsFields = {
 export default function TextOptions({ componentId }: OptionsProps) {
   // Using the selection id for keying the form will refresh the form values that
   // reflect the current selection.
-  const selectionId = useCurrentSelectionId();
+  const selectionId = useCurrentSelectionId(componentId);
   return <FormInner key={selectionId} componentId={componentId} />;
 }
 
 function FormInner({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
   const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
 
   // Update the form when the text selection changes.
   return (
@@ -42,10 +44,10 @@ function FormInner({ componentId }: OptionsProps) {
         (state) => {
           return {
             name: state.name,
-            ...getFormFieldValuesFromSelection(getEditorView()),
+            ...getFormFieldValuesFromSelection(getEditorView(), getSelection()),
           };
         },
-        [getEditorView]
+        [getEditorView, getSelection]
       )}
       onSync={useCallback((props, state) => {
         // Only name is to be paste as is to the component prop.
@@ -57,17 +59,17 @@ function FormInner({ componentId }: OptionsProps) {
       }, [])}
     >
       <Stack spacing={2} mt={2}>
-        <TextAlignInput name="textAlign" />
+        <TextAlignInput name="textAlign" componentId={componentId} />
         <Divider />
 
         <TextInput name="name" label="Label" />
         <Divider />
 
         <Typography variant="subtitle2">Appearance</Typography>
-        <FontSizeInput name="fontSize" />
-        <FontFamilyInput />
-        <FontWeightInput />
-        <TextColorPickerInput />
+        <FontSizeInput name="fontSize" componentId={componentId} />
+        <FontFamilyInput componentId={componentId} />
+        <FontWeightInput componentId={componentId} />
+        <TextColorPickerInput componentId={componentId} />
       </Stack>
     </CF>
   );

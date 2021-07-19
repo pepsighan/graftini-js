@@ -49,7 +49,7 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
         ],
       });
 
-      const editorView = new EditorView(ref, { state });
+      const editorView = new EditorView(ref, { state, editable: () => false });
       setEditorView(editorView);
     },
     [immerSetEditor, setCurrentSelection, setEditorView]
