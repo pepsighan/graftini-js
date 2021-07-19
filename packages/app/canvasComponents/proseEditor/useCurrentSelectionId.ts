@@ -1,5 +1,5 @@
 import { useProseEditor } from './ProseEditorContext';
-import useGetSelection from './useGetSelection';
+import useGetSelectionForForm from './useGetSelectionForForm';
 import useIsEditing from './useIsEditing';
 
 /**
@@ -15,7 +15,7 @@ export default function useCurrentSelectionId(componentId: string) {
   // If not in editing, then the whole thing is deemed to be selected.
   // Note: We cannot just use this because this is not reactive. [selection] makes
   // it reactive.
-  const getSelection = useGetSelection(componentId);
+  const getSelection = useGetSelectionForForm(componentId);
 
   // We need to the id for a selection based on whether they are editing or not.
   // Otherwise, the text options form looses focus.

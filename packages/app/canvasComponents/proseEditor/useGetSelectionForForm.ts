@@ -3,7 +3,7 @@ import { useCallback } from 'react';
 import { useDesignerStateApi } from 'store/designer';
 import { useProseEditor } from './ProseEditorContext';
 
-export default function useGetSelection(componentId: string) {
+export default function useGetSelectionForForm(componentId: string) {
   const getIsEditing = useGetIsEditing(componentId);
   const { getEditorView } = useProseEditor();
 
@@ -14,6 +14,7 @@ export default function useGetSelection(componentId: string) {
     }
 
     const isEditing = getIsEditing();
+    console.log({ isEditing });
     return isEditing ? view.state.selection : new AllSelection(view.state.doc);
   }, [getEditorView, getIsEditing]);
 }
@@ -26,6 +27,10 @@ function useGetIsEditing(componentId: string) {
 
   return useCallback(() => {
     const state = getState();
+    console.log({
+      componentId,
+      selected: state.selectedComponentId,
+    });
     return state.selectedComponentId === componentId && state.isTextEditingEnabled;
   }, [componentId, getState]);
 }

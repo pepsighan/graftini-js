@@ -1,7 +1,7 @@
 import { InputAdornment, MenuItem, TextField, Typography } from '@material-ui/core';
 import { setFontFamily } from 'canvasComponents/proseEditor/commands';
 import { useProseEditor } from 'canvasComponents/proseEditor/ProseEditorContext';
-import useGetSelection from 'canvasComponents/proseEditor/useGetSelection';
+import useGetSelectionForForm from 'canvasComponents/proseEditor/useGetSelectionForForm';
 import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { wideLabelAlignmentStyle } from './formLabels';
@@ -15,7 +15,7 @@ const families = [
 export default function FontFamilyInput({ componentId }) {
   const { control } = useFormContext();
   const { getEditorView } = useProseEditor();
-  const getSelection = useGetSelection(componentId);
+  const getSelection = useGetSelectionForForm(componentId);
 
   const onSet = useCallback(
     (value) => {
