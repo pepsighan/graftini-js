@@ -4,7 +4,7 @@ import { useProseEditor } from './ProseEditorContext';
  * A unique id for the current selection.
  */
 export default function useCurrentSelectionId() {
-  const { getEditorView } = useProseEditor();
-  const selection = getEditorView()?.state?.selection;
+  const { getCurrentSelection } = useProseEditor();
+  const selection = getCurrentSelection();
   return selection ? `${selection.from}-${selection.to}` : 'no-selection';
 }
