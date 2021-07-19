@@ -1,10 +1,12 @@
 import { setTextColor } from 'canvasComponents/proseEditor/commands';
 import { useProseEditor } from 'canvasComponents/proseEditor/ProseEditorContext';
+import useGetSelection from 'canvasComponents/proseEditor/useGetSelection';
 import { useCallback } from 'react';
 import ColorPickerInput from './ColorPickerInput';
 
-export default function TextColorPickerInput() {
+export default function TextColorPickerInput({ componentId }) {
   const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelection(componentId);
 
   return (
     <ColorPickerInput
@@ -13,9 +15,9 @@ export default function TextColorPickerInput() {
       onChange={useCallback(
         (rgba) => {
           const view = getEditorView();
-          setTextColor(rgba, view);
+          setTextColor(rgba, view, getSelection());
         },
-        [getEditorView]
+        [getEditorView, getSelection]
       )}
     />
   );

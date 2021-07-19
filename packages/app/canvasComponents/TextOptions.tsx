@@ -57,17 +57,17 @@ function FormInner({ componentId }: OptionsProps) {
       }, [])}
     >
       <Stack spacing={2} mt={2}>
-        <TextAlignInput name="textAlign" />
+        <TextAlignInput name="textAlign" componentId={componentId} />
         <Divider />
 
         <TextInput name="name" label="Label" />
         <Divider />
 
         <Typography variant="subtitle2">Appearance</Typography>
-        <FontSizeInput name="fontSize" />
-        <FontFamilyInput />
-        <FontWeightInput />
-        <TextColorPickerInput />
+        <FontSizeInput name="fontSize" componentId={componentId} />
+        <FontFamilyInput componentId={componentId} />
+        <FontWeightInput componentId={componentId} />
+        <TextColorPickerInput componentId={componentId} />
       </Stack>
     </CF>
   );

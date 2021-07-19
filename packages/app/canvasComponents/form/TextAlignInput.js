@@ -7,6 +7,7 @@ import {
 } from '@modulz/radix-icons';
 import { setTextAlign } from 'canvasComponents/proseEditor/commands';
 import { useProseEditor } from 'canvasComponents/proseEditor/ProseEditorContext';
+import useGetSelection from 'canvasComponents/proseEditor/useGetSelection';
 import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
@@ -29,16 +30,17 @@ const options = [
   },
 ];
 
-export default function TextAlignInput({ name }) {
+export default function TextAlignInput({ name, componentId }) {
   const { control } = useFormContext();
   const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelection(componentId);
 
   const onSet = useCallback(
     (value) => {
       const view = getEditorView();
-      setTextAlign(value, view);
+      setTextAlign(value, view, getSelection());
     },
-    [getEditorView]
+    [getEditorView, getSelection]
   );
 
   return (

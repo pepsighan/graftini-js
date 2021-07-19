@@ -53,6 +53,7 @@ function setMark(
   const dispatch = view.dispatch;
 
   const { empty, $cursor, ranges } = selection as any;
+
   if ((empty && !$cursor) || !markApplies(state.doc, ranges, markType)) {
     return false;
   }
