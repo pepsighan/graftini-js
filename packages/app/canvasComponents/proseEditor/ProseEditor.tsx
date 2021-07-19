@@ -4,6 +4,8 @@ import { useComponentId } from '@graftini/graft';
 import { forwardRef, MouseEventHandler, useCallback } from 'react';
 import { defaultTextFormValues } from './formFields';
 import { useProseEditor } from './ProseEditorContext';
+import useIsSelected from './useIsSelected';
+import useMakeEditorEditable from './useMakeEditorEditable';
 
 type ProseEditorProps = {
   isEditing: boolean;
@@ -41,6 +43,9 @@ const ProseEditor = forwardRef(
       [componentId, onInitialState, onInitialize]
     );
 
+    const isSelected = useIsSelected();
+    useMakeEditorEditable(isEditing);
+
     return (
       <Text
         ref={forwardedRef}
@@ -53,7 +58,7 @@ const ProseEditor = forwardRef(
         content={onInitialState()}
         cursor={isEditing ? 'text' : 'default'}
       >
-        {isEditing ? (
+        {isSelected ? (
           <div
             ref={onEdit}
             css={{
