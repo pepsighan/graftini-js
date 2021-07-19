@@ -14,7 +14,6 @@ export default function useGetSelectionForForm(componentId: string) {
     }
 
     const isEditing = getIsEditing();
-    console.log({ isEditing });
     return isEditing ? view.state.selection : new AllSelection(view.state.doc);
   }, [getEditorView, getIsEditing]);
 }
@@ -27,10 +26,6 @@ function useGetIsEditing(componentId: string) {
 
   return useCallback(() => {
     const state = getState();
-    console.log({
-      componentId,
-      selected: state.selectedComponentId,
-    });
     return state.selectedComponentId === componentId && state.isTextEditingEnabled;
   }, [componentId, getState]);
 }
