@@ -8,6 +8,8 @@ import { wideLabelAlignmentStyle } from './formLabels';
 
 const nonNumberChars = /[^0-9.]+/g;
 
+const units = ['px', 'rem'];
+
 export default function FontSizeInput({ name }) {
   const { control, setValue } = useFormContext();
   const size = useWatch({ control, name: `${name}.size` });
@@ -70,8 +72,16 @@ export default function FontSizeInput({ name }) {
                 },
               }}
             >
-              <MenuItem value="px">px</MenuItem>
-              <MenuItem value="rem">rem</MenuItem>
+              {units.map((it) => (
+                <MenuItem
+                  key={it}
+                  value={it}
+                  // Apply the style even when the value may not change.
+                  onClick={it === unit ? () => onUpdateStyle(size, unit) : null}
+                >
+                  {it}
+                </MenuItem>
+              ))}
             </Select>
           </InputAdornment>
         ),

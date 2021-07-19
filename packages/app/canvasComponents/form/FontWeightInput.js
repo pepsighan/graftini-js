@@ -1,6 +1,7 @@
 import { InputAdornment, MenuItem, TextField, Typography } from '@material-ui/core';
 import { setFontWeight } from 'canvasComponents/proseEditor/commands';
 import { useProseEditor } from 'canvasComponents/proseEditor/ProseEditorContext';
+import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { wideLabelAlignmentStyle } from './formLabels';
 
@@ -20,6 +21,14 @@ export default function FontWeightInput() {
   const { control } = useFormContext();
   const { getEditorView } = useProseEditor();
 
+  const onSet = useCallback(
+    (value) => {
+      const view = getEditorView();
+      setFontWeight(value, view);
+    },
+    [getEditorView]
+  );
+
   return (
     <Controller
       name="fontWeight"
@@ -29,9 +38,7 @@ export default function FontWeightInput() {
           ref={ref}
           onChange={(event) => {
             onChange(event);
-
-            const view = getEditorView();
-            setFontWeight(event.target.value, view);
+            onSet(event.target.value);
           }}
           value={value ?? ''}
           select
@@ -44,7 +51,14 @@ export default function FontWeightInput() {
           }}
         >
           {fontWeights.map((weight) => (
-            <MenuItem key={weight.value} value={weight.value}>
+            <MenuItem
+              key={weight.value}
+              value={weight.value}
+              // Apply the style even when the same value is clicked because the selection
+              // might be different. Selects by default do not trigger onChange event when
+              // value remains same.
+              onClick={value === weight.value ? () => onSet(weight.value) : null}
+            >
               {weight.label}
             </MenuItem>
           ))}

@@ -1,12 +1,27 @@
 import { InputAdornment, MenuItem, TextField, Typography } from '@material-ui/core';
 import { setFontFamily } from 'canvasComponents/proseEditor/commands';
 import { useProseEditor } from 'canvasComponents/proseEditor/ProseEditorContext';
+import { useCallback } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 import { wideLabelAlignmentStyle } from './formLabels';
+
+const families = [
+  ['sans-serif', 'Sans Serif'],
+  ['serif', 'Serif'],
+  ['monospace', 'Monospace'],
+];
 
 export default function FontFamilyInput() {
   const { control } = useFormContext();
   const { getEditorView } = useProseEditor();
+
+  const onSet = useCallback(
+    (value) => {
+      const view = getEditorView();
+      setFontFamily(value, view);
+    },
+    [getEditorView]
+  );
 
   return (
     <Controller
@@ -17,9 +32,7 @@ export default function FontFamilyInput() {
           ref={ref}
           onChange={(event) => {
             onChange(event);
-
-            const view = getEditorView();
-            setFontFamily(event.target.value, view);
+            onSet(event.target.value);
           }}
           value={value ?? ''}
           select
@@ -31,9 +44,12 @@ export default function FontFamilyInput() {
             ),
           }}
         >
-          <MenuItem value="sans-serif">Sans Serif</MenuItem>
-          <MenuItem value="serif">Serif</MenuItem>
-          <MenuItem value="monospace">Monospace</MenuItem>
+          {families.map(([val, label]) => (
+            // Apply the style even when the value may not change.
+            <MenuItem key={val} value={val} onClick={val === value ? () => onSet(value) : null}>
+              {label}
+            </MenuItem>
+          ))}
         </TextField>
       )}
     />
