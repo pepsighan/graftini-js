@@ -1,5 +1,5 @@
 import createCache from '@emotion/cache';
-import { CacheProvider } from '@emotion/react';
+import { CacheProvider, Global } from '@emotion/react';
 import weakMemoize from '@emotion/weak-memoize';
 import { Reset } from '@graftini/bricks';
 import Frame, { FrameContextConsumer } from 'react-frame-component';
@@ -29,6 +29,15 @@ export default function IFrame({ title, style, children, ...rest }) {
         {({ document }) => (
           <CacheProvider value={memoizedCreateCache(document.head)}>
             <Reset />
+            <Global
+              styles={`
+                .frame-content {
+                  width: 100vw;
+                  height: 100vh;
+                }
+              `}
+            />
+
             {children()}
           </CacheProvider>
         )}
