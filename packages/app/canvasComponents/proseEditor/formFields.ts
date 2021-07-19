@@ -1,4 +1,5 @@
 import { FontSize, FontWeight, RGBA, TextAlign } from '@graftini/bricks';
+import { Selection } from 'prosemirror-state';
 
 type TextOptionsFields = {
   color?: RGBA;
@@ -18,3 +19,14 @@ export const defaultTextFormValues: TextOptionsFields = {
   fontWeight: 400,
   textAlign: 'left',
 };
+
+/**
+ * Gets the current form field values from the current selection.
+ */
+export function getFormFieldValuesFromSelection(selection?: Selection | null): TextOptionsFields {
+  console.log(selection?.content().toJSON());
+
+  return {
+    ...defaultTextFormValues,
+  };
+}
