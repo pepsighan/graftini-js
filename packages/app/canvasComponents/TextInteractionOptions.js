@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, InputAdornment, MenuItem, Stack, TextField, Typography } from '@material-ui/core';
+import { InputAdornment, MenuItem, Stack, TextField, Typography } from '@material-ui/core';
 import { useProjectId } from 'hooks/useProjectId';
 import { useCallback } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -9,6 +9,11 @@ import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
 import { wideLabelAlignmentStyle } from './form/formLabels';
 import SelectInput from './form/SelectInput';
+import { unsetLink, setLinkWithHref, setLinkWithPageId } from './proseEditor/commands';
+import { getInteractionFormFieldValuesFromSelection } from './proseEditor/formFields';
+import { useProseEditor } from './proseEditor/ProseEditorContext';
+import useCurrentSelectionId from './proseEditor/useCurrentSelectionId';
+import useGetSelectionForForm from './proseEditor/useGetSelectionForForm';
 
 const url = z.string().regex(urlRegex, { message: 'Not a valid URL. Starts with http or https.' });
 const schema = z.object({
@@ -18,33 +23,19 @@ const schema = z.object({
 });
 
 export default function TextInteractionOptions({ componentId }) {
-  // TODO: Using the selection id for keying the form will refresh the form values that
+  // Using the selection id for keying the form will refresh the form values that
   // reflect the current selection.
-  const isTextSelected = false;
-
-  if (!isTextSelected) {
-    return (
-      <Box mt={2}>
-        <Typography variant="body2">
-          Select a portion of a text to configure interactions.
-        </Typography>
-      </Box>
-    );
-  }
-
-  return <TextInteractionOptionsInner componentId={componentId} />;
+  const selectionId = useCurrentSelectionId(componentId);
+  return <TextInteractionOptionsInner key={selectionId} componentId={componentId} />;
 }
 
 function TextInteractionOptionsInner({ componentId }) {
+  const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
+
   const onInitialize = useCallback(() => {
-    return {
-      link: {
-        action: '',
-        pageId: '',
-        href: '',
-      },
-    };
-  }, []);
+    return getInteractionFormFieldValuesFromSelection(getEditorView(), getSelection());
+  }, [getEditorView, getSelection]);
 
   return (
     <CanvasForm
@@ -63,6 +54,14 @@ function OnClick({ componentId }) {
   const { control } = useFormContext();
   const action = useWatch({ control, name: 'link.action' });
 
+  const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
+
+  const onDoNothing = useCallback(() => {
+    const view = getEditorView();
+    unsetLink(view, getSelection());
+  }, [getEditorView, getSelection]);
+
   return (
     <>
       <Typography variant="subtitle2" mt={2} mb={0.5}>
@@ -70,7 +69,9 @@ function OnClick({ componentId }) {
       </Typography>
 
       <SelectInput label="Action" name="link.action">
-        <MenuItem value="">Do nothing</MenuItem>
+        <MenuItem value="" onClick={onDoNothing}>
+          Do nothing
+        </MenuItem>
         <MenuItem value="pageId">Go to page</MenuItem>
         <MenuItem value="href">Open external link</MenuItem>
       </SelectInput>
@@ -85,6 +86,17 @@ function PageSelection({ componentId }) {
   const { project } = useMyProject({ projectId: useProjectId() });
   const { control } = useFormContext();
 
+  const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
+
+  const onSet = useCallback(
+    (value) => {
+      const view = getEditorView();
+      setLinkWithPageId(value, view, getSelection());
+    },
+    [getEditorView, getSelection]
+  );
+
   return (
     <Controller
       name="link.pageId"
@@ -96,6 +108,7 @@ function PageSelection({ componentId }) {
           value={field.value}
           onChange={(event) => {
             field.onChange(event);
+            onSet(event.target.value);
           }}
           InputProps={{
             startAdornment: (
@@ -106,7 +119,12 @@ function PageSelection({ componentId }) {
           }}
         >
           {project.pages.map((it) => (
-            <MenuItem key={it.id} value={it.id}>
+            <MenuItem
+              key={it.id}
+              value={it.id}
+              // If it selects the same apply it.
+              onClick={it.id === field.value ? () => onSet(it.id) : null}
+            >
               {it.name}
             </MenuItem>
           ))}
@@ -119,6 +137,17 @@ function PageSelection({ componentId }) {
 function HrefInput({ componentId }) {
   const { control } = useFormContext();
 
+  const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
+
+  const onSet = useCallback(
+    (value) => {
+      const view = getEditorView();
+      setLinkWithHref(value, view, getSelection());
+    },
+    [getEditorView, getSelection]
+  );
+
   return (
     <Controller
       name="link.href"
@@ -129,6 +158,12 @@ function HrefInput({ componentId }) {
           value={field.value}
           onChange={(event) => {
             field.onChange(event);
+
+            const href = event.target.value;
+            // Only store is if a valid href.
+            if (url.safeParse(href).success) {
+              onSet(href);
+            }
           }}
           error={!!error}
           helperText={error?.message}
