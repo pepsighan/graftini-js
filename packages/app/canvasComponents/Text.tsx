@@ -41,7 +41,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown, cont
     [componentId, onOpenContextMenu, selectComponentOnRightClick]
   );
 
-  const isEditing = useIsEditing();
+  const isEditing = useIsEditing(componentId);
   const onInitializeContent = useCallback(
     () => content ?? Text.graftOptions.defaultProps.content,
     // We only initialize the content once or when the editing state

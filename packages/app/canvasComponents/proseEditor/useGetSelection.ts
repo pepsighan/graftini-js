@@ -1,12 +1,11 @@
-import { AllSelection, Selection } from 'prosemirror-state';
-import { EditorView } from 'prosemirror-view';
+import { AllSelection } from 'prosemirror-state';
 import { useCallback } from 'react';
 import { useDesignerStateApi } from 'store/designer';
 import { useProseEditor } from './ProseEditorContext';
 
 export default function useGetSelection(componentId: string) {
   const getIsEditing = useGetIsEditing(componentId);
-  const { getEditorView, getCurrentSelection } = useProseEditor();
+  const { getEditorView } = useProseEditor();
 
   return useCallback(() => {
     const view = getEditorView();
@@ -15,23 +14,8 @@ export default function useGetSelection(componentId: string) {
     }
 
     const isEditing = getIsEditing();
-    return isEditing ? view.state.selection : selectAll(view, getCurrentSelection());
-  }, [getCurrentSelection, getEditorView, getIsEditing]);
-}
-
-function selectAll(view: EditorView, currentSelection: Selection) {
-  if (!currentSelection.empty) {
-    // When a text editor is newly selected, the view does not get updated immediately and
-    // hence does not reflect the latest data.
-    // As a stop-gap, we use [getCurrentSelection] which is immediately updated where all
-    // the text is selected.
-    // But once some changes are made the text editor (via style changes), the current selection
-    // reflects the actual selection (i.e. the first character). So, we skip that once it happens
-    // and use the actual view below (by then its updated).
-    return currentSelection;
-  }
-
-  return new AllSelection(view.state.doc);
+    return isEditing ? view.state.selection : new AllSelection(view.state.doc);
+  }, [getEditorView, getIsEditing]);
 }
 
 /**

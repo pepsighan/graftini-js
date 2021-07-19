@@ -27,7 +27,7 @@ type TextOptionsFields = {
 export default function TextOptions({ componentId }: OptionsProps) {
   // Using the selection id for keying the form will refresh the form values that
   // reflect the current selection.
-  const selectionId = useCurrentSelectionId();
+  const selectionId = useCurrentSelectionId(componentId);
   return <FormInner key={selectionId} componentId={componentId} />;
 }
 
