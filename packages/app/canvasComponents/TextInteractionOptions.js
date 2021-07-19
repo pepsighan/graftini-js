@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, InputAdornment, MenuItem, Stack, TextField, Typography } from '@material-ui/core';
+import { InputAdornment, MenuItem, Stack, TextField, Typography } from '@material-ui/core';
 import { useProjectId } from 'hooks/useProjectId';
 import { useCallback } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
@@ -9,6 +9,10 @@ import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
 import { wideLabelAlignmentStyle } from './form/formLabels';
 import SelectInput from './form/SelectInput';
+import { getInteractionFormFieldValuesFromSelection } from './proseEditor/formFields';
+import { useProseEditor } from './proseEditor/ProseEditorContext';
+import useCurrentSelectionId from './proseEditor/useCurrentSelectionId';
+import useGetSelectionForForm from './proseEditor/useGetSelectionForForm';
 
 const url = z.string().regex(urlRegex, { message: 'Not a valid URL. Starts with http or https.' });
 const schema = z.object({
@@ -18,33 +22,19 @@ const schema = z.object({
 });
 
 export default function TextInteractionOptions({ componentId }) {
-  // TODO: Using the selection id for keying the form will refresh the form values that
+  // Using the selection id for keying the form will refresh the form values that
   // reflect the current selection.
-  const isTextSelected = false;
-
-  if (!isTextSelected) {
-    return (
-      <Box mt={2}>
-        <Typography variant="body2">
-          Select a portion of a text to configure interactions.
-        </Typography>
-      </Box>
-    );
-  }
-
-  return <TextInteractionOptionsInner componentId={componentId} />;
+  const selectionId = useCurrentSelectionId(componentId);
+  return <TextInteractionOptionsInner key={selectionId} componentId={componentId} />;
 }
 
 function TextInteractionOptionsInner({ componentId }) {
+  const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelectionForForm(componentId);
+
   const onInitialize = useCallback(() => {
-    return {
-      link: {
-        action: '',
-        pageId: '',
-        href: '',
-      },
-    };
-  }, []);
+    return getInteractionFormFieldValuesFromSelection(getEditorView(), getSelection());
+  }, [getEditorView, getSelection]);
 
   return (
     <CanvasForm
