@@ -43,7 +43,7 @@ const ProseEditor = forwardRef(
       [componentId, onInitialState, onInitialize]
     );
 
-    const isSelected = useIsSelected();
+    const isSelected = useIsSelected(componentId);
     useMakeEditorEditable(isEditing);
 
     return (
