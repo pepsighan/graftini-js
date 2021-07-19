@@ -1,5 +1,5 @@
 import { FontSize, FontWeight, RGBA, TextAlign } from '@graftini/bricks';
-import { TextSelection } from 'prosemirror-state';
+import { Selection, TextSelection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { MarkKind, NodeKind } from './schema';
 
@@ -25,12 +25,14 @@ export const defaultTextFormValues: TextOptionsFields = {
 /**
  * Gets the current form field values from the current selection.
  */
-export function getFormFieldValuesFromSelection(view?: EditorView | null): TextOptionsFields {
+export function getFormFieldValuesFromSelection(
+  view?: EditorView | null,
+  selection?: Selection | null
+): TextOptionsFields {
   if (!view) {
     return defaultTextFormValues;
   }
 
-  const selection = view.state.selection;
   let content = selection.content().content;
 
   if (selection.empty) {

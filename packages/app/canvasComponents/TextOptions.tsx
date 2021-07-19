@@ -12,6 +12,7 @@ import TextInput from './form/TextInput';
 import { getFormFieldValuesFromSelection } from './proseEditor/formFields';
 import { useProseEditor } from './proseEditor/ProseEditorContext';
 import useCurrentSelectionId from './proseEditor/useCurrentSelectionId';
+import useGetSelection from './proseEditor/useGetSelection';
 import { TextComponentProps } from './Text';
 
 type TextOptionsFields = {
@@ -33,6 +34,7 @@ export default function TextOptions({ componentId }: OptionsProps) {
 function FormInner({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
   const { getEditorView } = useProseEditor();
+  const getSelection = useGetSelection(componentId);
 
   // Update the form when the text selection changes.
   return (
@@ -42,10 +44,10 @@ function FormInner({ componentId }: OptionsProps) {
         (state) => {
           return {
             name: state.name,
-            ...getFormFieldValuesFromSelection(getEditorView()),
+            ...getFormFieldValuesFromSelection(getEditorView(), getSelection()),
           };
         },
-        [getEditorView]
+        [getEditorView, getSelection]
       )}
       onSync={useCallback((props, state) => {
         // Only name is to be paste as is to the component prop.

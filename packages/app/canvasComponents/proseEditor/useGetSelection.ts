@@ -8,8 +8,12 @@ export default function useGetSelection(componentId: string) {
   const { getEditorView } = useProseEditor();
 
   return useCallback(() => {
-    const isEditing = getIsEditing();
     const view = getEditorView();
+    if (!view) {
+      return null;
+    }
+
+    const isEditing = getIsEditing();
     return isEditing ? view.state.selection : new AllSelection(view.state.doc);
   }, [getEditorView, getIsEditing]);
 }
