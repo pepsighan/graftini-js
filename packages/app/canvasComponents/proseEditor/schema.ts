@@ -1,12 +1,29 @@
 import { rgbaToCss } from '@graftini/bricks';
 import { Schema } from 'prosemirror-model';
 
+export enum NodeKind {
+  Doc = 'doc',
+  Paragraph = 'paragraph',
+  Text = 'text',
+}
+
+export enum ParagraphAttribute {
+  TextAlign = 'textAlign',
+}
+
+export enum MarkKind {
+  FontSize = 'fontSize',
+  FontFamily = 'fontFamily',
+  FontWeight = 'fontWeight',
+  TextColor = 'color',
+}
+
 const schema = new Schema({
   nodes: {
-    doc: { content: 'paragraph+' },
-    paragraph: {
+    [NodeKind.Doc]: { content: 'paragraph+' },
+    [NodeKind.Paragraph]: {
       attrs: {
-        textAlign: { default: 'left' },
+        [ParagraphAttribute.TextAlign]: { default: 'left' },
       },
       content: 'text*',
       toDOM: (node) => {
@@ -14,10 +31,10 @@ const schema = new Schema({
         return ['div', { style: `text-align: ${textAlign};` }, 0];
       },
     },
-    text: { inline: true },
+    [NodeKind.Text]: { inline: true },
   },
   marks: {
-    fontSize: {
+    [MarkKind.FontSize]: {
       attrs: {
         size: {},
         unit: {},
@@ -27,7 +44,7 @@ const schema = new Schema({
         return ['span', { style: `display: inline; font-size: ${size}${unit};` }, 0];
       },
     },
-    fontFamily: {
+    [MarkKind.FontFamily]: {
       attrs: {
         fontFamily: {},
       },
@@ -36,7 +53,7 @@ const schema = new Schema({
         return ['span', { style: `display: inline; font-family: ${fontFamily};` }, 0];
       },
     },
-    fontWeight: {
+    [MarkKind.FontWeight]: {
       attrs: {
         fontWeight: {},
       },
@@ -45,7 +62,7 @@ const schema = new Schema({
         return ['span', { style: `display: inline; font-weight: ${fontWeight};` }, 0];
       },
     },
-    color: {
+    [MarkKind.TextColor]: {
       attrs: {
         r: {},
         g: {},
