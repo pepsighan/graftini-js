@@ -26,7 +26,7 @@ type ProseMirrorText = {
   text: string;
 };
 
-type Mark = FontSizeMark | FontFamilyMark | FontWeightMark | ColorMark;
+type Mark = FontSizeMark | FontFamilyMark | FontWeightMark | ColorMark | LinkMark;
 
 type FontSizeMark = {
   type: 'fontSize';
@@ -50,6 +50,14 @@ type FontWeightMark = {
 type ColorMark = {
   type: 'color';
   attrs: RGBA;
+};
+
+type LinkMark = {
+  type: 'link';
+  attrs: {
+    to?: string | null;
+    href?: string | null;
+  };
 };
 
 /**
@@ -107,6 +115,8 @@ function TextItem({ text }: TextItemProps) {
   let fontFamily: string | undefined;
   let fontSize: FontSize | undefined;
   let fontWeight: FontWeight | undefined;
+  let linkTo: string | undefined;
+  let linkHref: string | undefined;
 
   (text.marks ?? []).forEach((it) => {
     switch (it.type) {
@@ -121,16 +131,22 @@ function TextItem({ text }: TextItemProps) {
         break;
       case 'fontWeight':
         fontWeight = it.attrs.fontWeight;
+        break;
+      case 'link':
+        linkTo = it.attrs.to ?? undefined;
+        linkHref = it.attrs.href ?? undefined;
     }
   });
 
   return (
     <Text
-      tag="span"
+      tag={linkTo || linkHref ? 'a' : 'span'}
       fontSize={fontSize}
       color={color}
       fontFamily={fontFamily}
       fontWeight={fontWeight}
+      to={linkTo}
+      href={linkHref}
       displayInline
     >
       {text.text}

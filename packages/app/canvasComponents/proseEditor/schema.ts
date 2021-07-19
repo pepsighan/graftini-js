@@ -16,6 +16,7 @@ export enum MarkKind {
   FontFamily = 'fontFamily',
   FontWeight = 'fontWeight',
   TextColor = 'color',
+  Link = 'link',
 }
 
 const schema = new Schema({
@@ -72,6 +73,15 @@ const schema = new Schema({
       toDOM: (node) => {
         const { r, g, b, a } = node.attrs;
         return ['span', { style: `display: inline; color: ${rgbaToCss({ r, g, b, a })};` }, 0];
+      },
+    },
+    [MarkKind.Link]: {
+      attrs: {
+        pageId: { default: null },
+        href: { default: null },
+      },
+      toDOM: () => {
+        return ['span', { style: 'display: inline; text-decoration: underline;' }, 0];
       },
     },
   },
