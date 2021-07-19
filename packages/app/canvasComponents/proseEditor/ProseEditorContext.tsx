@@ -1,5 +1,7 @@
 import { useEditorStore } from '@graftini/graft';
-import { EditorState } from 'prosemirror-state';
+import { baseKeymap } from 'prosemirror-commands';
+import { keymap } from 'prosemirror-keymap';
+import { EditorState, Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { createContext, PropsWithChildren, useCallback, useContext } from 'react';
 import { useGetSet } from 'react-use';
@@ -11,38 +13,46 @@ type OnInitializeFn = (props: { ref: HTMLElement; initialState: any; componentId
 type ProseEditorProviderState = {
   onInitialize: OnInitializeFn;
   getEditorView: () => EditorView | null;
+  getCurrentSelection: () => Selection | null;
 };
 
 const ProseEditorContext = createContext<ProseEditorProviderState>(null);
 
 export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
   const [getEditorView, setEditorView] = useGetSet<EditorView | null>(null);
+  const [getCurrentSelection, setCurrentSelection] = useGetSet<Selection | null>(null);
+
   const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
 
   // Initialize the editor once the ref is initialized.
   const onInitialize: OnInitializeFn = useCallback(
     ({ ref, initialState, componentId }) => {
       if (!ref) {
+        setEditorView((view) => {
+          if (view) {
+            // Remove the older view.
+            view.destroy();
+          }
+
+          return null;
+        });
+        setCurrentSelection(null);
         return;
       }
 
       const state = EditorState.create({
         schema,
         doc: schema.nodeFromJSON(initialState),
-        plugins: [trackPlugin(componentId, immerSetEditor)],
+        plugins: [
+          trackPlugin(componentId, immerSetEditor, setCurrentSelection),
+          keymap(baseKeymap),
+        ],
       });
 
       const editorView = new EditorView(ref, { state });
-      setEditorView((view) => {
-        if (view) {
-          // Remove the older view.
-          view.destroy();
-        }
-
-        return editorView;
-      });
+      setEditorView(editorView);
     },
-    [immerSetEditor, setEditorView]
+    [immerSetEditor, setCurrentSelection, setEditorView]
   );
 
   return (
@@ -50,6 +60,7 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
       value={{
         onInitialize,
         getEditorView,
+        getCurrentSelection,
       }}
     >
       {children}

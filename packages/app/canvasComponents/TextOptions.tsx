@@ -9,7 +9,9 @@ import FontWeightInput from './form/FontWeightInput';
 import TextAlignInput from './form/TextAlignInput';
 import TextColorPickerInput from './form/TextColorPickerInput';
 import TextInput from './form/TextInput';
-import { defaultTextFormValues } from './proseEditor/formFields';
+import { getFormFieldValuesFromSelection } from './proseEditor/formFields';
+import { useProseEditor } from './proseEditor/ProseEditorContext';
+import useCurrentSelectionId from './proseEditor/useCurrentSelectionId';
 import { TextComponentProps } from './Text';
 
 type TextOptionsFields = {
@@ -22,25 +24,29 @@ type TextOptionsFields = {
 };
 
 export default function TextOptions({ componentId }: OptionsProps) {
-  // TODO: Using the selection id for keying the form will refresh the form values that
+  // Using the selection id for keying the form will refresh the form values that
   // reflect the current selection.
-
-  return <FormInner componentId={componentId} />;
+  const selectionId = useCurrentSelectionId();
+  return <FormInner key={selectionId} componentId={componentId} />;
 }
 
 function FormInner({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<TextComponentProps, TextOptionsFields>;
+  const { getEditorView } = useProseEditor();
 
   // Update the form when the text selection changes.
   return (
     <CF
       componentId={componentId}
-      onInitialize={useCallback((state) => {
-        return {
-          ...defaultTextFormValues,
-          name: state.name,
-        };
-      }, [])}
+      onInitialize={useCallback(
+        (state) => {
+          return {
+            name: state.name,
+            ...getFormFieldValuesFromSelection(getEditorView()),
+          };
+        },
+        [getEditorView]
+      )}
       onSync={useCallback((props, state) => {
         // Only name is to be paste as is to the component prop.
         props.name = state.name;
