@@ -1,7 +1,7 @@
 import { useEditorStore } from '@graftini/graft';
 import { baseKeymap } from 'prosemirror-commands';
 import { keymap } from 'prosemirror-keymap';
-import { EditorState, Selection } from 'prosemirror-state';
+import { AllSelection, EditorState, Selection } from 'prosemirror-state';
 import { EditorView } from 'prosemirror-view';
 import { createContext, PropsWithChildren, useCallback, useContext } from 'react';
 import { useGetSet } from 'react-use';
@@ -51,6 +51,13 @@ export function ProseEditorProvider({ children }: PropsWithChildren<{}>) {
 
       const editorView = new EditorView(ref, { state, editable: () => false });
       setEditorView(editorView);
+
+      // We select all the text during selection of the text editor (and not in editing mode).
+      // This selection is only a stop-gap measure to allow text styling the whole thing
+      // until the user goes into editing mode and selects whatever text they want.
+      // Once some style has changes, [getCurrentSelection] reflects the actual selection
+      // via [trackPlugin].
+      setCurrentSelection(new AllSelection(editorView.state.doc));
     },
     [immerSetEditor, setCurrentSelection, setEditorView]
   );
