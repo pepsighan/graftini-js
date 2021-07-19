@@ -47,6 +47,13 @@ export function setLinkWithHref(href: string, view: EditorView, selection: Selec
 }
 
 /**
+ * Remove link from the selected text.
+ */
+export function unsetLink(view: EditorView, selection: Selection) {
+  unsetMark(schema.marks.link, view, selection);
+}
+
+/**
  * Set the text alignment for the paragraph that is selected in the editor view.
  */
 export function setTextAlign(textAlign: TextAlign, view: EditorView, selection: Selection) {
@@ -91,6 +98,7 @@ function setMark(
       for (let i = 0; i < ranges.length; i++) {
         const { $from, $to } = ranges[i];
 
+        // Remove the marks if it exists.
         if (has) {
           tr.removeMark($from.pos, $to.pos, markType);
         }
@@ -107,11 +115,54 @@ function setMark(
           to -= spaceEnd;
         }
 
+        // Add it with updated attributes.
         tr.addMark(from, to, markType.create(attrs));
       }
       dispatch(tr.scrollIntoView());
     }
   }
+  return true;
+}
+
+/**
+ * Unsets the mark for the selected text.
+ */
+function unsetMark(markType: MarkType<any>, view: EditorView, selection: Selection): boolean {
+  const state = view.state;
+  const dispatch = view.dispatch;
+
+  const { empty, $cursor, ranges } = selection as any;
+
+  if ((empty && !$cursor) || !markApplies(state.doc, ranges, markType)) {
+    return false;
+  }
+
+  if (dispatch) {
+    if ($cursor) {
+      // Remove the marks if it exists.
+      if (markType.isInSet(state.storedMarks || $cursor.marks())) {
+        dispatch(state.tr.removeStoredMark(markType));
+      }
+    } else {
+      let has = false;
+      const tr = state.tr;
+
+      for (let i = 0; !has && i < ranges.length; i++) {
+        let { $from, $to } = ranges[i];
+        has = state.doc.rangeHasMark($from.pos, $to.pos, markType);
+      }
+
+      for (let i = 0; i < ranges.length; i++) {
+        const { $from, $to } = ranges[i];
+        // Remove the marks if it exists.
+        if (has) {
+          tr.removeMark($from.pos, $to.pos, markType);
+        }
+      }
+      dispatch(tr.scrollIntoView());
+    }
+  }
+
   return true;
 }
 
