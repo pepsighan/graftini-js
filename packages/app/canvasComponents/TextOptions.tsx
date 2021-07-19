@@ -27,8 +27,6 @@ export default function TextOptions({ componentId }: OptionsProps) {
   // Using the selection id for keying the form will refresh the form values that
   // reflect the current selection.
   const selectionId = useCurrentSelectionId();
-  console.log({ selectionId });
-
   return <FormInner key={selectionId} componentId={componentId} />;
 }
 
@@ -44,7 +42,7 @@ function FormInner({ componentId }: OptionsProps) {
         (state) => {
           return {
             name: state.name,
-            ...getFormFieldValuesFromSelection(getEditorView()?.state?.selection),
+            ...getFormFieldValuesFromSelection(getEditorView()),
           };
         },
         [getEditorView]
