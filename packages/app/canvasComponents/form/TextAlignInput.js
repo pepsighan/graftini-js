@@ -40,6 +40,12 @@ export default function TextAlignInput({ name }) {
         <ToggleButtonGroup
           value={field.value}
           onChange={(_, value) => {
+            if (!value) {
+              // This is not a toggle for on and off. The value for alignment is
+              // required.
+              return;
+            }
+
             // Update the form state. This value is only used within the form.
             field.onChange(value);
 
