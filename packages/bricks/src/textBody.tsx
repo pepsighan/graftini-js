@@ -57,6 +57,7 @@ type LinkMark = {
   type: 'link';
   attrs: {
     to?: string | null;
+    pageId?: string | null;
     href?: string | null;
   };
 };
@@ -136,14 +137,16 @@ function TextItem({ isEditor, text }: TextItemProps) {
         fontWeight = it.attrs.fontWeight;
         break;
       case 'link':
-        linkTo = it.attrs.to ?? undefined;
+        // When in editor mode, the pageId are not transformed to `to` links (not
+        // required because its not interactive). We just need it for the view.
+        linkTo = (isEditor ? it.attrs.pageId : it.attrs.to) ?? undefined;
         linkHref = it.attrs.href ?? undefined;
     }
   });
 
   return (
     <Text
-      tag={linkTo || linkHref ? 'a' : 'span'}
+      tag={(linkTo || linkHref) && !isEditor ? 'a' : 'span'}
       isEditor={isEditor}
       fontSize={fontSize}
       color={color}
