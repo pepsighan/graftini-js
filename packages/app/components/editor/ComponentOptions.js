@@ -1,4 +1,3 @@
-import { Box, Typography } from '@material-ui/core';
 import { ROOT_NODE_ID } from '@graftini/graft';
 import { componentOptions } from 'canvasComponents';
 import { useCallback } from 'react';
@@ -21,16 +20,7 @@ export default function StyleOptions() {
     }, [])
   );
 
-  if (!selectedComponentId) {
-    return (
-      <Box mt={2}>
-        <Typography variant="body2">Select a component from the canvas to view options.</Typography>
-      </Box>
-    );
-  }
-
   const Options = type ? componentOptions[type] : null;
-
   return (
     <>
       {Options != null ? (
