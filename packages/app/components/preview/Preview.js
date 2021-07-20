@@ -60,10 +60,8 @@ export default function Preview() {
 
             <Head>
               <meta charset="utf-8" />
-              {rootNode.props.seo?.title && <title>{rootNode.props.seo.title}</title>}
-              {rootNode.props.seo?.description && (
-                <meta name="description" content={rootNode.props.seo.description} />
-              )}
+              <title>{rootNode.props.seo?.title ?? ''}</title>
+              <meta name="description" content={rootNode.props.seo?.description ?? ''} />
               <meta name="viewport" content="initial-scale=1, width=device-width" />
             </Head>
 
