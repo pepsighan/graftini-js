@@ -1,4 +1,4 @@
-import { ComponentMap } from '@graftini/graft';
+import { ComponentMap, ROOT_NODE_ID } from '@graftini/graft';
 import produce from 'immer';
 import { ReactNode, useCallback, useState } from 'react';
 import create from 'zustand';
@@ -7,7 +7,7 @@ import { ProjectPage } from './projects';
 
 type UseDesignerState = {
   currentOpenPage?: string | null;
-  selectedComponentId?: string | null;
+  selectedComponentId: string;
   isTextEditingEnabled: boolean; // Only makes sense in case a text component is selected.
   isBoxResizing: boolean;
   pages: {
@@ -31,7 +31,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
 
     return {
       currentOpenPage: pages.length > 0 ? pages[0].id : null,
-      selectedComponentId: null,
+      selectedComponentId: ROOT_NODE_ID,
       isTextEditingEnabled: false,
       isBoxResizing: false,
       isSaving: false,
@@ -55,7 +55,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
       },
       unselectComponent() {
         immerSet((state) => {
-          state.selectedComponentId = null;
+          state.selectedComponentId = ROOT_NODE_ID;
           state.isTextEditingEnabled = false;
         });
       },
@@ -72,7 +72,7 @@ const createDesignerState = (pages: ProjectPage[]) =>
       setCurrentPage(pageId: string) {
         immerSet((state) => {
           state.currentOpenPage = pageId;
-          state.selectedComponentId = null;
+          state.selectedComponentId = ROOT_NODE_ID;
         });
       },
       updatePageDesign(pageId: string, componentMap: ComponentMap) {
