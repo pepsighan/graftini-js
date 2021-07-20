@@ -12,6 +12,12 @@ const cursor = {
 
 export type RootProps = {
   color: RGBA;
+  seo: SEO;
+};
+
+type SEO = {
+  title?: string;
+  description?: string;
 };
 
 const Root: RootComponent<RootProps> = forwardRef(
@@ -85,6 +91,10 @@ Root.graftOptions = {
       r: 255,
       g: 255,
       b: 255,
+    },
+    seo: {
+      title: null,
+      description: null,
     },
   },
 };

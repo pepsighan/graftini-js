@@ -21,10 +21,12 @@ export default function InteractionOptions() {
     }, [])
   );
 
-  if (!selectedComponentId || type === 'Root') {
+  if (type === 'Root') {
     return (
       <Box mt={2}>
-        <Typography variant="body2">Select a component from the canvas to view options.</Typography>
+        <Typography variant="body2">
+          Select any layer other than the Root from the canvas to view options.
+        </Typography>
       </Box>
     );
   }

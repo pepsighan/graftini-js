@@ -4,6 +4,7 @@ import { ROOT_NODE_ID } from '@graftini/graft';
 import IFrame from 'components/IFrame';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { ProjectIdProvider } from 'hooks/useProjectId';
+import Head from 'next/head';
 import { useRouter } from 'next/router';
 import NotFound from 'pages/404';
 import { useMemo } from 'react';
@@ -29,6 +30,8 @@ export default function Preview() {
 
   const componentMap = parseComponentMap(page.componentMap);
   const rootNode = componentMap[ROOT_NODE_ID];
+
+  const seo = rootNode.props.seo;
 
   return (
     <ProjectIdProvider value={project.id}>
@@ -56,6 +59,15 @@ export default function Preview() {
               `}
               />
             )}
+
+            <Head>
+              <meta charset="utf-8" />
+              <title>
+                {seo?.title || 'Unspecified Title'} - Preview - {project.name}
+              </title>
+              <meta name="description" content={seo?.description || 'Unspecified description.'} />
+              <meta name="viewport" content="initial-scale=1, width=device-width" />
+            </Head>
 
             {rootNode.childrenNodes.map((componentId) => (
               <ComponentRender

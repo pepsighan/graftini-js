@@ -112,6 +112,15 @@ export default createTheme({
           paddingTop: 6,
           paddingBottom: 6,
         },
+        multiline: {
+          paddingTop: 6,
+          paddingBottom: 6,
+
+          '& .MuiOutlinedInput-input': {
+            paddingTop: 0,
+            paddingBottom: 0,
+          },
+        },
       },
     },
     MuiSelect: {
