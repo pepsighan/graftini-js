@@ -8,8 +8,8 @@ export default function SEOOptions() {
     <CanvasForm componentId={ROOT_NODE_ID}>
       <Stack spacing={2} mt={2}>
         <Typography variant="subtitle2">Head</Typography>
-        <TextInput name="title" label="Title" />
-        <TextInput name="description" label="Description" />
+        <TextInput name="seo.title" label="Title" />
+        <TextInput name="seo.description" label="Description" />
       </Stack>
     </CanvasForm>
   );
