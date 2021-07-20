@@ -1,6 +1,7 @@
 import { ROOT_NODE_ID } from '@graftini/graft';
 import { Stack, Typography } from '@material-ui/core';
 import CanvasForm, { CanvasFormComponent } from 'canvasComponents/form/CanvasForm';
+import TextareaInput from 'canvasComponents/form/TextareaInput';
 import TextInput from 'canvasComponents/form/TextInput';
 import { RootProps } from 'canvasComponents/Root';
 import { useCallback } from 'react';
@@ -22,7 +23,7 @@ export default function SEOOptions() {
       <Stack spacing={2} mt={2}>
         <Typography variant="subtitle2">Head</Typography>
         <TextInput name="seo.title" label="Title" />
-        <TextInput name="seo.description" label="Description" />
+        <TextareaInput name="seo.description" label="Description" />
       </Stack>
     </CF>
   );
