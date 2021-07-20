@@ -5,6 +5,7 @@ import { useDesignerState } from 'store/designer';
 import { rightSidebarWidth } from 'utils/constants';
 import ComponentOptions from './ComponentOptions';
 import InteractionOptions from './InteractionOptions';
+import SEOOptions from './SEOOptions';
 
 export default function RightSidebar() {
   const [currentTab, setCurrentTab] = useState(0);
@@ -53,6 +54,9 @@ export default function RightSidebar() {
       </TabPanel>
       <TabPanel value={currentTab} index={1}>
         <InteractionOptions />
+      </TabPanel>
+      <TabPanel value={currentTab} index={2}>
+        <SEOOptions />
       </TabPanel>
     </Box>
   );
