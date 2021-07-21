@@ -16,6 +16,7 @@ import { parsePositiveInteger } from 'utils/parser';
 import ColorBox from './ColorBox';
 import ColorPicker from './ColorPicker';
 import { wideLabelAlignmentStyle } from './formLabels';
+import useEnableContextMenu from './useEnableContextMenu';
 
 export default function BorderInput({ name }) {
   const { control, getValues } = useFormContext();
@@ -104,6 +105,7 @@ function BorderDialog({ name, open, onClose }) {
 
 function ColorPickerInput({ name }) {
   const { control } = useFormContext();
+  const onContextMenu = useEnableContextMenu();
 
   return (
     <Controller
@@ -127,6 +129,9 @@ function ColorPickerInput({ name }) {
                   <ColorBox value={field.value} />
                 </InputAdornment>
               ),
+            }}
+            inputProps={{
+              onContextMenu,
             }}
             sx={{ width: 200 }}
           />
@@ -174,6 +179,7 @@ function BorderStyleInput({ name }) {
 
 function BorderWidthInput({ name }) {
   const { control } = useFormContext();
+  const onContextMenu = useEnableContextMenu();
 
   return (
     <Controller
@@ -193,6 +199,9 @@ function BorderWidthInput({ name }) {
                 <Typography variant="body2">Width</Typography>
               </InputAdornment>
             ),
+          }}
+          inputProps={{
+            onContextMenu,
           }}
           sx={{ width: 200 }}
         />

@@ -9,7 +9,8 @@ import { z } from 'zod';
 import CanvasForm from './form/CanvasForm';
 import { wideLabelAlignmentStyle } from './form/formLabels';
 import SelectInput from './form/SelectInput';
-import { unsetLink, setLinkWithHref, setLinkWithPageId } from './proseEditor/commands';
+import useEnableContextMenu from './form/useEnableContextMenu';
+import { setLinkWithHref, setLinkWithPageId, unsetLink } from './proseEditor/commands';
 import { getInteractionFormFieldValuesFromSelection } from './proseEditor/formFields';
 import { useProseEditor } from './proseEditor/ProseEditorContext';
 import useCurrentSelectionId from './proseEditor/useCurrentSelectionId';
@@ -136,6 +137,7 @@ function PageSelection({ componentId }) {
 
 function HrefInput({ componentId }) {
   const { control } = useFormContext();
+  const onContextMenu = useEnableContextMenu();
 
   const { getEditorView } = useProseEditor();
   const getSelection = useGetSelectionForForm(componentId);
@@ -173,6 +175,9 @@ function HrefInput({ componentId }) {
                 <Typography variant="body2">Link</Typography>
               </InputAdornment>
             ),
+          }}
+          inputProps={{
+            onContextMenu,
           }}
         />
       )}

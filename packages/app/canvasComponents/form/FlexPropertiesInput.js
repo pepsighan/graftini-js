@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
 import { wideLabelAlignmentStyle } from './formLabels';
+import useEnableContextMenu from './useEnableContextMenu';
 
 export default function FlexPropertiesInput() {
   return (
@@ -34,6 +35,9 @@ function FlexNumericInput({ name, label }) {
             <Typography variant="body2">{label}</Typography>
           </InputAdornment>
         ),
+      }}
+      inputProps={{
+        onContextMenu: useEnableContextMenu(),
       }}
       sx={{
         '& .MuiOutlinedInput-root': {
