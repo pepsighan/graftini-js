@@ -29,8 +29,11 @@ export default function DeployButton() {
 
   const [deployNow, { loading: isStartingDeployment }] = useDeployNow();
   const onDeploy = useCallback(async () => {
-    await deployNow({ variables: { projectId } });
-    await refetch();
+    try {
+      await deployNow({ variables: { projectId } });
+    } finally {
+      await refetch();
+    }
   }, [deployNow, projectId, refetch]);
 
   const isDeploying = activelyDeploying.includes(deployment?.status);
