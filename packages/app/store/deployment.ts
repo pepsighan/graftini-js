@@ -42,6 +42,7 @@ export function useLiveDeploymentStatus({ projectId }) {
         myLastDeployment(projectId: $projectId) {
           id
           status
+          createdAt
         }
       }
     `,

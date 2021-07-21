@@ -6,6 +6,7 @@ import {
   Popover,
   Tooltip,
   Typography,
+  useTheme,
 } from '@material-ui/core';
 import { RocketIcon } from '@modulz/radix-icons';
 import AsyncButton from 'components/AsyncButton';
@@ -26,6 +27,7 @@ const activelyDeploying = [
 export default function DeployButton() {
   const projectId = useProjectId();
   const { deployment, refetch } = useLiveDeploymentStatus({ projectId });
+  const statusColor = useDeploymentStatusColor(deployment);
 
   const [deployNow, { loading: isStartingDeployment }] = useDeployNow();
   const onDeploy = useCallback(async () => {
@@ -46,7 +48,11 @@ export default function DeployButton() {
     <>
       <Tooltip title="Deploy">
         <IconButton onClick={onOpen}>
-          {isDeploying || isStartingDeployment ? <CircularProgress size={18} /> : <RocketIcon />}
+          {isDeploying || isStartingDeployment ? (
+            <CircularProgress size={18} />
+          ) : (
+            <RocketIcon color={statusColor} />
+          )}
         </IconButton>
       </Tooltip>
 
@@ -107,6 +113,33 @@ function DeployPopoverContent({ deployment, onDeploy, isDeploying }) {
       </Box>
     </Box>
   );
+}
+
+function useDeploymentStatusColor(deployment) {
+  const { palette } = useTheme();
+
+  if (!deployment) {
+    return undefined;
+  }
+
+  const createdAt = new Date(deployment.createdAt);
+  const now = new Date();
+  const diffMin = (now.getTime() - createdAt.getTime()) / (1000 * 60);
+
+  // Do not show the status color if the deployment began 20 minutes ago.
+  // The color is now obsolete to consider.
+  if (diffMin > 20) {
+    return undefined;
+  }
+
+  switch (deployment.status) {
+    case DeploymentStatus.Ready:
+      return palette.success.main;
+    case DeploymentStatus.Error:
+      return palette.error.main;
+    default:
+      return undefined;
+  }
 }
 
 function finalDeploymentStatus(deployment) {
