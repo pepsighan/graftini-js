@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
 import { wideLabelAlignmentStyle } from './formLabels';
+import useEnableContextMenu from './useEnableContextMenu';
 
 const units = ['px', '%'];
 
@@ -77,6 +78,9 @@ export default function SizeInput({ name, label }) {
             </Button>
           </InputAdornment>
         ),
+      }}
+      inputProps={{
+        onContextMenu: useEnableContextMenu(),
       }}
       sx={{
         '& .MuiOutlinedInput-root': {

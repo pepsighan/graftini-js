@@ -1,6 +1,7 @@
 import { InputAdornment, TextField, Typography } from '@material-ui/core';
 import useMaterialFormRegister from 'hooks/useMaterialFormRegister';
 import { wideLabelAlignmentStyle } from './formLabels';
+import useEnableContextMenu from './useEnableContextMenu';
 
 export default function TextInput({ name, label, error = null, helperText = null }) {
   return (
@@ -14,6 +15,9 @@ export default function TextInput({ name, label, error = null, helperText = null
             <Typography variant="body2">{label}</Typography>
           </InputAdornment>
         ),
+      }}
+      inputProps={{
+        onContextMenu: useEnableContextMenu(),
       }}
     />
   );

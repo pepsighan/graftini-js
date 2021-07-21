@@ -1,8 +1,10 @@
 import { Box, Slider, TextField, Typography } from '@material-ui/core';
 import { Controller, useFormContext } from 'react-hook-form';
+import useEnableContextMenu from './useEnableContextMenu';
 
 export default function OpacityInput({ name }) {
   const { control } = useFormContext();
+  const onContextMenu = useEnableContextMenu();
 
   return (
     <Controller
@@ -31,6 +33,9 @@ export default function OpacityInput({ name }) {
               '& .MuiOutlinedInput-input': {
                 textAlign: 'center',
               },
+            }}
+            inputProps={{
+              onContextMenu,
             }}
           />
         </Box>

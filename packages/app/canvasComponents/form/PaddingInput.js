@@ -3,6 +3,7 @@ import { useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { parsePositiveInteger } from 'utils/parser';
 import { thinLabelAlignmentStyle } from './formLabels';
+import useEnableContextMenu from './useEnableContextMenu';
 
 export default function PaddingInput({ name }) {
   return (
@@ -41,6 +42,9 @@ function NumberInputWithLabel({ name, label }) {
             <Typography variant="body2">{label}</Typography>
           </InputAdornment>
         ),
+      }}
+      inputProps={{
+        onContextMenu: useEnableContextMenu(),
       }}
       sx={{
         '& .MuiOutlinedInput-root': {
