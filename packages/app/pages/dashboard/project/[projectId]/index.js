@@ -2,13 +2,18 @@ import Designer from 'components/editor/Designer';
 import SEO from 'components/SEO';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { ProjectIdProvider } from 'hooks/useProjectId';
+import { useRouter } from 'next/router';
 import NotFound from 'pages/404';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { DesignerStateProvider, useDesignerState } from 'store/designer';
 import { protectedPage } from 'utils/auth';
+import { decode } from 'utils/url';
 
 export default protectedPage(function Project() {
+  const { query } = useRouter();
   const { project, loading } = useMyProjectFromRouter();
+
+  const pageId = useMemo(() => (query.page ? decode(query.page) || null : null), [query.page]);
 
   if (loading) {
     // TODO: Show some skeleton loading of the editor here.
@@ -21,7 +26,7 @@ export default protectedPage(function Project() {
 
   return (
     <ProjectIdProvider value={project.id}>
-      <DesignerStateProvider key={project.id} initialPages={project.pages}>
+      <DesignerStateProvider key={project.id} initialPages={project.pages} currentOpenPage={pageId}>
         <ProjectSEO />
         <Designer projectId={project.id} />
       </DesignerStateProvider>
