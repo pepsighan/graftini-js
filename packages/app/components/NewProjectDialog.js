@@ -6,14 +6,17 @@ import {
   DialogTitle,
   InputAdornment,
   TextField,
+  Alert,
   Typography,
+  Link,
 } from '@material-ui/core';
 import Root from 'canvasComponents/Root';
 import { materialRegister } from 'hooks/useMaterialFormRegister';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
-import { useCreateProject } from 'store/projects';
+import { useCreateProject, useMyProjects } from 'store/projects';
+import config, { Environment } from 'utils/config';
 import { slugify } from 'utils/url';
 import AsyncButton from './AsyncButton';
 
@@ -25,6 +28,10 @@ export default function NewProjectDialog({ isOpen, onClose }) {
   } = useForm();
   const { push } = useRouter();
   const [createProject] = useCreateProject();
+
+  const { myProjects } = useMyProjects();
+  // Limit the no of projects to 2 in production.
+  const isProjectLimitReached = config.ENV === Environment.Production && myProjects.length >= 2;
 
   const onSubmit = useCallback(
     async (state) => {
@@ -60,21 +67,40 @@ export default function NewProjectDialog({ isOpen, onClose }) {
       <DialogTitle>New Project</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
-          <TextField
-            {...materialRegister(register, 'name')}
-            autoComplete="off"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <Typography variant="body2">Name</Typography>
-                </InputAdornment>
-              ),
-            }}
-          />
+          {isProjectLimitReached && (
+            <Alert severity="info">
+              You have reached your projects limit.
+              <Typography variant="inherit">
+                Contact us at <Link href="mailto:sales@graftini.com">sales@graftini.com</Link> to
+                request an increase.
+              </Typography>
+            </Alert>
+          )}
+
+          {!isProjectLimitReached && (
+            <TextField
+              {...materialRegister(register, 'name')}
+              autoComplete="off"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Typography variant="body2">Name</Typography>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          )}
         </DialogContent>
 
         <DialogActions>
-          <AsyncButton type="submit" variant="contained" size="small" isLoading={isSubmitting}>
+          <AsyncButton
+            type="submit"
+            variant="contained"
+            size="small"
+            disabled={isProjectLimitReached}
+            isLoading={isSubmitting}
+          >
             Create
           </AsyncButton>
         </DialogActions>

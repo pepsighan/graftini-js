@@ -1,3 +1,9 @@
+export enum Environment {
+  Local = 'local',
+  Development = 'development',
+  Production = 'production',
+}
+
 const config = {
   ENV: process.env.NEXT_PUBLIC_ENV,
   USER_GRAPHQL_URL: process.env.NEXT_PUBLIC_USER_GRAPHQL_URL,
