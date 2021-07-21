@@ -32,19 +32,23 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(({ onMouseDown, cont
     [componentId, onCloseContextMenu, selectComponent]
   );
 
+  const isEditing = useIsEditing(componentId);
+  const isSelected = useIsSelected(componentId);
   const startEditingText = useDesignerState(useCallback((state) => state.startEditingText, []));
 
   const onContextMenu = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
+      if (isEditing) {
+        // Show the browser's default context menu if it is in editing mode.
+        return;
+      }
+
       selectComponentOnRightClick(componentId);
       onOpenContextMenu(event, componentContextMenuId);
     },
-    [componentId, onOpenContextMenu, selectComponentOnRightClick]
+    [componentId, isEditing, onOpenContextMenu, selectComponentOnRightClick]
   );
-
-  const isEditing = useIsEditing(componentId);
-  const isSelected = useIsSelected(componentId);
 
   const onInitializeContent = useCallback(
     () => content ?? Text.graftOptions.defaultProps.content,
