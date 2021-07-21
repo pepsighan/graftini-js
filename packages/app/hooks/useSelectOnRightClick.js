@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { useDesignerState, useDesignerStateApi } from 'store/designer';
-import { isComponentWithinSubTree, useEditorStoreApi } from '@graftini/graft';
+import { isComponentWithinSubTree, ROOT_NODE_ID, useEditorStoreApi } from '@graftini/graft';
 
 /**
  * Selects a component on right click but not if its parent is already selected.
@@ -14,7 +14,9 @@ export default function useSelectOnRightClick() {
     (componentId) => {
       const selectedComponentId = getState().selectedComponentId;
 
-      if (selectedComponentId) {
+      // If the selected component is anything other than the root node, then
+      // try to retain the selection if one of its children is selected.
+      if (selectedComponentId && selectedComponentId !== ROOT_NODE_ID) {
         const isChild = isComponentWithinSubTree(
           selectedComponentId,
           componentId,
