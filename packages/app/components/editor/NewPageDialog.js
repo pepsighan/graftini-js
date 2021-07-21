@@ -10,6 +10,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import useEnableContextMenu from 'canvasComponents/form/useEnableContextMenu';
 import Root from 'canvasComponents/Root';
 import AsyncButton from 'components/AsyncButton';
 import { materialRegister } from 'hooks/useMaterialFormRegister';
@@ -88,6 +89,9 @@ export default function NewPageDialog({ isOpen, onClose }) {
                   </InputAdornment>
                 ),
               }}
+              inputProps={{
+                onContextMenu: useEnableContextMenu(),
+              }}
             />
             <TextField
               {...materialRegister(register, 'route')}
@@ -99,6 +103,9 @@ export default function NewPageDialog({ isOpen, onClose }) {
                     <Typography variant="body2">Route</Typography>
                   </InputAdornment>
                 ),
+              }}
+              inputProps={{
+                onContextMenu: useEnableContextMenu(),
               }}
             />
           </Stack>
