@@ -1,7 +1,8 @@
-import { AppBar, Button, Stack, Toolbar } from '@material-ui/core';
+import { AppBar, Button, IconButton, Stack, Toolbar } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuthUser } from 'store/auth';
+import GraftiniLogo from './GraftiniLogo';
 import ProfileButton from './ProfileButton';
 
 export default function Navigation() {
@@ -13,10 +14,10 @@ export default function Navigation() {
   return (
     <AppBar>
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
-        <Link href="/" passHref>
-          <Button component="a" color="inherit" size="medium">
-            Graftini
-          </Button>
+        <Link href={isWithinDashboard ? '/dashboard/projects' : '/'} passHref>
+          <IconButton component="a" color="inherit">
+            <GraftiniLogo />
+          </IconButton>
         </Link>
 
         {!user && (
