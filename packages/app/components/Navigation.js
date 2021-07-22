@@ -1,6 +1,7 @@
-import { AppBar, Box, Button, Toolbar } from '@material-ui/core';
+import { AppBar, Button, Stack, Toolbar } from '@material-ui/core';
 import Link from 'next/link';
-import { logout, useAuthUser } from 'store/auth';
+import { useAuthUser } from 'store/auth';
+import ProfileButton from './ProfileButton';
 
 export default function Navigation() {
   const { user } = useAuthUser();
@@ -23,17 +24,15 @@ export default function Navigation() {
         )}
 
         {user && (
-          <Box>
+          <Stack spacing={2} direction="row" alignItems="center">
             <Link href="/dashboard/projects">
               <Button color="inherit" size="medium">
                 Dashboard
               </Button>
             </Link>
 
-            <Button color="inherit" onClick={logout} size="medium" sx={{ ml: 2 }}>
-              Logout
-            </Button>
-          </Box>
+            <ProfileButton />
+          </Stack>
         )}
       </Toolbar>
     </AppBar>
