@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 import logoLight from 'assets/logo-light.png';
 import SEO from 'components/SEO';
+import useOnlyBigScreens from 'hooks/useOnlyBigScreens';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -22,6 +23,8 @@ import theme from 'utils/theme';
 export default unprotectedOnlyPage(function ConfirmSignIn() {
   const { push } = useRouter();
   const [error, setError] = useState(null);
+
+  useOnlyBigScreens();
 
   useEffectOnce(() => {
     verifyAndSignInWithEmailLink().then((error) => {

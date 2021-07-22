@@ -1,17 +1,28 @@
-import { GlobalStyles, Grid, Link as MLink, Paper, Stack, Typography } from '@material-ui/core';
+import {
+  GlobalStyles,
+  Grid,
+  Link as MLink,
+  Paper,
+  Stack,
+  Typography,
+  useTheme,
+} from '@material-ui/core';
 import { LightningBoltIcon } from '@modulz/radix-icons';
 import logoLight from 'assets/logo-light.png';
 import SEO from 'components/SEO';
 import EmailLinkForm from 'components/signIn/EmailLinkForm';
+import useOnlyBigScreens from 'hooks/useOnlyBigScreens';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import { unprotectedOnlyPage } from 'utils/auth';
-import theme from 'utils/theme';
 
 export default unprotectedOnlyPage(function SignIn() {
   const [linkSent, setLinkSent] = useState(false);
 
+  useOnlyBigScreens();
+
+  const theme = useTheme();
   const onSend = useCallback(() => {
     setLinkSent(true);
   }, []);
