@@ -1,4 +1,4 @@
-import { AppBar, Button, IconButton, Stack, Toolbar } from '@material-ui/core';
+import { AppBar, Button, IconButton, Stack, Toolbar, Box } from '@material-ui/core';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuthUser } from 'store/auth';
@@ -20,27 +20,31 @@ export default function Navigation() {
           </IconButton>
         </Link>
 
-        {!user && (
-          <Link href="/sign-in">
-            <Button variant="contained" size="medium">
-              Sign In
-            </Button>
-          </Link>
-        )}
+        {/* Do not show a login button in smaller screens. There is no use for this app on non-laptops
+        or desktops. */}
+        <Box sx={{ display: ['none', null, 'block'] }}>
+          {!user && (
+            <Link href="/sign-in">
+              <Button variant="contained" size="medium">
+                Sign In
+              </Button>
+            </Link>
+          )}
 
-        {user && (
-          <Stack spacing={2} direction="row" alignItems="center">
-            {!isWithinDashboard && (
-              <Link href="/dashboard/projects">
-                <Button color="inherit" size="medium">
-                  Dashboard
-                </Button>
-              </Link>
-            )}
+          {user && (
+            <Stack spacing={2} direction="row" alignItems="center">
+              {!isWithinDashboard && (
+                <Link href="/dashboard/projects">
+                  <Button color="inherit" size="medium">
+                    Dashboard
+                  </Button>
+                </Link>
+              )}
 
-            <ProfileButton />
-          </Stack>
-        )}
+              <ProfileButton />
+            </Stack>
+          )}
+        </Box>
       </Toolbar>
     </AppBar>
   );
