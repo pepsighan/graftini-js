@@ -3,9 +3,26 @@ import { grey } from '@material-ui/core/colors';
 import { navBarHeight } from './constants';
 import typography from './typography';
 
+const primaryColor = {
+  50: '#e8e9ed',
+  100: '#c6c8d2',
+  200: '#a0a3b4',
+  300: '#7a7e95',
+  400: '#5e637f',
+  500: '#414768',
+  600: '#3b4060',
+  700: '#323755',
+  800: '#2a2f4b',
+  900: '#1c203a',
+  A100: '#7e8dff',
+  A200: '#4b60ff',
+  A400: '#1832ff',
+  A700: '#001dfd',
+};
+
 export default createTheme({
   palette: {
-    primary: colors.blue,
+    primary: primaryColor,
     secondary: colors.grey,
     drawButton: {
       main: grey[500],
