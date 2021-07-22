@@ -279,6 +279,7 @@ function backgroundImageStyles({ imageUrl, backgroundFit: fit }: BackgroundImage
   return {
     backgroundImage: imageUrl ? `url("${imageUrl}")` : undefined,
     backgroundSize: imageUrl ? fit : undefined,
+    backgroundPosition: 'center',
   };
 }
 
