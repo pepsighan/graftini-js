@@ -8,7 +8,7 @@ import {
 } from '@graftini/graft';
 import { Box, useTheme } from '@material-ui/core';
 import IFrame from 'components/IFrame';
-import ComponentContextMenu from './ComponentContextMenu';
+import ComponentContextMenu, { componentContextMenuId } from './ComponentContextMenu';
 import HoverOutline from './HoverOutline';
 import Selection from './Selection';
 
@@ -51,7 +51,7 @@ export default function Canvas() {
       </IFrame>
       <HoverOutline />
       <Selection />
-      <ComponentContextMenu />
+      <ComponentContextMenu id={componentContextMenuId} isCorrectionNeeded />
     </Box>
   );
 }
