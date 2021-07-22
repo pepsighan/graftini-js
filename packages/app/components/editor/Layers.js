@@ -1,15 +1,14 @@
 import { ROOT_NODE_ID, useEditorStore, useEditorStoreApi } from '@graftini/graft';
 import { Box, Button, ButtonGroup, Typography } from '@material-ui/core';
 import { TreeItem, TreeView, useTreeItem } from '@material-ui/lab';
-import { ChevronDownIcon, ChevronUpIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
-import { forwardRef, useCallback, useState } from 'react';
+import { SquareIcon, TextIcon } from '@modulz/radix-icons';
+import { forwardRef, useCallback, useMemo } from 'react';
 import { useDesignerState } from 'store/designer';
 
 export default function Layers() {
   const { getState } = useEditorStoreApi();
 
-  const [expanded, setExpanded] = useState(() => Object.keys(getState().componentMap));
-  const onExpansion = useCallback((_, ids) => setExpanded(ids), []);
+  const allExpanded = useMemo(() => Object.keys(getState().componentMap), [getState]);
 
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
   const onSelect = useCallback((_, id) => selectComponent(id), [selectComponent]);
@@ -22,12 +21,7 @@ export default function Layers() {
         Layers
       </Typography>
 
-      <TreeView
-        expanded={expanded}
-        selected={selectedId}
-        onNodeToggle={onExpansion}
-        onNodeSelect={onSelect}
-      >
+      <TreeView expanded={allExpanded} selected={selectedId} onNodeSelect={onSelect}>
         <LayerItem id={ROOT_NODE_ID} />
       </TreeView>
     </Box>
@@ -54,7 +48,7 @@ function LayerItem({ id }) {
 }
 
 const LayerView = forwardRef(({ nodeId }, ref) => {
-  const { type, props, childrenNodes } = useEditorStore(
+  const { type, props } = useEditorStore(
     useCallback((state) => state.componentMap[nodeId], [nodeId]),
     useCallback(
       (left, right) =>
@@ -67,7 +61,7 @@ const LayerView = forwardRef(({ nodeId }, ref) => {
     )
   );
 
-  const { expanded, selected, handleExpansion, handleSelection } = useTreeItem(nodeId);
+  const { selected, handleSelection } = useTreeItem(nodeId);
 
   return (
     <ButtonGroup
@@ -87,19 +81,7 @@ const LayerView = forwardRef(({ nodeId }, ref) => {
         },
       }}
     >
-      {childrenNodes.length > 0 && (
-        <Button sx={{ width: 20, minWidth: 'unset', p: 0 }} onClick={handleExpansion}>
-          {expanded ? (
-            <ChevronDownIcon width={12} height={12} />
-          ) : (
-            <ChevronUpIcon width={12} height={12} />
-          )}
-        </Button>
-      )}
-      <Button
-        sx={{ justifyContent: 'flex-start', pl: childrenNodes.length === 0 ? '18px' : 0 }}
-        onClick={handleSelection}
-      >
+      <Button sx={{ justifyContent: 'flex-start' }} onClick={handleSelection}>
         {type === 'Text' ? (
           <TextIcon width={12} height={12} />
         ) : (
