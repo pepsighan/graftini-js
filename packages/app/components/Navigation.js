@@ -1,17 +1,23 @@
-import { AppBar, Box, Button, Toolbar } from '@material-ui/core';
+import { AppBar, Button, IconButton, Stack, Toolbar } from '@material-ui/core';
 import Link from 'next/link';
-import { logout, useAuthUser } from 'store/auth';
+import { useRouter } from 'next/router';
+import { useAuthUser } from 'store/auth';
+import GraftiniLogo from './GraftiniLogo';
+import ProfileButton from './ProfileButton';
 
 export default function Navigation() {
+  const { route } = useRouter();
   const { user } = useAuthUser();
+
+  const isWithinDashboard = route.startsWith('/dashboard');
 
   return (
     <AppBar>
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
-        <Link href="/" passHref>
-          <Button component="a" color="inherit" size="medium">
-            Graftini
-          </Button>
+        <Link href={isWithinDashboard ? '/dashboard/projects' : '/'} passHref>
+          <IconButton component="a" color="inherit">
+            <GraftiniLogo />
+          </IconButton>
         </Link>
 
         {!user && (
@@ -23,17 +29,17 @@ export default function Navigation() {
         )}
 
         {user && (
-          <Box>
-            <Link href="/dashboard/projects">
-              <Button color="inherit" size="medium">
-                Dashboard
-              </Button>
-            </Link>
+          <Stack spacing={2} direction="row" alignItems="center">
+            {!isWithinDashboard && (
+              <Link href="/dashboard/projects">
+                <Button color="inherit" size="medium">
+                  Dashboard
+                </Button>
+              </Link>
+            )}
 
-            <Button color="inherit" onClick={logout} size="medium" sx={{ ml: 2 }}>
-              Logout
-            </Button>
-          </Box>
+            <ProfileButton />
+          </Stack>
         )}
       </Toolbar>
     </AppBar>

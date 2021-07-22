@@ -5,7 +5,7 @@ import {
 } from '@graftini/graft';
 import { AppBar, IconButton, Stack, Toolbar, Tooltip } from '@material-ui/core';
 import { CursorArrowIcon, PlayIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
-import BackButton from 'components/BackButton';
+import GraftiniLogo from 'components/GraftiniLogo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
@@ -19,7 +19,11 @@ export default function EditorNavigation() {
   return (
     <AppBar>
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
-        <BackButton href="/dashboard/projects" />
+        <Link href="/dashboard/projects" passHref>
+          <IconButton component="a" color="inherit">
+            <GraftiniLogo />
+          </IconButton>
+        </Link>
 
         <Stack direction="row" spacing={2}>
           <CursorButton />
