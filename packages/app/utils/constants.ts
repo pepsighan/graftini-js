@@ -35,6 +35,13 @@ export const boxTags: BoxTag[] = [
   'address',
 ];
 
+export type TextTag = 'div' | 'p' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
+/**
+ * The tags that can be used with a Text component.
+ */
+export const textTags: TextTag[] = ['div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'];
+
 /**
  * A route regex which has a compulsory starting `/` and optional trailing `/`.
  * The route path sections defined by text between `/` can be alphanumeric, -, _ and (.).

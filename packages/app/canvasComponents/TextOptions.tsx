@@ -1,11 +1,13 @@
 import { FontSize as FontSizeType, FontWeight, RGBA, TextAlign } from '@graftini/bricks';
-import { Divider, Stack, Typography } from '@material-ui/core';
+import { Divider, MenuItem, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
+import { TextTag, textTags } from 'utils/constants';
 import CanvasForm, { CanvasFormComponent } from './form/CanvasForm';
 import FontFamilyInput from './form/FontFamilyInput';
 import FontSizeInput from './form/FontSizeInput';
 import FontWeightInput from './form/FontWeightInput';
+import SelectInput from './form/SelectInput';
 import TextAlignInput from './form/TextAlignInput';
 import TextColorPickerInput from './form/TextColorPickerInput';
 import TextInput from './form/TextInput';
@@ -13,10 +15,11 @@ import { getFormFieldValuesFromSelection } from './proseEditor/formFields';
 import { useProseEditor } from './proseEditor/ProseEditorContext';
 import useCurrentSelectionId from './proseEditor/useCurrentSelectionId';
 import useGetSelectionForForm from './proseEditor/useGetSelectionForForm';
-import { TextComponentProps } from './Text';
+import Text, { TextComponentProps } from './Text';
 
 type TextOptionsFields = {
   name?: string;
+  tag?: TextTag;
   color?: RGBA;
   fontSize?: FontSizeType;
   fontFamily?: string;
@@ -44,14 +47,16 @@ function FormInner({ componentId }: OptionsProps) {
         (state) => {
           return {
             name: state.name,
+            tag: state.tag || Text.graftOptions.defaultProps.tag,
             ...getFormFieldValuesFromSelection(getEditorView(), getSelection()),
           };
         },
         [getEditorView, getSelection]
       )}
       onSync={useCallback((props, state) => {
-        // Only name is to be paste as is to the component prop.
+        // Only name & tag is to be synced as is to the component prop.
         props.name = state.name;
+        props.tag = state.tag;
 
         // Rest of the form state is synced directly from the form fields.
         // We cannot do blanket update here because that would apply all the styles
@@ -63,6 +68,14 @@ function FormInner({ componentId }: OptionsProps) {
         <Divider />
 
         <TextInput name="name" label="Label" />
+
+        <SelectInput name="tag" label="Tag">
+          {textTags.map((tag) => (
+            <MenuItem key={tag} value={tag}>
+              {tag}
+            </MenuItem>
+          ))}
+        </SelectInput>
         <Divider />
 
         <Typography variant="subtitle2">Appearance</Typography>

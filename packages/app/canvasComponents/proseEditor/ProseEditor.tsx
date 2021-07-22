@@ -2,12 +2,14 @@
 import { Text } from '@graftini/bricks';
 import { useComponentId } from '@graftini/graft';
 import { forwardRef, MouseEventHandler, useCallback } from 'react';
+import { TextTag } from 'utils/constants';
 import { defaultTextFormValues } from './formFields';
 import { useProseEditor } from './ProseEditorContext';
 import useIsSelected from './useIsSelected';
 import useMakeEditorEditable from './useMakeEditorEditable';
 
 type ProseEditorProps = {
+  tag: TextTag;
   isEditing: boolean;
   onInitialState: () => any;
   onMouseDown?: MouseEventHandler;
@@ -19,6 +21,7 @@ type ProseEditorProps = {
 const ProseEditor = forwardRef(
   (
     {
+      tag,
       isEditing,
       onClick,
       onContextMenu,
@@ -49,6 +52,7 @@ const ProseEditor = forwardRef(
     return (
       <Text
         ref={forwardedRef}
+        tag={tag}
         isEditor
         onMouseDown={onMouseDown}
         onClick={onClick}
