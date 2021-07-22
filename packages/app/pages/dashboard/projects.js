@@ -1,5 +1,5 @@
-import { Box, Button, Container, Grid, Typography } from '@material-ui/core';
-import { PlusIcon, TrashIcon } from '@modulz/radix-icons';
+import { Box, Button, Container, Grid, Typography, useTheme } from '@material-ui/core';
+import { PlusIcon, TrashIcon, CubeIcon } from '@modulz/radix-icons';
 import DeleteProjectConfirmation from 'components/DeleteProjectConfirmation';
 import Link from 'components/Link';
 import Navigation from 'components/Navigation';
@@ -47,6 +47,7 @@ export default protectedPage(function Projects() {
 
 function ProjectItem({ id, name }) {
   const link = `/dashboard/project/${slugify({ id, name })}`;
+  const { palette } = useTheme();
 
   return (
     <Box sx={{ width: 300 }}>
@@ -54,15 +55,17 @@ function ProjectItem({ id, name }) {
         <Box
           sx={{
             display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
+            justifyContent: 'center',
+            alignItems: 'center',
             backgroundColor: 'grey.200',
             width: 300,
             height: 200,
             textDecoration: 'none',
             borderRadius: 2,
           }}
-        ></Box>
+        >
+          <CubeIcon width={64} height={64} color={palette.grey[300]} />
+        </Box>
       </Link>
       <Box
         sx={{
