@@ -51,7 +51,13 @@ function Editorial() {
             {/* The height of the nav is subtracted, so that any of the following does not cause window-wide scroll. 
                 Any scroll they have should be within their boundaries.
             */}
-            <Box sx={{ display: 'flex', height: `calc(100vh - ${navBarHeight}px)` }}>
+            <Box
+              sx={{
+                display: 'flex',
+                height: `calc(100vh - ${navBarHeight}px)`,
+                userSelect: 'none',
+              }}
+            >
               <LeftSidebar />
               <Canvas />
               <RightSidebar />
