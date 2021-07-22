@@ -6,8 +6,9 @@ import { useDesignerState } from 'store/designer';
 import { ContextMenu, useContextMenu } from './ContextMenu';
 
 export const componentContextMenuId = 'component-context-menu';
+export const layerContextMenuId = 'layer-context-menu';
 
-export default function ComponentContextMenu() {
+export default function ComponentContextMenu({ id, isCorrectionNeeded }) {
   const { onClose } = useContextMenu();
 
   const componentId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
@@ -15,7 +16,7 @@ export default function ComponentContextMenu() {
   const onWrapWithBox = useOnWrapWithBox({ componentId, onClose });
 
   return (
-    <ContextMenu id={componentContextMenuId} isCorrectionNeeded>
+    <ContextMenu id={id} isCorrectionNeeded={isCorrectionNeeded}>
       <MenuItem onClick={onWrapWithBox}>Wrap with Box</MenuItem>
       <MenuItem onClick={onDeleteClick}>Delete</MenuItem>
     </ContextMenu>

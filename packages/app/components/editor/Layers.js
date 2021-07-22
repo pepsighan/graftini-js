@@ -4,6 +4,8 @@ import { TreeItem, TreeView, useTreeItem } from '@material-ui/lab';
 import { SquareIcon, TextIcon } from '@modulz/radix-icons';
 import { forwardRef, useCallback, useMemo } from 'react';
 import { useDesignerState } from 'store/designer';
+import ComponentContextMenu, { layerContextMenuId } from './ComponentContextMenu';
+import { useContextMenu } from './ContextMenu';
 
 export default function Layers() {
   const { getState } = useEditorStoreApi();
@@ -16,7 +18,7 @@ export default function Layers() {
   const selectedId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
 
   return (
-    <Box sx={{ flex: 1, px: 1.5 }}>
+    <Box sx={{ flex: 1, px: 1, position: 'relative' }}>
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
         Layers
       </Typography>
@@ -24,6 +26,8 @@ export default function Layers() {
       <TreeView expanded={allExpanded} selected={selectedId} onNodeSelect={onSelect}>
         <LayerItem id={ROOT_NODE_ID} />
       </TreeView>
+
+      <ComponentContextMenu id={layerContextMenuId} />
     </Box>
   );
 }
@@ -62,6 +66,7 @@ const LayerView = forwardRef(({ nodeId }, ref) => {
   );
 
   const { selected, handleSelection } = useTreeItem(nodeId);
+  const { onOpen: onOpenContextMenu } = useContextMenu();
 
   return (
     <ButtonGroup
@@ -81,7 +86,17 @@ const LayerView = forwardRef(({ nodeId }, ref) => {
         },
       }}
     >
-      <Button sx={{ justifyContent: 'flex-start' }} onClick={handleSelection}>
+      <Button
+        sx={{ justifyContent: 'flex-start' }}
+        onClick={handleSelection}
+        onContextMenu={useCallback(
+          (event) => {
+            handleSelection();
+            onOpenContextMenu(event, layerContextMenuId);
+          },
+          [handleSelection, onOpenContextMenu]
+        )}
+      >
         {type === 'Text' ? (
           <TextIcon width={12} height={12} />
         ) : (
