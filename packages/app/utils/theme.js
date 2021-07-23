@@ -206,11 +206,11 @@ export default createTheme({
     MuiAppBar: {
       defaultProps: {
         elevation: 0,
-        color: 'transparent',
+        color: 'inherit',
         position: 'sticky',
       },
       styleOverrides: {
-        colorTransparent: {
+        colorInherit: {
           border: 0,
           borderBottom: '1px solid',
           borderColor: grey[400],
