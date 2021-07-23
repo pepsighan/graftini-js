@@ -50,10 +50,6 @@ export default function Navigation() {
               >
                 Blog
               </Button>
-
-              <Button color="inherit" size="medium">
-                Contact
-              </Button>
             </>
           )}
 

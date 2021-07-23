@@ -1,4 +1,5 @@
 import { Box, Button, Stack, TextField, Typography } from '@material-ui/core';
+import Footer from 'components/Footer';
 import Link from 'components/Link';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
@@ -42,6 +43,8 @@ export default function Home() {
           .
         </Typography>
       </Stack>
+
+      <Footer />
     </>
   );
 }

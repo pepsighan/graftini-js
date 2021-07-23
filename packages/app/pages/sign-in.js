@@ -9,6 +9,7 @@ import {
 } from '@material-ui/core';
 import { LightningBoltIcon } from '@modulz/radix-icons';
 import logoLight from 'assets/logo-light.png';
+import Footer from 'components/Footer';
 import SEO from 'components/SEO';
 import EmailLinkForm from 'components/signIn/EmailLinkForm';
 import useOnlyBigScreens from 'hooks/useOnlyBigScreens';
@@ -68,6 +69,8 @@ export default unprotectedOnlyPage(function SignIn() {
           )}
         </Grid>
       </Grid>
+
+      <Footer />
     </>
   );
 });
