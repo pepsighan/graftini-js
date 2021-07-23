@@ -35,6 +35,7 @@
     "nanoid": "^3.1.22",
     "next": "11.0.0",
     "next-compose-plugins": "^2.2.1",
+    "next-mdx-remote": "^3.0.4",
     "prosemirror-commands": "^1.1.10",
     "prosemirror-keymap": "^1.1.4",
     "prosemirror-model": "^1.14.2",
