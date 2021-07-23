@@ -1,4 +1,5 @@
-import { AppBar, Button, IconButton, Stack, Toolbar, Box } from '@material-ui/core';
+import { AppBar, Button, IconButton, Stack, Toolbar, Box, Tooltip } from '@material-ui/core';
+import { EnterIcon } from '@modulz/radix-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuthUser } from 'store/auth';
@@ -9,6 +10,7 @@ export default function Navigation() {
   const { route } = useRouter();
   const { user } = useAuthUser();
 
+  const isHome = route === '/';
   const isWithinDashboard = route.startsWith('/dashboard');
 
   return (
@@ -22,7 +24,20 @@ export default function Navigation() {
 
         {/* Do not show a login button in smaller screens. There is no use for this app on non-laptops
         or desktops. */}
-        <Box sx={{ display: ['none', null, 'block'] }}>
+        <Stack
+          spacing={2}
+          direction="row"
+          alignItems="center"
+          sx={{ display: ['none', null, 'block'] }}
+        >
+          {isHome && (
+            <>
+              <Button color="inherit" size="medium">
+                Blog
+              </Button>
+            </>
+          )}
+
           {!user && (
             <Link href="/sign-in">
               <Button variant="contained" size="medium">
@@ -32,19 +47,23 @@ export default function Navigation() {
           )}
 
           {user && (
-            <Stack spacing={2} direction="row" alignItems="center">
+            <>
               {!isWithinDashboard && (
                 <Link href="/dashboard/projects">
-                  <Button color="inherit" size="medium">
-                    Dashboard
-                  </Button>
+                  <Tooltip title="Open Dashboard">
+                    <IconButton color="inherit">
+                      <Box sx={{ width: 20, height: 20 }}>
+                        <EnterIcon />
+                      </Box>
+                    </IconButton>
+                  </Tooltip>
                 </Link>
               )}
 
               <ProfileButton />
-            </Stack>
+            </>
           )}
-        </Box>
+        </Stack>
       </Toolbar>
     </AppBar>
   );
