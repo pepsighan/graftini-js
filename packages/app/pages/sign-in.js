@@ -67,6 +67,10 @@ export default unprotectedOnlyPage(function SignIn() {
               We will send a link to your e-mail which you can use to sign in.
             </Typography>
           )}
+
+          <Typography variant="body2" color="textSecondary" sx={{ px: 1, display: 'block', mt: 1 }}>
+            By signing in you agree to the terms of service and privacy policy of Graftini.
+          </Typography>
         </Grid>
       </Grid>
 
