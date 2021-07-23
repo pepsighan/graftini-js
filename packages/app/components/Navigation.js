@@ -14,7 +14,11 @@ export default function Navigation() {
   const isWithinDashboard = route.startsWith('/dashboard');
 
   return (
-    <AppBar>
+    <AppBar
+      sx={{
+        border: isHome ? 0 : undefined,
+      }}
+    >
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
         <Link href={isWithinDashboard ? '/dashboard/projects' : '/'} passHref>
           <IconButton component="a" color="inherit">
