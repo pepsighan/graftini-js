@@ -123,7 +123,11 @@ Last updated: 07/25/2021
 
   **Piwik / Matomo**
 
-  Piwik or Matomo is a web analytics service. You can visit their Privacy Policy page here: [https://matomo.org/privacy-policy](https://matomo.org/privacy-policy)
+  Piwik or Matomo is a web analytics service. You can visit their Privacy Policy page here: [https://matomo.org/privacy-policy](https://matomo.org/privacy-policy).
+
+  **Customer.io**
+
+  Customer.io is an automated messaging platform. You can visit their Privacy Policy page here: [https://customer.io/legal/privacy-policy/](https://customer.io/legal/privacy-policy/).
 
 11. **No Use By Minors**
 
