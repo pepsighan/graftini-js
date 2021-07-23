@@ -37,7 +37,22 @@ export default function Navigation() {
           {isHome && (
             <>
               <Button color="inherit" size="medium">
+                Pricing
+              </Button>
+
+              <Button
+                component="a"
+                href="https://blog.graftini.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                color="inherit"
+                size="medium"
+              >
                 Blog
+              </Button>
+
+              <Button color="inherit" size="medium">
+                Contact
               </Button>
             </>
           )}
