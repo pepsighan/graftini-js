@@ -1,4 +1,5 @@
 import {
+  Box,
   GlobalStyles,
   Grid,
   Link as MLink,
@@ -39,42 +40,50 @@ export default unprotectedOnlyPage(function SignIn() {
         `}
       />
 
-      <Grid container justifyContent="center" sx={{ mt: 12 }}>
-        <Grid item sx={{ width: 400 }}>
-          <Stack justifyContent="center" alignItems="center">
-            <Link href="/" passHref>
-              <MLink>
-                <Image src={logoLight} width={120} height={120} />
-              </MLink>
-            </Link>
-          </Stack>
-          <Paper sx={{ p: 4, mt: 16 }}>
-            {!linkSent && <EmailLinkForm onSend={onSend} />}
-            {linkSent && (
-              <>
-                <Typography textAlign="center">We have sent a link to your e-mail.</Typography>
-                <Typography textAlign="center">Please click on that link to login.</Typography>
+      <Stack justifyContent="space-between" sx={{ minHeight: '100vh' }}>
+        <Grid container justifyContent="center" sx={{ mt: 12 }}>
+          <Grid item sx={{ width: 400 }}>
+            <Stack justifyContent="center" alignItems="center">
+              <Link href="/" passHref>
+                <MLink>
+                  <Image src={logoLight} width={120} height={120} />
+                </MLink>
+              </Link>
+            </Stack>
+            <Paper sx={{ p: 4, mt: 16 }}>
+              {!linkSent && <EmailLinkForm onSend={onSend} />}
+              {linkSent && (
+                <>
+                  <Typography textAlign="center">We have sent a link to your e-mail.</Typography>
+                  <Typography textAlign="center">Please click on that link to login.</Typography>
 
-                <Stack alignItems="center" sx={{ mt: 4, color: 'grey.500' }}>
-                  <LightningBoltIcon width={24} height={24} />
-                </Stack>
-              </>
+                  <Stack alignItems="center" sx={{ mt: 4, color: 'grey.500' }}>
+                    <LightningBoltIcon width={24} height={24} />
+                  </Stack>
+                </>
+              )}
+            </Paper>
+
+            {!linkSent && (
+              <Typography variant="body2" sx={{ px: 1, display: 'block', mt: 1 }}>
+                We will send a link to your e-mail which you can use to sign in.
+              </Typography>
             )}
-          </Paper>
 
-          {!linkSent && (
-            <Typography variant="body2" sx={{ px: 1, display: 'block', mt: 1 }}>
-              We will send a link to your e-mail which you can use to sign in.
+            <Typography
+              variant="body2"
+              color="textSecondary"
+              sx={{ px: 1, display: 'block', mt: 1 }}
+            >
+              By signing in you agree to the terms of service and privacy policy of Graftini.
             </Typography>
-          )}
-
-          <Typography variant="body2" color="textSecondary" sx={{ px: 1, display: 'block', mt: 1 }}>
-            By signing in you agree to the terms of service and privacy policy of Graftini.
-          </Typography>
+          </Grid>
         </Grid>
-      </Grid>
 
-      <Footer />
+        <Box sx={{ width: '100%', pb: 1, pt: 6 }}>
+          <Footer />
+        </Box>
+      </Stack>
     </>
   );
 });
