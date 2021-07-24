@@ -12,7 +12,10 @@ export default function Pricing() {
       <SEO />
       <Navigation />
 
-      <Stack justifyContent="space-between" sx={{ height: `calc(100vh - ${navBarHeight}px)` }}>
+      <Stack
+        justifyContent="space-between"
+        sx={{ height: `calc(100vh - ${navBarHeight}px)`, px: 1 }}
+      >
         <Stack alignItems="center" sx={{ pt: 8 }}>
           <Typography variant="h3" textAlign="center">
             Pricing
@@ -27,8 +30,23 @@ export default function Pricing() {
             Try Graftini without having to put in your card.
           </Typography>
 
-          <Stack direction="row" spacing={2} sx={{ mt: 4 }}>
-            <Card sx={{ width: 300 }}>
+          <Stack
+            direction={{
+              xs: 'column',
+              md: 'row',
+            }}
+            spacing={2}
+            sx={{ mt: 4 }}
+          >
+            <Card
+              sx={{
+                maxWidth: 300,
+                width: {
+                  xs: '100%',
+                  md: 300,
+                },
+              }}
+            >
               <CardHeader
                 title="Early Access"
                 subheader="To know what Graftini is all about."
@@ -67,7 +85,15 @@ export default function Pricing() {
               </CardContent>
             </Card>
 
-            <Card sx={{ width: 300 }}>
+            <Card
+              sx={{
+                maxWidth: 300,
+                width: {
+                  xs: '100%',
+                  md: 300,
+                },
+              }}
+            >
               <CardHeader
                 title="Contact Us"
                 subheader="To know more about the plans we offer."
@@ -77,7 +103,7 @@ export default function Pricing() {
               />
               <CardContent
                 sx={{
-                  mt: 8,
+                  my: 8,
                   display: 'flex',
                   justifyContent: 'center',
                   alignItems: 'center',
