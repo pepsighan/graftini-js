@@ -2,22 +2,32 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, Stack, TextField } from '@material-ui/core';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { useIsEarlyAccessAllowed } from 'store/auth';
 import { z } from 'zod';
+import AsyncButton from './AsyncButton';
 
 const schema = z.object({
   email: z.string().email(),
 });
 
-export default function EarlyAccessRequest() {
+export default function EarlyAccessRequest({ onRequested }) {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = useCallback(() => {}, []);
+  const isEarlyAccessAllowed = useIsEarlyAccessAllowed();
+
+  const onSubmit = useCallback(
+    async (state) => {
+      const isAllowed = await isEarlyAccessAllowed(state.email);
+      onRequested(isAllowed);
+    },
+    [isEarlyAccessAllowed, onRequested]
+  );
 
   return (
     <Stack
@@ -46,9 +56,9 @@ export default function EarlyAccessRequest() {
         error={!!errors?.email}
         helperText={errors?.email?.message}
       />
-      <Button type="submit" variant="contained" size="medium">
+      <AsyncButton type="submit" variant="contained" size="medium" isLoading={isSubmitting}>
         Request Early Access
-      </Button>
+      </AsyncButton>
     </Stack>
   );
 }
