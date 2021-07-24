@@ -1,4 +1,4 @@
-import { useComponentRegionStoreApi, useRootScrollStoreApi } from '@graftini/graft';
+import { ROOT_NODE_ID, useComponentRegionStoreApi, useRootScrollStoreApi } from '@graftini/graft';
 import { useMotionValue, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -71,9 +71,11 @@ function useSelection({ componentId, posX, posY, width, height }) {
       setIsShown(false);
     };
 
-    // Initialize with the first value.
-    updateMotion(getState().regionMap[componentId]);
-    return subscribe(updateMotion, (state) => state.regionMap[componentId]);
+    // Initialize with the first value and ignore the selection if on root.
+    updateMotion(componentId !== ROOT_NODE_ID ? getState().regionMap[componentId] : null);
+    return componentId !== ROOT_NODE_ID
+      ? subscribe(updateMotion, (state) => state.regionMap[componentId])
+      : null;
   }, [componentId, getState, height, posX, posY, subscribe, width]);
 
   return isShown;

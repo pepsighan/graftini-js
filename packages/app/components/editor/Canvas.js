@@ -35,13 +35,7 @@ export default function Canvas() {
         {...useCheckCursorOnIFrame()}
       >
         {() => (
-          <div
-            css={{
-              width: '100%',
-              height: '100vh',
-              userSelect: 'none',
-            }}
-          >
+          <div css={{ userSelect: 'none' }}>
             <Canvs />
             <DropMarker color={palette.primary[500]} />
             <DrawMarker color={palette.primary[500]} />
