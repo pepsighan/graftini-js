@@ -180,7 +180,7 @@ export type JustifyContent =
   | 'space-evenly';
 export type AlignItems = 'flex-start' | 'center' | 'flex-end' | 'stretch' | 'baseline';
 export type BorderStyle = 'solid' | 'dashed' | 'dotted';
-export type DimensionUnit = 'px' | '%';
+export type DimensionUnit = 'px' | '%' | 'vw' | 'vh';
 export type Position = 'absolute' | 'fixed' | 'relative' | 'static' | 'sticky';
 export type Cursor = 'pointer'; // Will need to add more as needed.
 export type FlexWrap = 'wrap' | 'nowrap';
