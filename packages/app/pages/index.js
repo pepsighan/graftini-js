@@ -1,4 +1,5 @@
-import { Box, Button, Stack, TextField, Typography } from '@material-ui/core';
+import { Box, Stack, Typography } from '@material-ui/core';
+import EarlyAccessRequest from 'components/EarlyAccessRequest';
 import Footer from 'components/Footer';
 import Link from 'components/Link';
 import Navigation from 'components/Navigation';
@@ -49,25 +50,7 @@ export default function Home() {
             {/* Here would be a video of how we deploy the app in 10 minutes. */}
           </Box>
 
-          <Stack
-            direction={{
-              xs: 'column',
-              sm: 'row',
-            }}
-            spacing={1}
-            sx={{
-              mt: 4,
-              width: {
-                xs: '100%',
-                sm: 450,
-              },
-            }}
-          >
-            <TextField size="medium" placeholder="Enter your email" fullWidth sx={{ flex: 1 }} />
-            <Button variant="contained" size="medium">
-              Request Early Access
-            </Button>
-          </Stack>
+          <EarlyAccessRequest />
 
           <Typography color="textSecondary" sx={{ mt: 2 }}>
             If you are already received an invitation to access Graftini, just{' '}
