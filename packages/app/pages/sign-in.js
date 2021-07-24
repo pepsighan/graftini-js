@@ -64,12 +64,6 @@ export default unprotectedOnlyPage(function SignIn() {
               )}
             </Paper>
 
-            {!linkSent && (
-              <Typography variant="body2" sx={{ px: 1, display: 'block', mt: 1 }}>
-                We will send a link to your e-mail which you can use to sign in.
-              </Typography>
-            )}
-
             <Typography
               variant="body2"
               color="textSecondary"
@@ -77,6 +71,12 @@ export default unprotectedOnlyPage(function SignIn() {
             >
               By signing in you agree to the terms of service and privacy policy of Graftini.
             </Typography>
+
+            {!linkSent && (
+              <Typography variant="body1" sx={{ px: 1, display: 'block', mt: 4 }}>
+                We will send a link to your e-mail which you can use to sign in.
+              </Typography>
+            )}
           </Grid>
         </Grid>
 
