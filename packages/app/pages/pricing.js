@@ -1,5 +1,6 @@
 import { Box, Button, Card, CardContent, CardHeader, Stack, Typography } from '@material-ui/core';
 import Footer from 'components/Footer';
+import ILink from 'components/Link';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
 import Link from 'next/link';
@@ -90,6 +91,11 @@ export default function Pricing() {
               </CardContent>
             </Card>
           </Stack>
+
+          <Typography color="textSecondary" sx={{ mt: 2 }}>
+            The early access plan may be updated without prior notice. For more info read our{' '}
+            <ILink href="/terms-of-service">terms of service</ILink>.
+          </Typography>
         </Stack>
 
         <Box sx={{ width: '100%', pb: 1, pt: 6 }}>
