@@ -50,6 +50,7 @@ const Root: RootComponent<RootProps> = forwardRef(
 
     return (
       <div
+        id="app-root"
         css={{
           width: '100%',
           height: '100%',
