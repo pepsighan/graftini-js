@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Button, Stack, TextField } from '@material-ui/core';
+import { Stack, TextField } from '@material-ui/core';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { useIsEarlyAccessAllowed } from 'store/auth';

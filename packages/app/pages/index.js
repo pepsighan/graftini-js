@@ -1,10 +1,10 @@
-import { Box, Button, Paper, Stack, Typography } from '@material-ui/core';
+import { Box, Button, Stack, Typography } from '@material-ui/core';
 import EarlyAccessRequest from 'components/EarlyAccessRequest';
 import Footer from 'components/Footer';
 import Link from 'components/Link';
-import NLink from 'next/link';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
+import NLink from 'next/link';
 import { useState } from 'react';
 import { navBarHeight } from 'utils/constants';
 
