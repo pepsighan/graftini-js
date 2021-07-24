@@ -86,13 +86,8 @@ export async function verifyAndSignInWithEmailLink(): Promise<SignInErrors | nul
 /**
  * Logout the current user.
  */
-export function useLogout() {
-  const { refetch } = useAuthUser();
-
-  return useCallback(async () => {
-    await firebase.auth().signOut();
-    refetch();
-  }, [refetch]);
+export async function logout() {
+  await firebase.auth().signOut();
 }
 
 /**
