@@ -10,7 +10,6 @@ import { navBarHeight } from 'utils/constants';
 
 export default function Home() {
   const [isAccessAllowed, setIsAccessAllowed] = useState(null);
-  console.log({ isAccessAllowed });
 
   return (
     <>

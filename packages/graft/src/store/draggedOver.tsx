@@ -66,7 +66,7 @@ const { Provider, useStore, useStoreApi } = createContext<DraggedOverStore>();
 
 /** @internal */
 export function DraggedOverStoreProvider({ children }: PropsWithChildren<{}>) {
-  return <Provider initialStore={createDraggedOverStore()}>{children}</Provider>;
+  return <Provider createStore={createDraggedOverStore}>{children}</Provider>;
 }
 
 export const useDraggedOverStore = useStore;

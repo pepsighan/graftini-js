@@ -1,6 +1,6 @@
 import { ComponentMap, ROOT_NODE_ID } from '@graftini/graft';
 import produce from 'immer';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback } from 'react';
 import create from 'zustand';
 import createContext from 'zustand/context';
 import { ProjectPage } from './projects';
@@ -118,8 +118,11 @@ export function DesignerStateProvider({
   currentOpenPage,
   children,
 }: DesignerStateProviderProps) {
-  const [initialStore] = useState(() => createDesignerState(initialPages, currentOpenPage));
-  return <Provider initialStore={initialStore}>{children}</Provider>;
+  return (
+    <Provider createStore={() => createDesignerState(initialPages, currentOpenPage)}>
+      {children}
+    </Provider>
+  );
 }
 
 export const useDesignerState = useStore as ReturnType<typeof createDesignerState>;

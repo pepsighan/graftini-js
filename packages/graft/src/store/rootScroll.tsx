@@ -25,7 +25,7 @@ const { Provider, useStore, useStoreApi } = createContext<RootScrollStore>();
 
 /** @internal */
 export function RootScrollStoreProvider({ children }: PropsWithChildren<{}>) {
-  return <Provider initialStore={createRootScrollStore()}>{children}</Provider>;
+  return <Provider createStore={createRootScrollStore}>{children}</Provider>;
 }
 
 export const useRootScrollStore = useStore;

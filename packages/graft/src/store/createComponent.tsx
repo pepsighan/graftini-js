@@ -70,7 +70,7 @@ const { Provider, useStore, useStoreApi } = createContext<CreateComponentStore>(
 
 /** @internal */
 export function CreateComponentStoreProvider({ children }: PropsWithChildren<{}>) {
-  return <Provider initialStore={createCreateComponentStore()}>{children}</Provider>;
+  return <Provider createStore={createCreateComponentStore}>{children}</Provider>;
 }
 
 export const useCreateComponentStore = useStore;
