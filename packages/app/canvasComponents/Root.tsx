@@ -52,8 +52,6 @@ const Root: RootComponent<RootProps> = forwardRef(
       <div
         id="app-root"
         css={{
-          width: '100%',
-          height: '100%',
           cursor: cursor[currentCreateType] ?? 'auto',
           backgroundColor: rgbaToCss(color),
         }}
@@ -65,18 +63,10 @@ const Root: RootComponent<RootProps> = forwardRef(
           ref={ref as any}
           onScroll={onScroll}
           css={{
-            width: '100%',
-            height: '100%',
+            width: '100vw',
+            height: '100vh',
             overflow: 'auto',
             pointerEvents: currentCreateType ? 'none' : null,
-            // Hide scrollbars on all browsers.
-            // https://stackoverflow.com/a/49278385
-            scrollbarWidth: 'none',
-            msOverflowStyle: 'none',
-            '&::-webkit-scrollbar': {
-              width: 0,
-              height: 0,
-            },
           }}
         >
           {children}
