@@ -28,12 +28,7 @@ export default function Navigation() {
 
         {/* Do not show a login button in smaller screens. There is no use for this app on non-laptops
         or desktops. */}
-        <Stack
-          spacing={2}
-          direction="row"
-          alignItems="center"
-          sx={{ display: ['none', null, 'block'] }}
-        >
+        <Stack spacing={2} direction="row" alignItems="center">
           {isBorderless && (
             <>
               <Link href="/pricing" passHref>
@@ -57,7 +52,17 @@ export default function Navigation() {
 
           {!user && (
             <Link href="/sign-in" passHref>
-              <Button component="a" variant="contained" size="medium">
+              <Button
+                component="a"
+                variant="contained"
+                size="medium"
+                sx={{
+                  display: {
+                    xs: 'none',
+                    md: 'inline-flex',
+                  },
+                }}
+              >
                 Sign In
               </Button>
             </Link>
