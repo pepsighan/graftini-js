@@ -47,7 +47,7 @@ export default unprotectedOnlyPage(function SignIn() {
 
       <Stack justifyContent="space-between" sx={{ minHeight: '100vh' }}>
         <Grid container justifyContent="center" sx={{ mt: 12 }}>
-          <Grid item sx={{ width: 400 }}>
+          <Grid item sx={{ width: linkNotSent ? 450 : 400 }}>
             <Stack justifyContent="center" alignItems="center">
               <Link href="/" passHref>
                 <MLink>
@@ -55,11 +55,11 @@ export default unprotectedOnlyPage(function SignIn() {
                 </MLink>
               </Link>
             </Stack>
-            <Paper sx={{ p: 4, mt: 16 }}>
+            <Paper sx={{ py: 4, px: 3, mt: 16 }}>
               {!linkSent && <EmailLinkForm onSend={onSend} />}
               {linkSent && (
                 <>
-                  <Typography textAlign="center">We have sent a link to your e-mail.</Typography>
+                  <Typography textAlign="center">We have sent a link to your email.</Typography>
                   <Typography textAlign="center">Please click on that link to login.</Typography>
 
                   <Stack alignItems="center" sx={{ mt: 4, color: 'grey.500' }}>
@@ -81,7 +81,7 @@ export default unprotectedOnlyPage(function SignIn() {
 
             {!linkSent && !linkNotSent && (
               <Typography variant="body1" sx={{ px: 1, display: 'block', mt: 4 }}>
-                We will send a link to your e-mail which you can use to sign in.
+                We will send a link to your email which you can use to sign in.
               </Typography>
             )}
           </Grid>
