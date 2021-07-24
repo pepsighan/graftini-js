@@ -21,12 +21,17 @@ import { unprotectedOnlyPage } from 'utils/auth';
 
 export default unprotectedOnlyPage(function SignIn() {
   const [linkSent, setLinkSent] = useState(false);
+  const [linkNotSent, setLinkNotSent] = useState(false);
 
   useOnlyBigScreens();
 
   const theme = useTheme();
-  const onSend = useCallback(() => {
-    setLinkSent(true);
+  const onSend = useCallback((sent) => {
+    if (sent) {
+      setLinkSent(true);
+    } else {
+      setLinkNotSent(true);
+    }
   }, []);
 
   return (
@@ -64,15 +69,17 @@ export default unprotectedOnlyPage(function SignIn() {
               )}
             </Paper>
 
-            <Typography
-              variant="body2"
-              color="textSecondary"
-              sx={{ px: 1, display: 'block', mt: 1 }}
-            >
-              By signing in you agree to the terms of service and privacy policy of Graftini.
-            </Typography>
+            {!linkNotSent && (
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{ px: 1, display: 'block', mt: 1 }}
+              >
+                By signing in you agree to the terms of service and privacy policy of Graftini.
+              </Typography>
+            )}
 
-            {!linkSent && (
+            {!linkSent && !linkNotSent && (
               <Typography variant="body1" sx={{ px: 1, display: 'block', mt: 4 }}>
                 We will send a link to your e-mail which you can use to sign in.
               </Typography>

@@ -38,10 +38,11 @@ export default function EmailLinkForm({ onSend }) {
     async ({ email }) => {
       const error = await sendSignLinkInToEmail(email);
       if (!error) {
-        onSend();
+        onSend(true);
         return;
       }
 
+      onSend(false);
       setError(error);
     },
     [onSend, sendSignLinkInToEmail]
