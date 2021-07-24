@@ -6,10 +6,12 @@ import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
 import NLink from 'next/link';
 import { useState } from 'react';
+import { useAuthUser } from 'store/auth';
 import { navBarHeight } from 'utils/constants';
 
 export default function Home() {
   const [isAccessAllowed, setIsAccessAllowed] = useState(null);
+  const { isLoggedIn } = useAuthUser();
 
   return (
     <>
@@ -54,41 +56,47 @@ export default function Home() {
             {/* Here would be a video of how we deploy the app in 10 minutes. */}
           </Box>
 
-          {isAccessAllowed === null && <EarlyAccessRequest onRequested={setIsAccessAllowed} />}
-
-          {isAccessAllowed === false && (
+          {!isLoggedIn && (
             <>
-              <Typography component="div" variant="h3" sx={{ mt: 2 }}>
-                🎉
-              </Typography>
-              <Typography sx={{ mt: 1 }}>We have added you to the early access queue.</Typography>
-              <Typography>
-                You will receive a confirmation email in a while, if you have not already.
-              </Typography>
-            </>
-          )}
+              {isAccessAllowed === null && <EarlyAccessRequest onRequested={setIsAccessAllowed} />}
 
-          {isAccessAllowed !== true && (
-            <Typography color="textSecondary" sx={{ mt: 2 }}>
-              If you are already received an invitation to access Graftini,{' '}
-              <Link href="/sign-in" sx={{ textDecoration: 'underline' }}>
-                sign in
-              </Link>{' '}
-              to get access. .
-            </Typography>
-          )}
+              {isAccessAllowed === false && (
+                <>
+                  <Typography component="div" variant="h3" sx={{ mt: 2 }}>
+                    🎉
+                  </Typography>
+                  <Typography sx={{ mt: 1 }}>
+                    We have added you to the early access queue.
+                  </Typography>
+                  <Typography>
+                    You will receive a confirmation email in a while, if you have not already.
+                  </Typography>
+                </>
+              )}
 
-          {isAccessAllowed === true && (
-            <>
-              <Typography sx={{ mt: 2 }}>
-                You already have access to Graftini, sign in with the same email.
-              </Typography>
+              {isAccessAllowed !== true && (
+                <Typography color="textSecondary" sx={{ mt: 2 }}>
+                  If you are already received an invitation to access Graftini,{' '}
+                  <Link href="/sign-in" sx={{ textDecoration: 'underline' }}>
+                    sign in
+                  </Link>{' '}
+                  to get access. .
+                </Typography>
+              )}
 
-              <NLink href="/sign-in" passHref>
-                <Button component="a" variant="contained" size="medium" sx={{ mt: 1 }}>
-                  Sign In
-                </Button>
-              </NLink>
+              {isAccessAllowed === true && (
+                <>
+                  <Typography sx={{ mt: 2 }}>
+                    You already have access to Graftini, sign in with the same email.
+                  </Typography>
+
+                  <NLink href="/sign-in" passHref>
+                    <Button component="a" variant="contained" size="medium" sx={{ mt: 1 }}>
+                      Sign In
+                    </Button>
+                  </NLink>
+                </>
+              )}
             </>
           )}
         </Stack>
