@@ -1,4 +1,4 @@
-import { Avatar, Box, Divider, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
+import { Box, Divider, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
 import { PersonIcon } from '@modulz/radix-icons';
 import { useCallback, useState } from 'react';
 import { logout, useAuthUser } from 'store/auth';
@@ -18,9 +18,7 @@ export default function ProfileButton() {
   return (
     <>
       <IconButton onClick={onClick}>
-        <Avatar sx={{ width: 32, height: 32 }}>
-          <PersonIcon />
-        </Avatar>
+        <PersonIcon width={18} height={18} />
       </IconButton>
 
       <Menu

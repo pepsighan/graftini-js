@@ -16,29 +16,29 @@
   },
   "dependencies": {
     "framer-motion": "^4.1.17",
-    "immer": "^9.0.3",
+    "immer": "^9.0.5",
     "nanoid": "^3.1.23",
     "react-merge-refs": "^1.1.0",
-    "zustand": "^3.5.2"
+    "zustand": "^3.5.7"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^19.0.0",
-    "@rollup/plugin-typescript": "^8.2.1",
-    "@types/react": "^17.0.11",
-    "@typescript-eslint/eslint-plugin": "^4.27.0",
-    "@typescript-eslint/parser": "^4.27.0",
+    "@rollup/plugin-commonjs": "^19.0.1",
+    "@rollup/plugin-typescript": "^8.2.3",
+    "@types/react": "^17.0.14",
+    "@typescript-eslint/eslint-plugin": "^4.28.4",
+    "@typescript-eslint/parser": "^4.28.4",
     "babel-eslint": "^10.0.0",
-    "eslint": "^7.28.0",
+    "eslint": "^7.31.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-config-react-app": "^6.0.0",
-    "eslint-plugin-flowtype": "^5.7.2",
+    "eslint-plugin-flowtype": "^5.8.1",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-react": "^7.20.3",
     "eslint-plugin-react-hooks": "^4.0.8",
-    "rollup": "^2.52.0",
+    "rollup": "^2.53.3",
     "tslib": "^2.2.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.3.5"
   },
   "peerDependencies": {
     "react": ">= 16.8 || ^17.0.0"

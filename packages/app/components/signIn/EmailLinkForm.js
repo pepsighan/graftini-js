@@ -50,7 +50,7 @@ export default function EmailLinkForm({ onSend }) {
   return (
     <>
       {error !== SignInErrors.EarlyAccessNotAllowed && (
-        <Stack component="form" spacing={2} onSubmit={handleSubmit(onSubmit)}>
+        <Stack component="form" onSubmit={handleSubmit(onSubmit)}>
           <TextField
             {...register('email')}
             size="medium"
@@ -64,6 +64,7 @@ export default function EmailLinkForm({ onSend }) {
             }}
             error={!!errors?.email}
             helperText={errors?.email?.message}
+            sx={{ mb: 2 }}
           />
 
           <AsyncButton

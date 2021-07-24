@@ -7,7 +7,9 @@ export default function SEO({ title, description }) {
       <title>{title ? `${title} - Graftini` : 'Graftini'}</title>
       <meta
         name="description"
-        content={description ?? 'Create dynamic websites without writing a line of code.'}
+        content={
+          description ?? 'Deploy your web apps without writing any code in less than 10 minutes.'
+        }
       />
     </Head>
   );
