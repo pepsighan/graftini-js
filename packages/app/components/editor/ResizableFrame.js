@@ -3,6 +3,7 @@ import { Box, useTheme } from '@material-ui/core';
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
+import { isMacOs } from 'react-device-detect';
 
 export default function ResizeableFrame({ componentId, ...rest }) {
   const { isFrozen, ...restFrozen } = useFrozenProps(rest);
@@ -162,16 +163,16 @@ function FrameSide({
         (event, pointInfo) => {
           if (type === 'left') {
             const diffW = -pointInfo.offset.x;
-            updateWidth(original.width.get() + diffW, event.ctrlKey);
+            updateWidth(original.width.get() + diffW, isMacOs ? event.metaKey : event.ctrlKey);
           } else if (type === 'right') {
             const diffW = pointInfo.offset.x;
-            updateWidth(original.width.get() + diffW, event.ctrlKey);
+            updateWidth(original.width.get() + diffW, isMacOs ? event.metaKey : event.ctrlKey);
           } else if (type === 'top') {
             const diffH = -pointInfo.offset.y;
-            updateHeight(original.height.get() + diffH, event.ctrlKey);
+            updateHeight(original.height.get() + diffH, isMacOs ? event.metaKey : event.ctrlKey);
           } else if (type === 'bottom') {
             const diffH = pointInfo.offset.y;
-            updateHeight(original.height.get() + diffH, event.ctrlKey);
+            updateHeight(original.height.get() + diffH, isMacOs ? event.metaKey : event.ctrlKey);
           }
         },
         [original.height, original.width, type, updateHeight, updateWidth]
@@ -342,12 +343,12 @@ function useDimensionUpdate({ componentId }) {
   const { getState: getRegionState } = useComponentRegionStoreApi();
 
   const updateWidth = useCallback(
-    (width, isCtrl) => {
+    (width, isCtrlOrCommand) => {
       immerSet((state) => {
         const parentId = state.componentMap[componentId].parentId;
 
         let size = width <= 0 ? 0 : width;
-        if (isCtrl) {
+        if (isCtrlOrCommand) {
           // In percentage.
           const parentWidth = getRegionState().regionMap[parentId].width;
           size = Math.floor((size * 100) / parentWidth);
@@ -365,19 +366,19 @@ function useDimensionUpdate({ componentId }) {
         props.width ??= {};
 
         props.width.size = size;
-        props.width.unit = isCtrl ? '%' : 'px';
+        props.width.unit = isCtrlOrCommand ? '%' : 'px';
       });
     },
     [componentId, getRegionState, immerSet]
   );
 
   const updateHeight = useCallback(
-    (height, isCtrl) => {
+    (height, isCtrlOrCommand) => {
       immerSet((state) => {
         const parentId = state.componentMap[componentId].parentId;
 
         let size = height <= 0 ? 0 : height;
-        if (isCtrl) {
+        if (isCtrlOrCommand) {
           // In percentage.
           const parentHeight = getRegionState().regionMap[parentId].height;
           size = Math.floor((size * 100) / parentHeight);
@@ -395,7 +396,7 @@ function useDimensionUpdate({ componentId }) {
         props.height ??= {};
 
         props.height.size = size;
-        props.height.unit = isCtrl ? '%' : 'px';
+        props.height.unit = isCtrlOrCommand ? '%' : 'px';
       });
     },
     [componentId, getRegionState, immerSet]
