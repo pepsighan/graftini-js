@@ -21,7 +21,7 @@ type SEO = {
 };
 
 const Root: RootComponent<RootProps> = forwardRef(
-  ({ color, children, onScroll, ...rest }, ref: ForwardedRef<unknown>) => {
+  ({ color, seo, children, onScroll, ...rest }, ref: ForwardedRef<unknown>) => {
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const currentCreateType = useCreateComponentStore(
       useCallback((state) => state.newComponent?.type, [])
