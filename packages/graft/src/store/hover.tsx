@@ -1,6 +1,6 @@
 import produce from 'immer';
 import React, { PropsWithChildren } from 'react';
-import create, { StateListener } from 'zustand';
+import create from 'zustand';
 import createContext from 'zustand/context';
 import { HoverRegion } from '../hover';
 import { Position } from './draggedOver';
@@ -39,7 +39,7 @@ const { Provider, useStore, useStoreApi } = createContext<HoverStore>();
 
 /** @internal */
 export function HoverStoreProvider({ children }: PropsWithChildren<{}>) {
-  return <Provider initialStore={createHoverStore()}>{children}</Provider>;
+  return <Provider createStore={createHoverStore}>{children}</Provider>;
 }
 
 export const useHoverStore = useStore;

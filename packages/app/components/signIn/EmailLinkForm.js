@@ -38,10 +38,11 @@ export default function EmailLinkForm({ onSend }) {
     async ({ email }) => {
       const error = await sendSignLinkInToEmail(email);
       if (!error) {
-        onSend();
+        onSend(true);
         return;
       }
 
+      onSend(false);
       setError(error);
     },
     [onSend, sendSignLinkInToEmail]
@@ -81,7 +82,16 @@ export default function EmailLinkForm({ onSend }) {
 
       {/* TODO: Add the user to early access list if they were not allowed. */}
       {error === SignInErrors.EarlyAccessNotAllowed && (
-        <Typography textAlign="center">You are currently not in the early access list.</Typography>
+        <>
+          <Typography textAlign="center">
+            Sorry, you are currently not allowed for early access.
+          </Typography>
+
+          <Typography textAlign="center">
+            Since you are interested, we have added your email to the queue. We will notify you once
+            you are invited.
+          </Typography>
+        </>
       )}
 
       {/* TODO: Move to notistack once it is updated to MUI5. */}
@@ -91,7 +101,7 @@ export default function EmailLinkForm({ onSend }) {
         onClose={onCloseError}
         message={
           error === SignInErrors.SendingLinkFailed
-            ? 'We could not send you an e-mail link. Please try in a while.'
+            ? 'We could not send you an email link. Please try in a while.'
             : null
         }
         anchorOrigin={{

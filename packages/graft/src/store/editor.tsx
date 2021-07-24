@@ -155,8 +155,9 @@ type EditorStateProviderProps = {
 /** @internal */
 export function EditorStateProvider({ elementMap, children }: EditorStateProviderProps) {
   const RootComponent = useContext(RootOverrideContext);
-  const [store] = useState(() => createEditorStore(elementMap, RootComponent));
-  return <Provider initialStore={store}>{children}</Provider>;
+  return (
+    <Provider createStore={() => createEditorStore(elementMap, RootComponent)}>{children}</Provider>
+  );
 }
 
 /**

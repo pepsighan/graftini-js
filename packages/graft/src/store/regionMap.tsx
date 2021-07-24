@@ -35,7 +35,7 @@ const { Provider, useStore, useStoreApi } = createContext<ComponentRegionStore>(
 
 /** @internal */
 export function ComponentRegionStateProvider({ children }: PropsWithChildren<{}>) {
-  return <Provider initialStore={createRegionMapStore()}>{children}</Provider>;
+  return <Provider createStore={createRegionMapStore}>{children}</Provider>;
 }
 
 export const useComponentRegionStore = useStore;

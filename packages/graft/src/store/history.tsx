@@ -88,7 +88,7 @@ const { Provider, useStore, useStoreApi } = createContext<HistoryStore>();
 
 /** @internal */
 export function HistoryStoreProvider({ children }: PropsWithChildren<{}>) {
-  return <Provider initialStore={createHistoryStore()}>{children}</Provider>;
+  return <Provider createStore={createHistoryStore}>{children}</Provider>;
 }
 
 /** @internal */

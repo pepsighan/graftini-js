@@ -147,7 +147,7 @@ export function useListenToCurrentFirebaseUserStream(
 /**
  * Hook to check if the email is allowed for early access.
  */
-function useIsEarlyAccessAllowed() {
+export function useIsEarlyAccessAllowed() {
   const [isEarlyAccessAllowed] = useMutation(gql`
     mutation IsEarlyAccessAllowed($email: String!) {
       isEarlyAccessAllowed(email: $email)
