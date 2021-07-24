@@ -21,7 +21,7 @@ export default function MyApp({ Component, pageProps }) {
           href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap"
           rel="stylesheet"
         />
-        <meta charset="utf-8" />
+        <meta charSet="utf-8" />
         <meta name="viewport" content="initial-scale=1, width=device-width" />
 
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
