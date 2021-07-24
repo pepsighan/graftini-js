@@ -38,7 +38,7 @@ export default function Preview() {
       <IFrame
         title="Preview"
         style={{
-          width: '100%',
+          width: '100vw',
           // The height of the nav is substracted, so that the preview does not cause window-wide scroll.
           // Had to subtract 6px more because scrolls appeared otherwise. I checked the source of this
           // additional height on the iframe but could not find.
