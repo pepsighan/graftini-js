@@ -1,6 +1,7 @@
 import { ApolloProvider } from '@apollo/client';
 import { CssBaseline, GlobalStyles } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/system';
+import AuthStateChangeSync from 'components/AuthStateChangeSync';
 import Head from 'next/head';
 import { useMemo } from 'react';
 import 'utils/firebase';
@@ -33,6 +34,7 @@ export default function MyApp({ Component, pageProps }) {
         <meta name="theme-color" content="#ffffff" />
       </Head>
 
+      <AuthStateChangeSync />
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Component {...pageProps} />

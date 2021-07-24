@@ -86,13 +86,8 @@ export async function verifyAndSignInWithEmailLink(): Promise<SignInErrors | nul
 /**
  * Logout the current user.
  */
-export function useLogout() {
-  const { refetch } = useAuthUser();
-
-  return useCallback(async () => {
-    await firebase.auth().signOut();
-    refetch();
-  }, [refetch]);
+export async function logout() {
+  await firebase.auth().signOut();
 }
 
 /**
@@ -137,16 +132,22 @@ export async function getCurrentFirebaseUser(): Promise<firebase.User | null> {
 export function useListenToCurrentFirebaseUserStream(
   onChange: (user: firebase.User | null) => void
 ) {
+  useEffect(() => {
+    return firebase.auth().onAuthStateChanged(onChange);
+  }, [onChange]);
+}
+
+/**
+ * Refetch the user once the user auth state changes.
+ */
+export function useRefetchAuthUserOnAuthStateChange() {
   const { refetch } = useAuthUser();
 
-  useEffect(() => {
-    return firebase.auth().onAuthStateChanged((user) => {
-      // Refetch the user from the backend as the user may or may not
-      // be logged in.
+  useListenToCurrentFirebaseUserStream(
+    useCallback(() => {
       refetch();
-      return onChange(user);
-    });
-  }, [onChange, refetch]);
+    }, [refetch])
+  );
 }
 
 /**
