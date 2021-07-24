@@ -9,7 +9,7 @@ import { navBarHeight } from 'utils/constants';
 export default function Pricing() {
   return (
     <>
-      <SEO />
+      <SEO title="Pricing" description="Try Graftini without having to put in your card." />
       <Navigation />
 
       <Stack
