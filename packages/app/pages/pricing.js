@@ -14,7 +14,7 @@ export default function Pricing() {
 
       <Stack
         justifyContent="space-between"
-        sx={{ height: `calc(100vh - ${navBarHeight}px)`, px: 1 }}
+        sx={{ height: `calc(100vh - ${navBarHeight}px)`, px: 2 }}
       >
         <Stack alignItems="center" sx={{ pt: 8 }}>
           <Typography variant="h3" textAlign="center">

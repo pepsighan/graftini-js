@@ -11,7 +11,10 @@ export default function Home() {
       <SEO />
       <Navigation />
 
-      <Stack justifyContent="space-between" sx={{ height: `calc(100vh - ${navBarHeight}px)` }}>
+      <Stack
+        justifyContent="space-between"
+        sx={{ height: `calc(100vh - ${navBarHeight}px)`, px: 2 }}
+      >
         <Stack alignItems="center" sx={{ pt: 8 }}>
           <Typography variant="h3" textAlign="center">
             Graftini
@@ -26,12 +29,41 @@ export default function Home() {
             Deploy your web apps without writing any code in less than 10 minutes.
           </Typography>
 
-          <Box sx={{ width: 700, height: 400, bgcolor: 'grey.200', mt: 4, borderRadius: 1 }}>
+          <Box
+            sx={{
+              width: {
+                xs: 300,
+                sm: 400,
+                md: 700,
+              },
+              height: {
+                xs: 200,
+                sm: 250,
+                md: 400,
+              },
+              bgcolor: 'grey.200',
+              mt: 4,
+              borderRadius: 1,
+            }}
+          >
             {/* Here would be a video of how we deploy the app in 10 minutes. */}
           </Box>
 
-          <Stack direction="row" spacing={1} sx={{ mt: 4 }}>
-            <TextField size="medium" placeholder="Enter your email" />
+          <Stack
+            direction={{
+              xs: 'column',
+              sm: 'row',
+            }}
+            spacing={1}
+            sx={{
+              mt: 4,
+              width: {
+                xs: '100%',
+                sm: 450,
+              },
+            }}
+          >
+            <TextField size="medium" placeholder="Enter your email" fullWidth sx={{ flex: 1 }} />
             <Button variant="contained" size="medium">
               Request Early Access
             </Button>
