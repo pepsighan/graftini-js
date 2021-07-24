@@ -1,4 +1,4 @@
-import { Box, Button, Container, Grid, Typography, useTheme } from '@material-ui/core';
+import { Box, Button, Container, Grid, Stack, Typography, useTheme } from '@material-ui/core';
 import { PlusIcon, TrashIcon, CubeIcon } from '@modulz/radix-icons';
 import DeleteProjectConfirmation from 'components/DeleteProjectConfirmation';
 import Link from 'components/Link';
@@ -29,7 +29,7 @@ export default protectedPage(function Projects() {
           </Button>
         </Box>
 
-        {!loading && (
+        {!loading && myProjects.length > 0 && (
           <Grid container spacing={4}>
             {myProjects.map((it) => (
               <Grid item key={it.id}>
@@ -38,6 +38,38 @@ export default protectedPage(function Projects() {
             ))}
           </Grid>
         )}
+
+        {!loading && myProjects.length === 0 && (
+          <>
+            <Typography color="textSecondary">
+              Your dashboard feels a bit lonely. Create a project by clicking on the <b>New</b>{' '}
+              button on the top right.
+            </Typography>
+          </>
+        )}
+
+        <Stack alignItems="center" sx={{ mt: 12 }}>
+          <Box
+            sx={{
+              width: {
+                xs: 300,
+                sm: 400,
+                md: 500,
+              },
+              height: {
+                xs: 200,
+                sm: 250,
+                md: 300,
+              },
+              bgcolor: 'grey.200',
+              mt: 4,
+              borderRadius: 1,
+            }}
+          >
+            This is a youtube video that showcases how its used.
+            {/* Here would be a video of how we deploy the app in 10 minutes. */}
+          </Box>
+        </Stack>
       </Container>
 
       <NewProjectDialog isOpen={isOpen} onClose={off} />
