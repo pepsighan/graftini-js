@@ -137,16 +137,22 @@ export async function getCurrentFirebaseUser(): Promise<firebase.User | null> {
 export function useListenToCurrentFirebaseUserStream(
   onChange: (user: firebase.User | null) => void
 ) {
+  useEffect(() => {
+    return firebase.auth().onAuthStateChanged(onChange);
+  }, [onChange]);
+}
+
+/**
+ * Refetch the user once the user auth state changes.
+ */
+export function useRefetchAuthUserOnAuthStateChange() {
   const { refetch } = useAuthUser();
 
-  useEffect(() => {
-    return firebase.auth().onAuthStateChanged((user) => {
-      // Refetch the user from the backend as the user may or may not
-      // be logged in.
+  useListenToCurrentFirebaseUserStream(
+    useCallback(() => {
       refetch();
-      return onChange(user);
-    });
-  }, [onChange, refetch]);
+    }, [refetch])
+  );
 }
 
 /**
