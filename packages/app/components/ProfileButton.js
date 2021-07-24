@@ -1,10 +1,11 @@
 import { Box, Divider, IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
 import { PersonIcon } from '@modulz/radix-icons';
 import { useCallback, useState } from 'react';
-import { logout, useAuthUser } from 'store/auth';
+import { useAuthUser, useLogout } from 'store/auth';
 
 export default function ProfileButton() {
   const { user } = useAuthUser();
+  const onLogout = useLogout();
 
   const [el, setEl] = useState(null);
 
@@ -46,7 +47,7 @@ export default function ProfileButton() {
           <Typography variant="body2">{user.email}</Typography>
         </Box>
         <Divider />
-        <MenuItem onClick={logout}>Logout</MenuItem>
+        <MenuItem onClick={onLogout}>Logout</MenuItem>
       </Menu>
     </>
   );
