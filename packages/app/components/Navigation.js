@@ -10,13 +10,13 @@ export default function Navigation() {
   const { route } = useRouter();
   const { user } = useAuthUser();
 
-  const isHome = route === '/';
+  const isBorderless = route === '/' || route === '/pricing';
   const isWithinDashboard = route.startsWith('/dashboard');
 
   return (
     <AppBar
       sx={{
-        border: isHome ? 0 : undefined,
+        border: isBorderless ? 0 : undefined,
       }}
     >
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
@@ -34,11 +34,13 @@ export default function Navigation() {
           alignItems="center"
           sx={{ display: ['none', null, 'block'] }}
         >
-          {isHome && (
+          {isBorderless && (
             <>
-              <Button color="inherit" size="medium">
-                Pricing
-              </Button>
+              <Link href="/pricing" passHref>
+                <Button component="a" color="inherit" size="medium">
+                  Pricing
+                </Button>
+              </Link>
 
               <Button
                 component="a"
@@ -54,8 +56,8 @@ export default function Navigation() {
           )}
 
           {!user && (
-            <Link href="/sign-in">
-              <Button variant="contained" size="medium">
+            <Link href="/sign-in" passHref>
+              <Button component="a" variant="contained" size="medium">
                 Sign In
               </Button>
             </Link>
