@@ -17,6 +17,10 @@ export default function TextRender({ tag, content }: TextComponentProps) {
       }
 
       para.content.forEach((text) => {
+        if (!text.marks) {
+          return;
+        }
+
         text.marks.forEach((mark) => {
           if (mark.type === MarkKind.Link && mark.attrs.pageId) {
             mark.attrs.to = `${route.replace('[projectId]', query.projectId as string)}?page=${
