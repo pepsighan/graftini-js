@@ -10,8 +10,8 @@ export default function Navigation() {
   const { route } = useRouter();
   const { user } = useAuthUser();
 
-  const isBorderless = route === '/' || route === '/pricing';
   const isWithinDashboard = route.startsWith('/dashboard');
+  const isBorderless = !isWithinDashboard;
 
   return (
     <AppBar
