@@ -33,12 +33,17 @@ export default function PageContextMenu({ pageId, projectId }) {
         </MenuItem>
       </ContextMenu>
 
-      <UpdatePageDialog isOpen={isEditOpen} onClose={onEditClose} />
-      <DeletePageConfirmation
-        isOpen={isDeleteOpen}
+      <UpdatePageDialog
+        isOpen={isEditOpen}
+        onClose={onEditClose}
         pageId={pageId}
         projectId={projectId}
+      />
+      <DeletePageConfirmation
+        isOpen={isDeleteOpen}
         onClose={onDeleteClose}
+        pageId={pageId}
+        projectId={projectId}
       />
     </>
   );
