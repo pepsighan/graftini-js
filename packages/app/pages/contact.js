@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, Button, InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
+import { Box, InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
 import { wideLabelAlignmentStyle } from 'canvasComponents/form/formLabels';
+import AsyncButton from 'components/AsyncButton';
 import Footer from 'components/Footer';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
@@ -21,7 +22,7 @@ export default function Contact() {
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     defaultValues: {
       name: '',
@@ -142,9 +143,9 @@ export default function Contact() {
               helperText={errors?.content?.message}
             />
 
-            <Button type="submit" variant="contained" size="medium">
+            <AsyncButton type="submit" variant="contained" size="medium" isLoading={isSubmitting}>
               Send
-            </Button>
+            </AsyncButton>
           </Stack>
         </Stack>
 
