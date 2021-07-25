@@ -32,6 +32,11 @@ export default function NewPageDialog({ isOpen, onClose }) {
       .string()
       .regex(routeRegex, { message: 'Provide a valid route.' })
       .transform((route) => {
+        // This is the only exception to the following trimming.
+        if (route === '/') {
+          return route;
+        }
+
         // Cannot have trailing slashes.
         if (route.endsWith('/')) {
           return route.replace(/\/$/, '');
