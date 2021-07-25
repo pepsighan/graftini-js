@@ -86,7 +86,13 @@ export default function Contact() {
           <Stack
             component="form"
             spacing={2}
-            sx={{ width: 400, mt: 4 }}
+            sx={{
+              width: {
+                xs: '100%',
+                sm: 400,
+              },
+              mt: 4,
+            }}
             onSubmit={handleSubmit(onSubmit)}
           >
             <TextField
