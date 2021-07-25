@@ -4,17 +4,22 @@ import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useCallback } from 'react';
 import { ContextMenu, useContextMenu } from './ContextMenu';
 import DeletePageConfirmation from './DeletePageConfirmation';
+import UpdatePageDialog from './UpdatePageDialog';
 
 export const pageContextMenuIdPrefix = 'page-context-menu-';
 
 export default function PageContextMenu({ pageId, projectId }) {
-  const { onCloseContextMenu } = useContextMenu();
-  const [isOpen, { on, off }] = useBoolean();
+  const { onClose: onCloseContextMenu } = useContextMenu();
+  const [isEditOpen, { on: onEdit, off: onEditClose }] = useBoolean();
+  const [isDeleteOpen, { on: onDelete, off: onDeleteClose }] = useBoolean();
 
-  const onCloseDeleteConfirmation = useCallback(() => {
-    off();
-    onCloseContextMenu();
-  }, [off, onCloseContextMenu]);
+  const onWrapClose = useCallback(
+    (call) => () => {
+      onCloseContextMenu();
+      call();
+    },
+    [onCloseContextMenu]
+  );
 
   const { project } = useMyProjectFromRouter();
   const page = project.pages.find((it) => it.id === pageId);
@@ -22,17 +27,18 @@ export default function PageContextMenu({ pageId, projectId }) {
   return (
     <>
       <ContextMenu id={`${pageContextMenuIdPrefix}${pageId}`}>
-        {page.route !== '/' && <MenuItem>Edit</MenuItem>}
-        <MenuItem disabled={page.route === '/'} onClick={on}>
+        {page.route !== '/' && <MenuItem onClick={onWrapClose(onEdit)}>Edit</MenuItem>}
+        <MenuItem disabled={page.route === '/'} onClick={onWrapClose(onDelete)}>
           Delete
         </MenuItem>
       </ContextMenu>
 
+      <UpdatePageDialog isOpen={isEditOpen} onClose={onEditClose} />
       <DeletePageConfirmation
-        isOpen={isOpen}
+        isOpen={isDeleteOpen}
         pageId={pageId}
         projectId={projectId}
-        onClose={onCloseDeleteConfirmation}
+        onClose={onDeleteClose}
       />
     </>
   );
