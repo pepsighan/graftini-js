@@ -2,11 +2,12 @@ import { ROOT_NODE_ID, useCreateComponentStore, useHoverStoreApi } from '@grafti
 import { useTheme } from '@material-ui/core';
 import { motion, useMotionValue } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
-import { useDesignerState } from 'store/designer';
+import { useDesignerState, useDesignerStateApi } from 'store/designer';
 
 export default function HoverOutline() {
   const [isVisible, setIsVisible] = useState(false);
   const isDrawingNew = useCreateComponentStore(useCallback((state) => !!state.newComponent, []));
+  const { getState: getDesignerState } = useDesignerStateApi();
 
   // Do not show the hover outline when a resize operation is ongoing.
   const isBoxResizing = useDesignerState(useCallback((state) => state.isBoxResizing, []));
@@ -21,8 +22,15 @@ export default function HoverOutline() {
   useEffect(() => {
     return subscribeHover(
       (state) => {
-        // Do not show the outline when on root.
-        if (state && state.componentId !== ROOT_NODE_ID) {
+        const selectedComponentId = getDesignerState().selectedComponentId;
+
+        // Do not show the outline when on root or when the component is already selected
+        // (& has an outline).
+        if (
+          state &&
+          state.componentId !== ROOT_NODE_ID &&
+          state.componentId !== selectedComponentId
+        ) {
           // The position of the outline is put 1px outside on all sides
           // so that the content (border or text caret) is not hidden under
           // outline.
@@ -42,7 +50,7 @@ export default function HoverOutline() {
       },
       (state) => (state.isOnIFrame ? state.hoverRegion : null)
     );
-  }, [height, posX, posY, subscribeHover, width]);
+  }, [getDesignerState, height, posX, posY, subscribeHover, width]);
 
   const { palette } = useTheme();
 
