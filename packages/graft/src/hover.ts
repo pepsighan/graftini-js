@@ -1,8 +1,8 @@
-import { MouseEventHandler, useCallback } from 'react';
+import { MouseEvent, useCallback } from 'react';
 import { isCursorWithinRegion } from './dropLocation';
 import { Position } from './store/draggedOver';
 import { ComponentMap, ROOT_NODE_ID, useEditorStoreApi } from './store/editor';
-import { HoverStore, useHoverStore } from './store/hover';
+import { HoverStore, useHoverStore, useHoverStoreApi } from './store/hover';
 import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
 import { useRootScrollStoreApi } from './store/rootScroll';
 import { Region } from './useRegion';
@@ -16,21 +16,28 @@ export type HoverRegion = {
  * Sync the hover region to the store when the cursor is on the canvas.
  */
 /** @internal */
-export function useSyncHoverRegion(): MouseEventHandler {
+export function useSyncHoverRegion(): (event?: MouseEvent) => void {
   const immerSet = useHoverStore(useCallback((state: HoverStore) => state.immerSet, []));
 
   const { getState: getEditorState } = useEditorStoreApi();
   const { getState: getRegionState } = useComponentRegionStoreApi();
   const { getState: getScrollState } = useRootScrollStoreApi();
+  const { getState: getHoverState } = useHoverStoreApi();
 
   return useCallback(
     (event) => {
       const scrollPos = getScrollState().position;
 
-      const position = {
-        x: event.clientX,
-        y: event.clientY,
-      };
+      // If the event exists, then use the current cursor positions. Otherwise
+      // use the previously saved once. You may omit the event only after the
+      // first event capture.
+      const position = event
+        ? {
+            x: event.clientX,
+            y: event.clientY,
+          }
+        : getHoverState().cursorPosition!;
+
       const realPosition = {
         x: position.x + scrollPos.x,
         y: position.y + scrollPos.y,
@@ -53,7 +60,7 @@ export function useSyncHoverRegion(): MouseEventHandler {
         }
       });
     },
-    [getEditorState, getRegionState, getScrollState, immerSet]
+    [getEditorState, getHoverState, getRegionState, getScrollState, immerSet]
   );
 }
 
