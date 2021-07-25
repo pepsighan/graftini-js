@@ -30,9 +30,17 @@ export default function Contact() {
     resolver: zodResolver(schema),
   });
 
-  const onSubmit = useCallback(() => {
-    reset();
-  }, [reset]);
+  const { ref: nameRef, ...nameRegister } = register('name');
+  const { ref: emailRef, ...emailRegister } = register('email');
+  const { ref: contentRef, ...contentRegister } = register('content');
+
+  const onSubmit = useCallback(
+    (state) => {
+      console.log(state);
+      reset();
+    },
+    [reset]
+  );
 
   return (
     <>
@@ -64,7 +72,8 @@ export default function Contact() {
             onSubmit={handleSubmit(onSubmit)}
           >
             <TextField
-              {...register('name')}
+              {...nameRegister}
+              inputRef={nameRef}
               size="medium"
               fullWidth
               InputProps={{
@@ -79,7 +88,8 @@ export default function Contact() {
             />
 
             <TextField
-              {...register('email')}
+              {...emailRegister}
+              inputRef={emailRef}
               size="medium"
               fullWidth
               InputProps={{
@@ -94,7 +104,8 @@ export default function Contact() {
             />
 
             <TextField
-              {...register('content')}
+              {...contentRegister}
+              inputRef={contentRef}
               size="medium"
               fullWidth
               multiline
