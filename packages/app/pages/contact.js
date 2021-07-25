@@ -1,11 +1,39 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Box, Button, InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
 import { wideLabelAlignmentStyle } from 'canvasComponents/form/formLabels';
 import Footer from 'components/Footer';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
+import { useCallback } from 'react';
+import { useForm } from 'react-hook-form';
 import { navBarHeight } from 'utils/constants';
+import { z } from 'zod';
+
+const schema = z.object({
+  name: z.string().min(1),
+  email: z.string().email(),
+  content: z.string().min(1),
+});
 
 export default function Contact() {
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: '',
+      email: '',
+      content: '',
+    },
+    resolver: zodResolver(schema),
+  });
+
+  const onSubmit = useCallback(() => {
+    reset();
+  }, [reset]);
+
   return (
     <>
       <SEO />
@@ -29,8 +57,14 @@ export default function Contact() {
             Reach out to us in case you have questions or want to upgrade your existing plan.
           </Typography>
 
-          <Stack spacing={2} sx={{ width: 400, mt: 4 }}>
+          <Stack
+            component="form"
+            spacing={2}
+            sx={{ width: 400, mt: 4 }}
+            onSubmit={handleSubmit(onSubmit)}
+          >
             <TextField
+              {...register('name')}
               size="medium"
               fullWidth
               InputProps={{
@@ -40,9 +74,12 @@ export default function Contact() {
                   </InputAdornment>
                 ),
               }}
+              error={!!errors?.name}
+              helperText={errors?.name?.message}
             />
 
             <TextField
+              {...register('email')}
               size="medium"
               fullWidth
               InputProps={{
@@ -52,9 +89,12 @@ export default function Contact() {
                   </InputAdornment>
                 ),
               }}
+              error={!!errors?.email}
+              helperText={errors?.email?.message}
             />
 
             <TextField
+              {...register('content')}
               size="medium"
               fullWidth
               multiline
@@ -79,9 +119,11 @@ export default function Contact() {
                   flexDirection: 'column',
                 },
               }}
+              error={!!errors?.content}
+              helperText={errors?.content?.message}
             />
 
-            <Button variant="contained" size="medium">
+            <Button type="submit" variant="contained" size="medium">
               Send
             </Button>
           </Stack>
