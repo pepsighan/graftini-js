@@ -92,9 +92,14 @@ const LayerView = forwardRef(({ nodeId }, ref) => {
         onContextMenu={useCallback(
           (event) => {
             handleSelection();
-            onOpenContextMenu(event, layerContextMenuId);
+
+            // Do not show the context menu on the root similar to
+            // how it behaves on the canvas.
+            if (nodeId !== ROOT_NODE_ID) {
+              onOpenContextMenu(event, layerContextMenuId);
+            }
           },
-          [handleSelection, onOpenContextMenu]
+          [handleSelection, nodeId, onOpenContextMenu]
         )}
       >
         {type === 'Text' ? (
