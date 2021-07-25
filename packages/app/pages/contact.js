@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Box, InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
+import { Alert, Box, InputAdornment, Stack, TextField, Typography, Link } from '@material-ui/core';
 import { wideLabelAlignmentStyle } from 'canvasComponents/form/formLabels';
 import AsyncButton from 'components/AsyncButton';
 import Footer from 'components/Footer';
@@ -173,6 +173,11 @@ export default function Contact() {
                 Sorry, we could not sent your message at this moment. Can you try again later?
               </Alert>
             )}
+
+            <Typography textAlign="center" fontWeight="normal" sx={{ mt: 1 }}>
+              You may reach us via <Link href="mailto:team@graftini.com">team@graftini.com</Link> as
+              well.
+            </Typography>
           </Stack>
         </Stack>
 
