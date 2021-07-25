@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Box, InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
+import { Alert, Box, InputAdornment, Stack, TextField, Typography } from '@material-ui/core';
 import { wideLabelAlignmentStyle } from 'canvasComponents/form/formLabels';
 import AsyncButton from 'components/AsyncButton';
 import Footer from 'components/Footer';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSendContactMessage } from 'store/contact';
 import { navBarHeight } from 'utils/constants';
@@ -18,6 +18,9 @@ const schema = z.object({
 });
 
 export default function Contact() {
+  const [isSent, setIsSent] = useState(false);
+  const [isNotSent, setIsNotSent] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -39,6 +42,8 @@ export default function Contact() {
   const [sendContactMessage] = useSendContactMessage();
   const onSubmit = useCallback(
     async (state) => {
+      setIsSent(false);
+      setIsNotSent(false);
       try {
         await sendContactMessage({
           variables: {
@@ -46,7 +51,11 @@ export default function Contact() {
           },
         });
         reset();
-      } catch (err) {}
+        setIsSent(true);
+      } catch (err) {
+        setIsNotSent(true);
+        throw err;
+      }
     },
     [reset, sendContactMessage]
   );
@@ -146,6 +155,18 @@ export default function Contact() {
             <AsyncButton type="submit" variant="contained" size="medium" isLoading={isSubmitting}>
               Send
             </AsyncButton>
+
+            {isSent && (
+              <Alert>
+                Thank you for reaching out to us. We will get back to you as soon as possible.
+              </Alert>
+            )}
+
+            {isNotSent && (
+              <Alert severity="error">
+                Sorry, we could not sent your message at this moment. Can you try again later?
+              </Alert>
+            )}
           </Stack>
         </Stack>
 
