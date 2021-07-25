@@ -6,6 +6,7 @@ import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { useSendContactMessage } from 'store/contact';
 import { navBarHeight } from 'utils/constants';
 import { z } from 'zod';
 
@@ -34,12 +35,19 @@ export default function Contact() {
   const { ref: emailRef, ...emailRegister } = register('email');
   const { ref: contentRef, ...contentRegister } = register('content');
 
+  const [sendContactMessage] = useSendContactMessage();
   const onSubmit = useCallback(
-    (state) => {
-      console.log(state);
-      reset();
+    async (state) => {
+      try {
+        await sendContactMessage({
+          variables: {
+            input: state,
+          },
+        });
+        reset();
+      } catch (err) {}
     },
-    [reset]
+    [reset, sendContactMessage]
   );
 
   return (
