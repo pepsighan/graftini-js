@@ -23,7 +23,7 @@ type ProseMirrorParagraph = {
 
 type ProseMirrorText = {
   type: 'text';
-  marks: Mark[];
+  marks?: Mark[];
   text: string;
 };
 
