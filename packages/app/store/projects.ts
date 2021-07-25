@@ -136,6 +136,29 @@ export function useCreatePage({ projectId }) {
 }
 
 /**
+ * Hook to update page name and route.
+ */
+export function useUpdatePage({ projectId }) {
+  return useMutation(
+    gql`
+      mutation UpdateProjectPage($input: UpdatePage!) {
+        updatePage(input: $input) {
+          id
+        }
+      }
+    `,
+    {
+      refetchQueries: [
+        {
+          query: QUERY_MY_PROJECT,
+          variables: { id: projectId },
+        },
+      ],
+    }
+  );
+}
+
+/**
  * Hook to create a query for a project.
  */
 export function useCreateQuery({ projectId }) {
