@@ -1,4 +1,3 @@
-import { defaultComponentMap } from '@graftini/graft';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
@@ -11,20 +10,20 @@ import {
   Typography,
 } from '@material-ui/core';
 import useEnableContextMenu from 'canvasComponents/form/useEnableContextMenu';
-import Root from 'canvasComponents/Root';
 import AsyncButton from 'components/AsyncButton';
 import { materialRegister } from 'hooks/useMaterialFormRegister';
-import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
-import { useCreatePage } from 'store/projects';
+import { useMyProject, useUpdatePage } from 'store/projects';
 import { routeRegex } from 'utils/constants';
 import { z } from 'zod';
 
-export default function NewPageDialog({ isOpen, onClose }) {
-  const {
-    project: { id: projectId, pages },
-  } = useMyProjectFromRouter();
+export default function UpdatePageDialog({ isOpen, onClose, projectId, pageId }) {
+  const { project } = useMyProject({ projectId });
+  const page = useMemo(
+    () => project.pages.find((page) => page.id === pageId),
+    [pageId, project.pages]
+  );
 
   const schema = z.object({
     name: z.string().min(1, { message: 'Page name is required.' }),
@@ -45,7 +44,12 @@ export default function NewPageDialog({ isOpen, onClose }) {
       })
       .refine(
         (route) => {
-          const exists = pages.some((page) => page.route === route);
+          const exists = project.pages.find((page) => page.route === route);
+          // If it matches to self then no problem.
+          if (exists?.id === pageId) {
+            return true;
+          }
+
           return !exists;
         },
         { message: 'The route already exists.' }
@@ -56,30 +60,36 @@ export default function NewPageDialog({ isOpen, onClose }) {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
-  } = useForm({ resolver: zodResolver(schema) });
+  } = useForm({
+    defaultValues: {
+      name: page.name,
+      route: page.route,
+    },
+    resolver: zodResolver(schema),
+  });
 
-  const [createPage] = useCreatePage({ projectId });
+  const [updatePage] = useUpdatePage({ projectId });
 
   const onSubmit = useCallback(
     async (state) => {
-      await createPage({
+      await updatePage({
         variables: {
           input: {
             projectId,
+            pageId,
             name: state.name,
             route: state.route,
-            componentMap: JSON.stringify(defaultComponentMap(Root.graftOptions.defaultProps)),
           },
         },
       });
       onClose();
     },
-    [createPage, onClose, projectId]
+    [updatePage, projectId, pageId, onClose]
   );
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
-      <DialogTitle>New Page</DialogTitle>
+      <DialogTitle>Update Page</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           <Stack spacing={2}>
@@ -117,7 +127,7 @@ export default function NewPageDialog({ isOpen, onClose }) {
         </DialogContent>
         <DialogActions>
           <AsyncButton type="submit" variant="contained" isLoading={isSubmitting}>
-            Create
+            Save
           </AsyncButton>
         </DialogActions>
       </form>
