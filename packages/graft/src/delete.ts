@@ -1,4 +1,5 @@
 import { useCallback } from 'react';
+import { useSyncHoverRegion } from './hover';
 import { EditorStore, useEditorStore } from './store/editor';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
 
@@ -10,6 +11,7 @@ export function useOnDelete() {
   const immerSetRegion = useComponentRegionStore(
     useCallback((state: ComponentRegionStore) => state.immerSet, [])
   );
+  const onSyncHover = useSyncHoverRegion();
 
   return useCallback(
     (componentId: string) => {
@@ -36,9 +38,12 @@ export function useOnDelete() {
         immerSetEditor((state) => {
           recursivelyDeleteTree(componentId, state);
         });
+
+        // Update the current hover position cause this one no longer exists.
+        onSyncHover();
       });
     },
-    [immerSetEditor, immerSetRegion]
+    [immerSetEditor, immerSetRegion, onSyncHover]
   );
 }
 
