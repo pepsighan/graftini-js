@@ -1,4 +1,4 @@
-import { IconButton, Tooltip } from '@material-ui/core';
+import { Badge, IconButton, Tooltip } from '@material-ui/core';
 import { ArchiveIcon } from '@modulz/radix-icons';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -14,8 +14,10 @@ export default function SavingStatus() {
 
   return (
     <Tooltip title={isSaving ? 'Saving your project right now.' : 'Your project is saved.'}>
-      <IconButton color={isSaving ? 'primary' : 'default'}>
-        <ArchiveIcon />
+      <IconButton color="default">
+        <Badge variant="dot" color="info" invisible={!isSaving}>
+          <ArchiveIcon />
+        </Badge>
       </IconButton>
     </Tooltip>
   );

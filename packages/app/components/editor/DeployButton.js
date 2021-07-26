@@ -1,4 +1,5 @@
 import {
+  Badge,
   Box,
   Button,
   CircularProgress,
@@ -6,7 +7,6 @@ import {
   Popover,
   Tooltip,
   Typography,
-  useTheme,
 } from '@material-ui/core';
 import { RocketIcon } from '@modulz/radix-icons';
 import AsyncButton from 'components/AsyncButton';
@@ -48,11 +48,9 @@ export default function DeployButton() {
     <>
       <Tooltip title="Deploy">
         <IconButton onClick={onOpen}>
-          {isDeploying || isStartingDeployment ? (
-            <CircularProgress size={18} />
-          ) : (
-            <RocketIcon color={statusColor} />
-          )}
+          <Badge variant="dot" color={statusColor} invisible={!statusColor}>
+            {isDeploying || isStartingDeployment ? <CircularProgress size={18} /> : <RocketIcon />}
+          </Badge>
         </IconButton>
       </Tooltip>
 
@@ -116,8 +114,6 @@ function DeployPopoverContent({ deployment, onDeploy, isDeploying }) {
 }
 
 function useDeploymentStatusColor(deployment) {
-  const { palette } = useTheme();
-
   if (!deployment) {
     return undefined;
   }
@@ -134,9 +130,9 @@ function useDeploymentStatusColor(deployment) {
 
   switch (deployment.status) {
     case DeploymentStatus.Ready:
-      return palette.success.main;
+      return 'success';
     case DeploymentStatus.Error:
-      return palette.error.main;
+      return 'error';
     default:
       return undefined;
   }
