@@ -1,16 +1,18 @@
-import { ROOT_NODE_ID, useEditorStore, useEditorStoreApi } from '@graftini/graft';
+import { ROOT_NODE_ID, useEditorStore } from '@graftini/graft';
 import { Box, Button, ButtonGroup, Typography } from '@material-ui/core';
 import { TreeItem, TreeView, useTreeItem } from '@material-ui/lab';
 import { SquareIcon, TextIcon } from '@modulz/radix-icons';
-import { forwardRef, useCallback, useMemo } from 'react';
+import { isEqual } from 'lodash-es';
+import { forwardRef, useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import ComponentContextMenu, { layerContextMenuId } from './ComponentContextMenu';
 import { useContextMenu } from './ContextMenu';
 
 export default function Layers() {
-  const { getState } = useEditorStoreApi();
-
-  const allExpanded = useMemo(() => Object.keys(getState().componentMap), [getState]);
+  const allExpanded = useEditorStore(
+    useCallback((state) => Object.keys(state.componentMap), []),
+    useCallback((left, right) => isEqual(left.sort(), right.sort()), [])
+  );
 
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
   const onSelect = useCallback((_, id) => selectComponent(id), [selectComponent]);
