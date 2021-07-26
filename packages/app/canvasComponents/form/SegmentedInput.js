@@ -13,6 +13,7 @@ export default function SegmentedInput({ name, options }) {
           onChange={(_, value) => field.onChange(value)}
           sx={{ justifyContent: 'center' }}
           fullWidth
+          exclusive
         >
           {options.map((it) => (
             <ToggleButton key={it.value} value={it.value}>
