@@ -32,6 +32,7 @@ export default function OverflowInput({ name }) {
 
   return (
     <ToggleButtonGroup
+      exclusive
       value={overflow}
       onChange={useCallback(
         (_, value) => {
