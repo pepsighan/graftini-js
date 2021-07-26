@@ -226,19 +226,19 @@ function FrameCorner({
         (event, pointInfo) => {
           if (type.includes('left')) {
             const diffW = -pointInfo.offset.x;
-            updateWidth(original.width.get() + diffW, event.ctrlKey);
+            updateWidth(original.width.get() + diffW, isMacOs ? event.metaKey : event.ctrlKey);
           }
           if (type.includes('right')) {
             const diffW = pointInfo.offset.x;
-            updateWidth(original.width.get() + diffW, event.ctrlKey);
+            updateWidth(original.width.get() + diffW, isMacOs ? event.metaKey : event.ctrlKey);
           }
           if (type.includes('top')) {
             const diffH = -pointInfo.offset.y;
-            updateHeight(original.height.get() + diffH, event.ctrlKey);
+            updateHeight(original.height.get() + diffH, isMacOs ? event.metaKey : event.ctrlKey);
           }
           if (type.includes('bottom')) {
             const diffH = pointInfo.offset.y;
-            updateHeight(original.height.get() + diffH, event.ctrlKey);
+            updateHeight(original.height.get() + diffH, isMacOs ? event.metaKey : event.ctrlKey);
           }
         },
         [original.height, original.width, type, updateHeight, updateWidth]
