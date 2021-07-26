@@ -18,14 +18,25 @@ export default function Layers() {
   const selectedId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
 
   return (
-    <Box sx={{ flex: 1, px: 1, position: 'relative' }}>
+    <Box
+      sx={{
+        flex: 1,
+        px: 1,
+        position: 'relative',
+        display: 'flex',
+        flexDirection: 'column',
+        overflow: 'hidden',
+      }}
+    >
       <Typography variant="subtitle2" sx={{ mb: 1 }}>
         Layers
       </Typography>
 
-      <TreeView expanded={allExpanded} selected={selectedId} onNodeSelect={onSelect}>
-        <LayerItem id={ROOT_NODE_ID} />
-      </TreeView>
+      <Box sx={{ flex: 1, overflowY: 'auto' }}>
+        <TreeView expanded={allExpanded} selected={selectedId} onNodeSelect={onSelect}>
+          <LayerItem id={ROOT_NODE_ID} />
+        </TreeView>
+      </Box>
 
       <ComponentContextMenu id={layerContextMenuId} />
     </Box>

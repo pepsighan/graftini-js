@@ -35,7 +35,7 @@ export default function Pages() {
   });
 
   return (
-    <Box sx={{ flex: 1, px: 1.5 }}>
+    <Box sx={{ flex: 1, px: 1.5, overflowY: 'hidden', display: 'flex', flexDirection: 'column' }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
         <Typography variant="subtitle2">Pages</Typography>
 
@@ -44,7 +44,7 @@ export default function Pages() {
         </IconButton>
       </Box>
 
-      <Box>
+      <Box sx={{ flex: 1, overflowY: 'auto' }}>
         {project.pages.map((it) => (
           <PageItem
             key={it.id}
