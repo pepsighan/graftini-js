@@ -14,7 +14,6 @@ import DirectionInput from './form/DirectionInput';
 import FlexPropertiesInput from './form/FlexPropertiesInput';
 import MarginInput from './form/MarginInput';
 import OpacityInput from './form/OpacityInput';
-import OverflowInput from './form/OverflowInput';
 import PaddingInput from './form/PaddingInput';
 import RadiusInput from './form/RadiusInput';
 import SegmentedInput from './form/SegmentedInput';
@@ -148,8 +147,10 @@ export default function BoxOptions({ componentId }: OptionsProps) {
         <Divider />
         <LayoutSection />
         <Divider />
-        <OverflowSection />
-        <Divider />
+        {/* We do not know what overflow means and what needs to be shown in the UI
+        right now. https://github.com/graftini/graftini/issues/343 */}
+        {/* <OverflowSection />
+        <Divider /> */}
         <FlexSection />
         <Divider />
         <AppearanceSection />
@@ -216,14 +217,14 @@ function LayoutSection() {
   );
 }
 
-function OverflowSection() {
-  return (
-    <>
-      <Typography variant="subtitle2">Overflow</Typography>
-      <OverflowInput name="overflow" />
-    </>
-  );
-}
+// function OverflowSection() {
+//   return (
+//     <>
+//       <Typography variant="subtitle2">Overflow</Typography>
+//       <OverflowInput name="overflow" />
+//     </>
+//   );
+// }
 
 function AppearanceSection() {
   return (
