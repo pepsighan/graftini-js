@@ -16,6 +16,7 @@ export default function useSyncDesignerStateToBackend({ projectId }) {
   useEffect(() => {
     // Update every two seconds of the change.
     const debouncedUpdate = debounce(async (pages) => {
+      console.log(pages);
       try {
         await updateDesign({
           variables: {
