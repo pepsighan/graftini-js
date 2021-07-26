@@ -1,5 +1,4 @@
 import { BorderRadius, BorderSide } from '@graftini/bricks';
-import { useEditorStore } from '@graftini/graft';
 import { Divider, MenuItem, Stack, Typography } from '@material-ui/core';
 import { OptionsProps } from 'canvasComponents';
 import { useCallback } from 'react';
@@ -49,7 +48,6 @@ type BoxOptionsFields = BoxComponentProps & {
 
 export default function BoxOptions({ componentId }: OptionsProps) {
   const CF = CanvasForm as CanvasFormComponent<BoxComponentProps, BoxOptionsFields>;
-  const immerSetEditor = useEditorStore(useCallback((state) => state.immerSet, []));
 
   return (
     <CF
@@ -108,12 +106,6 @@ export default function BoxOptions({ componentId }: OptionsProps) {
             ...rest
           }: BoxOptionsFields
         ) => {
-          // Sync the append direction based on the flex direction.
-          immerSetEditor((state) => {
-            state.componentMap[componentId].childAppendDirection =
-              rest.flexDirection === 'column' ? 'vertical' : 'horizontal';
-          });
-
           // Copy the matching states as is.
           Object.keys(rest).forEach((key) => {
             props[key] = rest[key];
@@ -144,13 +136,13 @@ export default function BoxOptions({ componentId }: OptionsProps) {
           parseLimitDimension(props, 'minHeight', minHeightRaw, true);
           parseLimitDimension(props, 'maxHeight', maxHeightRaw, false);
         },
-        [componentId, immerSetEditor]
+        []
       )}
     >
       <SyncResize componentId={componentId} />
 
       <Stack spacing={2} mt={2}>
-        <AlignmentSection />
+        <AlignmentSection componentId={componentId} />
         <Divider />
         <PropertiesSection />
         <Divider />
@@ -168,11 +160,11 @@ export default function BoxOptions({ componentId }: OptionsProps) {
   );
 }
 
-function AlignmentSection() {
+function AlignmentSection({ componentId }) {
   return (
     <>
       <AlignmentInput />
-      <DirectionInput />
+      <DirectionInput componentId={componentId} />
     </>
   );
 }
