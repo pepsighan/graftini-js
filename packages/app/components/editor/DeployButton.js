@@ -12,6 +12,7 @@ import { RocketIcon } from '@modulz/radix-icons';
 import AsyncButton from 'components/AsyncButton';
 import { useProjectId } from 'hooks/useProjectId';
 import { useCallback, useState } from 'react';
+import { useLocalStorage } from 'react-use';
 import { DeploymentStatus, useDeployNow, useLiveDeploymentStatus } from 'store/deployment';
 import { useMyProject } from 'store/projects';
 
@@ -27,7 +28,14 @@ const activelyDeploying = [
 export default function DeployButton() {
   const projectId = useProjectId();
   const { deployment, refetch } = useLiveDeploymentStatus({ projectId });
-  const statusColor = useDeploymentStatusColor(deployment);
+
+  const [viewState, setViewState] = useLocalStorage('graftini-deployment-status-viewed', '{}', {
+    raw: false,
+    serializer: (value) => JSON.stringify(value),
+    deserializer: (value) => JSON.parse(value),
+  });
+  const isViewed = viewState[projectId] === deployment?.id;
+  const statusColor = deploymentStatusColor(isViewed, deployment?.status);
 
   const [deployNow, { loading: isStartingDeployment }] = useDeployNow();
   const onDeploy = useCallback(async () => {
@@ -41,7 +49,16 @@ export default function DeployButton() {
   const isDeploying = activelyDeploying.includes(deployment?.status);
 
   const [pop, setPop] = useState(null);
-  const onOpen = useCallback((event) => setPop(event.currentTarget), []);
+  const onOpen = useCallback(
+    (event) => {
+      setPop(event.currentTarget);
+      setViewState((state) => ({
+        ...state,
+        [projectId]: deployment.id,
+      }));
+    },
+    [deployment?.id, projectId, setViewState]
+  );
   const onClose = useCallback(() => setPop(null), []);
 
   return (
@@ -113,22 +130,12 @@ function DeployPopoverContent({ deployment, onDeploy, isDeploying }) {
   );
 }
 
-function useDeploymentStatusColor(deployment) {
-  if (!deployment) {
+function deploymentStatusColor(isViewed, status) {
+  if (isViewed) {
     return undefined;
   }
 
-  const createdAt = new Date(deployment.createdAt);
-  const now = new Date();
-  const diffMin = (now.getTime() - createdAt.getTime()) / (1000 * 60);
-
-  // Do not show the status color if the deployment began 20 minutes ago.
-  // The color is now obsolete to consider.
-  if (diffMin > 20) {
-    return undefined;
-  }
-
-  switch (deployment.status) {
+  switch (status) {
     case DeploymentStatus.Ready:
       return 'success';
     case DeploymentStatus.Error:
