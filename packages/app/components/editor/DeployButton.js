@@ -34,7 +34,7 @@ export default function DeployButton() {
     serializer: (value) => JSON.stringify(value),
     deserializer: (value) => JSON.parse(value),
   });
-  const isViewed = viewState[projectId];
+  const isViewed = viewState[projectId] === deployment?.id;
   const statusColor = deploymentStatusColor(isViewed, deployment?.status);
 
   const [deployNow, { loading: isStartingDeployment }] = useDeployNow();
@@ -54,10 +54,10 @@ export default function DeployButton() {
       setPop(event.currentTarget);
       setViewState((state) => ({
         ...state,
-        [projectId]: true,
+        [projectId]: deployment.id,
       }));
     },
-    [projectId, setViewState]
+    [deployment?.id, projectId, setViewState]
   );
   const onClose = useCallback(() => setPop(null), []);
 
