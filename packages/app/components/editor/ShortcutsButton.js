@@ -1,4 +1,4 @@
-import { Box, IconButton, Popover, Stack, Typography } from '@material-ui/core';
+import { Badge, Box, IconButton, Popover, Stack, Typography } from '@material-ui/core';
 import { MixIcon } from '@modulz/radix-icons';
 import { useCallback, useState } from 'react';
 import { isMacOs } from 'react-device-detect';
@@ -14,7 +14,9 @@ export default function ShortcutsButton() {
   return (
     <>
       <IconButton onClick={onOpen}>
-        <MixIcon />
+        <Badge variant="dot" color="info">
+          <MixIcon />
+        </Badge>
       </IconButton>
       <Popover
         open={!!open}
