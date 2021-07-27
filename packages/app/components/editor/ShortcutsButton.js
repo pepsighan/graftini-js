@@ -25,25 +25,36 @@ export default function ShortcutsButton() {
           horizontal: 'right',
         }}
       >
-        <Box sx={{ px: 2, pt: 1, pb: 1.5, width: 280 }}>
+        <Box sx={{ px: 2, pt: 1, pb: 1.5, width: 300 }}>
           <Typography variant="subtitle2" color="textSecondary" sx={{ mb: 1 }}>
             Shortcuts
           </Typography>
 
-          <Stack direction="row">
-            <Typography
-              variant="subtitle2"
-              color="textSecondary"
-              sx={{ bgcolor: 'grey.300', px: 1, borderRadius: 0.5, mr: 1 }}
-            >
-              {CtrlKey} + Mouse Resize
-            </Typography>
-            <Typography variant="subtitle2" color="textSecondary">
-              Resizes in %
-            </Typography>
+          <Stack spacing={1}>
+            <ShortcutKey shortcut={`Mouse Resize`} meaning="Resizes in px unit" />
+            <ShortcutKey shortcut={`${CtrlKey} + Mouse Resize`} meaning="Resizes in % unit" />
           </Stack>
         </Box>
       </Popover>
     </>
+  );
+}
+
+function ShortcutKey({ shortcut, meaning }) {
+  return (
+    <Stack direction="row" spacing={1}>
+      <Box sx={{ flex: 1 }}>
+        <Typography
+          variant="subtitle2"
+          color="textSecondary"
+          sx={{ bgcolor: 'grey.300', px: 1, borderRadius: 0.5 }}
+        >
+          {shortcut}
+        </Typography>
+      </Box>
+      <Typography variant="subtitle2" color="textSecondary" sx={{ flex: 1 }}>
+        {meaning}
+      </Typography>
+    </Stack>
   );
 }
