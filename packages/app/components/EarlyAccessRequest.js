@@ -56,7 +56,13 @@ export default function EarlyAccessRequest({ onRequested }) {
         error={!!errors?.email}
         helperText={errors?.email?.message}
       />
-      <AsyncButton type="submit" variant="contained" size="medium" isLoading={isSubmitting}>
+      <AsyncButton
+        type="submit"
+        variant="contained"
+        size="medium"
+        fullWidth
+        isLoading={isSubmitting}
+      >
         Request Early Access
       </AsyncButton>
     </Stack>
