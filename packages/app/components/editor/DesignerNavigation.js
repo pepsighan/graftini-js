@@ -20,13 +20,15 @@ export default function EditorNavigation() {
   return (
     <AppBar>
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
-        <Link href="/dashboard/projects" passHref>
-          <IconButton component="a" color="inherit">
-            <GraftiniLogo />
-          </IconButton>
-        </Link>
+        <Stack alignItems="flex-start" sx={{ flex: 1 }}>
+          <Link href="/dashboard/projects" passHref>
+            <IconButton component="a" color="inherit">
+              <GraftiniLogo />
+            </IconButton>
+          </Link>
+        </Stack>
 
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} justifyContent="center" sx={{ flex: 1 }}>
           <CursorButton />
           <DrawButton
             mr={4}
@@ -39,7 +41,7 @@ export default function EditorNavigation() {
           <DrawButton label="Text" component="Text" icon={<TextIcon />} />
         </Stack>
 
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ flex: 1 }}>
           <ShortcutsButton />
 
           <SavingStatus />

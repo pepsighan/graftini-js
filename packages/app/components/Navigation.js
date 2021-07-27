@@ -50,41 +50,52 @@ export default function Navigation() {
             </>
           )}
 
-          {!user && (
-            <Link href="/sign-in" passHref>
-              <Button
-                component="a"
-                variant="contained"
-                size="medium"
-                sx={{
-                  display: {
-                    xs: 'none',
-                    md: 'inline-flex',
-                  },
-                }}
-              >
-                Sign In
-              </Button>
-            </Link>
-          )}
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              display: {
+                xs: 'none',
+                md: 'flex',
+              },
+            }}
+          >
+            {!user && (
+              <Link href="/sign-in" passHref>
+                <Button
+                  component="a"
+                  variant="contained"
+                  size="medium"
+                  sx={{
+                    display: {
+                      xs: 'none',
+                      md: 'inline-flex',
+                    },
+                  }}
+                >
+                  Sign In
+                </Button>
+              </Link>
+            )}
 
-          {user && (
-            <>
-              {!isWithinDashboard && (
-                <Link href="/dashboard/projects">
-                  <Tooltip title="Open Dashboard">
-                    <IconButton color="inherit">
-                      <Box sx={{ width: 20, height: 20 }}>
-                        <EnterIcon />
-                      </Box>
-                    </IconButton>
-                  </Tooltip>
-                </Link>
-              )}
+            {user && (
+              <>
+                {!isWithinDashboard && (
+                  <Link href="/dashboard/projects">
+                    <Tooltip title="Open Dashboard">
+                      <IconButton color="inherit">
+                        <Box sx={{ width: 20, height: 20 }}>
+                          <EnterIcon />
+                        </Box>
+                      </IconButton>
+                    </Tooltip>
+                  </Link>
+                )}
 
-              <ProfileButton />
-            </>
-          )}
+                <ProfileButton />
+              </>
+            )}
+          </Stack>
         </Stack>
       </Toolbar>
     </AppBar>

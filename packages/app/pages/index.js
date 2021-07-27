@@ -4,10 +4,12 @@ import Footer from 'components/Footer';
 import Link from 'components/Link';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
+import Image from 'next/image';
 import NLink from 'next/link';
 import { useState } from 'react';
 import { useAuthUser } from 'store/auth';
 import { navBarHeight } from 'utils/constants';
+import previewImg from 'assets/preview.png';
 
 export default function Home() {
   const [isAccessAllowed, setIsAccessAllowed] = useState(null);
@@ -39,21 +41,14 @@ export default function Home() {
           <Box
             sx={{
               width: {
-                xs: 300,
-                sm: 400,
-                md: 700,
+                xs: '100%',
+                sm: 650,
+                md: 950,
               },
-              height: {
-                xs: 200,
-                sm: 250,
-                md: 400,
-              },
-              bgcolor: 'grey.200',
               mt: 4,
-              borderRadius: 1,
             }}
           >
-            {/* Here would be a video of how we deploy the app in 10 minutes. */}
+            <Image src={previewImg} placeholder="blur" />
           </Box>
 
           {!isLoggedIn && (
