@@ -1,5 +1,5 @@
-import { Box, Button, Container, Grid, Stack, Typography, useTheme } from '@material-ui/core';
-import { PlusIcon, TrashIcon, CubeIcon } from '@modulz/radix-icons';
+import { Box, Button, Container, Grid, Typography, useTheme } from '@material-ui/core';
+import { CubeIcon, PlusIcon, TrashIcon } from '@modulz/radix-icons';
 import DeleteProjectConfirmation from 'components/DeleteProjectConfirmation';
 import Link from 'components/Link';
 import Navigation from 'components/Navigation';
@@ -47,29 +47,6 @@ export default protectedPage(function Projects() {
             </Typography>
           </>
         )}
-
-        <Stack alignItems="center" sx={{ mt: 12 }}>
-          <Box
-            sx={{
-              width: {
-                xs: 300,
-                sm: 400,
-                md: 500,
-              },
-              height: {
-                xs: 200,
-                sm: 250,
-                md: 300,
-              },
-              bgcolor: 'grey.200',
-              mt: 4,
-              borderRadius: 1,
-            }}
-          >
-            This is a youtube video that showcases how its used.
-            {/* Here would be a video of how we deploy the app in 10 minutes. */}
-          </Box>
-        </Stack>
       </Container>
 
       <NewProjectDialog isOpen={isOpen} onClose={off} />
