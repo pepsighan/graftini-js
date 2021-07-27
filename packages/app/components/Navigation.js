@@ -52,6 +52,7 @@ export default function Navigation() {
 
           <Stack
             direction="row"
+            spacing={2}
             sx={{
               display: {
                 xs: 'none',
