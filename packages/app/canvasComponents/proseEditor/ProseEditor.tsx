@@ -68,6 +68,8 @@ const ProseEditor = forwardRef(
             css={{
               // This otherwise the cursor does not show on Safari.
               userSelect: 'auto',
+              // This is require to add trailing spaces while typing in Firefox.
+              whiteSpace: 'pre-wrap',
             }}
           />
         ) : null}

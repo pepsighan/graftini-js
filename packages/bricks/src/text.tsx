@@ -60,6 +60,9 @@ const Text = forwardRef(({ content, children, ...rest }: TextProps, ref) => {
         label: 'gr',
         display: rest.displayNone ? 'none' : rest.displayInline ? 'inline' : 'block',
         width: '100%',
+        // This is require to add trailing spaces while typing in Firefox. We need
+        // to show the same styles to render it as well.
+        whiteSpace: 'pre-wrap',
         ...baseStyles(rest),
         ...textInteractionStyles(rest),
       }}
