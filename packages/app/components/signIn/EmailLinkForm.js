@@ -97,7 +97,6 @@ export default function EmailLinkForm({ onSend }) {
       {/* TODO: Move to notistack once it is updated to MUI5. */}
       <Snackbar
         open={error === SignInErrors.SendingLinkFailed}
-        se="error"
         onClose={onCloseError}
         message={
           error === SignInErrors.SendingLinkFailed

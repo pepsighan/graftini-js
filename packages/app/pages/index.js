@@ -1,4 +1,5 @@
 import { Box, Button, Stack, Typography } from '@material-ui/core';
+import previewImg from 'assets/preview.png';
 import EarlyAccessRequest from 'components/EarlyAccessRequest';
 import Footer from 'components/Footer';
 import Link from 'components/Link';
@@ -9,7 +10,6 @@ import NLink from 'next/link';
 import { useState } from 'react';
 import { useAuthUser } from 'store/auth';
 import { navBarHeight } from 'utils/constants';
-import previewImg from 'assets/preview.png';
 
 export default function Home() {
   const [isAccessAllowed, setIsAccessAllowed] = useState(null);

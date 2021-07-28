@@ -6,7 +6,7 @@ import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { ProjectIdProvider } from 'hooks/useProjectId';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import NotFound from 'pages/404';
+import Error from 'pages/_error';
 import { useMemo } from 'react';
 import { parseComponentMap } from 'store/designer';
 import { navBarHeight } from 'utils/constants';
@@ -25,7 +25,7 @@ export default function Preview() {
   );
 
   if (!page) {
-    return <NotFound />;
+    return <Error statusCode={404} />;
   }
 
   const componentMap = parseComponentMap(page.componentMap);
