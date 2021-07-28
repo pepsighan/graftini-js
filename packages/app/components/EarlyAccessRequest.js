@@ -60,8 +60,13 @@ export default function EarlyAccessRequest({ onRequested }) {
         type="submit"
         variant="contained"
         size="medium"
-        fullWidth
         isLoading={isSubmitting}
+        sx={{
+          width: {
+            xs: '100%',
+            sm: 'auto',
+          },
+        }}
       >
         Request Early Access
       </AsyncButton>
