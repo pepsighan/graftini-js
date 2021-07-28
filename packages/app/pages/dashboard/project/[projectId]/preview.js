@@ -2,7 +2,7 @@ import Preview from 'components/preview/Preview';
 import PreviewNavigation from 'components/preview/PreviewNavigation';
 import SEO from 'components/SEO';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
-import NotFound from 'pages/404';
+import Error from 'pages/_error';
 import { protectedPage } from 'utils/auth';
 
 export default protectedPage(function ProjectPreview() {
@@ -14,7 +14,7 @@ export default protectedPage(function ProjectPreview() {
   }
 
   if (!project) {
-    return <NotFound />;
+    return <Error statusCode={404} />;
   }
 
   return (

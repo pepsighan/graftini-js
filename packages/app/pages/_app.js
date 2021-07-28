@@ -15,7 +15,7 @@ export default function MyApp({ Component, pageProps }) {
   );
 
   return (
-    <ApolloProvider client={apolloClient}>
+    <ThemeProvider theme={theme}>
       <Head>
         <link rel="preconnect" href="https://fonts.gstatic.com" />
         <link
@@ -34,19 +34,19 @@ export default function MyApp({ Component, pageProps }) {
         <meta name="theme-color" content="#ffffff" />
       </Head>
 
-      <AuthStateChangeSync />
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        <Component {...pageProps} />
-
-        <GlobalStyles
-          styles={`
+      <CssBaseline />
+      <GlobalStyles
+        styles={`
             html {
               font-size: 14px;
             }
           `}
-        />
-      </ThemeProvider>
-    </ApolloProvider>
+      />
+
+      <ApolloProvider client={apolloClient}>
+        <AuthStateChangeSync />
+        <Component {...pageProps} />
+      </ApolloProvider>
+    </ThemeProvider>
   );
 }

@@ -3,7 +3,7 @@ import SEO from 'components/SEO';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { ProjectIdProvider } from 'hooks/useProjectId';
 import { useRouter } from 'next/router';
-import NotFound from 'pages/404';
+import Error from 'pages/_error';
 import { useCallback, useMemo } from 'react';
 import { DesignerStateProvider, useDesignerState } from 'store/designer';
 import { protectedPage } from 'utils/auth';
@@ -21,7 +21,7 @@ export default protectedPage(function Project() {
   }
 
   if (!project) {
-    return <NotFound />;
+    return <Error statusCode={404} />;
   }
 
   return (
