@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import config, { Environment } from 'utils/config';
+import previewImg from 'assets/preview.png';
 
 function domainName() {
   switch (config.ENV) {
@@ -20,6 +21,7 @@ export default function SEO({ title, description }) {
   const { pathname } = useRouter();
   const domain = domainName();
   const url = domain + pathname;
+  const imageUrl = domain + previewImg.src;
 
   return (
     <Head>
@@ -34,7 +36,7 @@ export default function SEO({ title, description }) {
       <meta property="og:title" content={expandedTitle} />
       <meta property="og:type" content="website" />
       <meta property="og:url" content={url} />
-      <meta property="og:image" content="https://ia.media-imdb.com/images/rock.jpg" />
+      <meta property="og:image" content={imageUrl} />
     </Head>
   );
 }
