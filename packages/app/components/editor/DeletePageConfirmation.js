@@ -1,17 +1,34 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText } from '@material-ui/core';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
-import { useDeletePage } from 'store/projects';
+import { useDeletePage, useMyProject } from 'store/projects';
 
 export default function DeletePageConfirmation({ projectId, pageId, isOpen, onClose }) {
   const [deletePage, { loading }] = useDeletePage({ projectId });
+  const { project } = useMyProject({ projectId });
+  const currentPage = useDesignerState(useCallback((state) => state.currentOpenPage, []));
+  const setCurrentPage = useDesignerState(useCallback((state) => state.setCurrentPage, []));
   const deletePageFromDesigner = useDesignerState(useCallback((state) => state.deletePage, []));
 
   const onDelete = useCallback(async () => {
+    // If the current page is selected, then before deleting select the home page.
+    if (currentPage === pageId) {
+      setCurrentPage(project.pages.find((it) => it.route === '/').id);
+    }
+
     await deletePage({ variables: { projectId, pageId } });
     deletePageFromDesigner(pageId);
     onClose();
-  }, [deletePage, deletePageFromDesigner, onClose, pageId, projectId]);
+  }, [
+    currentPage,
+    deletePage,
+    deletePageFromDesigner,
+    onClose,
+    pageId,
+    project.pages,
+    projectId,
+    setCurrentPage,
+  ]);
 
   return (
     <Dialog open={isOpen} onClose={onClose}>
