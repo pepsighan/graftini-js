@@ -1,4 +1,5 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
+import ResizeObserver from 'resize-observer-polyfill';
 import { useEditorStoreApi } from './store/editor';
 import { ComponentRegionStore, useComponentRegionStore } from './store/regionMap';
 import { useRootScrollStoreApi } from './store/rootScroll';
@@ -46,13 +47,19 @@ export function useSyncRegion(componentId: string) {
 
     // Measure it for the first time.
     measureRegion();
-    // Measure on window resize.
-    window.addEventListener('resize', measureRegion);
+
+    // Also measure if the body dimensions change. window.resize event worked previously for
+    // the most part but it did not work on Safari when a new tab row appeared. So, depending
+    // on the body dimensions works because body is restricted to `100vh` and it will change if new
+    // tab appears.
+    const ro = new ResizeObserver(measureRegion);
+    ro.observe(document.body);
+
     // Also measure the region if there is change anywhere in the component tree.
     const unsubscribeStore = subscribeEditor(measureRegion, (state) => state.componentMap);
 
     return () => {
-      window.removeEventListener('resize', measureRegion);
+      ro.unobserve(document.body);
       unsubscribeStore();
     };
   }, [componentId, getRootScroll, immerSet, ref, subscribeEditor]);

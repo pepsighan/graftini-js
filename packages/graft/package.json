@@ -19,6 +19,7 @@
     "immer": "^9.0.5",
     "nanoid": "^3.1.23",
     "react-merge-refs": "^1.1.0",
+    "resize-observer-polyfill": "^1.5.1",
     "zustand": "^3.5.7"
   },
   "devDependencies": {
