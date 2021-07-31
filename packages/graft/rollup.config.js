@@ -11,6 +11,7 @@ const config = {
     'immer',
     'react-merge-refs',
     'framer-motion',
+    'resize-observer-polyfill',
   ],
   output: [
     { file: pkg.main, format: 'cjs' },
