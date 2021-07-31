@@ -18,7 +18,7 @@ export default function EditorNavigation() {
   const { query } = useRouter();
 
   return (
-    <AppBar>
+    <AppBar sx={{ backgroundColor: 'grey.50' }}>
       <Toolbar variant="dense" sx={{ justifyContent: 'space-between' }}>
         <Stack alignItems="flex-start" sx={{ flex: 1 }}>
           <Link href="/dashboard/projects" passHref>
