@@ -10,8 +10,6 @@ export default function LeftSidebar() {
         flexDirection: 'column',
         py: 1,
         width: 250,
-        borderRight: '1px solid',
-        borderColor: 'grey.400',
         gap: 1.5,
       }}
     >

@@ -19,33 +19,42 @@ export default function Canvas() {
     <Box
       sx={{
         flex: 1,
-        height: '100%',
-        position: 'relative',
+        backgroundColor: 'grey.50',
         overflow: 'hidden',
-        backgroundColor: 'white',
       }}
     >
-      <IFrame
-        title="Designer"
-        style={{
-          width: '100%',
+      <Box
+        sx={{
           height: '100%',
-          border: 'none',
+          position: 'relative',
+          margin: 0.75,
+          backgroundColor: 'white',
+          border: '1px solid',
+          borderColor: 'grey.200',
         }}
-        {...useCheckCursorOnIFrame()}
       >
-        {() => (
-          <div css={{ userSelect: 'none' }}>
-            <Canvs />
-            <DropMarker color={palette.primary[500]} />
-            <DrawMarker color={palette.primary[500]} />
-            <DragPreview color={palette.primary[500]} />
-          </div>
-        )}
-      </IFrame>
-      <HoverOutline />
-      <Selection />
-      <ComponentContextMenu id={componentContextMenuId} isCorrectionNeeded />
+        <IFrame
+          title="Designer"
+          style={{
+            width: '100%',
+            height: '100%',
+            border: 'none',
+          }}
+          {...useCheckCursorOnIFrame()}
+        >
+          {() => (
+            <div css={{ userSelect: 'none' }}>
+              <Canvs />
+              <DropMarker color={palette.primary[500]} />
+              <DrawMarker color={palette.primary[500]} />
+              <DragPreview color={palette.primary[500]} />
+            </div>
+          )}
+        </IFrame>
+        <HoverOutline />
+        <Selection />
+        <ComponentContextMenu id={componentContextMenuId} isCorrectionNeeded />
+      </Box>
     </Box>
   );
 }
