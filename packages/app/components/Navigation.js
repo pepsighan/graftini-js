@@ -84,7 +84,15 @@ export default function Navigation() {
                   <Link href="/dashboard/projects">
                     <Tooltip title="Open Dashboard">
                       <IconButton color="inherit">
-                        <Box sx={{ width: 20, height: 20 }}>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            width: 20,
+                            height: 20,
+                          }}
+                        >
                           <EnterIcon />
                         </Box>
                       </IconButton>
