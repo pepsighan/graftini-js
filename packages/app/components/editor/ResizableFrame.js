@@ -122,7 +122,7 @@ export default function ResizeableFrame({ componentId, ...rest }) {
         componentId={componentId}
         original={restFrozen}
         cursor="nesw-resize"
-        type="bottomLeft"
+        type="bottom-left"
         onResizingStart={onResizingStart}
         onResizingEnd={onResizingEnd}
       />
