@@ -4,6 +4,7 @@ import { TreeItem, TreeView, useTreeItem } from '@material-ui/lab';
 import { SquareIcon, TextIcon } from '@modulz/radix-icons';
 import { isEqual } from 'lodash-es';
 import { forwardRef, useCallback } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { useDesignerState } from 'store/designer';
 import ComponentContextMenu, { layerContextMenuId } from './ComponentContextMenu';
 import { useContextMenu } from './ContextMenu';
@@ -34,11 +35,11 @@ export default function Layers() {
         Layers
       </Typography>
 
-      <Box sx={{ flex: 1, overflowY: 'auto' }}>
+      <Scrollbars autoHide autoHideTimeout={1000} autoHideDuration={200} style={{ flex: 1 }}>
         <TreeView expanded={allExpanded} selected={selectedId} onNodeSelect={onSelect}>
           <LayerItem id={ROOT_NODE_ID} />
         </TreeView>
-      </Box>
+      </Scrollbars>
 
       <ComponentContextMenu id={layerContextMenuId} />
     </Box>

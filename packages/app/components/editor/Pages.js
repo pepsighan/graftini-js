@@ -4,6 +4,7 @@ import useBoolean from 'hooks/useBoolean';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { useDesignerState } from 'store/designer';
 import { encode } from 'utils/url';
 import { useEffectOnce } from 'utils/useEffect';
@@ -44,7 +45,7 @@ export default function Pages() {
         </IconButton>
       </Box>
 
-      <Box sx={{ flex: 1, overflowY: 'auto' }}>
+      <Scrollbars autoHide autoHideTimeout={1000} autoHideDuration={200} style={{ flex: 1 }}>
         {project.pages.map((it) => (
           <PageItem
             key={it.id}
@@ -55,7 +56,7 @@ export default function Pages() {
             projectId={project.id}
           />
         ))}
-      </Box>
+      </Scrollbars>
 
       <NewPageDialog key={isOpen} isOpen={isOpen} onClose={off} />
     </Box>
