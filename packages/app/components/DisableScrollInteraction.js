@@ -1,5 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
+/**
+ * We need to disable the scroll using mouse interactions because it works iffy on the canvas.
+ * So disabled it altogether all over the place.
+ */
 export function ScrollTrackHorizontal({ style, ...props }) {
   return (
     <div
