@@ -12,6 +12,7 @@ import {
   useEditorStoreApi,
 } from './store/editor';
 import { ComponentRegionMap, useComponentRegionStoreApi } from './store/regionMap';
+import { useRootScrollStoreApi } from './store/rootScroll';
 import { Region } from './useRegion';
 
 /**
@@ -50,6 +51,7 @@ export function useSyncDropRegion() {
   const { subscribe: subscribeDraggedOver } = useDraggedOverStoreApi();
   const { getState: getEditorState } = useEditorStoreApi();
   const { getState: getComponentRegionState } = useComponentRegionStoreApi();
+  const { getState: getRootScrollState } = useRootScrollStoreApi();
 
   useEffect(() => {
     // Only react to when the cursor position changes.
@@ -58,17 +60,34 @@ export function useSyncDropRegion() {
         immerSet((state: DraggedOverStore) => {
           // Only update the drop region if the cursor is being dragged.
           if (state.draggedOver.isDragging && state.draggedOver.cursorPosition) {
-            state.draggedOver.dropRegion = identifyDropRegion(
+            const scrollPosition = getRootScrollState().position;
+            const resolvedCursorPosition = {
+              x: state.draggedOver.cursorPosition.x + scrollPosition.x,
+              y: state.draggedOver.cursorPosition.y + scrollPosition.y,
+            };
+
+            const dropRegion = identifyDropRegion(
               getEditorState().componentMap,
               getComponentRegionState().regionMap,
-              state.draggedOver.cursorPosition
+              resolvedCursorPosition
             );
+            state.draggedOver.dropRegion = dropRegion;
+
+            if (!state.draggedOver.dropRegion || !dropRegion) {
+              return;
+            }
+
+            state.draggedOver.dropRegion.dropMarkerRegion = {
+              ...dropRegion.dropMarkerRegion,
+              x: dropRegion.dropMarkerRegion.x - scrollPosition.x,
+              y: dropRegion.dropMarkerRegion.y - scrollPosition.y,
+            };
           }
         });
       },
       (state) => state.draggedOver.cursorPosition
     );
-  }, [getComponentRegionState, getEditorState, immerSet, subscribeDraggedOver]);
+  }, [getComponentRegionState, getEditorState, getRootScrollState, immerSet, subscribeDraggedOver]);
 }
 
 /**

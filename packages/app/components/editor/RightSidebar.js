@@ -1,6 +1,7 @@
 import { ROOT_NODE_ID } from '@graftini/graft';
 import { Box, Tab, Tabs } from '@material-ui/core';
 import { useCallback, useEffect, useState } from 'react';
+import Scrollbars from 'react-custom-scrollbars';
 import { useDesignerState } from 'store/designer';
 import { rightSidebarWidth } from 'utils/constants';
 import ComponentOptions from './ComponentOptions';
@@ -25,38 +26,37 @@ export default function RightSidebar() {
   }, [isRootSelected]);
 
   return (
-    <Box
-      sx={{
-        px: 1.5,
-        pb: 4,
+    <Scrollbars
+      autoHide
+      autoHideTimeout={1000}
+      autoHideDuration={200}
+      style={{
         width: rightSidebarWidth,
-        overflowY: 'auto',
-        // Hide scrollbars on all browsers.
-        // https://stackoverflow.com/a/49278385
-        scrollbarWidth: 'none',
-        msOverflowStyle: 'none',
-        '&::-webkit-scrollbar': {
-          width: 0,
-          height: 0,
-        },
       }}
     >
-      <Tabs value={currentTab} onChange={onChange} centered sx={{ mt: 1, minHeight: 'auto' }}>
-        <Tab label="Design" sx={{ padding: 1, minHeight: 0 }} />
-        <Tab label="Interaction" sx={{ padding: 1, minHeight: 0 }} />
-        {isRootSelected && <Tab label="SEO" sx={{ padding: 1, minHeight: 0 }} />}
-      </Tabs>
+      <Box
+        sx={{
+          px: 1.5,
+          pb: 4,
+        }}
+      >
+        <Tabs value={currentTab} onChange={onChange} centered sx={{ mt: 1, minHeight: 'auto' }}>
+          <Tab label="Design" sx={{ padding: 1, minHeight: 0 }} />
+          <Tab label="Interaction" sx={{ padding: 1, minHeight: 0 }} />
+          {isRootSelected && <Tab label="SEO" sx={{ padding: 1, minHeight: 0 }} />}
+        </Tabs>
 
-      <TabPanel value={currentTab} index={0}>
-        <ComponentOptions />
-      </TabPanel>
-      <TabPanel value={currentTab} index={1}>
-        <InteractionOptions />
-      </TabPanel>
-      <TabPanel value={currentTab} index={2}>
-        <SEOOptions />
-      </TabPanel>
-    </Box>
+        <TabPanel value={currentTab} index={0}>
+          <ComponentOptions />
+        </TabPanel>
+        <TabPanel value={currentTab} index={1}>
+          <InteractionOptions />
+        </TabPanel>
+        <TabPanel value={currentTab} index={2}>
+          <SEOOptions />
+        </TabPanel>
+      </Box>
+    </Scrollbars>
   );
 }
 

@@ -1,7 +1,14 @@
-import { ForwardRefExoticComponent, MouseEventHandler, ReactNode, UIEventHandler } from 'react';
+import {
+  ForwardRefExoticComponent,
+  MouseEventHandler,
+  ReactNode,
+  Ref,
+  UIEventHandler,
+} from 'react';
 
 export type RootComponent<T extends object> = ForwardRefExoticComponent<
   {
+    scrollRef: Ref<any>;
     onScroll: UIEventHandler;
     onMouseUp: MouseEventHandler;
     onMouseDown: MouseEventHandler;

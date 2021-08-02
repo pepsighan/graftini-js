@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 import { RGBA, rgbaToCss } from '@graftini/bricks';
 import { RootComponent, ROOT_NODE_ID, useCreateComponentStore } from '@graftini/graft';
+import { ScrollTrackHorizontal, ScrollTrackVertical } from 'components/DisableScrollInteraction';
 import { useContextMenu } from 'components/editor/ContextMenu';
 import { ForwardedRef, forwardRef, MouseEvent, useCallback } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { useDesignerState } from 'store/designer';
 
 const cursor = {
@@ -21,7 +23,7 @@ type SEO = {
 };
 
 const Root: RootComponent<RootProps> = forwardRef(
-  ({ color, seo, children, onScroll, ...rest }, ref: ForwardedRef<unknown>) => {
+  ({ color, seo, children, onScroll, scrollRef, ...rest }, containerRef: ForwardedRef<unknown>) => {
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const currentCreateType = useCreateComponentStore(
       useCallback((state) => state.newComponent?.type, [])
@@ -49,29 +51,41 @@ const Root: RootComponent<RootProps> = forwardRef(
     );
 
     return (
-      <div
+      <Scrollbars
         id="app-root"
-        css={{
-          cursor: cursor[currentCreateType] ?? 'auto',
-          backgroundColor: rgbaToCss(color),
+        ref={scrollRef as any}
+        autoHide
+        autoHideTimeout={1000}
+        autoHideDuration={200}
+        style={{
+          width: '100vw',
+          height: '100vh',
         }}
-        {...rest}
-        onClick={onSelect}
-        onContextMenu={onContextMenu}
+        onScroll={onScroll}
+        renderTrackHorizontal={ScrollTrackHorizontal}
+        renderTrackVertical={ScrollTrackVertical}
       >
         <div
-          ref={ref as any}
-          onScroll={onScroll}
           css={{
-            width: '100vw',
-            height: '100vh',
-            overflow: 'auto',
-            pointerEvents: currentCreateType ? 'none' : null,
+            width: '100%',
+            height: '100%',
+            cursor: cursor[currentCreateType] ?? 'auto',
+            backgroundColor: rgbaToCss(color),
           }}
+          {...rest}
+          onClick={onSelect}
+          onContextMenu={onContextMenu}
         >
-          {children}
+          <div
+            ref={containerRef as any}
+            css={{
+              pointerEvents: currentCreateType ? 'none' : null,
+            }}
+          >
+            {children}
+          </div>
         </div>
-      </div>
+      </Scrollbars>
     );
   }
 );
