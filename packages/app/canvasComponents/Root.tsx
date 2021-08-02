@@ -54,6 +54,9 @@ const Root: RootComponent<RootProps> = forwardRef(
       <Scrollbars
         id="app-root"
         ref={scrollRef as any}
+        autoHide
+        autoHideTimeout={1000}
+        autoHideDuration={200}
         style={{
           width: '100vw',
           height: '100vh',
