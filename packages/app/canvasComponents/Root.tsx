@@ -79,6 +79,8 @@ const Root: RootComponent<RootProps> = forwardRef(
           <div
             ref={containerRef as any}
             css={{
+              minHeight: '100%',
+              minWidth: '100%',
               pointerEvents: currentCreateType ? 'none' : null,
             }}
           >
