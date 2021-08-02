@@ -3,6 +3,7 @@ import { RGBA, rgbaToCss } from '@graftini/bricks';
 import { RootComponent, ROOT_NODE_ID, useCreateComponentStore } from '@graftini/graft';
 import { useContextMenu } from 'components/editor/ContextMenu';
 import { ForwardedRef, forwardRef, MouseEvent, useCallback } from 'react';
+import { Scrollbars } from 'react-custom-scrollbars';
 import { useDesignerState } from 'store/designer';
 
 const cursor = {
@@ -49,30 +50,36 @@ const Root: RootComponent<RootProps> = forwardRef(
     );
 
     return (
-      <div
+      <Scrollbars
         id="app-root"
         ref={scrollRef as any}
-        css={{
-          cursor: cursor[currentCreateType] ?? 'auto',
-          backgroundColor: rgbaToCss(color),
+        style={{
           width: '100vw',
           height: '100vh',
-          overflow: 'auto',
         }}
         onScroll={onScroll}
-        {...rest}
-        onClick={onSelect}
-        onContextMenu={onContextMenu}
       >
         <div
-          ref={containerRef as any}
           css={{
-            pointerEvents: currentCreateType ? 'none' : null,
+            width: '100%',
+            height: '100%',
+            cursor: cursor[currentCreateType] ?? 'auto',
+            backgroundColor: rgbaToCss(color),
           }}
+          {...rest}
+          onClick={onSelect}
+          onContextMenu={onContextMenu}
         >
-          {children}
+          <div
+            ref={containerRef as any}
+            css={{
+              pointerEvents: currentCreateType ? 'none' : null,
+            }}
+          >
+            {children}
+          </div>
         </div>
-      </div>
+      </Scrollbars>
     );
   }
 );
