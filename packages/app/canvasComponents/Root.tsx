@@ -21,7 +21,7 @@ type SEO = {
 };
 
 const Root: RootComponent<RootProps> = forwardRef(
-  ({ color, seo, children, onScroll, ...rest }, ref: ForwardedRef<unknown>) => {
+  ({ color, seo, children, onScroll, scrollRef, ...rest }, containerRef: ForwardedRef<unknown>) => {
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const currentCreateType = useCreateComponentStore(
       useCallback((state) => state.newComponent?.type, [])
@@ -51,7 +51,7 @@ const Root: RootComponent<RootProps> = forwardRef(
     return (
       <div
         id="app-root"
-        ref={ref as any}
+        ref={scrollRef as any}
         css={{
           cursor: cursor[currentCreateType] ?? 'auto',
           backgroundColor: rgbaToCss(color),
@@ -65,6 +65,7 @@ const Root: RootComponent<RootProps> = forwardRef(
         onContextMenu={onContextMenu}
       >
         <div
+          ref={containerRef as any}
           css={{
             pointerEvents: currentCreateType ? 'none' : null,
           }}
