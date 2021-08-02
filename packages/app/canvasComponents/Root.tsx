@@ -51,21 +51,21 @@ const Root: RootComponent<RootProps> = forwardRef(
     return (
       <div
         id="app-root"
+        ref={ref as any}
         css={{
           cursor: cursor[currentCreateType] ?? 'auto',
           backgroundColor: rgbaToCss(color),
+          width: '100vw',
+          height: '100vh',
+          overflow: 'auto',
         }}
+        onScroll={onScroll}
         {...rest}
         onClick={onSelect}
         onContextMenu={onContextMenu}
       >
         <div
-          ref={ref as any}
-          onScroll={onScroll}
           css={{
-            width: '100vw',
-            height: '100vh',
-            overflow: 'auto',
             pointerEvents: currentCreateType ? 'none' : null,
           }}
         >
