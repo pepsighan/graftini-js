@@ -1,5 +1,6 @@
 import { Box, IconButton, Typography } from '@material-ui/core';
 import { PlusIcon } from '@modulz/radix-icons';
+import { ScrollTrackHorizontal, ScrollTrackVertical } from 'components/DisableScrollInteraction';
 import useBoolean from 'hooks/useBoolean';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { useRouter } from 'next/router';
@@ -45,7 +46,14 @@ export default function Pages() {
         </IconButton>
       </Box>
 
-      <Scrollbars autoHide autoHideTimeout={1000} autoHideDuration={200} style={{ flex: 1 }}>
+      <Scrollbars
+        autoHide
+        autoHideTimeout={1000}
+        autoHideDuration={200}
+        renderTrackHorizontal={ScrollTrackHorizontal}
+        renderTrackVertical={ScrollTrackVertical}
+        style={{ flex: 1 }}
+      >
         {project.pages.map((it) => (
           <PageItem
             key={it.id}

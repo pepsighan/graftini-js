@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { RGBA, rgbaToCss } from '@graftini/bricks';
 import { RootComponent, ROOT_NODE_ID, useCreateComponentStore } from '@graftini/graft';
+import { ScrollTrackHorizontal, ScrollTrackVertical } from 'components/DisableScrollInteraction';
 import { useContextMenu } from 'components/editor/ContextMenu';
 import { ForwardedRef, forwardRef, MouseEvent, useCallback } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -58,6 +59,8 @@ const Root: RootComponent<RootProps> = forwardRef(
           height: '100vh',
         }}
         onScroll={onScroll}
+        renderTrackHorizontal={ScrollTrackHorizontal}
+        renderTrackVertical={ScrollTrackVertical}
       >
         <div
           css={{
