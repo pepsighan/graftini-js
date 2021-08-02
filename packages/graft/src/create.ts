@@ -9,6 +9,7 @@ import {
 } from './store/createComponent';
 import { ComponentNode, EditorStore, useEditorStore, useEditorStoreApi } from './store/editor';
 import { useComponentRegionStoreApi } from './store/regionMap';
+import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
  * Read the paper around why we are using a draw method to create components.
@@ -68,6 +69,7 @@ export function useDrawComponent(): UseDrawComponent {
   const { getState: getEditorState } = useEditorStoreApi();
   const { getState: getRegionState } = useComponentRegionStoreApi();
   const resolverMap = useContext(ResolverContext);
+  const { getState: getRootScrollState } = useRootScrollStoreApi();
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
@@ -136,10 +138,17 @@ export function useDrawComponent(): UseDrawComponent {
         state.draw.end.x = event.clientX < state.draw.start.x ? state.draw.start.x : event.clientX;
         state.draw.end.y = event.clientY < state.draw.start.y ? state.draw.start.y : event.clientY;
 
+        // The draw might be happening at a position where the canvas is scrolled.
+        const scrollPosition = getRootScrollState().position;
+        const resolvedStartPosition = {
+          x: state.draw!.start.x + scrollPosition.x,
+          y: state.draw!.start.y + scrollPosition.y,
+        };
+
         dropRegion = identifyDropRegion(
           getEditorState().componentMap,
           getRegionState().regionMap,
-          state.draw!.start
+          resolvedStartPosition
         );
 
         const { onCreate, transformSize, defaultProps, isCanvas, type, childAppendDirection } =
@@ -178,7 +187,14 @@ export function useDrawComponent(): UseDrawComponent {
         afterCreate(newComponent!.id);
       }
     },
-    [getEditorState, getRegionState, immerSetCreateComponent, immerSetEditor, resolverMap]
+    [
+      getEditorState,
+      getRegionState,
+      getRootScrollState,
+      immerSetCreateComponent,
+      immerSetEditor,
+      resolverMap,
+    ]
   );
 
   return {
