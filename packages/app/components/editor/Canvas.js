@@ -28,6 +28,9 @@ export default function Canvas() {
           height: '100%',
           position: 'relative',
           margin: 0.75,
+          // Margin does not work on the bottom. And padding works to show the
+          // scroll.
+          pb: 0.75,
           backgroundColor: 'white',
           border: '1px solid',
           borderColor: 'grey.200',
