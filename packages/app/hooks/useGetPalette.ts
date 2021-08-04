@@ -1,5 +1,6 @@
-import { RGBA, rgbaToCss } from '@graftini/bricks';
+import { ProseMirrorDocument, RGBA, rgbaToCss } from '@graftini/bricks';
 import { useEditorStore } from '@graftini/graft';
+import { MarkKind } from 'canvasComponents/proseEditor/schema';
 import { isEqual } from 'lodash-es';
 import { useCallback, useMemo } from 'react';
 
@@ -13,9 +14,30 @@ export default function useGetPalette(): RGBA[] {
 
       Object.keys(state.componentMap).forEach((key) => {
         const component = state.componentMap[key];
+
+        // Extract the colors used in any text.
         if (component.type === 'Text') {
-          // Skip the text component for now.
-          // TODO: We will come back to it later.
+          const content: ProseMirrorDocument = component.props.content;
+
+          content.content.forEach((para) => {
+            if (!para.content) {
+              return;
+            }
+
+            para.content.forEach((text) => {
+              if (!text.marks) {
+                return;
+              }
+
+              text.marks.forEach((mark) => {
+                if (mark.type === MarkKind.TextColor) {
+                  const color = mark.attrs as RGBA;
+                  colors[rgbaToCss(color)] = color;
+                }
+              });
+            });
+          });
+
           return;
         }
 
