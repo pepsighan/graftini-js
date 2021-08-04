@@ -20,8 +20,8 @@ export default function useGetPalette(): RGBA[] {
         }
 
         if (component.type === 'Root') {
-          // Also skip the root component for now.
-          // TODO: We will come back to it later.
+          const color = component.props.color;
+          colors[rgbaToCss(color)] = color;
           return;
         }
 
