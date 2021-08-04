@@ -1,12 +1,14 @@
 import { Box } from '@material-ui/core';
 import { RgbaColorPicker } from 'react-colorful';
+import ColorPalette from './ColorPalette';
 
 export default function ColorPicker({ value, onChange, padding = 1.2 }) {
   return (
     <Box
       sx={{
         '& .react-colorful': {
-          padding,
+          pt: padding,
+          px: padding,
           height: 200,
           borderRadius: 0,
         },
@@ -34,6 +36,15 @@ export default function ColorPicker({ value, onChange, padding = 1.2 }) {
       }}
     >
       <RgbaColorPicker color={value} onChange={onChange} />
+      <Box
+        sx={{
+          px: padding,
+          pb: 1,
+          pt: 0.5,
+        }}
+      >
+        <ColorPalette onChange={onChange} />
+      </Box>
     </Box>
   );
 }
