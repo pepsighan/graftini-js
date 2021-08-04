@@ -9,11 +9,16 @@ export type RGBA = {
 };
 
 /**
- * Converts an RGBA color to either hex format with # symbol or rgba() format.
+ * Converts an RGBA color to either hex format with # symbol or rgba() format or `transparent`
+ * if alpha is 0.
  */
 export function rgbaToCss(rgba: RGBA): string {
   if (typeof rgba.a !== 'number' || rgba.a === 1) {
     return rgbToHex(rgba);
+  }
+
+  if (rgba.a === 0) {
+    return 'transparent';
   }
 
   return `rgba(${rgba.r}, ${rgba.g}, ${rgba.b}, ${rgba.a})`;
