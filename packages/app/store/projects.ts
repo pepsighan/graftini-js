@@ -136,6 +136,36 @@ export function useCreatePage({ projectId }) {
 }
 
 /**
+ * Hook to create a new page in the project.
+ */
+export function useDuplicatePage({ projectId }) {
+  const updatePageDesign = useDesignerState(useCallback((state) => state.updatePageDesign, []));
+
+  return useMutation(
+    gql`
+      mutation DuplicateProjectPage($input: DuplicatePage!) {
+        duplicatePage(input: $input) {
+          id
+          componentMap
+        }
+      }
+    `,
+    {
+      refetchQueries: [
+        {
+          query: QUERY_MY_PROJECT,
+          variables: { id: projectId },
+        },
+      ],
+      onCompleted: (data) => {
+        // Add this page so that the UI can edit it.
+        updatePageDesign(data.duplicatePage.id, parseComponentMap(data.duplicatePage.componentMap));
+      },
+    }
+  );
+}
+
+/**
  * Hook to update page name and route.
  */
 export function useUpdatePage({ projectId }) {
