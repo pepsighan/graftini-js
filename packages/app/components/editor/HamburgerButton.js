@@ -7,37 +7,38 @@ import ShortcutsDialog from './ShortcutsDialog';
 
 export default function HamburgerButton() {
   const [open, setOpen] = useState(null);
-  const [value, setValue] = useLocalStorage('graftini-project-settings-viewed', 'false');
+  const [shortcutsViewed, setShortcutsViewed] = useLocalStorage(
+    'graftini-shortcut-viewed',
+    'false'
+  );
 
   const [isShortcutsOpen, { on: onShortcuts, off: onShortcutsClose }] = useBoolean(false);
 
-  const onOpen = useCallback(
-    (event) => {
-      setValue('true');
-      setOpen(event.currentTarget);
-    },
-    [setValue]
-  );
+  const onOpen = useCallback((event) => {
+    setOpen(event.currentTarget);
+  }, []);
   const onClose = useCallback(() => setOpen(null), []);
 
-  const onCloseWrap = useCallback(
-    (fn) => () => {
-      onClose();
-      fn();
-    },
-    [onClose]
-  );
+  const onShortcutOpen = useCallback(() => {
+    setShortcutsViewed('true');
+    onClose();
+    onShortcuts();
+  }, [onClose, onShortcuts, setShortcutsViewed]);
 
   return (
     <>
       <IconButton onClick={onOpen}>
-        <Badge variant="dot" color="info" invisible={value === 'true'}>
+        <Badge variant="dot" color="info" invisible={shortcutsViewed === 'true'}>
           <HamburgerMenuIcon />
         </Badge>
       </IconButton>
 
       <Menu open={!!open} onClose={onClose} anchorEl={open}>
-        <MenuItem onClick={onCloseWrap(onShortcuts)}>Keyboard Shortcuts</MenuItem>
+        <MenuItem onClick={onShortcutOpen}>
+          <Badge variant="dot" color="info" invisible={shortcutsViewed === 'true'}>
+            Keyboard Shortcuts
+          </Badge>
+        </MenuItem>
         <MenuItem>Changelog</MenuItem>
       </Menu>
 
