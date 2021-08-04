@@ -1,7 +1,7 @@
-import { rgbaToCss } from '@graftini/bricks';
 import { InputAdornment, Popover, TextField, Typography } from '@material-ui/core';
 import { useCallback, useState } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
+import { rgbaToViewableText } from 'utils/color';
 import ColorBox from './ColorBox';
 import ColorPicker from './ColorPicker';
 import { wideLabelAlignmentStyle } from './formLabels';
@@ -23,7 +23,7 @@ export default function ColorPickerInput({ name, label = null, onChange = null }
         <>
           <TextField
             onClick={onOpen}
-            value={field.value ? rgbaToCss({ ...field.value, a: null }) : ''}
+            value={field.value ? rgbaToViewableText(field.value) : ''}
             InputProps={{
               readOnly: true,
               startAdornment: (

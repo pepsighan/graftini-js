@@ -1,4 +1,3 @@
-import { rgbaToCss } from '@graftini/bricks';
 import {
   Button,
   InputAdornment,
@@ -12,6 +11,7 @@ import { Cross1Icon } from '@modulz/radix-icons';
 import { capitalize } from 'lodash-es';
 import { useCallback, useState } from 'react';
 import { Controller, useFormContext, useWatch } from 'react-hook-form';
+import { rgbaToViewableText } from 'utils/color';
 import { parsePositiveInteger } from 'utils/parser';
 import ColorBox from './ColorBox';
 import ColorPicker from './ColorPicker';
@@ -115,7 +115,7 @@ function ColorPickerInput({ name }) {
         <>
           <ColorPicker value={field.value} onChange={field.onChange} padding={0} />
           <TextField
-            value={rgbaToCss({ ...field.value, a: null })}
+            value={rgbaToViewableText(field.value)}
             InputProps={{
               readOnly: true,
               startAdornment: (
