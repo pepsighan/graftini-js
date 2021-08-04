@@ -1,6 +1,10 @@
+import { rgbaToCss } from '@graftini/bricks';
 import { Box, Button, Tooltip, Typography } from '@material-ui/core';
 import { TransparencyGridIcon } from '@modulz/radix-icons';
 import { useCallback } from 'react';
+
+// Any color with a=0 is a transparent color.
+const transparentColor = { r: 255, g: 255, b: 255, a: 0 };
 
 export default function ColorPalette({ onChange }) {
   return (
@@ -10,7 +14,7 @@ export default function ColorPalette({ onChange }) {
       </Typography>
 
       <Box sx={{ mt: 0.25 }}>
-        <ColorButton color="transparent" onClick={onChange}>
+        <ColorButton color={transparentColor} onClick={onChange}>
           <TransparencyGridIcon width="100%" height="100%" />
         </ColorButton>
       </Box>
@@ -22,7 +26,7 @@ function ColorButton({ color, onClick, children }) {
   const onColor = useCallback(() => onClick(color), [color, onClick]);
 
   return (
-    <Tooltip title={color}>
+    <Tooltip title={rgbaToCss(color)}>
       <Button
         sx={{
           position: 'relative',
