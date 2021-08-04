@@ -11,8 +11,8 @@ import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
 import DeployButton from './DeployButton';
+import HamburgerButton from './HamburgerButton';
 import SavingStatus from './SavingStatus';
-import ShortcutsButton from './ShortcutsButton';
 
 export default function EditorNavigation() {
   const { query } = useRouter();
@@ -42,8 +42,6 @@ export default function EditorNavigation() {
         </Stack>
 
         <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ flex: 1 }}>
-          <ShortcutsButton />
-
           <SavingStatus />
 
           <Link href={`/dashboard/project/${query.projectId}/preview`}>
@@ -55,6 +53,8 @@ export default function EditorNavigation() {
           </Link>
 
           <DeployButton />
+
+          <HamburgerButton />
         </Stack>
       </Toolbar>
     </AppBar>
