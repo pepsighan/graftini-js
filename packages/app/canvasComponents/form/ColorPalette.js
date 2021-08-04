@@ -7,9 +7,24 @@ import { rgbaToCss } from '@graftini/bricks';
 
 // Any color with a=0 is a transparent color.
 const transparentColor = { r: 255, g: 255, b: 255, a: 0 };
+const blackColor = { r: 0, g: 0, b: 0 };
 
 export default function ColorPalette({ onChange }) {
-  const colors = useGetPalette();
+  // Get the palette used in the page skipping transparent or black color. We have these two
+  // colors by default.
+  const colors = useGetPalette(
+    useCallback((color) => {
+      if (color.a === 0) {
+        return false;
+      }
+
+      if (color.r === 0 && color.g === 0 && color.b === 0 && (color.a === null || color.a === 1)) {
+        return false;
+      }
+
+      return true;
+    }, [])
+  );
 
   return (
     <>
@@ -21,13 +36,14 @@ export default function ColorPalette({ onChange }) {
         <ColorButton color={transparentColor} onClick={onChange}>
           <TransparencyGridIcon width="100%" height="100%" />
         </ColorButton>
-        {colors
-          .filter((it) => it.a !== 0)
-          .map((it, index) => (
-            <ColorButton key={index} color={it} onClick={onChange}>
-              <TransparencyGridIcon width="100%" height="100%" />
-            </ColorButton>
-          ))}
+        <ColorButton color={blackColor} onClick={onChange}>
+          <TransparencyGridIcon width="100%" height="100%" />
+        </ColorButton>
+        {colors.map((it, index) => (
+          <ColorButton key={index} color={it} onClick={onChange}>
+            <TransparencyGridIcon width="100%" height="100%" />
+          </ColorButton>
+        ))}
       </Grid>
     </>
   );

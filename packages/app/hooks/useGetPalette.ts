@@ -7,7 +7,7 @@ import { useCallback, useMemo } from 'react';
 /**
  * Gets the palette in the given page.
  */
-export default function useGetPalette(): RGBA[] {
+export default function useGetPalette(skip: (color: RGBA) => boolean): RGBA[] {
   const colors = useEditorStore(
     useCallback((state) => {
       const colors: { [key: string]: RGBA } = {};
@@ -63,5 +63,5 @@ export default function useGetPalette(): RGBA[] {
     useCallback((left, right) => isEqual(left, right), [])
   );
 
-  return useMemo(() => Object.values(colors), [colors]);
+  return useMemo(() => Object.values(colors).filter(skip), [colors, skip]);
 }
