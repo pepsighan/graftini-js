@@ -4,7 +4,7 @@ import { TreeItem, TreeView, useTreeItem } from '@material-ui/lab';
 import { SquareIcon, TextIcon } from '@modulz/radix-icons';
 import { ScrollTrackHorizontal, ScrollTrackVertical } from 'components/DisableScrollInteraction';
 import { isEqual } from 'lodash-es';
-import { forwardRef, useCallback } from 'react';
+import { forwardRef, useCallback, useEffect } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useDesignerState } from 'store/designer';
 import ComponentContextMenu, { layerContextMenuId } from './ComponentContextMenu';
@@ -89,6 +89,17 @@ const LayerView = forwardRef(({ nodeId }, ref) => {
 
   const { selected, handleSelection } = useTreeItem(nodeId);
   const { onOpen: onOpenContextMenu } = useContextMenu();
+
+  useEffect(() => {
+    if (selected) {
+      // If the layer is hidden from the view, then it scrolls into
+      // view. Otherwise, nothing happens.
+      ref.current?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+      });
+    }
+  }, [ref, selected]);
 
   return (
     <ButtonGroup
