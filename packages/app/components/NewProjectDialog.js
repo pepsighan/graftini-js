@@ -63,9 +63,11 @@ function Form() {
         variables: {
           input: {
             name: state.name,
-            defaultPageComponentMap: JSON.stringify(
-              defaultComponentMap(Root.graftOptions.defaultProps)
-            ),
+            defaultPageComponentMap:
+              state.templateId === 'blank'
+                ? JSON.stringify(defaultComponentMap(Root.graftOptions.defaultProps))
+                : null,
+            templateId: state.templateId !== 'blank' ? state.templateId : null,
           },
         },
       });
