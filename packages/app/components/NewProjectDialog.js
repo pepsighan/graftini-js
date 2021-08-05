@@ -1,14 +1,15 @@
 import { defaultComponentMap } from '@graftini/graft';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Alert,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   InputAdornment,
-  TextField,
-  Alert,
-  Typography,
   Link,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import Root from 'canvasComponents/Root';
 import { materialRegister } from 'hooks/useMaterialFormRegister';
@@ -18,14 +19,37 @@ import { useForm } from 'react-hook-form';
 import { useCreateProject, useMyProjects } from 'store/projects';
 import config, { Environment } from 'utils/config';
 import { slugify } from 'utils/url';
+import { z } from 'zod';
 import AsyncButton from './AsyncButton';
+import ProjectTemplates from './ProjectTemplates';
+
+const schema = z.object({
+  name: z.string().min(1),
+  templateId: z.string().min(1, { message: 'Select a template to begin.' }),
+});
 
 export default function NewProjectDialog({ isOpen, onClose }) {
+  return (
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
+      <DialogTitle>New Project</DialogTitle>
+      <Form key={isOpen} />
+    </Dialog>
+  );
+}
+
+function Form() {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm();
+    formState: { isSubmitting, errors },
+    control,
+  } = useForm({
+    defaultValues: {
+      name: '',
+      templateId: '',
+    },
+    resolver: zodResolver(schema),
+  });
   const { push } = useRouter();
   const [createProject] = useCreateProject();
 
@@ -39,9 +63,11 @@ export default function NewProjectDialog({ isOpen, onClose }) {
         variables: {
           input: {
             name: state.name,
-            defaultPageComponentMap: JSON.stringify(
-              defaultComponentMap(Root.graftOptions.defaultProps)
-            ),
+            defaultPageComponentMap:
+              state.templateId === 'blank'
+                ? JSON.stringify(defaultComponentMap(Root.graftOptions.defaultProps))
+                : null,
+            templateId: state.templateId !== 'blank' ? state.templateId : null,
           },
         },
       });
@@ -63,21 +89,22 @@ export default function NewProjectDialog({ isOpen, onClose }) {
   );
 
   return (
-    <Dialog open={isOpen} onClose={onClose}>
-      <DialogTitle>New Project</DialogTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogContent>
-          {isProjectLimitReached && (
-            <Alert severity="info">
-              You have reached your projects limit.
-              <Typography variant="inherit">
-                Contact us at <Link href="mailto:sales@graftini.com">sales@graftini.com</Link> to
-                request an increase.
-              </Typography>
-            </Alert>
-          )}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogContent>
+        {isProjectLimitReached && (
+          <Alert severity="info">
+            You have reached your projects limit.
+            <Typography variant="inherit">
+              Contact us at <Link href="mailto:sales@graftini.com">sales@graftini.com</Link> to
+              request an increase.
+            </Typography>
+          </Alert>
+        )}
 
-          {!isProjectLimitReached && (
+        {!isProjectLimitReached && (
+          <>
+            <ProjectTemplates control={control} error={errors.templateId?.message} />
+
             <TextField
               {...materialRegister(register, 'name')}
               autoComplete="off"
@@ -89,22 +116,25 @@ export default function NewProjectDialog({ isOpen, onClose }) {
                   </InputAdornment>
                 ),
               }}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+              sx={{ mt: 2 }}
             />
-          )}
-        </DialogContent>
+          </>
+        )}
+      </DialogContent>
 
-        <DialogActions>
-          <AsyncButton
-            type="submit"
-            variant="contained"
-            size="small"
-            disabled={isProjectLimitReached}
-            isLoading={isSubmitting}
-          >
-            Create
-          </AsyncButton>
-        </DialogActions>
-      </form>
-    </Dialog>
+      <DialogActions>
+        <AsyncButton
+          type="submit"
+          variant="contained"
+          size="small"
+          disabled={isProjectLimitReached}
+          isLoading={isSubmitting}
+        >
+          Create
+        </AsyncButton>
+      </DialogActions>
+    </form>
   );
 }
