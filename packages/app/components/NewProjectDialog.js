@@ -19,6 +19,7 @@ import { useCreateProject, useMyProjects } from 'store/projects';
 import config, { Environment } from 'utils/config';
 import { slugify } from 'utils/url';
 import AsyncButton from './AsyncButton';
+import ProjectTemplates from './ProjectTemplates';
 
 export default function NewProjectDialog({ isOpen, onClose }) {
   const {
@@ -63,7 +64,7 @@ export default function NewProjectDialog({ isOpen, onClose }) {
   );
 
   return (
-    <Dialog open={isOpen} onClose={onClose}>
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
       <DialogTitle>New Project</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
@@ -78,18 +79,23 @@ export default function NewProjectDialog({ isOpen, onClose }) {
           )}
 
           {!isProjectLimitReached && (
-            <TextField
-              {...materialRegister(register, 'name')}
-              autoComplete="off"
-              fullWidth
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Typography variant="body2">Name</Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
+            <>
+              <ProjectTemplates />
+
+              <TextField
+                {...materialRegister(register, 'name')}
+                autoComplete="off"
+                fullWidth
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <Typography variant="body2">Name</Typography>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={{ mt: 2 }}
+              />
+            </>
           )}
         </DialogContent>
 
