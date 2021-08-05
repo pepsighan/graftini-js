@@ -1,4 +1,5 @@
 import { Box, Chip, Dialog, DialogContent, DialogTitle, Typography } from '@material-ui/core';
+import { Fragment } from 'react';
 
 // Increment this once the changelog has been updated.
 export const version = '1';
@@ -17,7 +18,7 @@ export default function ChangelogDialog({ open, onClose }) {
       <DialogTitle>Changelog</DialogTitle>
       <DialogContent>
         {changelog.map((it) => (
-          <>
+          <Fragment key={it.date}>
             <Typography variant="subtitle2" color="textSecondary" sx={{ mt: 0.5 }}>
               {it.date}
             </Typography>
@@ -25,12 +26,14 @@ export default function ChangelogDialog({ open, onClose }) {
               <Chip label="Features" color="info" size="small" />
 
               <Box component="ul" sx={{ pl: 3, mt: 0.5 }}>
-                {it.features.map((feature) => (
-                  <Typography component="li">{feature.text}</Typography>
+                {it.features.map((feature, index) => (
+                  <Typography key={index} component="li">
+                    {feature.text}
+                  </Typography>
                 ))}
               </Box>
             </Box>
-          </>
+          </Fragment>
         ))}
       </DialogContent>
     </Dialog>
