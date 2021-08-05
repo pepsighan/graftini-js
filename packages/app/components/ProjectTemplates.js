@@ -1,7 +1,10 @@
 import { Box, Button, Grid, Paper, Typography } from '@material-ui/core';
 import { FileIcon } from '@modulz/radix-icons';
+import { useProjectTemplates } from 'store/templates';
 
 export default function ProjectTemplates() {
+  const { templates } = useProjectTemplates();
+
   return (
     <Box>
       <Typography variant="body2" color="textSecondary" sx={{ mb: 1 }}>
@@ -13,13 +16,11 @@ export default function ProjectTemplates() {
         <Grid item xs={4}>
           <BlankProject />
         </Grid>
-        {Array(4)
-          .fill(0)
-          .map((_, index) => (
-            <Grid key={index} item xs={4}>
-              <Project />
-            </Grid>
-          ))}
+        {templates.map((template) => (
+          <Grid key={template.id} item xs={4}>
+            <Project template={template} />
+          </Grid>
+        ))}
       </Grid>
     </Box>
   );
@@ -48,7 +49,7 @@ function BlankProject() {
   );
 }
 
-function Project() {
+function Project({ template }) {
   return (
     <Button sx={{ flexDirection: 'column', width: '100%', p: 0 }}>
       <Paper
@@ -61,7 +62,7 @@ function Project() {
         }}
       />
       <Typography variant="subtitle2" sx={{ px: 1, py: 0.5 }}>
-        Portfolio
+        {template.name}
       </Typography>
     </Button>
   );
