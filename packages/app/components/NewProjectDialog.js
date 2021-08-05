@@ -25,14 +25,29 @@ import ProjectTemplates from './ProjectTemplates';
 
 const schema = z.object({
   name: z.string().min(1),
+  templateId: z.string().min(1, { message: 'Select a template to begin.' }),
 });
 
 export default function NewProjectDialog({ isOpen, onClose }) {
+  return (
+    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
+      <DialogTitle>New Project</DialogTitle>
+      <Form key={isOpen} />
+    </Dialog>
+  );
+}
+
+function Form() {
   const {
     register,
     handleSubmit,
     formState: { isSubmitting, errors },
+    control,
   } = useForm({
+    defaultValues: {
+      name: '',
+      templateId: '',
+    },
     resolver: zodResolver(schema),
   });
   const { push } = useRouter();
@@ -72,55 +87,52 @@ export default function NewProjectDialog({ isOpen, onClose }) {
   );
 
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
-      <DialogTitle>New Project</DialogTitle>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <DialogContent>
-          {isProjectLimitReached && (
-            <Alert severity="info">
-              You have reached your projects limit.
-              <Typography variant="inherit">
-                Contact us at <Link href="mailto:sales@graftini.com">sales@graftini.com</Link> to
-                request an increase.
-              </Typography>
-            </Alert>
-          )}
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <DialogContent>
+        {isProjectLimitReached && (
+          <Alert severity="info">
+            You have reached your projects limit.
+            <Typography variant="inherit">
+              Contact us at <Link href="mailto:sales@graftini.com">sales@graftini.com</Link> to
+              request an increase.
+            </Typography>
+          </Alert>
+        )}
 
-          {!isProjectLimitReached && (
-            <>
-              <ProjectTemplates />
+        {!isProjectLimitReached && (
+          <>
+            <ProjectTemplates control={control} error={errors.templateId?.message} />
 
-              <TextField
-                {...materialRegister(register, 'name')}
-                autoComplete="off"
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <Typography variant="body2">Name</Typography>
-                    </InputAdornment>
-                  ),
-                }}
-                error={!!errors.name}
-                helperText={errors.name?.message}
-                sx={{ mt: 2 }}
-              />
-            </>
-          )}
-        </DialogContent>
+            <TextField
+              {...materialRegister(register, 'name')}
+              autoComplete="off"
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Typography variant="body2">Name</Typography>
+                  </InputAdornment>
+                ),
+              }}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+              sx={{ mt: 2 }}
+            />
+          </>
+        )}
+      </DialogContent>
 
-        <DialogActions>
-          <AsyncButton
-            type="submit"
-            variant="contained"
-            size="small"
-            disabled={isProjectLimitReached}
-            isLoading={isSubmitting}
-          >
-            Create
-          </AsyncButton>
-        </DialogActions>
-      </form>
-    </Dialog>
+      <DialogActions>
+        <AsyncButton
+          type="submit"
+          variant="contained"
+          size="small"
+          disabled={isProjectLimitReached}
+          isLoading={isSubmitting}
+        >
+          Create
+        </AsyncButton>
+      </DialogActions>
+    </form>
   );
 }
