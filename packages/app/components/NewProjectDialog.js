@@ -1,14 +1,15 @@
 import { defaultComponentMap } from '@graftini/graft';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Alert,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   InputAdornment,
-  TextField,
-  Alert,
-  Typography,
   Link,
+  TextField,
+  Typography,
 } from '@material-ui/core';
 import Root from 'canvasComponents/Root';
 import { materialRegister } from 'hooks/useMaterialFormRegister';
@@ -18,15 +19,22 @@ import { useForm } from 'react-hook-form';
 import { useCreateProject, useMyProjects } from 'store/projects';
 import config, { Environment } from 'utils/config';
 import { slugify } from 'utils/url';
+import { z } from 'zod';
 import AsyncButton from './AsyncButton';
 import ProjectTemplates from './ProjectTemplates';
+
+const schema = z.object({
+  name: z.string().min(1),
+});
 
 export default function NewProjectDialog({ isOpen, onClose }) {
   const {
     register,
     handleSubmit,
-    formState: { isSubmitting },
-  } = useForm();
+    formState: { isSubmitting, errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
   const { push } = useRouter();
   const [createProject] = useCreateProject();
 
@@ -93,6 +101,8 @@ export default function NewProjectDialog({ isOpen, onClose }) {
                     </InputAdornment>
                   ),
                 }}
+                error={!!errors.name}
+                helperText={errors.name?.message}
                 sx={{ mt: 2 }}
               />
             </>
