@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
+  Button,
   IconButton,
   InputAdornment,
   Snackbar,
@@ -9,6 +10,7 @@ import {
 } from '@material-ui/core';
 import { Cross1Icon } from '@modulz/radix-icons';
 import AsyncButton from 'components/AsyncButton';
+import Link from 'next/link';
 import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { SignInErrors, useSendSignLinkInToEmail } from 'store/auth';
@@ -80,18 +82,18 @@ export default function EmailLinkForm({ onSend }) {
         </Stack>
       )}
 
-      {/* TODO: Add the user to early access list if they were not allowed. */}
       {error === SignInErrors.EarlyAccessNotAllowed && (
-        <>
+        <Stack>
           <Typography textAlign="center">
             Sorry, you are currently not allowed for early access.
           </Typography>
 
-          <Typography textAlign="center">
-            Since you are interested, we have added your email to the queue. We will notify you once
-            you are invited.
-          </Typography>
-        </>
+          <Link href="/early-access-registration" passHref>
+            <Button component="a" variant="contained" size="medium" sx={{ mt: 2 }}>
+              Request for Early Access
+            </Button>
+          </Link>
+        </Stack>
       )}
 
       {/* TODO: Move to notistack once it is updated to MUI5. */}
