@@ -61,21 +61,39 @@ export default function Navigation() {
             }}
           >
             {!user && (
-              <Link href="/sign-in" passHref>
-                <Button
-                  component="a"
-                  variant="contained"
-                  size="medium"
-                  sx={{
-                    display: {
-                      xs: 'none',
-                      md: 'inline-flex',
-                    },
-                  }}
-                >
-                  Sign In
-                </Button>
-              </Link>
+              <>
+                <Link href="/early-access-registration" passHref>
+                  <Button
+                    component="a"
+                    variant="outlined"
+                    size="medium"
+                    sx={{
+                      display: {
+                        xs: 'none',
+                        md: 'inline-flex',
+                      },
+                    }}
+                  >
+                    Request Access
+                  </Button>
+                </Link>
+
+                <Link href="/sign-in" passHref>
+                  <Button
+                    component="a"
+                    variant="contained"
+                    size="medium"
+                    sx={{
+                      display: {
+                        xs: 'none',
+                        md: 'inline-flex',
+                      },
+                    }}
+                  >
+                    Sign In
+                  </Button>
+                </Link>
+              </>
             )}
 
             {user && (
