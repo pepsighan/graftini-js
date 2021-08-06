@@ -10,6 +10,7 @@ export function useProjectTemplates() {
         id
         name
         snapshot
+        fileUrl
       }
     }
   `);
