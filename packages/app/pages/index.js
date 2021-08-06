@@ -1,20 +1,13 @@
 import { Box, Button, Stack, Typography } from '@material-ui/core';
 import previewImg from 'assets/preview.png';
-import EarlyAccessRequest from 'components/EarlyAccessRequest';
 import Footer from 'components/Footer';
-import Link from 'components/Link';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
 import Image from 'next/image';
-import NLink from 'next/link';
-import { useState } from 'react';
-import { useAuthUser } from 'store/auth';
+import Link from 'next/link';
 import { navBarHeight } from 'utils/constants';
 
 export default function Home() {
-  const [isAccessAllowed, setIsAccessAllowed] = useState(null);
-  const { isLoggedIn } = useAuthUser();
-
   return (
     <>
       <SEO />
@@ -51,49 +44,23 @@ export default function Home() {
             <Image src={previewImg} placeholder="blur" />
           </Box>
 
-          {!isLoggedIn && (
-            <>
-              {isAccessAllowed === null && <EarlyAccessRequest onRequested={setIsAccessAllowed} />}
-
-              {isAccessAllowed === false && (
-                <>
-                  <Typography component="div" variant="h3" sx={{ mt: 2 }}>
-                    🎉
-                  </Typography>
-                  <Typography sx={{ mt: 1 }}>
-                    We have added you to the early access queue.
-                  </Typography>
-                  <Typography>
-                    You will receive a confirmation email in a while, if you have not already.
-                  </Typography>
-                </>
-              )}
-
-              {isAccessAllowed !== true && (
-                <Typography color="textSecondary" sx={{ mt: 2 }}>
-                  If you are already received an invitation to access Graftini,{' '}
-                  <Link href="/sign-in" sx={{ textDecoration: 'underline' }}>
-                    sign in
-                  </Link>{' '}
-                  to get access. .
-                </Typography>
-              )}
-
-              {isAccessAllowed === true && (
-                <>
-                  <Typography sx={{ mt: 2 }}>
-                    You already have access to Graftini, sign in with the same email.
-                  </Typography>
-
-                  <NLink href="/sign-in" passHref>
-                    <Button component="a" variant="contained" size="medium" sx={{ mt: 1 }}>
-                      Sign In
-                    </Button>
-                  </NLink>
-                </>
-              )}
-            </>
-          )}
+          <Typography
+            textAlign="center"
+            sx={{
+              mb: 2,
+              width: {
+                md: 600,
+              },
+            }}
+          >
+            We are currently only open for Early Access. If you are interested, you may request for
+            early access by clicking the button below.
+          </Typography>
+          <Link href="/early-access-registration" passHref>
+            <Button component="a" variant="contained" size="medium">
+              Request for Early Access
+            </Button>
+          </Link>
         </Stack>
 
         <Box sx={{ width: '100%', pb: 1, pt: 6 }}>
