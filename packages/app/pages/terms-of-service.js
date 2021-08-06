@@ -121,9 +121,9 @@ Last updated: 07/25/2021
 
   We may use third-party Service Providers to monitor and analyze the use of our Service.
 
-  **Piwik / Matomo**
+  **Google Analytics**
 
-  Piwik or Matomo is a web analytics service. You can visit their Privacy Policy page here: [https://matomo.org/privacy-policy](https://matomo.org/privacy-policy).
+  Google Analytics is a web analytics service. You can visit their Privacy and Terms page here: [https://policies.google.com/technologies/partner-sites](https://policies.google.com/technologies/partner-sites) & understand how they safeguard your data at: [https://support.google.com/analytics/answer/6004245](https://support.google.com/analytics/answer/6004245).
 
   **Customer.io**
 
