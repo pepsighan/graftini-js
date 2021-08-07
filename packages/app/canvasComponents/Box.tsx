@@ -97,7 +97,7 @@ const Box: GraftComponent<BoxComponentProps> = forwardRef(
     return (
       <BoxComp
         ref={ref}
-        {...useTransformBoxProps(boxProps)}
+        {...useTransformBoxProps({ ...boxProps, componentId })}
         isEditor
         onMouseDown={!isDraggingDisabled ? onMouseDown : null}
         onClick={onSelection}

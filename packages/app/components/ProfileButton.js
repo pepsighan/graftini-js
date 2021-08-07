@@ -17,7 +17,7 @@ export default function ProfileButton() {
 
   return (
     <>
-      <IconButton onClick={onClick}>
+      <IconButton onClick={onClick} color="inherit">
         <PersonIcon width={18} height={18} />
       </IconButton>
 
