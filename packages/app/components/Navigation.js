@@ -1,9 +1,9 @@
-import { FeedbackFish } from '@feedback-fish/react';
-import { AppBar, Button, IconButton, Stack, Toolbar, Box, Tooltip } from '@material-ui/core';
-import { EnterIcon, CrumpledPaperIcon } from '@modulz/radix-icons';
+import { AppBar, Box, Button, IconButton, Stack, Toolbar, Tooltip } from '@material-ui/core';
+import { CrumpledPaperIcon, EnterIcon } from '@modulz/radix-icons';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useAuthUser } from 'store/auth';
+import FeedbackFish from './FeedbackFish';
 import GraftiniLogo from './GraftiniLogo';
 import ProfileButton from './ProfileButton';
 
@@ -120,7 +120,7 @@ export default function Navigation() {
                 )}
 
                 {isWithinDashboard && (
-                  <FeedbackFish projectId="0cfacd08fe9961">
+                  <FeedbackFish>
                     <Button color="inherit">
                       <CrumpledPaperIcon />
                       <Box sx={{ ml: 0.5 }}>Give us Feedback</Box>

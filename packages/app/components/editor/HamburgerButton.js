@@ -1,11 +1,11 @@
 import { Badge, Button, IconButton, Menu, MenuItem } from '@material-ui/core';
 import { HamburgerMenuIcon } from '@modulz/radix-icons';
+import FeedbackFish from 'components/FeedbackFish';
 import useBoolean from 'hooks/useBoolean';
 import { useCallback, useRef, useState } from 'react';
 import { useLocalStorage } from 'react-use';
 import ChangelogDialog, { version } from './ChangelogDialog';
 import ShortcutsDialog from './ShortcutsDialog';
-import { FeedbackFish } from '@feedback-fish/react';
 
 export default function HamburgerButton() {
   const feedbackRef = useRef(null);
@@ -77,7 +77,7 @@ export default function HamburgerButton() {
 
       {/* Feedback fish provides an API component which when clicked will open the feedback UI.
       But since our UI is a menu, we are delegating the click to the wrapped button. */}
-      <FeedbackFish projectId="0cfacd08fe9961">
+      <FeedbackFish>
         <Button
           ref={feedbackRef}
           sx={{
