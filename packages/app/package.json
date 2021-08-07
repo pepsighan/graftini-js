@@ -15,6 +15,7 @@
     "@emotion/react": "^11.4.0",
     "@emotion/styled": "^11.3.0",
     "@emotion/weak-memoize": "^0.2.5",
+    "@feedback-fish/react": "^1.2.1",
     "@graftini/bricks": "^0.7.0",
     "@graftini/graft": "^0.7.0",
     "@hookform/resolvers": "^2.6.1",
