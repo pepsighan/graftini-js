@@ -5,7 +5,7 @@ import {
   DimensionMinLimit,
   DimensionSize,
 } from '@graftini/bricks';
-import { ROOT_NODE_ID, useComponentId, useEditorStore } from '@graftini/graft';
+import { ROOT_NODE_ID, useEditorStore } from '@graftini/graft';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useUploadedImage } from 'store/projects';
@@ -19,10 +19,10 @@ export function useTransformBoxProps({
   maxHeight,
   minWidth,
   maxWidth,
+  componentId,
   ...rest
-}: BoxComponentProps): BoxProps {
+}: BoxRenderProps): BoxProps {
   const { image } = useUploadedImage(imageId);
-  const componentId = useComponentId();
   const isRootParent = useEditorStore(
     useCallback((state) => state.componentMap[componentId].parentId === ROOT_NODE_ID, [componentId])
   );
@@ -60,7 +60,11 @@ function normalizeRootChildrenBoxDimension(
   return size;
 }
 
-export default function BoxRender({ link, ...rest }: BoxComponentProps) {
+type BoxRenderProps = BoxComponentProps & {
+  componentId: string;
+};
+
+export default function BoxRender({ link, ...rest }: BoxRenderProps) {
   const { route, query } = useRouter();
   const restProps = useTransformBoxProps(rest);
 

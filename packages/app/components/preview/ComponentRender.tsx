@@ -15,6 +15,7 @@ export default function ComponentRender({ componentId, componentMap }: Component
   return (
     <Render
       {...rest}
+      componentId={componentId}
       children={
         isCanvas
           ? childrenNodes.map((componentId) => (

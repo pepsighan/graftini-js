@@ -1,6 +1,8 @@
 import { Global } from '@emotion/react';
 import { rgbaToCss } from '@graftini/bricks';
-import { ROOT_NODE_ID } from '@graftini/graft';
+import { Editor, ROOT_NODE_ID } from '@graftini/graft';
+import components from 'canvasComponents';
+import Root from 'canvasComponents/Root';
 import IFrame from 'components/IFrame';
 import useMyProjectFromRouter from 'hooks/useMyProjectFromRouter';
 import { ProjectIdProvider } from 'hooks/useProjectId';
@@ -35,50 +37,52 @@ export default function Preview() {
 
   return (
     <ProjectIdProvider value={project.id}>
-      <IFrame
-        title="Preview"
-        style={{
-          width: '100vw',
-          // The height of the nav is substracted, so that the preview does not cause window-wide scroll.
-          // Had to subtract 6px more because scrolls appeared otherwise. I checked the source of this
-          // additional height on the iframe but could not find.
-          height: `calc(100vh - ${navBarHeight + 6}px)`,
-          border: 0,
-          // Any content that overflows vertically will have the scrollbar on this box itself.
-          overflowY: 'auto',
-        }}
-      >
-        {() => (
-          <>
-            {rootNode.props.color && (
-              <Global
-                styles={`
-                body {
-                  background-color: ${rgbaToCss(rootNode.props.color)};
-                }
-              `}
-              />
-            )}
+      <Editor resolvers={components} initialState={componentMap} rootComponentOverride={Root}>
+        <IFrame
+          title="Preview"
+          style={{
+            width: '100vw',
+            // The height of the nav is substracted, so that the preview does not cause window-wide scroll.
+            // Had to subtract 6px more because scrolls appeared otherwise. I checked the source of this
+            // additional height on the iframe but could not find.
+            height: `calc(100vh - ${navBarHeight + 6}px)`,
+            border: 0,
+            // Any content that overflows vertically will have the scrollbar on this box itself.
+            overflowY: 'auto',
+          }}
+        >
+          {() => (
+            <>
+              {rootNode.props.color && (
+                <Global
+                  styles={`
+                    body {
+                      background-color: ${rgbaToCss(rootNode.props.color)};
+                    }
+                  `}
+                />
+              )}
 
-            <Head>
-              <meta charset="utf-8" />
-              <title>
-                {seo?.title || 'Unspecified Title'} - Preview - {project.name}
-              </title>
-              <meta name="description" content={seo?.description || 'Unspecified description.'} />
-              <meta name="viewport" content="initial-scale=1, width=device-width" />
-            </Head>
+              <Head>
+                <meta charset="utf-8" />
+                <title>
+                  {seo?.title || 'Unspecified Title'} - Preview - {project.name}
+                </title>
+                <meta name="description" content={seo?.description || 'Unspecified description.'} />
+                <meta name="viewport" content="initial-scale=1, width=device-width" />
+              </Head>
 
-            {rootNode.childrenNodes.map((componentId) => (
-              <ComponentRender
-                key={componentId}
-                componentId={componentId}
-                componentMap={componentMap}
-              />
-            ))}
-          </>
-        )}
-      </IFrame>
+              {rootNode.childrenNodes.map((componentId) => (
+                <ComponentRender
+                  key={componentId}
+                  componentId={componentId}
+                  componentMap={componentMap}
+                />
+              ))}
+            </>
+          )}
+        </IFrame>
+      </Editor>
     </ProjectIdProvider>
   );
 }
