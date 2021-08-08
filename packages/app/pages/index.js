@@ -18,7 +18,7 @@ export default function Home() {
 
       <Stack
         justifyContent="space-between"
-        sx={{ height: `calc(100vh - ${navBarHeight}px)`, px: 2 }}
+        sx={{ minHeight: `calc(100vh - ${navBarHeight}px)`, px: 2, overflow: 'hidden' }}
       >
         <Stack alignItems="center" sx={{ pt: 8 }}>
           <Typography variant="h3" textAlign="center">
@@ -31,8 +31,8 @@ export default function Home() {
           <Box
             sx={{
               width: {
-                xs: '100%',
-                sm: 650,
+                xs: '200%',
+                sm: '120%',
                 md: 950,
               },
               mt: 2,
