@@ -24,13 +24,7 @@ export default function Home() {
           <Typography variant="h3" textAlign="center">
             Graftini
           </Typography>
-          <Typography
-            variant="h6"
-            textAlign="center"
-            fontWeight="normal"
-            color="textSecondary"
-            sx={{ mt: 1 }}
-          >
+          <Typography variant="h6" textAlign="center" fontWeight="normal" color="textSecondary">
             Deploy your web apps without writing any code in less than 10 minutes.
           </Typography>
 
@@ -41,7 +35,7 @@ export default function Home() {
                 sm: 650,
                 md: 950,
               },
-              mt: 4,
+              mt: 2,
             }}
           >
             <Image src={previewImg} placeholder="blur" />
