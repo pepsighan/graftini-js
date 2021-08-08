@@ -7,13 +7,17 @@ export default class MyDocument extends Document {
         <Head>
           {/* Global site tag (gtag.js) - Google Analytics */}
           <script async src="https://www.googletagmanager.com/gtag/js?id=G-5SF7LFKFM7" />
-          <script>{`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-
-            gtag('config', 'G-5SF7LFKFM7');
-          `}</script>
+          <script
+            type="text/javascript"
+            dangerouslySetInnerHTML={{
+              __html: `
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-5SF7LFKFM7');
+              `,
+            }}
+          />
         </Head>
         <body>
           <Main />

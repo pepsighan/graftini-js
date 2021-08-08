@@ -18,30 +18,24 @@ export default function Home() {
 
       <Stack
         justifyContent="space-between"
-        sx={{ height: `calc(100vh - ${navBarHeight}px)`, px: 2 }}
+        sx={{ minHeight: `calc(100vh - ${navBarHeight}px)`, px: 2, overflow: 'hidden' }}
       >
         <Stack alignItems="center" sx={{ pt: 8 }}>
           <Typography variant="h3" textAlign="center">
             Graftini
           </Typography>
-          <Typography
-            variant="h6"
-            textAlign="center"
-            fontWeight="normal"
-            color="textSecondary"
-            sx={{ mt: 1 }}
-          >
+          <Typography variant="h6" textAlign="center" fontWeight="normal" color="textSecondary">
             Deploy your web apps without writing any code in less than 10 minutes.
           </Typography>
 
           <Box
             sx={{
               width: {
-                xs: '100%',
-                sm: 650,
+                xs: '200%',
+                sm: '120%',
                 md: 950,
               },
-              mt: 4,
+              mt: 2,
             }}
           >
             <Image src={previewImg} placeholder="blur" />
