@@ -42,6 +42,8 @@ export default function ResizeableFrame({ componentId, ...rest }) {
             width: '100%',
             height: '100%',
             cursor,
+            // So that the cursor does not change when it hovers other anchors during a drag.
+            zIndex: 1,
           }}
         />
       )}
