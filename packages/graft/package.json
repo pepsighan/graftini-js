@@ -1,6 +1,6 @@
 {
   "name": "@graftini/graft",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "The structure which forms Graftini.",
   "main": "dist/graft.cjs.js",
   "module": "dist/graft.esm.js",
