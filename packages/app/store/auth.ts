@@ -10,6 +10,7 @@ type User = {
   firstName?: string;
   lastName?: string;
   email: string;
+  isAdmin: boolean;
 };
 
 const signInLinkToEmailKey = 'sign-in-link-to-email';
@@ -102,6 +103,7 @@ export function useAuthUser() {
           firstName
           lastName
           email
+          isAdmin
         }
       }
     `
