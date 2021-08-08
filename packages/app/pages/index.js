@@ -5,9 +5,12 @@ import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useAuthUser } from 'store/auth';
 import { navBarHeight } from 'utils/constants';
 
 export default function Home() {
+  const { isLoggedIn } = useAuthUser();
+
   return (
     <>
       <SEO />
@@ -44,23 +47,27 @@ export default function Home() {
             <Image src={previewImg} placeholder="blur" />
           </Box>
 
-          <Typography
-            textAlign="center"
-            sx={{
-              mb: 2,
-              width: {
-                md: 600,
-              },
-            }}
-          >
-            We are currently only open for Early Access. If you are interested, you may request for
-            early access by clicking the button below.
-          </Typography>
-          <Link href="/early-access-registration" passHref>
-            <Button component="a" variant="contained" size="medium">
-              Request for Early Access
-            </Button>
-          </Link>
+          {!isLoggedIn && (
+            <>
+              <Typography
+                textAlign="center"
+                sx={{
+                  mb: 2,
+                  width: {
+                    md: 600,
+                  },
+                }}
+              >
+                We are currently only open for Early Access. If you are interested, you may request
+                for early access by clicking the button below.
+              </Typography>
+              <Link href="/early-access-registration" passHref>
+                <Button component="a" variant="contained" size="medium">
+                  Request for Early Access
+                </Button>
+              </Link>
+            </>
+          )}
         </Stack>
 
         <Box sx={{ width: '100%', pb: 1, pt: 6 }}>
