@@ -16,6 +16,7 @@ import { materialRegister } from 'hooks/useMaterialFormRegister';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useForm } from 'react-hook-form';
+import { useAuthUser } from 'store/auth';
 import { useCreateProject, useMyProjects } from 'store/projects';
 import config, { Environment } from 'utils/config';
 import { slugify } from 'utils/url';
@@ -29,15 +30,26 @@ const schema = z.object({
 });
 
 export default function NewProjectDialog({ isOpen, onClose }) {
+  const { user } = useAuthUser();
+  const { myProjects } = useMyProjects();
+  // Limit the no of projects to 2 in production for any user except the admin.
+  const isProjectLimitReached =
+    config.ENV === Environment.Production && myProjects.length >= 2 && !user.isAdmin;
+
   return (
-    <Dialog open={isOpen} onClose={onClose} fullWidth maxWidth="md">
+    <Dialog
+      open={isOpen}
+      onClose={onClose}
+      fullWidth
+      maxWidth={isProjectLimitReached ? 'xs' : 'md'}
+    >
       <DialogTitle>New Project</DialogTitle>
-      <Form key={isOpen} />
+      <Form key={isOpen} isProjectLimitReached={isProjectLimitReached} />
     </Dialog>
   );
 }
 
-function Form() {
+function Form({ isProjectLimitReached }) {
   const {
     register,
     handleSubmit,
@@ -52,10 +64,6 @@ function Form() {
   });
   const { push } = useRouter();
   const [createProject] = useCreateProject();
-
-  const { myProjects } = useMyProjects();
-  // Limit the no of projects to 2 in production.
-  const isProjectLimitReached = config.ENV === Environment.Production && myProjects.length >= 2;
 
   const onSubmit = useCallback(
     async (state) => {
