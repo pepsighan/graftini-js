@@ -32,7 +32,7 @@ export default function ColorPalette({ onChange }) {
         Palette
       </Typography>
 
-      <Grid container sx={{ pt: 0.25 }} spacing={1}>
+      <Grid container sx={{ pt: 0.25 }} spacing={0.85}>
         <ColorButton color={transparentColor} onClick={onChange}>
           <TransparencyGridIcon width="100%" height="100%" />
         </ColorButton>
