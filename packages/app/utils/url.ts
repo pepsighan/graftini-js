@@ -8,7 +8,7 @@ export const urlRegex =
  * Encodes the id (UUID) and the name to a readable slug.
  */
 export function slugify({ id, name }: { id: string; name: string }) {
-  return `${name.replaceAll(/\s+/g, '-')}--${encode(id)}`;
+  return `${encodeURIComponent(name.replaceAll(/\s+/g, '-'))}--${encode(id)}`;
 }
 
 /**
