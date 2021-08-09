@@ -69,7 +69,6 @@ const Root: RootComponent<RootProps> = forwardRef(
           css={{
             width: '100%',
             height: '100%',
-            cursor: cursor[currentCreateType] ?? 'auto',
             backgroundColor: rgbaToCss(color),
           }}
           {...rest}
@@ -84,7 +83,8 @@ const Root: RootComponent<RootProps> = forwardRef(
             css={{
               minHeight: '100%',
               minWidth: '100%',
-              pointerEvents: currentCreateType ? 'none' : null,
+              // The cursor that is shown when an action is taking place.
+              cursor: cursor[currentCreateType] ?? 'auto',
               // We do not show the content that overflows the intrinsic height of the children.
               // TODO: Show a dummy region after the last content to contain the overflowing
               // component. This region will also form the basis for drawing after the last
@@ -92,7 +92,17 @@ const Root: RootComponent<RootProps> = forwardRef(
               overflow: 'hidden',
             }}
           >
-            {children}
+            {/* The children is nested one further step to accomodate for `cursor` which does not work 
+            when `pointerEvents` is `none`. */}
+            <div
+              css={{
+                minHeight: '100%',
+                minWidth: '100%',
+                pointerEvents: currentCreateType ? 'none' : null,
+              }}
+            >
+              {children}
+            </div>
           </div>
         </div>
       </Scrollbars>
