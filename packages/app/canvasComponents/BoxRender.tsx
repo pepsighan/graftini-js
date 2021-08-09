@@ -14,11 +14,8 @@ import { BoxComponentProps } from './Box';
 export function useTransformBoxProps({
   imageId,
   height,
-  width,
   minHeight,
   maxHeight,
-  minWidth,
-  maxWidth,
   componentId,
   ...rest
 }: BoxRenderProps): BoxProps {
@@ -27,23 +24,18 @@ export function useTransformBoxProps({
     useCallback((state) => state.componentMap[componentId].parentId === ROOT_NODE_ID, [componentId])
   );
 
-  // Since the root wrapper has no height and width of its own, the % values that the user provides
+  // Since the root wrapper has no height of its own, the % values that the user provides
   // are based on the body or viewport. This is how we handle it when deployed.
+  // As for the width, % and vw kind of mean the same thing because they are all block components.
   const resolvedHeight = normalizeRootChildrenBoxDimension(height, isRootParent, 'vh');
-  const resolvedWidth = normalizeRootChildrenBoxDimension(width, isRootParent, 'vw');
   const resolvedMinHeight = normalizeRootChildrenBoxDimension(minHeight, isRootParent, 'vh');
   const resolvedMaxHeight = normalizeRootChildrenBoxDimension(maxHeight, isRootParent, 'vh');
-  const resolvedMinWidth = normalizeRootChildrenBoxDimension(minWidth, isRootParent, 'vw');
-  const resolvedMaxWidth = normalizeRootChildrenBoxDimension(maxWidth, isRootParent, 'vw');
 
   return {
     imageUrl: image?.fileUrl,
     height: resolvedHeight as DimensionSize,
-    width: resolvedWidth as DimensionSize,
     minHeight: resolvedMinHeight as DimensionMinLimit,
     maxHeight: resolvedMaxHeight as DimensionMaxLimit,
-    minWidth: resolvedMinWidth as DimensionMinLimit,
-    maxWidth: resolvedMaxWidth as DimensionMaxLimit,
     ...rest,
   };
 }
@@ -51,7 +43,7 @@ export function useTransformBoxProps({
 function normalizeRootChildrenBoxDimension(
   size: DimensionSize | DimensionMinLimit | DimensionMaxLimit,
   isRootParent: boolean,
-  unit: 'vh' | 'vw'
+  unit: 'vh'
 ): DimensionSize | DimensionMinLimit | DimensionMaxLimit {
   if (isRootParent && typeof size !== 'string' && size.unit === '%') {
     return { ...size, unit };

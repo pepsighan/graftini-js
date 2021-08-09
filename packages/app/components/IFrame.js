@@ -32,7 +32,7 @@ export default function IFrame({ title, style, children, ...rest }) {
             <Global
               styles={`
                 .frame-content {
-                  width: 100vw;
+                  width: 100%;
                   height: 100vh;
                 }
               `}
