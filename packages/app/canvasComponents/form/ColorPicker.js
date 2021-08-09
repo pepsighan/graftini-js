@@ -6,6 +6,7 @@ export default function ColorPicker({ value, onChange, padding = 1.2 }) {
   return (
     <Box
       sx={{
+        width: 200,
         '& .react-colorful': {
           pt: padding,
           px: padding,
