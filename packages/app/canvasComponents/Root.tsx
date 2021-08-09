@@ -77,11 +77,18 @@ const Root: RootComponent<RootProps> = forwardRef(
           onContextMenu={onContextMenu}
         >
           <div
+            // The container ref is different that the scroll ref because this ref calculates the
+            // intrinsic dimensions of the root. The scroll ref component is limited to the viewport
+            // and cannot accurately calculate the full dimensions of the content.
             ref={containerRef as any}
             css={{
               minHeight: '100%',
               minWidth: '100%',
               pointerEvents: currentCreateType ? 'none' : null,
+              // We do not show the content that overflows the intrinsic height of the children.
+              // TODO: Show a dummy region after the last content to contain the overflowing
+              // component. This region will also form the basis for drawing after the last
+              // component. https://github.com/graftini/graftini/issues/438
               overflow: 'hidden',
             }}
           >
