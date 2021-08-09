@@ -6,9 +6,13 @@ export const version = '1';
 
 const changelog = [
   {
-    // TODO: Decide the release date of the app.
-    date: 'TBD-Aug-2021',
-    features: [{ text: 'You can now create new projects with templates 🎉.' }],
+    date: '8-Aug-2021',
+    features: [
+      { text: 'You can now create new projects with templates 🎉.' },
+      {
+        text: 'Color picker now supports palettes that intelligently lists all the colors used on the page.',
+      },
+    ],
   },
 ];
 
