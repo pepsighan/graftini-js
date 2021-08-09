@@ -82,6 +82,7 @@ const Root: RootComponent<RootProps> = forwardRef(
               minHeight: '100%',
               minWidth: '100%',
               pointerEvents: currentCreateType ? 'none' : null,
+              overflow: 'hidden',
             }}
           >
             {children}
