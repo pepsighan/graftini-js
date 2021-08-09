@@ -29,21 +29,24 @@ export function useSyncRegion(componentId: string) {
     }
 
     const measureRegion = () =>
-      window.requestAnimationFrame(() => {
-        const rect = ref.getBoundingClientRect();
-        const scrollPosition = getRootScroll().position;
+      // The region is not measured immediately because it may still be rendering.
+      setTimeout(() =>
+        window.requestAnimationFrame(() => {
+          const rect = ref.getBoundingClientRect();
+          const scrollPosition = getRootScroll().position;
 
-        immerSet((state: ComponentRegionStore) => {
-          // Doing away with typescript here for extract performance from immer.
-          state.regionMap[componentId] ??= {} as any;
-          const region = state.regionMap[componentId];
-          // Place the position relative to the document (iframe).
-          region.x = rect.x + scrollPosition.x;
-          region.y = rect.y + scrollPosition.y;
-          region.width = rect.width;
-          region.height = rect.height;
-        });
-      });
+          immerSet((state: ComponentRegionStore) => {
+            // Doing away with typescript here for extract performance from immer.
+            state.regionMap[componentId] ??= {} as any;
+            const region = state.regionMap[componentId];
+            // Place the position relative to the document (iframe).
+            region.x = rect.x + scrollPosition.x;
+            region.y = rect.y + scrollPosition.y;
+            region.width = rect.width;
+            region.height = rect.height;
+          });
+        })
+      );
 
     // Measure it for the first time.
     measureRegion();
@@ -56,12 +59,7 @@ export function useSyncRegion(componentId: string) {
     ro.observe(document.body);
 
     // Also measure the region if there is change anywhere in the component tree.
-    const unsubscribeStore = subscribeEditor(
-      // The region is not measured immediately for the following edge case where the drag
-      // happens along with a scroll. Doing this makes it to measure it correctly.
-      () => setTimeout(measureRegion),
-      (state) => state.componentMap
-    );
+    const unsubscribeStore = subscribeEditor(measureRegion, (state) => state.componentMap);
 
     return () => {
       ro.unobserve(document.body);
