@@ -37,7 +37,12 @@ export default function Preview() {
 
   return (
     <ProjectIdProvider value={project.id}>
-      <Editor resolvers={components} initialState={componentMap} rootComponentOverride={Root}>
+      <Editor
+        key={pageId}
+        resolvers={components}
+        initialState={componentMap}
+        rootComponentOverride={Root}
+      >
         <IFrame
           title="Preview"
           style={{
