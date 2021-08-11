@@ -92,6 +92,7 @@ function Project({ templateId, isSelected, onChange, template }) {
           backgroundImage: template.fileUrl ? `url('${template.fileUrl}')` : undefined,
           backgroundRepeat: 'no-repeat',
           backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       />
       <Typography variant="subtitle2" sx={{ px: 1, py: 0.5 }}>
