@@ -1,5 +1,6 @@
 import {
   newComponentNode,
+  Position,
   ROOT_NODE_ID,
   useEditorStore,
   useEditorStoreApi,
@@ -25,7 +26,7 @@ export default function ComponentContextMenu({ id, isCorrectionNeeded, isLayer }
 
   return (
     <ContextMenu id={id} isCorrectionNeeded={isCorrectionNeeded}>
-      {(position) => (
+      {(position: Position) => (
         <>
           {!isLayer && (
             <CopyPaste componentId={componentId} position={position} onClose={onClose} />

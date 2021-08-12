@@ -20,7 +20,12 @@ export {
   useCreateComponentStore,
   useCreateComponentStoreApi,
 } from './store/createComponent';
-export { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
+export {
+  DraggedOverStore,
+  useDraggedOverStore,
+  useDraggedOverStoreApi,
+  Position,
+} from './store/draggedOver';
 export {
   ComponentMap,
   ComponentNode,
