@@ -50,7 +50,7 @@ export function usePaste(): UsePaste {
             return;
           }
 
-          const newComponentId = assignNewComponents(component, state.componentMap);
+          const newComponentId = assignNewComponents(component, state.componentMap, null);
           addComponentToDropRegion(newComponentId, dropRegion, state.componentMap);
         });
         return;
@@ -81,15 +81,22 @@ export function usePaste(): UsePaste {
 /**
  * Fills the component map with all the components in the paste component tree.
  */
-function assignNewComponents(component: PasteComponent, componentMap: ComponentMap): string {
+function assignNewComponents(
+  component: PasteComponent,
+  componentMap: ComponentMap,
+  parentId: string | null
+): string {
+  const id = nanoid();
+
   const childrenNodes = component.childrenNodes.map((node) =>
-    assignNewComponents(node as PasteComponent, componentMap)
+    assignNewComponents(node as PasteComponent, componentMap, id)
   );
 
   const newComponent = {
     ...component,
-    id: nanoid(),
+    id,
     childrenNodes,
+    parentId,
   };
   componentMap[newComponent.id] = newComponent!;
   return newComponent.id;
