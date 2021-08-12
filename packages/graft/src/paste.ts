@@ -10,7 +10,7 @@ import { useRootScrollStoreApi } from './store/rootScroll';
  * A component that can be pasted. This component encapsulates every children as a
  * tree.
  */
-type PasteComponent = Omit<ComponentNode, 'id' | 'childrenNodes'> & {
+export type PasteComponent = Omit<ComponentNode, 'id' | 'childrenNodes'> & {
   id?: string;
   childrenNodes: PasteComponent[];
 };

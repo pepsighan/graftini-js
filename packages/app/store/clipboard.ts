@@ -1,9 +1,9 @@
+import { PasteComponent } from '@graftini/graft';
 import create from 'zustand';
-import { ComponentNode } from '@graftini/graft';
 
 type UseClipboardStore = {
-  component?: ComponentNode | null;
-  copyComponent(component: ComponentNode): void;
+  component?: PasteComponent | null;
+  copyComponent(component: PasteComponent): void;
   flush(): void;
 };
 
@@ -12,7 +12,7 @@ type UseClipboardStore = {
  */
 export const useClipboardStore = create<UseClipboardStore>((set) => ({
   component: null,
-  copyComponent(component: ComponentNode) {
+  copyComponent(component) {
     set({
       component,
     });
