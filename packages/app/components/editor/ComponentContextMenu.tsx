@@ -8,7 +8,7 @@ import { ContextMenu, useContextMenu } from './ContextMenu';
 export const componentContextMenuId = 'component-context-menu';
 export const layerContextMenuId = 'layer-context-menu';
 
-export default function ComponentContextMenu({ id, isCorrectionNeeded }) {
+export default function ComponentContextMenu({ id, isCorrectionNeeded, isLayer }) {
   const { onClose } = useContextMenu();
 
   const componentId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
@@ -17,6 +17,12 @@ export default function ComponentContextMenu({ id, isCorrectionNeeded }) {
 
   return (
     <ContextMenu id={id} isCorrectionNeeded={isCorrectionNeeded}>
+      {!isLayer && (
+        <>
+          <MenuItem>Copy</MenuItem>
+          <MenuItem>Paste</MenuItem>
+        </>
+      )}
       <MenuItem onClick={onWrapWithBox}>Wrap with Box</MenuItem>
       <MenuItem onClick={onDeleteClick}>Delete</MenuItem>
     </ContextMenu>
