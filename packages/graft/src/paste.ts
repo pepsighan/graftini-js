@@ -4,6 +4,7 @@ import { addComponentToDropRegion, identifyDropRegion } from './dropLocation';
 import { ComponentNode, useEditorStore } from './store/editor';
 import { useHoverStoreApi } from './store/hover';
 import { useComponentRegionStoreApi } from './store/regionMap';
+import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
  * A component that can be pasted. If id is provided, it means to cut-paste
@@ -22,6 +23,7 @@ export function usePaste(): UsePaste {
   const { getState: getHoverState } = useHoverStoreApi();
   const { getState: getComponentRegionState } = useComponentRegionStoreApi();
   const { immerSet: immerEditorStore } = useEditorStore();
+  const { getState: getScrollState } = useRootScrollStoreApi();
 
   return useCallback(
     (component) => {
@@ -30,13 +32,22 @@ export function usePaste(): UsePaste {
       if (!isOnIFrame) {
         return;
       }
+
       const regionMap = getComponentRegionState().regionMap;
-      const position = hover.cursorPosition!;
+      const scrollPosition = getScrollState().position;
+      const cursorPosition = hover.cursorPosition!;
+      const resolvedCursorPosition = {
+        x: cursorPosition.x + scrollPosition.x,
+        y: cursorPosition.y + scrollPosition.y,
+      };
 
       if (!component.id) {
         immerEditorStore((state) => {
-          // TODO: Correct the position of the cursor based on the scroll.
-          const dropRegion = identifyDropRegion(state.componentMap, regionMap, position);
+          const dropRegion = identifyDropRegion(
+            state.componentMap,
+            regionMap,
+            resolvedCursorPosition
+          );
           if (!dropRegion) {
             return;
           }
@@ -53,8 +64,11 @@ export function usePaste(): UsePaste {
 
       // If a component id is present, then it is to be moved to its new position.
       immerEditorStore((state) => {
-        // TODO: Correct the position of the cursor based on the scroll.
-        const dropRegion = identifyDropRegion(state.componentMap, regionMap, position);
+        const dropRegion = identifyDropRegion(
+          state.componentMap,
+          regionMap,
+          resolvedCursorPosition
+        );
         if (!dropRegion) {
           return;
         }
@@ -66,6 +80,6 @@ export function usePaste(): UsePaste {
         addComponentToDropRegion(component.id, dropRegion, state.componentMap);
       });
     },
-    [getComponentRegionState, getHoverState, immerEditorStore]
+    [getComponentRegionState, getHoverState, getScrollState, immerEditorStore]
   );
 }
