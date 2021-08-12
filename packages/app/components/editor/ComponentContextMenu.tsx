@@ -2,6 +2,7 @@ import { newComponentNode, useEditorStore, useOnDelete } from '@graftini/graft';
 import { MenuItem } from '@material-ui/core';
 import Box from 'canvasComponents/Box';
 import { useCallback } from 'react';
+import { useClipboardStore } from 'store/clipboard';
 import { useDesignerState } from 'store/designer';
 import { ContextMenu, useContextMenu } from './ContextMenu';
 
@@ -17,12 +18,7 @@ export default function ComponentContextMenu({ id, isCorrectionNeeded, isLayer }
 
   return (
     <ContextMenu id={id} isCorrectionNeeded={isCorrectionNeeded}>
-      {!isLayer && (
-        <>
-          <MenuItem>Copy</MenuItem>
-          <MenuItem>Paste</MenuItem>
-        </>
-      )}
+      {!isLayer && <CopyPaste onClose={onClose} />}
       <MenuItem onClick={onWrapWithBox}>Wrap with Box</MenuItem>
       <MenuItem onClick={onDeleteClick}>Delete</MenuItem>
     </ContextMenu>
@@ -95,4 +91,32 @@ function useOnWrapWithBox({ componentId, onClose }) {
 
     onClose();
   }, [componentId, immerSet, onClose, selectComponent]);
+}
+
+function CopyPaste({ onClose }) {
+  const { component, copyComponent, flush } = useClipboardStore();
+
+  const onCopy = useCallback(() => {
+    onClose();
+    copyComponent({
+      id: '322',
+      childrenNodes: [],
+      isCanvas: false,
+      props: {},
+      type: 'Text',
+      childAppendDirection: 'horizontal',
+    });
+  }, [copyComponent, onClose]);
+
+  const onPaste = useCallback(() => {
+    onClose();
+    flush();
+  }, [flush, onClose]);
+
+  return (
+    <>
+      <MenuItem onClick={onCopy}>Copy</MenuItem>
+      {component && <MenuItem onClick={onPaste}>Paste</MenuItem>}
+    </>
+  );
 }
