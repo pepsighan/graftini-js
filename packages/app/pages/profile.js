@@ -1,18 +1,20 @@
 import {
+  Alert,
   Box,
-  Button,
   Container,
   InputAdornment,
   Stack,
   TextField,
   Typography,
 } from '@material-ui/core';
+import AsyncButton from 'components/AsyncButton';
 import Footer from 'components/Footer';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
 import { materialRegister } from 'hooks/useMaterialFormRegister';
+import { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useAuthUser } from 'store/auth';
+import { useAuthUser, useUpdateProfile } from 'store/auth';
 import { protectedPage } from 'utils/auth';
 import { navBarHeight } from 'utils/constants';
 
@@ -42,15 +44,39 @@ export default protectedPage(function Profile() {
 });
 
 function ProfileForm({ user }) {
-  const { register } = useForm({
+  const [status, setStatus] = useState(null);
+  const [updateProfile, { loading }] = useUpdateProfile();
+
+  const { register, handleSubmit } = useForm({
     defaultValues: {
       firstName: user?.firstName ?? '',
       lastName: user?.lastName ?? '',
     },
   });
 
+  const onUpdate = useCallback(
+    async (state) => {
+      try {
+        setStatus(null);
+        await updateProfile({
+          variables: {
+            input: {
+              firstName: state.firstName,
+              lastName: state.lastName,
+            },
+          },
+        });
+        setStatus('success');
+      } catch (err) {
+        setStatus('error');
+        throw err;
+      }
+    },
+    [updateProfile]
+  );
+
   return (
-    <Stack spacing={2} sx={{ mt: 3 }}>
+    <Stack component="form" spacing={2} sx={{ mt: 3 }} onSubmit={handleSubmit(onUpdate)}>
       <TextField
         {...materialRegister(register, 'firstName')}
         size="medium"
@@ -87,9 +113,17 @@ function ProfileForm({ user }) {
         helperText="You cannot change your email."
       />
 
-      <Button variant="contained" size="medium">
+      <AsyncButton type="submit" variant="contained" size="medium" isLoading={loading}>
         Save
-      </Button>
+      </AsyncButton>
+
+      {status && (
+        <Alert severity={status}>
+          {status === 'success'
+            ? 'Your profile changes has been saved.'
+            : 'There was some issue while saving. Try again later.'}
+        </Alert>
+      )}
     </Stack>
   );
 }
