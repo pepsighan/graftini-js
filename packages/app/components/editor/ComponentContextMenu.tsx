@@ -124,6 +124,12 @@ function CopyPaste({ componentId, onClose, position }) {
     copyComponent(copyTree);
   }, [componentId, copyComponent, getEditorState, onClose]);
 
+  const onCut = useCallback(() => {
+    onClose();
+    // Passing the whole component node as-is leads to cut-paste.
+    copyComponent(getEditorState().componentMap[componentId]);
+  }, [componentId, copyComponent, getEditorState, onClose]);
+
   const onPaste = useCallback(() => {
     pasteComponent(component, position);
 
@@ -135,6 +141,9 @@ function CopyPaste({ componentId, onClose, position }) {
     <>
       <MenuItem disabled={componentId === ROOT_NODE_ID} onClick={onCopy}>
         Copy
+      </MenuItem>
+      <MenuItem disabled={componentId === ROOT_NODE_ID} onClick={onCut}>
+        Cut
       </MenuItem>
       {component && <MenuItem onClick={onPaste}>Paste</MenuItem>}
     </>
