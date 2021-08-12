@@ -1,4 +1,4 @@
-import { newComponentNode, useEditorStore, useOnDelete } from '@graftini/graft';
+import { newComponentNode, useEditorStore, useEditorStoreApi, useOnDelete } from '@graftini/graft';
 import { MenuItem } from '@material-ui/core';
 import Box from 'canvasComponents/Box';
 import { useCallback } from 'react';
@@ -18,7 +18,7 @@ export default function ComponentContextMenu({ id, isCorrectionNeeded, isLayer }
 
   return (
     <ContextMenu id={id} isCorrectionNeeded={isCorrectionNeeded}>
-      {!isLayer && <CopyPaste onClose={onClose} />}
+      {!isLayer && <CopyPaste componentId={componentId} onClose={onClose} />}
       <MenuItem onClick={onWrapWithBox}>Wrap with Box</MenuItem>
       <MenuItem onClick={onDeleteClick}>Delete</MenuItem>
     </ContextMenu>
@@ -93,25 +93,24 @@ function useOnWrapWithBox({ componentId, onClose }) {
   }, [componentId, immerSet, onClose, selectComponent]);
 }
 
-function CopyPaste({ onClose }) {
+function CopyPaste({ componentId, onClose }) {
   const { component, copyComponent, flush } = useClipboardStore();
+  const { getState: getEditorState } = useEditorStoreApi();
 
   const onCopy = useCallback(() => {
     onClose();
-    copyComponent({
-      id: '322',
-      childrenNodes: [],
-      isCanvas: false,
-      props: {},
-      type: 'Text',
-      childAppendDirection: 'horizontal',
-    });
-  }, [copyComponent, onClose]);
+
+    const component = getEditorState().componentMap[componentId];
+    // Reset the id to null to copy.
+    copyComponent({ ...component, id: null });
+  }, [componentId, copyComponent, getEditorState, onClose]);
 
   const onPaste = useCallback(() => {
+    console.log({ component });
+
     onClose();
     flush();
-  }, [flush, onClose]);
+  }, [component, flush, onClose]);
 
   return (
     <>
