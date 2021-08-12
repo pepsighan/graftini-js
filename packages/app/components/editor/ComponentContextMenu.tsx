@@ -116,6 +116,8 @@ function CopyPaste({ componentId, onClose, position }) {
   const { component, copyComponent, flush } = useClipboardStore();
   const { getState: getEditorState } = useEditorStoreApi();
   const pasteComponent = usePaste();
+  const deleteComponent = useOnDelete();
+  const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
 
   const onCopy = useCallback(() => {
     onClose();
@@ -123,6 +125,16 @@ function CopyPaste({ componentId, onClose, position }) {
     const copyTree = bundleCopyComponentTree(getEditorState().componentMap, componentId);
     copyComponent(copyTree);
   }, [componentId, copyComponent, getEditorState, onClose]);
+
+  const onCut = useCallback(() => {
+    onClose();
+    unselectComponent();
+
+    const copyTree = bundleCopyComponentTree(getEditorState().componentMap, componentId);
+    copyComponent(copyTree);
+    // Delete the component as it has been cut.
+    deleteComponent(componentId);
+  }, [componentId, copyComponent, deleteComponent, getEditorState, onClose, unselectComponent]);
 
   const onPaste = useCallback(() => {
     pasteComponent(component, position);
@@ -135,6 +147,9 @@ function CopyPaste({ componentId, onClose, position }) {
     <>
       <MenuItem disabled={componentId === ROOT_NODE_ID} onClick={onCopy}>
         Copy
+      </MenuItem>
+      <MenuItem disabled={componentId === ROOT_NODE_ID} onClick={onCut}>
+        Cut
       </MenuItem>
       {component && <MenuItem onClick={onPaste}>Paste</MenuItem>}
     </>

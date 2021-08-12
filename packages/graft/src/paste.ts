@@ -7,17 +7,12 @@ import { useComponentRegionStoreApi } from './store/regionMap';
 import { useRootScrollStoreApi } from './store/rootScroll';
 
 /**
- * A component that can be pasted. If id is provided, it means to cut-paste
- * an existing component.
+ * A component that can be pasted. This component encapsulates every children as a
+ * tree.
  */
-type PasteComponent = Omit<ComponentNode, 'id'> & {
+export type PasteComponent = Omit<ComponentNode, 'id' | 'childrenNodes'> & {
   id?: string;
-  /**
-   * If an id is provided, it is a cut-paste, hence its expected that the children
-   * are also ids. If it is copy-paste, the children node represents a tree of id-less
-   * component nodes.
-   */
-  childrenNodes: string[] | PasteComponent[];
+  childrenNodes: PasteComponent[];
 };
 
 type UsePaste = (component: PasteComponent, position: Position) => void;
@@ -39,24 +34,6 @@ export function usePaste(): UsePaste {
         y: position.y + scrollPosition.y,
       };
 
-      if (!component.id) {
-        immerEditorStore((state) => {
-          const dropRegion = identifyDropRegion(
-            state.componentMap,
-            regionMap,
-            resolvedCursorPosition
-          );
-          if (!dropRegion) {
-            return;
-          }
-
-          const newComponentId = assignNewComponents(component, state.componentMap, null);
-          addComponentToDropRegion(newComponentId, dropRegion, state.componentMap);
-        });
-        return;
-      }
-
-      // If a component id is present, then it is to be moved to its new position.
       immerEditorStore((state) => {
         const dropRegion = identifyDropRegion(
           state.componentMap,
@@ -67,12 +44,10 @@ export function usePaste(): UsePaste {
           return;
         }
 
-        const parent = state.componentMap[component.parentId!];
-        // Remove the component from its existing parent.
-        parent.childrenNodes = parent.childrenNodes.filter((it) => it !== component.id);
-        // Add it to the new place.
-        addComponentToDropRegion(component.id!, dropRegion, state.componentMap);
+        const newComponentId = assignNewComponents(component, state.componentMap, null);
+        addComponentToDropRegion(newComponentId, dropRegion, state.componentMap);
       });
+      return;
     },
     [getComponentRegionState, getScrollState, immerEditorStore]
   );

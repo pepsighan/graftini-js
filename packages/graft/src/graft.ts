@@ -12,7 +12,7 @@ export { DrawMarker, DrawMarkerProps } from './drawMarker';
 export { DropMarker, DropMarkerProps } from './dropMarker';
 export { Editor, EditorProps } from './editor';
 export { useCheckCursorOnIFrame } from './iframe';
-export { usePaste } from './paste';
+export { usePaste, PasteComponent } from './paste';
 export { DragPreview } from './preview';
 export {
   CreateComponentStore,
