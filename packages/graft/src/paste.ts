@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid';
 import { useCallback } from 'react';
 import { addComponentToDropRegion, identifyDropRegion } from './dropLocation';
 import { Position } from './store/draggedOver';
-import { ComponentNode, useEditorStore } from './store/editor';
+import { ComponentMap, ComponentNode, useEditorStore } from './store/editor';
 import { useComponentRegionStoreApi } from './store/regionMap';
 import { useRootScrollStoreApi } from './store/rootScroll';
 
@@ -10,8 +10,14 @@ import { useRootScrollStoreApi } from './store/rootScroll';
  * A component that can be pasted. If id is provided, it means to cut-paste
  * an existing component.
  */
-type PasteComponent = ComponentNode & {
+type PasteComponent = Omit<ComponentNode, 'id'> & {
   id?: string;
+  /**
+   * If an id is provided, it is a cut-paste, hence its expected that the children
+   * are also ids. If it is copy-paste, the children node represents a tree of id-less
+   * component nodes.
+   */
+  childrenNodes: string[] | PasteComponent[];
 };
 
 type UsePaste = (component: PasteComponent, position: Position) => void;
@@ -44,12 +50,8 @@ export function usePaste(): UsePaste {
             return;
           }
 
-          const newComponent: ComponentNode = {
-            ...component,
-            id: nanoid(),
-          };
-          state.componentMap[newComponent!.id] = newComponent!;
-          addComponentToDropRegion(newComponent!.id, dropRegion, state.componentMap);
+          const newComponentId = assignNewComponents(component, state.componentMap);
+          addComponentToDropRegion(newComponentId, dropRegion, state.componentMap);
         });
         return;
       }
@@ -69,9 +71,26 @@ export function usePaste(): UsePaste {
         // Remove the component from its existing parent.
         parent.childrenNodes = parent.childrenNodes.filter((it) => it !== component.id);
         // Add it to the new place.
-        addComponentToDropRegion(component.id, dropRegion, state.componentMap);
+        addComponentToDropRegion(component.id!, dropRegion, state.componentMap);
       });
     },
     [getComponentRegionState, getScrollState, immerEditorStore]
   );
+}
+
+/**
+ * Fills the component map with all the components in the paste component tree.
+ */
+function assignNewComponents(component: PasteComponent, componentMap: ComponentMap): string {
+  const childrenNodes = component.childrenNodes.map((node) =>
+    assignNewComponents(node as PasteComponent, componentMap)
+  );
+
+  const newComponent = {
+    ...component,
+    id: nanoid(),
+    childrenNodes,
+  };
+  componentMap[newComponent.id] = newComponent!;
+  return newComponent.id;
 }
