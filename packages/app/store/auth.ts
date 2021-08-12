@@ -175,3 +175,18 @@ export function useIsEarlyAccessAllowed() {
     [isEarlyAccessAllowed]
   );
 }
+
+/**
+ * Hook to update the profile.
+ */
+export function useUpdateProfile() {
+  return useMutation(gql`
+    mutation UpdateProfile($input: UpdateProfile!) {
+      updateProfile(input: $input) {
+        id
+        firstName
+        lastName
+      }
+    }
+  `);
+}
