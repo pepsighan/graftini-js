@@ -1,6 +1,7 @@
 import { nanoid } from 'nanoid';
 import { useCallback } from 'react';
 import { addComponentToDropRegion, identifyDropRegion } from './dropLocation';
+import { Position } from './store/draggedOver';
 import { ComponentNode, useEditorStore } from './store/editor';
 import { useHoverStoreApi } from './store/hover';
 import { useComponentRegionStoreApi } from './store/regionMap';
@@ -14,7 +15,7 @@ type PasteComponent = ComponentNode & {
   id?: string;
 };
 
-type UsePaste = (component: PasteComponent) => void;
+type UsePaste = (component: PasteComponent, position: Position) => void;
 
 /**
  * Pastes a component at the current hover location.
@@ -26,7 +27,7 @@ export function usePaste(): UsePaste {
   const { getState: getScrollState } = useRootScrollStoreApi();
 
   return useCallback(
-    (component) => {
+    (component, position) => {
       const hover = getHoverState();
       const isOnIFrame = hover.isOnIFrame;
       if (!isOnIFrame) {
@@ -35,10 +36,9 @@ export function usePaste(): UsePaste {
 
       const regionMap = getComponentRegionState().regionMap;
       const scrollPosition = getScrollState().position;
-      const cursorPosition = hover.cursorPosition!;
       const resolvedCursorPosition = {
-        x: cursorPosition.x + scrollPosition.x,
-        y: cursorPosition.y + scrollPosition.y,
+        x: position.x + scrollPosition.x,
+        y: position.y + scrollPosition.y,
       };
 
       if (!component.id) {
