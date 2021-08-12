@@ -1,15 +1,17 @@
 import {
+  Box,
+  Button,
   Container,
+  InputAdornment,
+  Stack,
   TextField,
   Typography,
-  Stack,
-  InputAdornment,
-  Button,
-  Box,
 } from '@material-ui/core';
 import Footer from 'components/Footer';
 import Navigation from 'components/Navigation';
 import SEO from 'components/SEO';
+import { materialRegister } from 'hooks/useMaterialFormRegister';
+import { useForm } from 'react-hook-form';
 import { useAuthUser } from 'store/auth';
 import { protectedPage } from 'utils/auth';
 import { navBarHeight } from 'utils/constants';
@@ -28,47 +30,7 @@ export default protectedPage(function Profile() {
       >
         <Container sx={{ mt: 4 }} maxWidth="xs">
           <Typography variant="h5">Your Profile</Typography>
-          <Stack spacing={2} sx={{ mt: 3 }}>
-            <TextField
-              value={user.firstName ?? ''}
-              size="medium"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ width: 100 }}>
-                    <Typography>First Name</Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <TextField
-              value={user.lastName ?? ''}
-              size="medium"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ width: 100 }}>
-                    <Typography>Last Name</Typography>
-                  </InputAdornment>
-                ),
-              }}
-            />
-            <TextField
-              value={user.email}
-              size="medium"
-              disabled
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start" sx={{ width: 100 }}>
-                    <Typography>Email</Typography>
-                  </InputAdornment>
-                ),
-              }}
-              helperText="You cannot change your email."
-            />
-
-            <Button variant="contained" size="medium">
-              Save
-            </Button>
-          </Stack>
+          <ProfileForm key={!!user} user={user} />
         </Container>
 
         <Box sx={{ width: '100%', pb: 1, pt: 6 }}>
@@ -78,3 +40,56 @@ export default protectedPage(function Profile() {
     </>
   );
 });
+
+function ProfileForm({ user }) {
+  const { register } = useForm({
+    defaultValues: {
+      firstName: user?.firstName ?? '',
+      lastName: user?.lastName ?? '',
+    },
+  });
+
+  return (
+    <Stack spacing={2} sx={{ mt: 3 }}>
+      <TextField
+        {...materialRegister(register, 'firstName')}
+        size="medium"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start" sx={{ width: 100 }}>
+              <Typography>First Name</Typography>
+            </InputAdornment>
+          ),
+        }}
+      />
+      <TextField
+        {...materialRegister(register, 'lastName')}
+        size="medium"
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start" sx={{ width: 100 }}>
+              <Typography>Last Name</Typography>
+            </InputAdornment>
+          ),
+        }}
+      />
+      <TextField
+        value={user?.email ?? ''}
+        size="medium"
+        disabled
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start" sx={{ width: 100 }}>
+              <Typography>Email</Typography>
+            </InputAdornment>
+          ),
+        }}
+        helperText="You cannot change your email."
+      />
+
+      <Button variant="contained" size="medium">
+        Save
+      </Button>
+    </Stack>
+  );
+}
