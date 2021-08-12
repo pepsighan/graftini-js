@@ -2,6 +2,7 @@
 import { RGBA, rgbaToCss } from '@graftini/bricks';
 import { RootComponent, ROOT_NODE_ID, useCreateComponentStore } from '@graftini/graft';
 import { ScrollTrackHorizontal, ScrollTrackVertical } from 'components/DisableScrollInteraction';
+import { componentContextMenuId } from 'components/editor/ComponentContextMenu';
 import { useContextMenu } from 'components/editor/ContextMenu';
 import { ForwardedRef, forwardRef, MouseEvent, useCallback } from 'react';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -28,16 +29,15 @@ const Root: RootComponent<RootProps> = forwardRef(
     const currentCreateType = useCreateComponentStore(
       useCallback((state) => state.newComponent?.type, [])
     );
-
-    const { onClose } = useContextMenu();
+    const { onOpen: onOpenContextMenu, onClose: onCloseContextMenu } = useContextMenu();
 
     const onSelect = useCallback(
       (event: MouseEvent) => {
         event.stopPropagation();
         selectComponent(ROOT_NODE_ID);
-        onClose();
+        onCloseContextMenu();
       },
-      [onClose, selectComponent]
+      [onCloseContextMenu, selectComponent]
     );
 
     const onContextMenu = useCallback(
@@ -45,9 +45,9 @@ const Root: RootComponent<RootProps> = forwardRef(
         event.preventDefault();
         event.stopPropagation();
         selectComponent(ROOT_NODE_ID);
-        onClose();
+        onOpenContextMenu(event, componentContextMenuId);
       },
-      [onClose, selectComponent]
+      [onOpenContextMenu, selectComponent]
     );
 
     return (
