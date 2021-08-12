@@ -116,6 +116,8 @@ function CopyPaste({ componentId, onClose, position }) {
   const { component, copyComponent, flush } = useClipboardStore();
   const { getState: getEditorState } = useEditorStoreApi();
   const pasteComponent = usePaste();
+  const deleteComponent = useOnDelete();
+  const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
 
   const onCopy = useCallback(() => {
     onClose();
@@ -126,9 +128,13 @@ function CopyPaste({ componentId, onClose, position }) {
 
   const onCut = useCallback(() => {
     onClose();
-    // Passing the whole component node as-is leads to cut-paste.
-    copyComponent(getEditorState().componentMap[componentId]);
-  }, [componentId, copyComponent, getEditorState, onClose]);
+    unselectComponent();
+
+    const copyTree = bundleCopyComponentTree(getEditorState().componentMap, componentId);
+    copyComponent(copyTree);
+    // Delete the component as it has been cut.
+    deleteComponent(componentId);
+  }, [componentId, copyComponent, deleteComponent, getEditorState, onClose, unselectComponent]);
 
   const onPaste = useCallback(() => {
     pasteComponent(component, position);
