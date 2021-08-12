@@ -1,4 +1,5 @@
 import {
+  ComponentMap,
   newComponentNode,
   Position,
   ROOT_NODE_ID,
@@ -119,9 +120,8 @@ function CopyPaste({ componentId, onClose, position }) {
   const onCopy = useCallback(() => {
     onClose();
 
-    const component = getEditorState().componentMap[componentId];
-    // Reset the id to null to copy.
-    copyComponent({ ...component, id: null });
+    const copyTree = bundleCopyComponentTree(getEditorState().componentMap, componentId);
+    copyComponent(copyTree);
   }, [componentId, copyComponent, getEditorState, onClose]);
 
   const onPaste = useCallback(() => {
@@ -139,4 +139,17 @@ function CopyPaste({ componentId, onClose, position }) {
       {component && <MenuItem onClick={onPaste}>Paste</MenuItem>}
     </>
   );
+}
+
+/**
+ * Bundles the children into the tree structure for a copy action while removing each id.
+ */
+function bundleCopyComponentTree(componentMap: ComponentMap, componentId: string) {
+  return {
+    ...componentMap[componentId],
+    id: null,
+    childrenNodes: componentMap[componentId].childrenNodes.map((nodeId) =>
+      bundleCopyComponentTree(componentMap, nodeId)
+    ),
+  };
 }
