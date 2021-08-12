@@ -1,14 +1,24 @@
-import { newComponentNode, useEditorStore, useOnDelete } from '@graftini/graft';
+import {
+  ComponentMap,
+  newComponentNode,
+  Position,
+  ROOT_NODE_ID,
+  useEditorStore,
+  useEditorStoreApi,
+  useOnDelete,
+  usePaste,
+} from '@graftini/graft';
 import { MenuItem } from '@material-ui/core';
 import Box from 'canvasComponents/Box';
 import { useCallback } from 'react';
+import { useClipboardStore } from 'store/clipboard';
 import { useDesignerState } from 'store/designer';
 import { ContextMenu, useContextMenu } from './ContextMenu';
 
 export const componentContextMenuId = 'component-context-menu';
 export const layerContextMenuId = 'layer-context-menu';
 
-export default function ComponentContextMenu({ id, isCorrectionNeeded }) {
+export default function ComponentContextMenu({ id, isCorrectionNeeded, isLayer }) {
   const { onClose } = useContextMenu();
 
   const componentId = useDesignerState(useCallback((state) => state.selectedComponentId, []));
@@ -17,8 +27,19 @@ export default function ComponentContextMenu({ id, isCorrectionNeeded }) {
 
   return (
     <ContextMenu id={id} isCorrectionNeeded={isCorrectionNeeded}>
-      <MenuItem onClick={onWrapWithBox}>Wrap with Box</MenuItem>
-      <MenuItem onClick={onDeleteClick}>Delete</MenuItem>
+      {(position: Position) => (
+        <>
+          {!isLayer && (
+            <CopyPaste componentId={componentId} position={position} onClose={onClose} />
+          )}
+          {componentId !== ROOT_NODE_ID && (
+            <>
+              <MenuItem onClick={onWrapWithBox}>Wrap with Box</MenuItem>
+              <MenuItem onClick={onDeleteClick}>Delete</MenuItem>
+            </>
+          )}
+        </>
+      )}
     </ContextMenu>
   );
 }
@@ -89,4 +110,46 @@ function useOnWrapWithBox({ componentId, onClose }) {
 
     onClose();
   }, [componentId, immerSet, onClose, selectComponent]);
+}
+
+function CopyPaste({ componentId, onClose, position }) {
+  const { component, copyComponent, flush } = useClipboardStore();
+  const { getState: getEditorState } = useEditorStoreApi();
+  const pasteComponent = usePaste();
+
+  const onCopy = useCallback(() => {
+    onClose();
+
+    const copyTree = bundleCopyComponentTree(getEditorState().componentMap, componentId);
+    copyComponent(copyTree);
+  }, [componentId, copyComponent, getEditorState, onClose]);
+
+  const onPaste = useCallback(() => {
+    pasteComponent(component, position);
+
+    onClose();
+    flush();
+  }, [component, flush, onClose, pasteComponent, position]);
+
+  return (
+    <>
+      <MenuItem disabled={componentId === ROOT_NODE_ID} onClick={onCopy}>
+        Copy
+      </MenuItem>
+      {component && <MenuItem onClick={onPaste}>Paste</MenuItem>}
+    </>
+  );
+}
+
+/**
+ * Bundles the children into the tree structure for a copy action while removing each id.
+ */
+function bundleCopyComponentTree(componentMap: ComponentMap, componentId: string) {
+  return {
+    ...componentMap[componentId],
+    id: null,
+    childrenNodes: componentMap[componentId].childrenNodes.map((nodeId) =>
+      bundleCopyComponentTree(componentMap, nodeId)
+    ),
+  };
 }

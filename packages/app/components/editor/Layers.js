@@ -49,7 +49,7 @@ export default function Layers() {
         </TreeView>
       </Scrollbars>
 
-      <ComponentContextMenu id={layerContextMenuId} />
+      <ComponentContextMenu id={layerContextMenuId} isLayer />
     </Box>
   );
 }

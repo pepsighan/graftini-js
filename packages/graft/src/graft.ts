@@ -12,6 +12,7 @@ export { DrawMarker, DrawMarkerProps } from './drawMarker';
 export { DropMarker, DropMarkerProps } from './dropMarker';
 export { Editor, EditorProps } from './editor';
 export { useCheckCursorOnIFrame } from './iframe';
+export { usePaste } from './paste';
 export { DragPreview } from './preview';
 export {
   CreateComponentStore,
@@ -19,7 +20,12 @@ export {
   useCreateComponentStore,
   useCreateComponentStoreApi,
 } from './store/createComponent';
-export { DraggedOverStore, useDraggedOverStore, useDraggedOverStoreApi } from './store/draggedOver';
+export {
+  DraggedOverStore,
+  useDraggedOverStore,
+  useDraggedOverStoreApi,
+  Position,
+} from './store/draggedOver';
 export {
   ComponentMap,
   ComponentNode,
