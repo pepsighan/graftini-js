@@ -12,7 +12,8 @@ export default function Navigation() {
   const { user } = useAuthUser();
 
   const isWithinDashboard = route.startsWith('/dashboard');
-  const isBorderless = !isWithinDashboard;
+  const isWithinProfile = route.startsWith('/profile');
+  const isBorderless = !isWithinDashboard && !isWithinProfile;
 
   return (
     <AppBar

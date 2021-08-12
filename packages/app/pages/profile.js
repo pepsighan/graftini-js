@@ -26,7 +26,7 @@ export default protectedPage(function Profile() {
         justifyContent="space-between"
         sx={{ minHeight: `calc(100vh - ${navBarHeight}px)`, px: 2, overflow: 'hidden' }}
       >
-        <Container sx={{ mt: 2 }} maxWidth="xs">
+        <Container sx={{ mt: 4 }} maxWidth="xs">
           <Typography variant="h5">Your Profile</Typography>
           <Stack spacing={2} sx={{ mt: 3 }}>
             <TextField
