@@ -3,7 +3,6 @@ import { useCallback } from 'react';
 import { addComponentToDropRegion, identifyDropRegion } from './dropLocation';
 import { Position } from './store/draggedOver';
 import { ComponentNode, useEditorStore } from './store/editor';
-import { useHoverStoreApi } from './store/hover';
 import { useComponentRegionStoreApi } from './store/regionMap';
 import { useRootScrollStoreApi } from './store/rootScroll';
 
@@ -21,19 +20,12 @@ type UsePaste = (component: PasteComponent, position: Position) => void;
  * Pastes a component at the current hover location.
  */
 export function usePaste(): UsePaste {
-  const { getState: getHoverState } = useHoverStoreApi();
   const { getState: getComponentRegionState } = useComponentRegionStoreApi();
   const { immerSet: immerEditorStore } = useEditorStore();
   const { getState: getScrollState } = useRootScrollStoreApi();
 
   return useCallback(
     (component, position) => {
-      const hover = getHoverState();
-      const isOnIFrame = hover.isOnIFrame;
-      if (!isOnIFrame) {
-        return;
-      }
-
       const regionMap = getComponentRegionState().regionMap;
       const scrollPosition = getScrollState().position;
       const resolvedCursorPosition = {
@@ -80,6 +72,6 @@ export function usePaste(): UsePaste {
         addComponentToDropRegion(component.id, dropRegion, state.componentMap);
       });
     },
-    [getComponentRegionState, getHoverState, getScrollState, immerEditorStore]
+    [getComponentRegionState, getScrollState, immerEditorStore]
   );
 }
