@@ -47,6 +47,13 @@ function useContextMenuState() {
 export function ContextMenu({ id, isCorrectionNeeded = false, children }) {
   const { context, onClose } = useContextMenu();
 
+  // The correction may be needed if the menu is to be shown on right clicking the
+  // components within the canvas. In that case, the position of the context menu is
+  // relative to the iframe which needs to be corrected for it to be shown in the
+  // context of the main document.
+  const x = context?.x + (isCorrectionNeeded ? leftSideBarWidth : 0);
+  const y = context?.y + (isCorrectionNeeded ? navBarHeight : 0);
+
   // Only show the context menu if it matches the id.
   return context?.id === id ? (
     // Clickaway does not handle cases within the iframe which are manually handled.
@@ -55,16 +62,12 @@ export function ContextMenu({ id, isCorrectionNeeded = false, children }) {
         sx={{
           position: 'fixed',
           zIndex: 'modal',
-          // The correction may be needed if the menu is to be shown on right clicking the
-          // components within the canvas. In that case, the position of the context menu is
-          // relative to the iframe which needs to be corrected for it to be shown in the
-          // context of the main document.
-          left: context?.x + (isCorrectionNeeded ? leftSideBarWidth : 0),
-          top: context?.y + (isCorrectionNeeded ? navBarHeight : 0),
+          left: x,
+          top: y,
           width: 150,
         }}
       >
-        {children}
+        {typeof children === 'function' ? children({ x, y }) : children}
       </Paper>
     </ClickAwayListener>
   ) : null;
