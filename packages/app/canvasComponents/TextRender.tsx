@@ -1,11 +1,32 @@
-import { Text } from '@graftini/bricks';
+import { DimensionSize, Text } from '@graftini/bricks';
+import { ROOT_NODE_ID, useEditorStore } from '@graftini/graft';
 import { useRouter } from 'next/router';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
+import { normalizeRootChildrenBoxDimension } from './BoxRender';
 import { defaultTextFormValues } from './proseEditor/formFields';
 import { MarkKind } from './proseEditor/schema';
 import { TextComponentProps } from './Text';
 
-export default function TextRender({ tag, content, width, height }: TextComponentProps) {
+export function useTransformTextHeight({ height, componentId }): any {
+  const isRootParent = useEditorStore(
+    useCallback((state) => state.componentMap[componentId].parentId === ROOT_NODE_ID, [componentId])
+  );
+
+  // Since the root wrapper has no height of its own, the % values that the user provides
+  // are based on the body or viewport. This is how we handle it when deployed.
+  // As for the width, % and vw kind of mean the same thing because they are all block components.
+  const resolvedHeight = normalizeRootChildrenBoxDimension(height, isRootParent, 'vh');
+
+  return {
+    height: resolvedHeight as DimensionSize,
+  };
+}
+
+type TextRenderProps = TextComponentProps & {
+  componentId: string;
+};
+
+export default function TextRender({ tag, content, width, height, componentId }: TextRenderProps) {
   const { route, query } = useRouter();
 
   // We cannot have the routing system for the preview with actual path, so we transform the
@@ -42,7 +63,7 @@ export default function TextRender({ tag, content, width, height }: TextComponen
       tag={tag}
       content={derivedContent}
       width={width}
-      height={height}
+      {...useTransformTextHeight({ height, componentId })}
     />
   );
 }

@@ -10,6 +10,7 @@ import { TextTag } from 'utils/constants';
 import ProseEditor from './proseEditor/ProseEditor';
 import useIsEditing from './proseEditor/useIsEditing';
 import useIsSelected from './proseEditor/useIsSelected';
+import { useTransformTextHeight } from './TextRender';
 
 export type TextComponentProps = {
   name?: string;
@@ -63,12 +64,18 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
       [isEditing, isSelected]
     );
 
+    // The root text component may have % units which needs to be normalized to vh units.
+    const { height: resolvedHeight } = useTransformTextHeight({
+      height: height ?? Text.graftOptions.defaultProps.height!,
+      componentId,
+    });
+
     return (
       <ProseEditor
         ref={ref}
         tag={tag || Text.graftOptions.defaultProps.tag}
         width={width ?? Text.graftOptions.defaultProps.width!}
-        height={height ?? Text.graftOptions.defaultProps.height!}
+        height={resolvedHeight}
         isEditing={isEditing}
         onInitialState={onInitializeContent}
         onMouseDown={!isDraggingDisabled ? onMouseDown : null}
