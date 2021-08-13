@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { Text } from '@graftini/bricks';
+import { DimensionSize, Text } from '@graftini/bricks';
 import { useComponentId } from '@graftini/graft';
 import { forwardRef, MouseEventHandler, useCallback } from 'react';
 import { TextTag } from 'utils/constants';
@@ -10,6 +10,8 @@ import useMakeEditorEditable from './useMakeEditorEditable';
 
 type ProseEditorProps = {
   tag: TextTag;
+  width: DimensionSize;
+  height: DimensionSize;
   isEditing: boolean;
   onInitialState: () => any;
   onMouseDown?: MouseEventHandler;
@@ -22,6 +24,8 @@ const ProseEditor = forwardRef(
   (
     {
       tag,
+      width,
+      height,
       isEditing,
       onClick,
       onContextMenu,
@@ -58,6 +62,8 @@ const ProseEditor = forwardRef(
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         onContextMenu={onContextMenu}
+        width={width}
+        height={height}
         {...defaultTextFormValues}
         content={onInitialState()}
         cursor={isEditing ? 'text' : 'default'}

@@ -1,5 +1,5 @@
 /** @jsxImportSource @emotion/react */
-import { ProseMirrorDocument } from '@graftini/bricks';
+import { DimensionSize, ProseMirrorDocument } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
 import { componentContextMenuId } from 'components/editor/ComponentContextMenu';
 import { useContextMenu } from 'components/editor/ContextMenu';
@@ -15,10 +15,12 @@ export type TextComponentProps = {
   name?: string;
   tag: TextTag;
   content: ProseMirrorDocument;
+  width?: DimensionSize;
+  height?: DimensionSize;
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(
-  ({ onMouseDown, content, tag }, ref) => {
+  ({ onMouseDown, content, tag, width, height }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const selectComponentOnRightClick = useSelectOnRightClick();
@@ -70,6 +72,8 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
             <ProseEditor
               ref={ref}
               tag={tag || Text.graftOptions.defaultProps.tag}
+              width={width ?? Text.graftOptions.defaultProps.width!}
+              height={height ?? Text.graftOptions.defaultProps.height!}
               isEditing={isEditing}
               onInitialState={onInitializeContent}
               onMouseDown={!isDraggingDisabled ? onMouseDown : null}
@@ -79,6 +83,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
             />
           ),
           [
+            height,
             isDraggingDisabled,
             isEditing,
             onClick,
@@ -88,6 +93,7 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
             ref,
             startEditingText,
             tag,
+            width,
           ]
         )}
       </>
@@ -119,6 +125,8 @@ Text.graftOptions = {
         },
       ],
     },
+    width: { size: 100, unit: '%' },
+    height: 'auto',
   },
 };
 
