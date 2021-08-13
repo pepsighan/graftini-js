@@ -4,7 +4,7 @@ import {
   useForgetCreateComponent,
 } from '@graftini/graft';
 import { AppBar, IconButton, Stack, Toolbar, Tooltip } from '@material-ui/core';
-import { CursorArrowIcon, PlayIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
+import { CursorArrowIcon, PlayIcon, PlusIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
 import GraftiniLogo from 'components/GraftiniLogo';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -29,16 +29,17 @@ export default function EditorNavigation() {
         </Stack>
 
         <Stack direction="row" spacing={2} justifyContent="center" sx={{ flex: 1 }}>
+          <PlusButton />
           <CursorButton />
           <DrawButton
             mr={4}
             label="Box"
             component="Box"
-            icon={<SquareIcon />}
+            icon={<SquareIcon width={16} height={16} />}
             isCanvas
             childAppendDirection="vertical"
           />
-          <DrawButton label="Text" component="Text" icon={<TextIcon />} />
+          <DrawButton label="Text" component="Text" icon={<TextIcon width={16} height={16} />} />
         </Stack>
 
         <Stack direction="row" spacing={2} justifyContent="flex-end" sx={{ flex: 1 }}>
@@ -61,6 +62,16 @@ export default function EditorNavigation() {
   );
 }
 
+function PlusButton() {
+  return (
+    <Tooltip title="Components">
+      <IconButton sx={{ flexDirection: 'column' }}>
+        <PlusIcon width={18} height={18} />
+      </IconButton>
+    </Tooltip>
+  );
+}
+
 function CursorButton() {
   const isNoCreate = useCreateComponentStore(useCallback((state) => !state.newComponent, []));
   const forgetCreateComponent = useForgetCreateComponent();
@@ -72,7 +83,7 @@ function CursorButton() {
         sx={{ flexDirection: 'column' }}
         onClick={forgetCreateComponent}
       >
-        <CursorArrowIcon />
+        <CursorArrowIcon width={16} height={16} />
       </IconButton>
     </Tooltip>
   );
