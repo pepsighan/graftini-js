@@ -40,7 +40,7 @@ export function useTransformBoxProps({
   };
 }
 
-function normalizeRootChildrenBoxDimension(
+export function normalizeRootChildrenBoxDimension(
   size: DimensionSize | DimensionMinLimit | DimensionMaxLimit,
   isRootParent: boolean,
   unit: 'vh'
