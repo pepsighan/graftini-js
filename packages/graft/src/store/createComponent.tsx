@@ -10,6 +10,12 @@ import { ChildAppendDirection, ComponentProps } from './editor';
  */
 export type NewComponent = {
   /**
+   * The variant of new component that is to be created. Basic components are those that are the
+   * building blocks that are used to create complex components on the canvas. Complex components
+   * can be provided when drawing pre-built components.
+   */
+  variant: 'basic' | 'complex';
+  /**
    * The kind of component to create. This type should be registered with the Editor.
    */
   type: string;

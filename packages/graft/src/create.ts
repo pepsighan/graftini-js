@@ -151,8 +151,15 @@ export function useDrawComponent(): UseDrawComponent {
           resolvedStartPosition
         );
 
-        const { onCreate, transformSize, defaultProps, isCanvas, type, childAppendDirection } =
-          state.newComponent;
+        const {
+          variant,
+          onCreate,
+          transformSize,
+          defaultProps,
+          isCanvas,
+          type,
+          childAppendDirection,
+        } = state.newComponent;
         afterCreate = onCreate;
 
         const width = state.draw.end.x - state.draw.start.x;
@@ -160,6 +167,7 @@ export function useDrawComponent(): UseDrawComponent {
         const transformedSize = transformSize?.(width, height) ?? {};
 
         newComponent = newComponentNode({
+          variant,
           isCanvas,
           type,
           childAppendDirection,
