@@ -77,6 +77,7 @@ const Text = forwardRef(({ content, children, ...rest }: TextProps, ref) => {
         // Append -gr in class names rather than -Text.
         label: 'gr',
         display: rest.displayNone ? 'none' : rest.displayInline ? 'inline' : 'block',
+        overflow: 'hidden',
         // This is require to add trailing spaces while typing in Firefox. We need
         // to show the same styles to render it as well.
         whiteSpace: 'pre-wrap',
