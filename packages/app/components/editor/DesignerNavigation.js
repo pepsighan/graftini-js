@@ -6,10 +6,12 @@ import {
 import { AppBar, IconButton, Stack, Toolbar, Tooltip } from '@material-ui/core';
 import { CursorArrowIcon, PlayIcon, PlusIcon, SquareIcon, TextIcon } from '@modulz/radix-icons';
 import GraftiniLogo from 'components/GraftiniLogo';
+import useBoolean from 'hooks/useBoolean';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
+import ComponentDialog from './ComponentDialog';
 import DeployButton from './DeployButton';
 import HamburgerButton from './HamburgerButton';
 import SavingStatus from './SavingStatus';
@@ -63,12 +65,18 @@ export default function EditorNavigation() {
 }
 
 function PlusButton() {
+  const [open, { on, off }] = useBoolean();
+
   return (
-    <Tooltip title="Components">
-      <IconButton sx={{ flexDirection: 'column' }}>
-        <PlusIcon width={18} height={18} />
-      </IconButton>
-    </Tooltip>
+    <>
+      <Tooltip title="Components" onClick={on}>
+        <IconButton sx={{ flexDirection: 'column' }}>
+          <PlusIcon width={18} height={18} />
+        </IconButton>
+      </Tooltip>
+
+      <ComponentDialog open={open} onClose={off} />
+    </>
   );
 }
 
