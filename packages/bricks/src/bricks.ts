@@ -48,5 +48,6 @@ export {
   TextAlign,
   TextInteractionStyles,
   TextProps,
+  TextStyleProps,
 } from './text';
 export { ProseMirrorDocument } from './textBody';

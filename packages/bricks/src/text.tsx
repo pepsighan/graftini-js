@@ -6,6 +6,7 @@ import { RGBA, rgbaToCss } from './colors';
 import TextBody, { ProseMirrorDocument } from './textBody';
 
 export type TextProps = BaseTextProps &
+  TextStyleProps &
   DragProps &
   InteractionProps &
   TextInteractionStyles &
@@ -14,6 +15,11 @@ export type TextProps = BaseTextProps &
 
 export type BaseTextProps = {
   tag?: string;
+  content?: ProseMirrorDocument;
+  children?: ReactNode;
+};
+
+export type TextStyleProps = {
   color?: RGBA;
   fontSize?: FontSize;
   fontFamily?: string;
@@ -21,8 +27,6 @@ export type BaseTextProps = {
   textAlign?: TextAlign;
   displayNone?: boolean;
   displayInline?: boolean;
-  content?: ProseMirrorDocument;
-  children?: ReactNode;
 };
 
 export type FontSize = {
@@ -63,7 +67,7 @@ const Text = forwardRef(({ content, children, ...rest }: TextProps, ref) => {
         // This is require to add trailing spaces while typing in Firefox. We need
         // to show the same styles to render it as well.
         whiteSpace: 'pre-wrap',
-        ...baseStyles(rest),
+        ...textStyleProps(rest),
         ...textInteractionStyles(rest),
       }}
     >
@@ -73,13 +77,13 @@ const Text = forwardRef(({ content, children, ...rest }: TextProps, ref) => {
   );
 });
 
-function baseStyles({
+function textStyleProps({
   color,
   fontSize,
   fontFamily,
   fontWeight,
   textAlign,
-}: BaseTextProps): CSSObject {
+}: TextStyleProps): CSSObject {
   return {
     color: color ? rgbaToCss(color) : undefined,
     fontSize:
