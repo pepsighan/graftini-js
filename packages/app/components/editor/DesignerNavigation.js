@@ -90,21 +90,36 @@ function DrawButton({ label, icon, component, isCanvas, childAppendDirection }) 
     childAppendDirection,
     // Transform the drawn size to the one usable by the box.
     transformSize: (width, height) => {
-      if (component === 'Box') {
-        return {
-          width: {
-            size: width,
-            unit: 'px',
-          },
-          height: {
-            size: height,
-            unit: 'px',
-          },
-        };
-      }
+      switch (component) {
+        case 'Text':
+          let widthSize = { size: 100, unit: '%' };
+          if (width >= 40) {
+            widthSize = { size: width, unit: 'px' };
+          }
 
-      // No need to add width and height for Text.
-      return {};
+          let heightSize = 'auto';
+          if (height >= 18) {
+            heightSize = { size: height, unit: 'px' };
+          }
+
+          return {
+            width: widthSize,
+            height: heightSize,
+          };
+
+        case 'Box':
+        default:
+          return {
+            width: {
+              size: width,
+              unit: 'px',
+            },
+            height: {
+              size: height,
+              unit: 'px',
+            },
+          };
+      }
     },
     // Select the component which was just created.
     onCreate: (componentId) => {

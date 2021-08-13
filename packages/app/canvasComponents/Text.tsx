@@ -1,10 +1,10 @@
 /** @jsxImportSource @emotion/react */
-import { ProseMirrorDocument } from '@graftini/bricks';
+import { DimensionSize, ProseMirrorDocument } from '@graftini/bricks';
 import { GraftComponent, useComponentId } from '@graftini/graft';
 import { componentContextMenuId } from 'components/editor/ComponentContextMenu';
 import { useContextMenu } from 'components/editor/ContextMenu';
 import useSelectOnRightClick from 'hooks/useSelectOnRightClick';
-import { forwardRef, MouseEvent, useCallback, useMemo } from 'react';
+import { forwardRef, MouseEvent, useCallback } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import { TextTag } from 'utils/constants';
 import ProseEditor from './proseEditor/ProseEditor';
@@ -15,10 +15,12 @@ export type TextComponentProps = {
   name?: string;
   tag: TextTag;
   content: ProseMirrorDocument;
+  width?: DimensionSize;
+  height?: DimensionSize;
 };
 
 const Text: GraftComponent<TextComponentProps> = forwardRef(
-  ({ onMouseDown, content, tag }, ref) => {
+  ({ onMouseDown, content, tag, width, height }, ref) => {
     const componentId = useComponentId();
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const selectComponentOnRightClick = useSelectOnRightClick();
@@ -61,36 +63,19 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
       [isEditing, isSelected]
     );
 
-    // The text component keeps on changing with changing props.
-    // The text editor does not need to update to those extra props.
     return (
-      <>
-        {useMemo(
-          () => (
-            <ProseEditor
-              ref={ref}
-              tag={tag || Text.graftOptions.defaultProps.tag}
-              isEditing={isEditing}
-              onInitialState={onInitializeContent}
-              onMouseDown={!isDraggingDisabled ? onMouseDown : null}
-              onClick={onClick}
-              onDoubleClick={startEditingText}
-              onContextMenu={onContextMenu}
-            />
-          ),
-          [
-            isDraggingDisabled,
-            isEditing,
-            onClick,
-            onContextMenu,
-            onInitializeContent,
-            onMouseDown,
-            ref,
-            startEditingText,
-            tag,
-          ]
-        )}
-      </>
+      <ProseEditor
+        ref={ref}
+        tag={tag || Text.graftOptions.defaultProps.tag}
+        width={width ?? Text.graftOptions.defaultProps.width!}
+        height={height ?? Text.graftOptions.defaultProps.height!}
+        isEditing={isEditing}
+        onInitialState={onInitializeContent}
+        onMouseDown={!isDraggingDisabled ? onMouseDown : null}
+        onClick={onClick}
+        onDoubleClick={startEditingText}
+        onContextMenu={onContextMenu}
+      />
     );
   }
 );
@@ -119,6 +104,8 @@ Text.graftOptions = {
         },
       ],
     },
+    width: { size: 100, unit: '%' },
+    height: 'auto',
   },
 };
 

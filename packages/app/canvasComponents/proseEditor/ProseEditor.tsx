@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
-import { Text } from '@graftini/bricks';
+import { DimensionSize, Text } from '@graftini/bricks';
 import { useComponentId } from '@graftini/graft';
-import { forwardRef, MouseEventHandler, useCallback } from 'react';
+import { forwardRef, memo, MouseEventHandler, useCallback } from 'react';
 import { TextTag } from 'utils/constants';
 import { defaultTextFormValues } from './formFields';
 import { useProseEditor } from './ProseEditorContext';
@@ -10,6 +10,8 @@ import useMakeEditorEditable from './useMakeEditorEditable';
 
 type ProseEditorProps = {
   tag: TextTag;
+  width: DimensionSize;
+  height: DimensionSize;
   isEditing: boolean;
   onInitialState: () => any;
   onMouseDown?: MouseEventHandler;
@@ -22,6 +24,8 @@ const ProseEditor = forwardRef(
   (
     {
       tag,
+      width,
+      height,
       isEditing,
       onClick,
       onContextMenu,
@@ -58,6 +62,8 @@ const ProseEditor = forwardRef(
         onClick={onClick}
         onDoubleClick={onDoubleClick}
         onContextMenu={onContextMenu}
+        width={width}
+        height={height}
         {...defaultTextFormValues}
         content={onInitialState()}
         cursor={isEditing ? 'text' : 'default'}
@@ -70,6 +76,15 @@ const ProseEditor = forwardRef(
               userSelect: 'auto',
               // This is require to add trailing spaces while typing in Firefox.
               whiteSpace: 'pre-wrap',
+              // Take whatever space is defined by the text component. This way
+              // the editor becomes susceptible to all the events a text component
+              // gets.
+              width: '100%',
+              height: '100%',
+              '& .ProseMirror': {
+                width: '100%',
+                height: '100%',
+              },
             }}
           />
         ) : null}
@@ -78,4 +93,7 @@ const ProseEditor = forwardRef(
   }
 );
 
-export default ProseEditor;
+// The parent text component keeps on changing with changing props.
+// The text editor does not need to update to those extra props.
+const ProseEditorMemo = memo(ProseEditor);
+export default ProseEditorMemo;

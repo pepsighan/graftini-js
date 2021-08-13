@@ -5,7 +5,7 @@ import { defaultTextFormValues } from './proseEditor/formFields';
 import { MarkKind } from './proseEditor/schema';
 import { TextComponentProps } from './Text';
 
-export default function TextRender({ tag, content }: TextComponentProps) {
+export default function TextRender({ tag, content, width, height }: TextComponentProps) {
   const { route, query } = useRouter();
 
   // We cannot have the routing system for the preview with actual path, so we transform the
@@ -36,5 +36,13 @@ export default function TextRender({ tag, content }: TextComponentProps) {
 
   // For anything that is not styled, they have the default look. The styles
   // that are configured by the user will be overridden by the content itself.
-  return <Text {...defaultTextFormValues} tag={tag} content={derivedContent} />;
+  return (
+    <Text
+      {...defaultTextFormValues}
+      tag={tag}
+      content={derivedContent}
+      width={width}
+      height={height}
+    />
+  );
 }

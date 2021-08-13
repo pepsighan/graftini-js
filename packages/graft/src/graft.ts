@@ -12,7 +12,7 @@ export { DrawMarker, DrawMarkerProps } from './drawMarker';
 export { DropMarker, DropMarkerProps } from './dropMarker';
 export { Editor, EditorProps } from './editor';
 export { useCheckCursorOnIFrame } from './iframe';
-export { usePaste, PasteComponent } from './paste';
+export { PasteComponent, usePaste } from './paste';
 export { DragPreview } from './preview';
 export {
   CreateComponentStore,
@@ -22,9 +22,9 @@ export {
 } from './store/createComponent';
 export {
   DraggedOverStore,
+  Position,
   useDraggedOverStore,
   useDraggedOverStoreApi,
-  Position,
 } from './store/draggedOver';
 export {
   ComponentMap,
@@ -33,6 +33,7 @@ export {
   defaultComponentMap,
   EditorStore,
   isComponentWithinSubTree,
+  ROOT_NODE_COMPONENT,
   ROOT_NODE_ID,
   useEditorStore,
   useEditorStoreApi,

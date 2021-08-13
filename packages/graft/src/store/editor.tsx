@@ -87,7 +87,6 @@ export const ROOT_NODE_ID = 'ROOT';
  * The component type that the ROOT node represents. It does not render anything other than the children
  * nodes it has.
  */
-/** @internal */
 export const ROOT_NODE_COMPONENT = 'Root__Graft__Component';
 
 /**

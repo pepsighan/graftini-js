@@ -23,7 +23,7 @@ import SizeLimitInput from './form/SizeLimitInput';
 import TextInput from './form/TextInput';
 import SyncResize, { transformToRawHeight, transformToRawWidth } from './SyncResize';
 
-type RawDimension = {
+export type RawDimension = {
   size: number;
   unit: 'px' | '%';
   toggle?: 'auto';
@@ -247,7 +247,7 @@ function BorderSection() {
   );
 }
 
-function assignDimension(props: BoxComponentProps, field: string, raw: RawDimension) {
+export function assignDimension<T extends object>(props: T, field: string, raw: RawDimension) {
   if (raw.toggle) {
     props[field] = raw.toggle;
     return;
