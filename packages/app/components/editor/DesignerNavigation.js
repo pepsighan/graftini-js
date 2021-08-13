@@ -108,7 +108,7 @@ function DrawButton({ label, icon, component, isCanvas, childAppendDirection }) 
     type: component,
     isCanvas,
     childAppendDirection,
-    // Transform the drawn size to the one usable by the box.
+    // Transform the drawn size to the one usable by the box and text.
     transformSize: (width, height) => {
       switch (component) {
         case 'Text':

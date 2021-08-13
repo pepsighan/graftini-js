@@ -1,3 +1,4 @@
+import { useCreateComponent } from '@graftini/graft';
 import {
   Box,
   Button,
@@ -8,6 +9,8 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+import { useCallback } from 'react';
+import { useDesignerState } from 'store/designer';
 
 export default function ComponentDialog({ open, onClose }) {
   return (
@@ -21,7 +24,7 @@ export default function ComponentDialog({ open, onClose }) {
 
         <Box sx={{ mt: 1.5 }}>
           <Grid container>
-            <ComponentItem />
+            <ComponentItem onClose={onClose} />
           </Grid>
         </Box>
       </DialogContent>
@@ -29,10 +32,51 @@ export default function ComponentDialog({ open, onClose }) {
   );
 }
 
-function ComponentItem() {
+function ComponentItem({ onClose }) {
+  const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
+  const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
+
+  const onCreate = useCreateComponent({
+    variant: 'complex',
+    type: 'Box',
+    isCanvas: true,
+    childAppendDirection: 'horizontal',
+    defaultProps: {},
+    // Transform the drawn size to the one usable by the box.
+    transformSize: (width, height) => {
+      return {
+        width: {
+          size: width,
+          unit: 'px',
+        },
+        height: {
+          size: height,
+          unit: 'px',
+        },
+      };
+    },
+    // Select the component which was just created.
+    onCreate: (componentId) => {
+      // The component is not selected if done immediately. The parent was
+      // getting selected.
+      setTimeout(() => {
+        selectComponent(componentId);
+      });
+    },
+  });
+
+  const onClick = useCallback(
+    (event) => {
+      onCreate(event);
+      unselectComponent();
+      onClose();
+    },
+    [onClose, onCreate, unselectComponent]
+  );
+
   return (
     <Grid item>
-      <Button sx={{ flexDirection: 'column' }}>
+      <Button sx={{ flexDirection: 'column' }} onClick={onClick}>
         <Paper sx={{ padding: 3 }}>
           <Box
             sx={{
