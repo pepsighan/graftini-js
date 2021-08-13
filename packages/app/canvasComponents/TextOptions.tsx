@@ -17,7 +17,7 @@ import { getFormFieldValuesFromSelection } from './proseEditor/formFields';
 import { useProseEditor } from './proseEditor/ProseEditorContext';
 import useCurrentSelectionId from './proseEditor/useCurrentSelectionId';
 import useGetSelectionForForm from './proseEditor/useGetSelectionForForm';
-import { transformToRawHeight, transformToRawWidth } from './SyncResize';
+import SyncResize, { transformToRawHeight, transformToRawWidth } from './SyncResize';
 import Text, { TextComponentProps } from './Text';
 
 type TextOptionsFields = {
@@ -71,6 +71,8 @@ function FormInner({ componentId }: OptionsProps) {
         // regardless of which the user intended to.
       }, [])}
     >
+      <SyncResize componentId={componentId} />
+
       <Stack spacing={2} mt={2}>
         <TextAlignInput name="textAlign" componentId={componentId} />
         <Divider />

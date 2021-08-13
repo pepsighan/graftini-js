@@ -19,6 +19,9 @@ export function transformToRawHeight(height: DimensionSize) {
   };
 }
 
+/**
+ * The component which syncs the mouse resize back to the form values.
+ */
 export default function SyncResize({ componentId }: { componentId: string }) {
   const { subscribe } = useEditorStoreApi();
   const { setValue } = useFormContext();
