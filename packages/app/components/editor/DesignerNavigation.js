@@ -11,7 +11,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
-import ComponentDialog from './ComponentDialog';
+import ComponentDialog from './componentDialog/ComponentDialog';
 import DeployButton from './DeployButton';
 import HamburgerButton from './HamburgerButton';
 import SavingStatus from './SavingStatus';

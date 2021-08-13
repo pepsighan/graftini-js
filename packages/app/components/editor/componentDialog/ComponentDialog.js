@@ -11,6 +11,7 @@ import {
 } from '@material-ui/core';
 import { useCallback } from 'react';
 import { useDesignerState } from 'store/designer';
+import buttonComponent from './buttonComponent';
 
 export default function ComponentDialog({ open, onClose }) {
   return (
@@ -37,11 +38,7 @@ function ComponentItem({ onClose }) {
   const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
 
   const onCreate = useCreateComponent({
-    variant: 'complex',
-    type: 'Box',
-    isCanvas: true,
-    childAppendDirection: 'horizontal',
-    defaultProps: {},
+    ...buttonComponent,
     // Transform the drawn size to the one usable by the box.
     transformSize: (width, height) => {
       return {
