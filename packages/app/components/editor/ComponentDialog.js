@@ -1,4 +1,13 @@
-import { Box, Dialog, DialogContent, DialogTitle, Typography } from '@material-ui/core';
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  Paper,
+  Typography,
+} from '@material-ui/core';
 
 export default function ComponentDialog({ open, onClose }) {
   return (
@@ -6,13 +15,45 @@ export default function ComponentDialog({ open, onClose }) {
       <DialogTitle>Components</DialogTitle>
       <DialogContent>
         <Typography variant="body2" color="textSecondary">
-          Use from the following selection of pre-built components.
+          Use the following pre-built components to design faster rather than making everything from
+          scratch.
         </Typography>
 
         <Box sx={{ mt: 1.5 }}>
-          <Box sx={{ width: 100, height: 30, bgcolor: 'grey.200' }} />
+          <Grid container>
+            <ComponentItem />
+          </Grid>
         </Box>
       </DialogContent>
     </Dialog>
+  );
+}
+
+function ComponentItem() {
+  return (
+    <Grid item>
+      <Button sx={{ flexDirection: 'column' }}>
+        <Paper sx={{ padding: 3 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              bgcolor: 'primary.500',
+              width: 100,
+              height: 30,
+              borderRadius: 1,
+            }}
+          >
+            <Typography color="white" sx={{ fontWeight: 500 }}>
+              Button
+            </Typography>
+          </Box>
+        </Paper>
+        <Typography textAlign="center" variant="subtitle2">
+          Button
+        </Typography>
+      </Button>
+    </Grid>
   );
 }
