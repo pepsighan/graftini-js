@@ -7,7 +7,7 @@ import { defaultTextFormValues } from './proseEditor/formFields';
 import { MarkKind } from './proseEditor/schema';
 import { TextComponentProps } from './Text';
 
-export function useTransformTextDimension({ height, width, componentId }): any {
+export function useTransformTextHeight({ height, componentId }): any {
   const isRootParent = useEditorStore(
     useCallback((state) => state.componentMap[componentId].parentId === ROOT_NODE_ID, [componentId])
   );
@@ -19,7 +19,6 @@ export function useTransformTextDimension({ height, width, componentId }): any {
 
   return {
     height: resolvedHeight as DimensionSize,
-    width,
   };
 }
 
@@ -63,7 +62,8 @@ export default function TextRender({ tag, content, width, height, componentId }:
       {...defaultTextFormValues}
       tag={tag}
       content={derivedContent}
-      {...useTransformTextDimension({ width, height, componentId })}
+      width={width}
+      {...useTransformTextHeight({ height, componentId })}
     />
   );
 }
