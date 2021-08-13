@@ -1,4 +1,9 @@
-import { ROOT_NODE_ID, useComponentRegionStoreApi, useRootScrollStoreApi } from '@graftini/graft';
+import {
+  ROOT_NODE_COMPONENT,
+  ROOT_NODE_ID,
+  useComponentRegionStoreApi,
+  useRootScrollStoreApi,
+} from '@graftini/graft';
 import { useMotionValue, useTransform } from 'framer-motion';
 import { useCallback, useEffect, useState } from 'react';
 import { useDesignerState } from 'store/designer';
@@ -13,7 +18,7 @@ export default function Selection() {
 function ActualSelection({ componentId }) {
   const isResizable = useDesignerState(
     useCallback(
-      (state) => state.pages[state.currentOpenPage][componentId].type === 'Box',
+      (state) => state.pages[state.currentOpenPage][componentId].type !== ROOT_NODE_COMPONENT,
       [componentId]
     )
   );
