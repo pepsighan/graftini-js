@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 import { DimensionSize, Text } from '@graftini/bricks';
 import { useComponentId } from '@graftini/graft';
-import { forwardRef, MouseEventHandler, useCallback } from 'react';
+import { forwardRef, memo, MouseEventHandler, useCallback } from 'react';
 import { TextTag } from 'utils/constants';
 import { defaultTextFormValues } from './formFields';
 import { useProseEditor } from './ProseEditorContext';
@@ -84,4 +84,7 @@ const ProseEditor = forwardRef(
   }
 );
 
-export default ProseEditor;
+// The parent text component keeps on changing with changing props.
+// The text editor does not need to update to those extra props.
+const ProseEditorMemo = memo(ProseEditor);
+export default ProseEditorMemo;

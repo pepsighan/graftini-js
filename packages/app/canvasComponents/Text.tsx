@@ -4,7 +4,7 @@ import { GraftComponent, useComponentId } from '@graftini/graft';
 import { componentContextMenuId } from 'components/editor/ComponentContextMenu';
 import { useContextMenu } from 'components/editor/ContextMenu';
 import useSelectOnRightClick from 'hooks/useSelectOnRightClick';
-import { forwardRef, MouseEvent, useCallback, useMemo } from 'react';
+import { forwardRef, MouseEvent, useCallback } from 'react';
 import { useDesignerState, useIsDraggingDisabled } from 'store/designer';
 import { TextTag } from 'utils/constants';
 import ProseEditor from './proseEditor/ProseEditor';
@@ -63,40 +63,19 @@ const Text: GraftComponent<TextComponentProps> = forwardRef(
       [isEditing, isSelected]
     );
 
-    // The text component keeps on changing with changing props.
-    // The text editor does not need to update to those extra props.
     return (
-      <>
-        {useMemo(
-          () => (
-            <ProseEditor
-              ref={ref}
-              tag={tag || Text.graftOptions.defaultProps.tag}
-              width={width ?? Text.graftOptions.defaultProps.width!}
-              height={height ?? Text.graftOptions.defaultProps.height!}
-              isEditing={isEditing}
-              onInitialState={onInitializeContent}
-              onMouseDown={!isDraggingDisabled ? onMouseDown : null}
-              onClick={onClick}
-              onDoubleClick={startEditingText}
-              onContextMenu={onContextMenu}
-            />
-          ),
-          [
-            height,
-            isDraggingDisabled,
-            isEditing,
-            onClick,
-            onContextMenu,
-            onInitializeContent,
-            onMouseDown,
-            ref,
-            startEditingText,
-            tag,
-            width,
-          ]
-        )}
-      </>
+      <ProseEditor
+        ref={ref}
+        tag={tag || Text.graftOptions.defaultProps.tag}
+        width={width ?? Text.graftOptions.defaultProps.width!}
+        height={height ?? Text.graftOptions.defaultProps.height!}
+        isEditing={isEditing}
+        onInitialState={onInitializeContent}
+        onMouseDown={!isDraggingDisabled ? onMouseDown : null}
+        onClick={onClick}
+        onDoubleClick={startEditingText}
+        onContextMenu={onContextMenu}
+      />
     );
   }
 );
