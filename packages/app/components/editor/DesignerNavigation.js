@@ -104,6 +104,7 @@ function DrawButton({ label, icon, component, isCanvas, childAppendDirection }) 
   const unselectComponent = useDesignerState(useCallback((state) => state.unselectComponent, []));
 
   const onCreate = useCreateComponent({
+    variant: 'basic',
     type: component,
     isCanvas,
     childAppendDirection,
