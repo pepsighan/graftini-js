@@ -1,7 +1,7 @@
 import { nanoid } from 'nanoid';
 import { MouseEvent, MouseEventHandler, useCallback, useContext } from 'react';
 import { addComponentToDropRegion, DropRegion, identifyDropRegion } from './dropLocation';
-import { ResolverContext } from './resolver';
+import { ResolverContext, ResolverMap } from './resolver';
 import {
   CreateComponentStore,
   NewComponent,
@@ -118,19 +118,13 @@ export function useDrawComponent(): UseDrawComponent {
     (event: MouseEvent) => {
       let dropRegion: DropRegion | null = null;
       let newComponent: ComponentNode | null = null;
+      const childrenComponents: ComponentNode[] = [];
       let afterCreate: any = null;
 
       // Insert the new component.
       immerSetCreateComponent((state) => {
         if (!state.newComponent || !state.draw) {
           return;
-        }
-
-        const Component = resolverMap[state.newComponent.type];
-        if (!Component) {
-          throw new Error(
-            `\`${state.newComponent.type}\` is not registered in the Editor resolvers prop.`
-          );
         }
 
         // Use the final values for the cursor.
@@ -151,32 +145,20 @@ export function useDrawComponent(): UseDrawComponent {
           resolvedStartPosition
         );
 
-        const {
-          variant,
-          onCreate,
-          transformSize,
-          defaultProps,
-          isCanvas,
-          type,
-          childAppendDirection,
-        } = state.newComponent;
-        afterCreate = onCreate;
+        afterCreate = state.newComponent.onCreate;
+        const transformSize = state.newComponent.transformSize;
 
         const width = state.draw.end.x - state.draw.start.x;
         const height = state.draw.end.y - state.draw.start.y;
-        const transformedSize = transformSize?.(width, height) ?? {};
+        const transformedSize = transformSize?.(width, height);
 
-        newComponent = newComponentNode({
-          variant,
-          isCanvas,
-          type,
-          childAppendDirection,
-          defaultProps: {
-            ...(Component.graftOptions?.defaultProps ?? {}),
-            ...(defaultProps ?? {}),
-            ...transformedSize,
-          },
-        });
+        newComponent = newComponentNode(
+          resolverMap,
+          state.newComponent,
+          transformedSize,
+          childrenComponents,
+          null
+        );
 
         state.draw = null;
         state.newComponent = null;
@@ -188,6 +170,10 @@ export function useDrawComponent(): UseDrawComponent {
         }
 
         state.componentMap[newComponent!.id] = newComponent!;
+        childrenComponents.forEach((it) => {
+          state.componentMap[it.id] = it;
+        });
+
         addComponentToDropRegion(newComponent!.id, dropRegion, state.componentMap);
       });
 
@@ -213,17 +199,59 @@ export function useDrawComponent(): UseDrawComponent {
 }
 
 /**
- * Creates a new component node with the given config options.
+ * Creates a new component node with the given config options. In case of complex components
+ * all the nested children components will be filled within [childrenComponents] argument.
  */
 export function newComponentNode(
-  config: Omit<NewComponent, 'onCreate' | 'transformSize'>
+  resolverMap: ResolverMap,
+  component: NewComponent,
+  transformedSize: any,
+  childrenComponents: ComponentNode[],
+  parentId: string | null
 ): ComponentNode {
+  const Component = resolverMap[component.type];
+  if (!Component) {
+    throw new Error(`\`${component.type}\` is not registered in the Editor resolvers prop.`);
+  }
+
+  if (component.variant === 'basic') {
+    return {
+      id: nanoid(),
+      type: component.type,
+      isCanvas: component.isCanvas,
+      props: {
+        ...(Component.graftOptions?.defaultProps ?? {}),
+        ...(component.defaultProps ?? {}),
+        ...(transformedSize ?? {}),
+      },
+      childAppendDirection: component.childAppendDirection || 'vertical',
+      childrenNodes: [],
+    };
+  }
+
+  // The component is a complex one. So we will need to create all the nested components
+  // as well and attach them to its parent.
+
+  const id = nanoid();
+  const { childrenNodes, ...restProps } = component.defaultProps ?? {};
+
+  // Create all the children nodes and attach them to the parent.
+  const nodes = (childrenNodes ?? []).map((it: NewComponent) =>
+    newComponentNode(resolverMap, it, null, childrenComponents, id)
+  );
+  childrenComponents.push(...nodes);
+
   return {
-    id: nanoid(),
-    type: config.type,
-    isCanvas: config.isCanvas,
-    props: config.defaultProps ?? {},
-    childAppendDirection: config.childAppendDirection || 'vertical',
-    childrenNodes: [],
+    id,
+    type: component.type,
+    isCanvas: component.isCanvas,
+    props: {
+      ...(Component.graftOptions?.defaultProps ?? {}),
+      ...restProps,
+      ...(transformedSize ?? {}),
+    },
+    childAppendDirection: component.childAppendDirection || 'vertical',
+    childrenNodes: nodes.map((it: ComponentNode) => it.id),
+    parentId,
   };
 }
