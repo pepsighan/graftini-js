@@ -1,12 +1,4 @@
-import React, {
-  ForwardedRef,
-  forwardRef,
-  MouseEvent,
-  useCallback,
-  useContext,
-  useState,
-} from 'react';
-import mergeRefs from 'react-merge-refs';
+import React, { ForwardedRef, forwardRef, MouseEvent, useCallback, useContext } from 'react';
 import { GraftComponentProps } from './componentTypes';
 import { RootOverrideContext } from './context';
 import { useDrawComponent } from './create';
@@ -29,11 +21,8 @@ export const Root__Graft__Component = forwardRef(
 
     const onMouseMoveToHover = useSyncHoverRegion();
 
-    const [scrollRef, setScrollRef] = useState<HTMLElement | null>(null);
-    const mergedRef = mergeRefs([setScrollRef, containerRef]);
-
     // Link the scroll to enable hover, region map and drag to scroll.
-    const onScroll = useScroll(scrollRef);
+    const onScroll = useScroll();
 
     const onMouseMove = useCallback(
       (event: MouseEvent) => {
@@ -56,9 +45,7 @@ export const Root__Graft__Component = forwardRef(
     if (!RootOverrideComponent) {
       return (
         <div
-          // Here the scroll and the container are same so using the
-          // merged ref.
-          ref={mergedRef}
+          ref={containerRef}
           style={{ width: '100%', height: '100%', overflow: 'auto' }}
           onScroll={onScroll}
           onMouseUp={onMouseUp}
@@ -76,7 +63,6 @@ export const Root__Graft__Component = forwardRef(
         // Pass both the refs separately so they can be managed
         // with full flexibility.
         ref={containerRef}
-        scrollRef={setScrollRef}
         onScroll={onScroll}
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}

@@ -24,7 +24,7 @@ type SEO = {
 };
 
 const Root: RootComponent<RootProps> = forwardRef(
-  ({ color, seo, children, onScroll, scrollRef, ...rest }, containerRef: ForwardedRef<unknown>) => {
+  ({ color, seo, children, onScroll, ...rest }, containerRef: ForwardedRef<unknown>) => {
     const selectComponent = useDesignerState(useCallback((state) => state.selectComponent, []));
     const currentCreateType = useCreateComponentStore(
       useCallback((state) => state.newComponent?.type, [])
@@ -53,7 +53,6 @@ const Root: RootComponent<RootProps> = forwardRef(
     return (
       <Scrollbars
         id="app-root"
-        ref={scrollRef as any}
         autoHide
         autoHideTimeout={1000}
         autoHideDuration={200}
