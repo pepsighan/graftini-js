@@ -460,7 +460,8 @@ function editorInteractionProps({
   };
 }
 
-function dimensionSize(
+/** @internal */
+export function dimensionSize(
   size?: DimensionSize | DimensionMinLimit | DimensionMaxLimit
 ): string | undefined {
   if (!size) {

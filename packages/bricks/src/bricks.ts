@@ -46,8 +46,9 @@ export {
   FontSizeUnit,
   FontWeight,
   TextAlign,
+  TextAppearanceStyles,
   TextInteractionStyles,
+  TextLayoutStyles,
   TextProps,
-  TextStyleProps,
 } from './text';
 export { ProseMirrorDocument } from './textBody';

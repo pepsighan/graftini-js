@@ -1,12 +1,21 @@
 /** @jsxImportSource @emotion/react */
 import { CSSObject } from '@emotion/react';
 import { ElementType, FocusEventHandler, forwardRef, MouseEventHandler, ReactNode } from 'react';
-import { DragProps, dragProps, EditorProps, interactionProps, InteractionProps } from './box';
+import {
+  dimensionSize,
+  DimensionSize,
+  DragProps,
+  dragProps,
+  EditorProps,
+  interactionProps,
+  InteractionProps,
+} from './box';
 import { RGBA, rgbaToCss } from './colors';
 import TextBody, { ProseMirrorDocument } from './textBody';
 
 export type TextProps = BaseTextProps &
-  TextStyleProps &
+  TextAppearanceStyles &
+  TextLayoutStyles &
   DragProps &
   InteractionProps &
   TextInteractionStyles &
@@ -19,7 +28,7 @@ export type BaseTextProps = {
   children?: ReactNode;
 };
 
-export type TextStyleProps = {
+export type TextAppearanceStyles = {
   color?: RGBA;
   fontSize?: FontSize;
   fontFamily?: string;
@@ -27,6 +36,11 @@ export type TextStyleProps = {
   textAlign?: TextAlign;
   displayNone?: boolean;
   displayInline?: boolean;
+};
+
+export type TextLayoutStyles = {
+  width?: DimensionSize;
+  height?: DimensionSize;
 };
 
 export type FontSize = {
@@ -63,12 +77,12 @@ const Text = forwardRef(({ content, children, ...rest }: TextProps, ref) => {
         // Append -gr in class names rather than -Text.
         label: 'gr',
         display: rest.displayNone ? 'none' : rest.displayInline ? 'inline' : 'block',
-        width: '100%',
         // This is require to add trailing spaces while typing in Firefox. We need
         // to show the same styles to render it as well.
         whiteSpace: 'pre-wrap',
-        ...textStyleProps(rest),
+        ...textAppearanceStyles(rest),
         ...textInteractionStyles(rest),
+        ...textLayoutStyles(rest),
       }}
     >
       {/* If children is provided render it. It may be a content editor. */}
@@ -77,13 +91,13 @@ const Text = forwardRef(({ content, children, ...rest }: TextProps, ref) => {
   );
 });
 
-function textStyleProps({
+function textAppearanceStyles({
   color,
   fontSize,
   fontFamily,
   fontWeight,
   textAlign,
-}: TextStyleProps): CSSObject {
+}: TextAppearanceStyles): CSSObject {
   return {
     color: color ? rgbaToCss(color) : undefined,
     fontSize:
@@ -91,6 +105,13 @@ function textStyleProps({
     fontWeight,
     fontFamily,
     textAlign,
+  };
+}
+
+function textLayoutStyles({ width, height }: TextLayoutStyles): CSSObject {
+  return {
+    width: dimensionSize(width),
+    height: dimensionSize(height),
   };
 }
 
