@@ -1,6 +1,6 @@
 import { NewComponent } from '@graftini/graft';
-import Box from 'canvasComponents/Box';
-import Text from 'canvasComponents/Text';
+import Box, { BoxComponentProps } from 'canvasComponents/Box';
+import Text, { TextComponentProps } from 'canvasComponents/Text';
 
 const buttonText: NewComponent = {
   variant: 'complex',
@@ -8,6 +8,7 @@ const buttonText: NewComponent = {
   isCanvas: false,
   defaultProps: {
     ...Text.graftOptions.defaultProps,
+    name: 'ButtonText',
     content: {
       type: 'doc',
       content: [
@@ -26,7 +27,7 @@ const buttonText: NewComponent = {
         },
       ],
     },
-  },
+  } as TextComponentProps,
 };
 
 const buttonComponent: NewComponent = {
@@ -36,7 +37,8 @@ const buttonComponent: NewComponent = {
   childAppendDirection: 'horizontal',
   defaultProps: {
     ...Box.graftOptions.defaultProps,
+    name: 'Button',
     childrenNodes: [buttonText],
-  },
+  } as BoxComponentProps,
 };
 export default buttonComponent;
