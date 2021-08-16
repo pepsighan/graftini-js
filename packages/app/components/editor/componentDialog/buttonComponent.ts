@@ -37,6 +37,8 @@ const buttonComponent: NewComponent = {
   childAppendDirection: 'horizontal',
   defaultProps: {
     ...Box.graftOptions.defaultProps,
+    justifyContent: 'center',
+    alignItems: 'center',
     name: 'Button',
     childrenNodes: [buttonText],
   } as BoxComponentProps,
