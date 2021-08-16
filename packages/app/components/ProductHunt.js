@@ -10,6 +10,12 @@ export default function ProductHunt() {
       id="ph-email-form"
       name="ph-email-form"
       target="_blank"
+      sx={{
+        flexDirection: {
+          xs: 'column',
+          md: 'row',
+        },
+      }}
     >
       <TextField
         type="email"
@@ -19,9 +25,7 @@ export default function ProductHunt() {
         required
         size="medium"
         sx={{
-          minWidth: {
-            sm: 250,
-          },
+          minWidth: 250,
         }}
       />
       <Button
@@ -31,11 +35,17 @@ export default function ProductHunt() {
         name="subscribe"
         id="ph-subscribe-button"
         sx={{
-          ml: 1,
+          ml: {
+            md: 1,
+          },
+          mt: {
+            xs: 1,
+            md: 0,
+          },
           px: 2,
         }}
       >
-        Subscribe
+        Request Access to Graftini
       </Button>
     </Stack>
   );

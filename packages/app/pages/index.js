@@ -52,8 +52,7 @@ export default function Home() {
                   },
                 }}
               >
-                We are currently only open for Early Access. If you are interested, you may request
-                for early access by clicking the button below.
+                We are currently only open for early access.
               </Typography>
 
               <ProductHunt />
