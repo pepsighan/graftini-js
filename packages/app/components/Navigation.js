@@ -64,22 +64,6 @@ export default function Navigation() {
           >
             {!user && (
               <>
-                <Link href="/early-access-registration" passHref>
-                  <Button
-                    component="a"
-                    variant="outlined"
-                    size="medium"
-                    sx={{
-                      display: {
-                        xs: 'none',
-                        md: 'inline-flex',
-                      },
-                    }}
-                  >
-                    Request Access
-                  </Button>
-                </Link>
-
                 <Link href="/sign-in" passHref>
                   <Button
                     component="a"

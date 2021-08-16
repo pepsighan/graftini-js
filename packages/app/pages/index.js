@@ -1,11 +1,10 @@
-import { Box, Button, Stack, Typography } from '@material-ui/core';
+import { Box, Stack, Typography } from '@material-ui/core';
 import previewImg from 'assets/preview.png';
 import Footer from 'components/Footer';
 import Navigation from 'components/Navigation';
 import ProductHunt from 'components/ProductHunt';
 import SEO from 'components/SEO';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useAuthUser } from 'store/auth';
 import { navBarHeight } from 'utils/constants';
 
