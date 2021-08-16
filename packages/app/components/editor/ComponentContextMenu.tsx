@@ -1,6 +1,6 @@
 import {
   ComponentMap,
-  newComponentNode,
+  ComponentNode,
   Position,
   ROOT_NODE_ID,
   useEditorStore,
@@ -10,6 +10,7 @@ import {
 } from '@graftini/graft';
 import { MenuItem } from '@material-ui/core';
 import Box from 'canvasComponents/Box';
+import { nanoid } from 'nanoid';
 import { useCallback } from 'react';
 import { useClipboardStore } from 'store/clipboard';
 import { useDesignerState } from 'store/designer';
@@ -76,16 +77,18 @@ function useOnWrapWithBox({ componentId, onClose }) {
 
       // Create a new box component which has no width and height of
       // its own. Its going to stick tight to the component.
-      const wrapBoxComponent = newComponentNode({
+      const wrapBoxComponent: ComponentNode = {
+        id: nanoid(),
         type: 'Box',
         isCanvas: true,
         childAppendDirection: 'vertical',
-        defaultProps: {
+        props: {
           ...Box.graftOptions.defaultProps,
           width: 'auto',
           height: 'auto',
         },
-      });
+        childrenNodes: [],
+      };
       wrappedComponentId = wrapBoxComponent.id;
 
       // Register the new box component.
