@@ -1,10 +1,10 @@
-import { Box, Button, Stack, Typography } from '@material-ui/core';
+import { Box, Stack, Typography } from '@material-ui/core';
 import previewImg from 'assets/preview.png';
 import Footer from 'components/Footer';
 import Navigation from 'components/Navigation';
+import ProductHunt from 'components/ProductHunt';
 import SEO from 'components/SEO';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useAuthUser } from 'store/auth';
 import { navBarHeight } from 'utils/constants';
 
@@ -25,7 +25,7 @@ export default function Home() {
             Graftini
           </Typography>
           <Typography variant="h6" textAlign="center" fontWeight="normal" color="textSecondary">
-            Deploy your web apps without writing any code in less than 10 minutes.
+            Design & deploy frontends for your headless WordPress without writing any code.
           </Typography>
 
           <Box
@@ -52,14 +52,10 @@ export default function Home() {
                   },
                 }}
               >
-                We are currently only open for Early Access. If you are interested, you may request
-                for early access by clicking the button below.
+                We are currently only open for early access.
               </Typography>
-              <Link href="/early-access-registration" passHref>
-                <Button component="a" variant="contained" size="medium">
-                  Request for Early Access
-                </Button>
-              </Link>
+
+              <ProductHunt />
             </>
           )}
         </Stack>
