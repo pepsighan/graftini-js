@@ -22,7 +22,13 @@ const buttonText: NewComponent = {
           content: [
             {
               type: 'text',
-              marks: [],
+              marks: [
+                { type: 'fontWeight', attrs: { fontWeight: 600 } },
+                {
+                  type: 'color',
+                  attrs: { r: 255, g: 255, b: 255, a: 1 },
+                },
+              ],
               text: 'Button',
             },
           ],
@@ -39,9 +45,12 @@ const buttonComponent: NewComponent = {
   childAppendDirection: 'horizontal',
   defaultProps: {
     ...Box.graftOptions.defaultProps,
+    name: 'Button',
+    tag: 'button',
+    color: { r: 65, g: 71, b: 104 },
     justifyContent: 'center',
     alignItems: 'center',
-    name: 'Button',
+    borderRadius: { bottomLeft: 4, bottomRight: 4, topLeft: 4, topRight: 4 },
     childrenNodes: [buttonText],
   } as BoxComponentProps,
 };
