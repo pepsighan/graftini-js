@@ -2,6 +2,7 @@ import { Box, Button, Stack, Typography } from '@material-ui/core';
 import previewImg from 'assets/preview.png';
 import Footer from 'components/Footer';
 import Navigation from 'components/Navigation';
+import ProductHunt from 'components/ProductHunt';
 import SEO from 'components/SEO';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -55,11 +56,8 @@ export default function Home() {
                 We are currently only open for Early Access. If you are interested, you may request
                 for early access by clicking the button below.
               </Typography>
-              <Link href="/early-access-registration" passHref>
-                <Button component="a" variant="contained" size="medium">
-                  Request for Early Access
-                </Button>
-              </Link>
+
+              <ProductHunt />
             </>
           )}
         </Stack>
