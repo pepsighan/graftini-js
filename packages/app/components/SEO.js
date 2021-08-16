@@ -29,7 +29,8 @@ export default function SEO({ title, description }) {
       <meta
         name="description"
         content={
-          description ?? 'Deploy your web apps without writing any code in less than 10 minutes.'
+          description ??
+          'Design & deploy frontends for your headless WordPress without writing any code.'
         }
       />
 

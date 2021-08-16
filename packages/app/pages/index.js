@@ -25,7 +25,7 @@ export default function Home() {
             Graftini
           </Typography>
           <Typography variant="h6" textAlign="center" fontWeight="normal" color="textSecondary">
-            Design & deploy frontends for your headless WordPress without writing any code.
+            Design &amp; deploy frontends for your headless WordPress without writing any code.
           </Typography>
 
           <Box
