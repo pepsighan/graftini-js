@@ -6,6 +6,7 @@ import {
   CreateComponentStore,
   NewComponent,
   useCreateComponentStore,
+  useCreateComponentStoreApi,
 } from './store/createComponent';
 import { ComponentNode, EditorStore, useEditorStore, useEditorStoreApi } from './store/editor';
 import { useComponentRegionStoreApi } from './store/regionMap';
@@ -70,6 +71,7 @@ export function useDrawComponent(): UseDrawComponent {
   const { getState: getRegionState } = useComponentRegionStoreApi();
   const resolverMap = useContext(ResolverContext);
   const { getState: getRootScrollState } = useRootScrollStoreApi();
+  const { getState: getCreateComponentState } = useCreateComponentStoreApi();
 
   const onMouseDown = useCallback(
     (event: MouseEvent) => {
@@ -117,13 +119,17 @@ export function useDrawComponent(): UseDrawComponent {
   const onMouseUp = useCallback(
     (event: MouseEvent) => {
       let dropRegion: DropRegion | null = null;
-      let newComponent: ComponentNode | null = null;
+      // Load the new component using the getter rather than using the one available within
+      // immerSetCreateComponent's state because the setter's state is a proxy whose value
+      // weirdly gets garbage collected.
+      const newComponent = getCreateComponentState().newComponent;
+      let newCompNode: ComponentNode | null = null;
       const childrenComponents: ComponentNode[] = [];
       let afterCreate: any = null;
 
       // Insert the new component.
       immerSetCreateComponent((state) => {
-        if (!state.newComponent || !state.draw) {
+        if (!newComponent || !state.draw) {
           return;
         }
 
@@ -145,16 +151,16 @@ export function useDrawComponent(): UseDrawComponent {
           resolvedStartPosition
         );
 
-        afterCreate = state.newComponent.onCreate;
-        const transformSize = state.newComponent.transformSize;
+        afterCreate = newComponent.onCreate;
+        const transformSize = newComponent.transformSize;
 
         const width = state.draw.end.x - state.draw.start.x;
         const height = state.draw.end.y - state.draw.start.y;
         const transformedSize = transformSize?.(width, height);
 
-        newComponent = newComponentNode(
+        newCompNode = newComponentNode(
           resolverMap,
-          state.newComponent,
+          newComponent,
           transformedSize,
           childrenComponents,
           null
@@ -169,19 +175,20 @@ export function useDrawComponent(): UseDrawComponent {
           return;
         }
 
-        state.componentMap[newComponent!.id] = newComponent!;
         childrenComponents.forEach((it) => {
           state.componentMap[it.id] = it;
         });
+        state.componentMap[newCompNode!.id] = newCompNode!;
 
-        addComponentToDropRegion(newComponent!.id, dropRegion, state.componentMap);
+        addComponentToDropRegion(newCompNode!.id, dropRegion, state.componentMap);
       });
 
       if (dropRegion && afterCreate) {
-        afterCreate(newComponent!.id);
+        afterCreate(newCompNode!.id);
       }
     },
     [
+      getCreateComponentState,
       getEditorState,
       getRegionState,
       getRootScrollState,
