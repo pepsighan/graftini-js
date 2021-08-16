@@ -9,6 +9,8 @@ const buttonText: NewComponent = {
   defaultProps: {
     ...Text.graftOptions.defaultProps,
     name: 'ButtonText',
+    width: 'auto',
+    height: 'auto',
     content: {
       type: 'doc',
       content: [
