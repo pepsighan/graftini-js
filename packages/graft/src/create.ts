@@ -209,7 +209,7 @@ export function useDrawComponent(): UseDrawComponent {
  * Creates a new component node with the given config options. In case of complex components
  * all the nested children components will be filled within [childrenComponents] argument.
  */
-export function newComponentNode(
+function newComponentNode(
   resolverMap: ResolverMap,
   component: NewComponent,
   transformedSize: any,
